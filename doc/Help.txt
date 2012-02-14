@@ -1,0 +1,18 @@
+Help for using git:
+Always do git fetch before working
+    git fetch
+If you create a new file, do git add .
+
+If you are done working on a specific task, do
+    git commit -a
+This will allow you to write a message of what you changed(added)
+
+If the fix was small(ie spelling mistake) just do
+    git commit -am 'enter what you did (ie. fixed spelling mistake'
+
+After you do a commit, or commits, do
+    git push -u origin master
+This syncs the github website with the content you added/changed, so everyone
+else has access to it.
+
+I'll add branching soon, considering it will be very useful in a few weeks.
