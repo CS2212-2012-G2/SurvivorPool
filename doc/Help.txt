@@ -15,4 +15,47 @@ After you do a commit, or commits, do
 This syncs the github website with the content you added/changed, so everyone
 else has access to it.
 
+
+********Testing if git works!*******
+Open up Git Bash, change directory to the place where you did a git clone.
+If you type in git status, there should be some output.
+Like On Branch Master or something similar.
+
+If not, you are not in the right directory!
+
+Now hit ls, you should see the same file as on the github page.
+Try adding and editing a file.
+
+Make a new file in notepad and type in YourName got git working!
+Save it in the git folder.
+
+
+Now type in git status    this should say untracked files present or something
+similar.
+
+
+Now type git add .   (the . needs to be there)
+This adds any new file.
+
+
+
+Now type in git commit -am "I did it" (the I did it is a commit message, you use
+-am if you have a short message, or you can do -a and write out a longer
+message.
+
+Now do git push origin master    (master just is your current branch, I'll
+expand on this later)
+
+Type in your password if it asks, and there you go, you have successfully set up
+git.
+
+Remeber: Commit and push regularly, and do a git fetch before you start working.
+Stuff can get messed up quickly if you don't.
+Post a message on the group if you have any issues. I'm sure Kevin or Ramesh can
+help.
+
+
+
+
+
 I'll add branching soon, considering it will be very useful in a few weeks.
