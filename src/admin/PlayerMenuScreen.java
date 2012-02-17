@@ -1,4 +1,4 @@
-package UWOSurvivorAdmin;
+package admin;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -42,6 +42,7 @@ public class PlayerMenuScreen {
 		/* list player button */
 		buttonList = new JButton("List Players"); // the continue button
 		buttonList.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new ListPlayerScreen(skin);
@@ -52,6 +53,7 @@ public class PlayerMenuScreen {
 		/* create player button */
 		buttonCreate = new JButton("Create Player"); // the continue button
 		buttonCreate.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new CreatePlayerScreen(skin);
@@ -62,6 +64,7 @@ public class PlayerMenuScreen {
 		/* modify player button */
 		buttonModify = new JButton("Modify Player"); // the continue button
 		buttonModify.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new ModifyPlayerScreen(skin);
@@ -72,6 +75,7 @@ public class PlayerMenuScreen {
 		/* delete player button */
 		buttonDelete = new JButton("Delete Player"); // the continue button
 		buttonDelete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				/* push to the next frame */
@@ -87,6 +91,7 @@ public class PlayerMenuScreen {
 		/* new game menu button */
 		JMenuItem menuItemMain = new JMenuItem("Main Menu");
 		menuItemMain.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new MainMenuScreen(skin);
@@ -95,6 +100,7 @@ public class PlayerMenuScreen {
 		/* exit menu button */
 		JMenuItem menuItemMainExit = new JMenuItem("Exit");
 		menuItemMainExit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
@@ -103,6 +109,7 @@ public class PlayerMenuScreen {
 		/* theme selection buttons */
 		JMenuItem menuItemMainSunset = new JMenuItem("Sunset");
 		menuItemMainSunset.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Sunset";
 				updateTheme();
@@ -111,6 +118,7 @@ public class PlayerMenuScreen {
 
 		JMenuItem menuItemMainUnderwater = new JMenuItem("Underwater");
 		menuItemMainUnderwater.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Underwater";
 				updateTheme();
@@ -119,6 +127,7 @@ public class PlayerMenuScreen {
 
 		JMenuItem menuItemMainJungle = new JMenuItem("Jungle");
 		menuItemMainJungle.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Jungle";
 				updateTheme();
@@ -130,6 +139,7 @@ public class PlayerMenuScreen {
 		JMenu menuBack = new JMenu("Back");
 		JMenuItem menuItemMainBack = new JMenuItem("Go Back");
 		menuItemMainBack.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new MainMenuScreen(skin);

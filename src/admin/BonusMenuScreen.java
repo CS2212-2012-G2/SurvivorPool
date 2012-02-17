@@ -1,4 +1,4 @@
-package UWOSurvivorAdmin;
+package admin;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -42,6 +42,7 @@ public class BonusMenuScreen {
 		/* list bonus questions button */
 		buttonList = new JButton("List Bonus Questions"); // the continue button
 		buttonList.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new ListBonusScreen(skin);
@@ -52,6 +53,7 @@ public class BonusMenuScreen {
 		/* create Bonus button */
 		buttonCreate = new JButton("Create Bonus"); // the continue button
 		buttonCreate.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new CreateBonusScreen(skin);
@@ -62,6 +64,7 @@ public class BonusMenuScreen {
 		/* modify Bonus button */
 		buttonModify = new JButton("Modify Bonus"); // the continue button
 		buttonModify.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new ModifyBonusScreen(skin);
@@ -72,6 +75,7 @@ public class BonusMenuScreen {
 		/* delete Bonus button */
 		buttonDelete = new JButton("Delete Bonus"); // the continue button
 		buttonDelete.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				/* push to the next frame */
@@ -87,6 +91,7 @@ public class BonusMenuScreen {
 		/* new game menu button */
 		JMenuItem menuItemMain = new JMenuItem("Main Menu");
 		menuItemMain.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new MainMenuScreen(skin);
@@ -95,6 +100,7 @@ public class BonusMenuScreen {
 		/* exit menu button */
 		JMenuItem menuItemMainExit = new JMenuItem("Exit");
 		menuItemMainExit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
@@ -103,6 +109,7 @@ public class BonusMenuScreen {
 		/* theme selection buttons */
 		JMenuItem menuItemMainSunset = new JMenuItem("Sunset");
 		menuItemMainSunset.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Sunset";
 				updateTheme();
@@ -111,6 +118,7 @@ public class BonusMenuScreen {
 
 		JMenuItem menuItemMainUnderwater = new JMenuItem("Underwater");
 		menuItemMainUnderwater.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Underwater";
 				updateTheme();
@@ -119,6 +127,7 @@ public class BonusMenuScreen {
 
 		JMenuItem menuItemMainJungle = new JMenuItem("Jungle");
 		menuItemMainJungle.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Jungle";
 				updateTheme();
@@ -130,6 +139,7 @@ public class BonusMenuScreen {
 		JMenu menuBack = new JMenu("Back");
 		JMenuItem menuItemMainBack = new JMenuItem("Go Back");
 		menuItemMainBack.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new MainMenuScreen(skin);

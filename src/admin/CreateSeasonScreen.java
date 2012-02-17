@@ -1,4 +1,4 @@
-package UWOSurvivorAdmin;
+package admin;
 
 public class CreateSeasonScreen {
 

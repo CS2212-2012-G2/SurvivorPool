@@ -1,4 +1,4 @@
-package UWOSurvivorAdmin;
+package admin;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -42,6 +42,7 @@ public class SeasonMenuScreen {
 		/* start season button */
 		buttonStartSeason = new JButton("Start Season"); // the continue button
 		buttonStartSeason.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				/* ---------------- START THE SEASON STUFF ------------------*/
 			}
@@ -51,6 +52,7 @@ public class SeasonMenuScreen {
 		/* advance week button */
 		buttonAdvance = new JButton("Advance Week"); // the continue button
 		buttonAdvance.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				/* ---------------- ADVANCE THE WEEK      ------------------*/
 			}
@@ -60,6 +62,7 @@ public class SeasonMenuScreen {
 		/* create season button */
 		buttonCreate = new JButton("Create Season"); // the continue button
 		buttonCreate.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				/* push to the next frame */
@@ -75,6 +78,7 @@ public class SeasonMenuScreen {
 		/* new game menu button */
 		JMenuItem menuItemMain = new JMenuItem("Main Menu");
 		menuItemMain.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new MainMenuScreen(skin);
@@ -83,6 +87,7 @@ public class SeasonMenuScreen {
 		/* exit menu button */
 		JMenuItem menuItemMainExit = new JMenuItem("Exit");
 		menuItemMainExit.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
@@ -91,6 +96,7 @@ public class SeasonMenuScreen {
 		/* theme selection buttons */
 		JMenuItem menuItemMainSunset = new JMenuItem("Sunset");
 		menuItemMainSunset.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Sunset";
 				updateTheme();
@@ -99,6 +105,7 @@ public class SeasonMenuScreen {
 
 		JMenuItem menuItemMainUnderwater = new JMenuItem("Underwater");
 		menuItemMainUnderwater.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Underwater";
 				updateTheme();
@@ -107,6 +114,7 @@ public class SeasonMenuScreen {
 
 		JMenuItem menuItemMainJungle = new JMenuItem("Jungle");
 		menuItemMainJungle.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				skin = "Jungle";
 				updateTheme();
@@ -119,6 +127,7 @@ public class SeasonMenuScreen {
 		JMenu menuBack = new JMenu("Back");
 		JMenuItem menuItemMainBack = new JMenuItem("Go Back");
 		menuItemMainBack.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 				new MainMenuScreen(skin);
