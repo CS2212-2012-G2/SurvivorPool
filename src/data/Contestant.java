@@ -1,3 +1,7 @@
+package data;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * The contestant class will be used to create a person who
  * will be competing in the actual game of survivor, and can be
@@ -25,6 +29,7 @@ public class Contestant {
 	
 	public Contestant(String first, String last, String tribe)
 	{	
+		throw new NotImplementedException();
 	}
 	
 	// ------------------ ACCESSOR METHODS -----------------//
@@ -36,6 +41,7 @@ public class Contestant {
 	
 	public String getFirstName()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -45,6 +51,7 @@ public class Contestant {
 	
 	public String getLastName()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -54,6 +61,7 @@ public class Contestant {
 	
 	public String getPicture()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -63,6 +71,7 @@ public class Contestant {
 	
 	public boolean isCastOff()
 	{
+		throw new NotImplementedException();
 	}
 	
 	
@@ -75,6 +84,7 @@ public class Contestant {
 	
 	public void castOff()
 	{	
+		throw new NotImplementedException();
 	}
 	
 	
@@ -84,6 +94,7 @@ public class Contestant {
 	 */
 	public void setPicture(String pic)
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -94,5 +105,6 @@ public class Contestant {
 	
 	public void setTribe(String name)
 	{
+		throw new NotImplementedException();
 	}
 }

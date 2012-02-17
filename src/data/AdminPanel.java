@@ -1,4 +1,8 @@
+package data;
+
 import java.util.*;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * AdminPanel class represents the administrator of the game, and will have the
@@ -32,8 +36,8 @@ public class AdminPanel {
 	 */
 	public BonusQuestion getBonusQuestion()
 	{
+		throw new NotImplementedException();
 	}
-	
 	/**
 	 * getUser returns a User object based off of an entered unique ID.
 	 * 
@@ -43,6 +47,7 @@ public class AdminPanel {
 	
 	public User getUser(String uniqueId)
 	{
+		throw new NotImplementedException();
 	}
 
 	// ----------------- MUTATOR METHODS ----------------- //
@@ -67,6 +72,7 @@ public class AdminPanel {
 	
 	public void addBonusQuestion(String bonus)
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -77,11 +83,13 @@ public class AdminPanel {
 	 */
 	public void addUser(User user)
 	{
+		throw new NotImplementedException();
 	}
 	
 	// I'm actually not sure why we have this method here
 	public void setGame()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -91,6 +99,7 @@ public class AdminPanel {
 	 */
 	public void removeBonusQuestion(BonusQuestion target)
 	{
+		throw new NotImplementedException();
 	}
 	
 	

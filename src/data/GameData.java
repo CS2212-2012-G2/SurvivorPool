@@ -1,3 +1,7 @@
+package data;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 /**
  * GameData is the class that will be used to keep track of the important game information, including
@@ -21,6 +25,7 @@ public class GameData {
 	 */
 	public GameData(int numContestants)
 	{
+		throw new NotImplementedException();
 	}
 	
 	
@@ -34,6 +39,7 @@ public class GameData {
 	 */
 	public Contestant[] getActiveContestants()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -44,6 +50,7 @@ public class GameData {
 	 */
 	public Contestant[] getAllContestants()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -56,6 +63,7 @@ public class GameData {
 	 */
 	public Contestant getContestant(Contestant target)
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -65,6 +73,7 @@ public class GameData {
 	 */
 	public int weeksLeft()
 	{
+		throw new NotImplementedException();
 	}
 	
 	// ----------------- MUTATOR METHODS ------------------//
@@ -74,6 +83,7 @@ public class GameData {
 	 */
 	public void advanceWeek()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -82,8 +92,9 @@ public class GameData {
 	 * 
 	 * @param target   eliminated contestant
 	 */
-	public void removeContestant(Conestant target)
+	public void removeContestant(Contestant target)
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -93,6 +104,7 @@ public class GameData {
 	
 	private void startGame()
 	{
+		throw new NotImplementedException();
 	}
 	
 	

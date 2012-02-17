@@ -1,3 +1,7 @@
+package data;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * BonusQuestion is the class that will deal with the numerous bonus questions
  * that users can answer at their leisure during the competition.
@@ -31,6 +35,7 @@ public abstract class BonusQuestion {
 	// This is just a palceholder method afterall.
 	public String getPrompt()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -41,6 +46,7 @@ public abstract class BonusQuestion {
 	 */
 	public String getType()
 	{
+		throw new NotImplementedException();
 	}
 	
 	/**
@@ -51,6 +57,7 @@ public abstract class BonusQuestion {
 	 */
 	public boolean isActive()
 	{
+		throw new NotImplementedException();
 	}
 	
 	

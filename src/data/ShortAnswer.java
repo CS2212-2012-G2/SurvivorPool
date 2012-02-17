@@ -1,3 +1,7 @@
+package data;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 /**
  * ShortAnswer.java represents the case that a bonus question is of type
@@ -13,8 +17,10 @@ public class ShortAnswer extends BonusQuestion{
 	 * 
 	 * @return answer   the answer to the question
 	 */
+	@Override
 	public String getAnswer() 
 	{
+		throw new NotImplementedException();
 	}
 
 }

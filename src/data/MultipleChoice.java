@@ -1,3 +1,7 @@
+package data;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 
 /**
  * MultipleChoice.java represents the case that a bonus question is of type
@@ -15,8 +19,10 @@ public class MultipleChoice extends BonusQuestion{
 	 * 
 	 * @return answer   the answer to the question
 	 */
-    public String getAnswer() 
+    @Override
+	public String getAnswer() 
     {
+    	throw new NotImplementedException();
     }
     
     /**
@@ -26,5 +32,6 @@ public class MultipleChoice extends BonusQuestion{
      */
     public String[] getOptions()
     {
+    	throw new NotImplementedException();
     }
 }

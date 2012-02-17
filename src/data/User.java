@@ -1,3 +1,6 @@
+package data;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * The user class will be used to create an individual who will be participating in the 
@@ -24,7 +27,8 @@ public class User {
      */
     
     public User(String first, String last, String id)
-    {	
+    {
+    	throw new NotImplementedException();
     }
     
     // -------------------- ACCESSOR METHODS ------------------ //
@@ -36,6 +40,7 @@ public class User {
     
     public String getFirstName()
     {
+    	throw new NotImplementedException();
     }
     
     /**
@@ -45,6 +50,7 @@ public class User {
     
     public String getLastName()
     {
+    	throw new NotImplementedException();
     }
     
     /**
@@ -54,6 +60,7 @@ public class User {
     
     public String getID()
     {
+    	throw new NotImplementedException();
     }
     
     /**
@@ -63,6 +70,7 @@ public class User {
     
     public Contestant getWeeklyPick()
     {
+    	throw new NotImplementedException();
     }
     
     /**
@@ -72,6 +80,7 @@ public class User {
     
     public GameData getGame()
     {
+    	throw new NotImplementedException();
     }
     
     /**
@@ -81,6 +90,7 @@ public class User {
     
     public Contestant getWinPick()
     {
+    	throw new NotImplementedException();
     }
     
     
