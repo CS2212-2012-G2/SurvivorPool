@@ -1,4 +1,4 @@
-package UWOSurvivorPool;
+package client;
 
 public class BonusQuestion {
 private String question, type, answer;
