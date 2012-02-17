@@ -1,4 +1,4 @@
-Help for using git:
+****Help for using git********:
 Always do git fetch before working
     git fetch
 If you create a new file, do git add .
@@ -55,7 +55,37 @@ Post a message on the group if you have any issues. I'm sure Kevin or Ramesh can
 help.
 
 
+*****Branching***********
+This is really important, especially in a few weeks.
+
+Check out this link to see what branching is:
+http://learn.github.com/p/branching.html
+
+You just have to understand what branching is, and how to do it.
+
+Why branch?
+If you are working on the default(master) branch, and someone pushes a new update to github,
+you will have to pull the new update, and possibly erasing all the work you have just done or
+getting a merge error. If we branch, you can have an updated master branch, and a
+branch of all your hardwork separtely.
+
+
+This is going how you can work on your own part of the project without worrying about if someone updated the repo.
+
+The default branch is called master, it will have all our of WORKING code.
+So when you want to start working on your part of the project, you first (! are comments):
+	git fetch !update your local repo with the one in github
+	git branch branchName !where branchName is something specific to what you are working on
+	git checkout branchName
+Now you are working on a different branch than the master. You can switch between the master and your branchName anytime by doing git checkout xxx,
+where xxx is master, or a branch name.
+
+After you are doing commiting and pulling to your new branch, do a
+	git checkout master
+Then do
+	git merge branchName
+
+If there is any problems with combining(merging) the code, it will alert you right away. You can fix the merge issues before pushing it up to github.
 
 
 
-I'll add branching soon, considering it will be very useful in a few weeks.
