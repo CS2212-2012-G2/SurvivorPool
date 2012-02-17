@@ -1,4 +1,9 @@
-TO DO
+TODO
+====
+
+Client
+------
+
 
 BlackBerryApp.java
 
@@ -45,3 +50,7 @@ BonusQuestion
 	
 	- fULL COMMENTING
 	- ADD DATA PERSISTANCE TRACKING FEATURE.
+
+
+Swing:
+------
