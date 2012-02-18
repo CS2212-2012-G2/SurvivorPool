@@ -1,4 +1,4 @@
-package UWOSurvivorPool;
+package client;
 
 /* Author: CS2212 Group 2
  * File Name: MainMenuScreen.java
