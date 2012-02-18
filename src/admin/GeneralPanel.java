@@ -16,9 +16,6 @@ import common.Utils;
 
 import data.GameData;
 
-
-
-
 public class GeneralPanel extends JPanel {
 
 	JLabel lblGenInfo = new JLabel("General infos.");
