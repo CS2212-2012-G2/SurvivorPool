@@ -50,3 +50,21 @@ BonusQuestion
 
 Admin (SWING)
 ------
+
+	Main.java
+		
+		- CHANGE TAB SIZE
+		- IMPLEMENT THEMES
+	
+	GeneralPanel.java
+	
+		- CHANGE LAYOUT TO USE ENTIRE SCREEN
+		- IMPLEMENT THEMES
+	
+	PlayerPanel.java
+	
+		- EVERYTHING!
+	
+	UserPanel.java
+	
+		- EVERYTHING!
