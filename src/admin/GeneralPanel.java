@@ -21,25 +21,26 @@ public class GeneralPanel extends JPanel {
 	JTextField txtQuestion = new JTextField("");
 	
 	public GeneralPanel(){
-		this.setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
+		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		initPnlInfo();
 		initPnlBonus();
 		initPnlAnswer();
 	}
 	
 	private void initPnlInfo(){
-		JPanel pnlInfo = new JPanel();
+		JPanel pnlInfo = new JPanel(new BorderLayout());
 		JPanel pnlGenInfo = new JPanel();
-		JPanel pnlBonusInfo = new JPanel();
-		
+				
 		pnlGenInfo.setLayout(new BorderLayout());
 		pnlGenInfo.add(lblGenInfo,BorderLayout.CENTER);
 		pnlGenInfo.add(btnAdvWeek,BorderLayout.SOUTH);
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,pnlGenInfo,lblBonusInfo);
-		splitPane.setPreferredSize(new Dimension(480,200));
-		pnlInfo.add(splitPane);
-	
+		splitPane.setDividerSize(0);
+		splitPane.setDividerLocation(320);
+		
+		pnlInfo.add(splitPane,BorderLayout.CENTER);
+		pnlInfo.setPreferredSize(new Dimension(450,400));
 		this.add(pnlInfo);
 	}
 	
@@ -75,7 +76,9 @@ public class GeneralPanel extends JPanel {
 		JPanel pnlAnswer = new JPanel(); //added panel just incase we need to add anything else
 		JLabel lblAnswer = new JLabel("Answer something(Couldn't read writing).");
 		
+		
 		pnlAnswer.add(lblAnswer);
+		pnlAnswer.setPreferredSize(new Dimension(480,200));
 		this.add(pnlAnswer);
 	}	
 }
