@@ -27,7 +27,7 @@ public class SeasonMenuScreen {
 	public SeasonMenuScreen(String Tempskin) {
 		this.skin = Tempskin;
 		
-		frame = new JFrame("Main Menu");
+		frame = new JFrame("Season Menu");
 		panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(5, 115, 5, 115));
 		panel.setLayout(new GridLayout(5, 1, 5, 5));
@@ -44,7 +44,9 @@ public class SeasonMenuScreen {
 		buttonStartSeason.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/* ---------------- START THE SEASON STUFF ------------------*/
+				frame.dispose();
+				/* push to the next frame */
+				new StartSeasonScreen(skin);
 			}
 		});
 		panel.add(buttonStartSeason);
