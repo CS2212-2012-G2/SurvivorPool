@@ -61,9 +61,10 @@ public class CreateSeasonScreen {
 			public void actionPerformed(ActionEvent e) { // if pressed
 				if (betInput.getText().length() > 0) { // something is entered
 					try { // see if the input is an integer
-						int tempNumContestant = Integer.parseInt(betInput.getText());
-						// send "tempNumContestant - 3" to proper data storage (number of weeks)
-						// send tempNumContestant to proper data storage. (number of contestants)
+						int tempNumContestants = Integer.parseInt(betInput.getText());
+						int tempNumWeeks = tempNumContestants - 3; 
+						// send tempNumWeeks to proper data storage (number of weeks)
+						// send tempNumContestants to proper data storage. (number of contestants)
 						// *********************************************************
 						frame.dispose();
 						new MainMenuScreen(skin);
