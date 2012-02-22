@@ -36,9 +36,7 @@ public class CreateSeasonScreen {
 		panel.setLayout(new GridLayout(5, 1, 5, 5));
 
 		/* banner */
-		textBanner = new JLabel("CREATE SEASON", SwingConstants.CENTER); // large
-																		// title
-																		// banner
+		textBanner = new JLabel("CREATE SEASON", SwingConstants.CENTER);
 		font = new Font("Verdana", Font.BOLD, 30);
 		textBanner.setOpaque(false);
 		textBanner.setFont(font);
@@ -64,7 +62,8 @@ public class CreateSeasonScreen {
 				if (betInput.getText().length() > 0) { // something is entered
 					try { // see if the input is an integer
 						int tempNumContestant = Integer.parseInt(betInput.getText());
-						// send tempNumContestant to proper data storage.
+						// send "tempNumContestant - 3" to proper data storage (number of weeks)
+						// send tempNumContestant to proper data storage. (number of contestants)
 						// *********************************************************
 						frame.dispose();
 						new MainMenuScreen(skin);
