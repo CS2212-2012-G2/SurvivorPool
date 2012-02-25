@@ -6,7 +6,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,6 +27,8 @@ public class StartSeasonScreen {
 	private JPanel panel;
 	private String skin;
 	private JTextField betInput;
+	private FileWriter fileWrite = null; // I/O
+	private BufferedWriter buffWrite = null;
 
 	public StartSeasonScreen(String Tempskin) {
 		this.skin = Tempskin;
@@ -61,17 +64,32 @@ public class StartSeasonScreen {
 		buttonStart = new JButton("Start Season"); // the start button
 		buttonStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { // if pressed
-				if (betInput.getText().length() > 0) { // something is entered
+				if (betInput.getText().length() > 0 && Integer.parseInt(betInput.getText()) >= 0) { // something is entered
 					try { // see if the input is an integer
 						int tempBetValue = Integer.parseInt(betInput.getText());
 						// send tempBetValue to proper data storage.
-						// *********************************************************
+						try {
+							fileWrite = new FileWriter(
+									"src/data/SeasonSettings", true);
+							buffWrite = new BufferedWriter(fileWrite);
+							 String tempString = Integer.toString(tempBetValue);
+							buffWrite.write("Weekly_Bet_Value: " + tempString); // first line
+							buffWrite.newLine();
+							buffWrite.write("Current_Week: 1"); // first line
+							buffWrite.newLine();
+							buffWrite.close(); // close the file
+						} catch (Exception i) {
+						}
+						
 						frame.dispose();
 						new MainMenuScreen(skin);
 
 					} catch (NumberFormatException nFE) { // if not an integer
 						betInput.setText(""); // clear the input field
 					}
+				}
+				else { // if not proper parameter requirements
+					betInput.setText(""); // clear the input field
 				}
 			}
 		});

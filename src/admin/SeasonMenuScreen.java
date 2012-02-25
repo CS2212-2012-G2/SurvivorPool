@@ -5,7 +5,12 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,6 +20,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.util.StringTokenizer; 
 
 public class SeasonMenuScreen {
 	private JFrame frame;
@@ -23,6 +29,9 @@ public class SeasonMenuScreen {
 	private JButton buttonStartSeason, buttonAdvance, buttonCreate; // buttons
 	private JPanel panel;
 	private String skin;
+	private FileWriter fileWrite = null; // I/O
+	private BufferedWriter buffWrite = null;
+	private StringTokenizer st;
 	
 	public SeasonMenuScreen(String Tempskin) {
 		this.skin = Tempskin;
@@ -49,6 +58,8 @@ public class SeasonMenuScreen {
 				new StartSeasonScreen(skin);
 			}
 		});
+		/* Default disabled */
+		buttonStartSeason.setEnabled(false);
 		panel.add(buttonStartSeason);
 
 		/* advance week button */
@@ -56,9 +67,10 @@ public class SeasonMenuScreen {
 		buttonAdvance.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				/* ---------------- ADVANCE THE WEEK      ------------------*/
+				advanceWeek();
 			}
 		});
+		buttonAdvance.setEnabled(false);
 		panel.add(buttonAdvance);
 
 		/* create season button */
@@ -148,6 +160,29 @@ public class SeasonMenuScreen {
 		menuBar.add(menuBack);
 		frame.setJMenuBar(menuBar);
 		
+		/* Check if there's a created season */
+		
+		int tempCount = 0;
+		try {
+			FileInputStream file = new FileInputStream("src/data/SeasonSettings");
+			DataInputStream input = new DataInputStream(file);
+			BufferedReader buff = new BufferedReader(new InputStreamReader(
+					input));
+
+			while (!buff.readLine().equals("")){
+				tempCount++;
+			}
+
+			input.close();
+		} catch (Exception e) { 
+			if (tempCount == 2)
+				buttonStartSeason.setEnabled(true);
+			/* ****************************************************************
+			 * DISABLED UNTIL WEEK ADVANCING IS REQUIRED
+			if (tempCount > 2)
+				buttonAdvance.setEnabled(true);
+			******************************************************************/
+		}
 		
 		/* build frame */
 		frame.setSize(600, 430);
@@ -187,6 +222,38 @@ public class SeasonMenuScreen {
 			buttonAdvance.setForeground(Color.blue);
 			buttonCreate.setBackground(Color.white);
 			buttonCreate.setForeground(Color.blue);
+		}
+	}
+	
+	
+	private void advanceWeek(){
+		String tempReader = "";
+		try {
+			FileInputStream file = new FileInputStream("src/data/SeasonSettings");
+			DataInputStream input = new DataInputStream(file);
+			BufferedReader buff = new BufferedReader(new InputStreamReader(
+					input));
+			buff.readLine();
+			buff.readLine();
+			buff.readLine();
+			tempReader = buff.readLine();
+			st = new StringTokenizer(tempReader, " ;"); 
+			st.nextToken(); 
+			int weekNum = Integer.parseInt(st.nextToken());
+			weekNum++;
+			tempReader = "Current_Week: " + weekNum;
+			input.close();
+		} catch (Exception e) { 
+		}
+		
+		try {
+			fileWrite = new FileWriter(
+					"src/data/SeasonSettings", true);
+			buffWrite = new BufferedWriter(fileWrite);
+			buffWrite.write(tempReader); // first line
+			buffWrite.newLine();
+			buffWrite.close(); // close the file
+		} catch (Exception i) {
 		}
 	}
 	

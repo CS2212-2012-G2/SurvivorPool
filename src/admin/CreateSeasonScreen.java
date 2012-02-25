@@ -6,7 +6,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,7 +26,9 @@ public class CreateSeasonScreen {
 	private JButton buttonCreate; // buttons
 	private JPanel panel;
 	private String skin;
-	private JTextField betInput;
+	private JTextField contestantInput;
+	private FileWriter fileWrite = null; // I/O
+	private BufferedWriter buffWrite = null;
 
 	public CreateSeasonScreen(String Tempskin) {
 		this.skin = Tempskin;
@@ -43,35 +46,56 @@ public class CreateSeasonScreen {
 		panel.add(textBanner);
 
 		/* heading */
-		textHeader = new JLabel("Enter Season's Number of Contestants",
+		textHeader = new JLabel("Enter Season's Number of Contestants (6-15)",
 				SwingConstants.CENTER); // large title banner
 		font = new Font("Verdana", Font.BOLD, 14);
 		textHeader.setOpaque(false);
 		textHeader.setFont(font);
 		panel.add(textHeader);
-
+		
 		/* bet textField */
-		betInput = new JTextField();
-		betInput.setPreferredSize(new Dimension(340, 24));
-		panel.add(betInput);
+		contestantInput = new JTextField();
+		contestantInput.setPreferredSize(new Dimension(340, 24));
+		panel.add(contestantInput);
 
 		/* create season button */
 		buttonCreate = new JButton("Create Season"); // the create button
 		buttonCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { // if pressed
-				if (betInput.getText().length() > 0) { // something is entered
+				if (contestantInput.getText().length() > 0 && Integer.parseInt(contestantInput
+						.getText()) >= 6 && Integer.parseInt(contestantInput
+								.getText()) <= 15) { // something is entered
 					try { // see if the input is an integer
-						int tempNumContestants = Integer.parseInt(betInput.getText());
-						int tempNumWeeks = tempNumContestants - 3; 
-						// send tempNumWeeks to proper data storage (number of weeks)
-						// send tempNumContestants to proper data storage. (number of contestants)
-						// *********************************************************
+						int tempNumContestants = Integer.parseInt(contestantInput
+								.getText());
+						int tempNumWeeks = tempNumContestants - 3;
+						/*
+						 * Create new file and sends data to file, will delete
+						 * old one if present
+						 */
+						try {
+							fileWrite = new FileWriter(
+									"src/data/SeasonSettings", false);
+							buffWrite = new BufferedWriter(fileWrite);
+							 String tempString = Integer.toString(tempNumContestants);
+							buffWrite.write("Number_Of_Contestants: " + tempString); // first line
+							buffWrite.newLine();
+							tempString = Integer.toString(tempNumWeeks);
+							buffWrite.write("Number_Of_Weeks: " + tempString); // second line
+							buffWrite.newLine();
+							buffWrite.close(); // close the file
+						} catch (Exception i) {
+						}
+
 						frame.dispose();
 						new MainMenuScreen(skin);
 
 					} catch (NumberFormatException nFE) { // if not an integer
-						betInput.setText(""); // clear the input field
+						contestantInput.setText(""); // clear the input field
 					}
+				}
+				else { // if not proper parameter requirements
+					contestantInput.setText(""); // clear the input field
 				}
 			}
 		});
