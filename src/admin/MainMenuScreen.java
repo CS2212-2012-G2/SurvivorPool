@@ -2,6 +2,7 @@ package admin;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -171,11 +172,6 @@ public class MainMenuScreen {
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
 	}
-
-	// main method
-	public static void main(String[] args) {
-		new MainMenuScreen("Sunset"); // push the first screen
-	}
 	
 	private void updateTheme(){
 		if (skin.equals("Sunset")){
@@ -212,5 +208,10 @@ public class MainMenuScreen {
 			buttonContestant.setBackground(Color.white);
 			buttonContestant.setForeground(Color.blue);
 		}
+	}
+	
+	// main method
+	public static void main(String[] args) {
+		new MainMenuScreen("Jungle"); // push the first screen
 	}
 }

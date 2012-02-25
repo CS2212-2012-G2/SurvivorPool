@@ -2,8 +2,8 @@ package admin;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -35,12 +35,12 @@ public class CreateSeasonScreen {
 
 		frame = new JFrame("Create Season");
 		panel = new JPanel();
-		panel.setBorder(BorderFactory.createEmptyBorder(5, 115, 5, 115));
-		panel.setLayout(new GridLayout(5, 1, 5, 5));
+		panel.setBorder(BorderFactory.createEmptyBorder(45, 115, 5, 115));
+		panel.setLayout(new FlowLayout ());
 
 		/* banner */
 		textBanner = new JLabel("CREATE SEASON", SwingConstants.CENTER);
-		font = new Font("Verdana", Font.BOLD, 30);
+		font = new Font("Verdana", Font.BOLD, 50);
 		textBanner.setOpaque(false);
 		textBanner.setFont(font);
 		panel.add(textBanner);
