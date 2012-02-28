@@ -1,6 +1,3 @@
-package data;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * The user class will be used to create an individual who will be participating in the 
@@ -26,9 +23,12 @@ public class User {
      * @param id       unique ID
      */
     
-    public User(String first, String last, String id)
-    {
-    	throw new NotImplementedException();
+    public User(String first, String last, String id){
+    	firstName = first;
+    	lastName = last;
+    	unID = id;
+    	points = 0; // begin with 0 points
+    	
     }
     
     // -------------------- ACCESSOR METHODS ------------------ //
@@ -38,9 +38,8 @@ public class User {
      * @return this.firstName   
      */
     
-    public String getFirstName()
-    {
-    	throw new NotImplementedException();
+    public String getFirstName(){
+    	return firstName;
     }
     
     /**
@@ -48,9 +47,8 @@ public class User {
      * @return this.lastName
      */
     
-    public String getLastName()
-    {
-    	throw new NotImplementedException();
+    public String getLastName(){
+    	return lastName;
     }
     
     /**
@@ -58,9 +56,8 @@ public class User {
      * @return this.unID
      */
     
-    public String getID()
-    {
-    	throw new NotImplementedException();
+    public String getID(){
+    	return unID;
     }
     
     /**
@@ -68,9 +65,8 @@ public class User {
      * @ return this.weeklyPick
      */
     
-    public Contestant getWeeklyPick()
-    {
-    	throw new NotImplementedException();
+    public Contestant getWeeklyPick(){
+    	return weeklyPick;
     }
     
     /**
@@ -78,9 +74,8 @@ public class User {
      * @return this.game
      */
     
-    public GameData getGame()
-    {
-    	throw new NotImplementedException();
+    public GameData getGame(){
+    	return this.game;
     }
     
     /**
@@ -88,9 +83,8 @@ public class User {
      * @return this.winPick
      */
     
-    public Contestant getWinPick()
-    {
-    	throw new NotImplementedException();
+    public Contestant getWinPick(){
+    	return winPick;
     }
     
     
@@ -104,8 +98,8 @@ public class User {
      * @param newPoints   points to be added
      */
     
-    public void addPoints(int newPoints)
-    {
+    public void addPoints(int newPoints){
+    	points += newPoints;
     }
   
     /**
@@ -114,19 +108,8 @@ public class User {
      * @param first    users first name
      */
     
-    public void setFirstName(String first)
-    {
-    }
-    
-    /**
-     * setGame sets the assigns the desired GameData object to the user,
-     * allowing him/her to follow the same game as all the others.
-     * 
-     * @param comp   the GameData being set
-     */
-    
-    public void setGame(GameData comp)
-    {
+    public void setFirstName(String first){
+    	firstName = first;
     }
     
     /**
@@ -135,8 +118,8 @@ public class User {
      * @param last    users last name
      */
     
-    public void setLastName(String last)
-    {
+    public void setLastName(String last){
+    	lastName = last;
     }
     
     /**
@@ -146,8 +129,8 @@ public class User {
      * @param pick   contestant choice
      */
     
-    public void setWeeklyPick(Contestant pick)
-    {
+    public void setWeeklyPick(Contestant pick){
+    	weeklyPick = pick;
     }
     
     /**
@@ -158,12 +141,12 @@ public class User {
      * @param winner   contestant choice
      */
     
-    public void setWinPick(Contestant winner)
-    {
+    public void setWinPick(Contestant winner){
+    	winPick = winner;
+    	winPoints = 2*game.weeksLeft();
     }
     
     
     // ----------------- HELPER METHODS ----------------- //
   
-   
 }

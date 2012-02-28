@@ -1,7 +1,3 @@
-package data;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * The contestant class will be used to create a person who
  * will be competing in the actual game of survivor, and can be
@@ -27,9 +23,12 @@ public class Contestant {
 	 * @param tribe     contestant's tribe
 	 */
 	
-	public Contestant(String first, String last, String tribe)
-	{	
-		throw new NotImplementedException();
+	public Contestant(String first, String last, String tribe){
+		firstName = first;
+		lastName = last;
+		this.tribe = tribe;
+		castOff = false;
+		
 	}
 	
 	// ------------------ ACCESSOR METHODS -----------------//
@@ -39,9 +38,8 @@ public class Contestant {
 	 * @return this.firstName
 	 */
 	
-	public String getFirstName()
-	{
-		throw new NotImplementedException();
+	public String getFirstName(){
+		return firstName;
 	}
 	
 	/**
@@ -49,9 +47,8 @@ public class Contestant {
 	 * @return this.lastName
 	 */
 	
-	public String getLastName()
-	{
-		throw new NotImplementedException();
+	public String getLastName(){
+		return lastName;
 	}
 	
 	/**
@@ -59,9 +56,8 @@ public class Contestant {
 	 * @return this.picture
 	 */
 	
-	public String getPicture()
-	{
-		throw new NotImplementedException();
+	public String getPicture(){
+		return picture;
 	}
 	
 	/**
@@ -69,9 +65,8 @@ public class Contestant {
 	 * @return this.castOff
 	 */
 	
-	public boolean isCastOff()
-	{
-		throw new NotImplementedException();
+	public boolean isCastOff(){
+		return castOff;
 	}
 	
 	
@@ -82,9 +77,9 @@ public class Contestant {
 	 * the show
 	 */
 	
-	public void castOff()
-	{	
-		throw new NotImplementedException();
+	public void castOff(){
+		castOff = true;
+		// weekCastOff = game.weeksLeft();
 	}
 	
 	
@@ -92,9 +87,8 @@ public class Contestant {
 	 * setPicture sets a contestant's picture
 	 * @param pic           
 	 */
-	public void setPicture(String pic)
-	{
-		throw new NotImplementedException();
+	public void setPicture(String pic){
+		picture = pic;
 	}
 	
 	/**
@@ -103,8 +97,7 @@ public class Contestant {
 	 * @param name  name of new tribe
 	 */
 	
-	public void setTribe(String name)
-	{
-		throw new NotImplementedException();
+	public void setTribe(String name){
+		tribe = name;
 	}
 }
