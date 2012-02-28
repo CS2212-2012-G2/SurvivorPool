@@ -18,6 +18,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * Screen for creating a season. Controls the number of contestants and weeks
+ * and the two tribes name.
+ * @author CS2212 GROUP TWO 2011/2012
+ *
+ */
 public class SeasonCreatePanel extends JPanel {
 
 	JSpinner spnWeek;
@@ -26,7 +32,7 @@ public class SeasonCreatePanel extends JPanel {
 	
 	private FileWriter fileWrite = null; // I/O
 	private BufferedWriter buffWrite = null;
-	
+
 	public SeasonCreatePanel(){
 		this.setPreferredSize(new Dimension(400,400));
 		this.setLayout(new GridLayout(6,2));
@@ -41,10 +47,10 @@ public class SeasonCreatePanel extends JPanel {
 		
 		
 		//is there a default number of weeks?
-		SpinnerNumberModel weekModel = new SpinnerNumberModel(3,3,12,1);
+		SpinnerNumberModel weekModel = new SpinnerNumberModel(3,3,12,1); //default,low,min,step
 		spnWeek = new JSpinner(weekModel);
 		
-		SpinnerNumberModel contestantModel = new SpinnerNumberModel(6,6,15,1);
+		SpinnerNumberModel contestantModel = new SpinnerNumberModel(6,6,15,1);//default,low,min,step
 		spnContestant = new JSpinner(contestantModel);
 		
 		
@@ -69,7 +75,8 @@ public class SeasonCreatePanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				JSpinner spn = (JSpinner) ce.getSource();
-				changeSpinnerValue(spn);				
+				if(!programChange) //makes sure that the code did not change the value
+					changeSpinnerValue(spn);				
 			}
 			
 		});
@@ -86,9 +93,11 @@ public class SeasonCreatePanel extends JPanel {
 		
 		btnCreate.addActionListener(new ActionListener(){
 
+			//write the number of contestants and weeks to the file.
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				try {
+					
 					fileWrite = new FileWriter(
 							"src/data/SeasonSettings", false);
 					buffWrite = new BufferedWriter(fileWrite);
@@ -107,6 +116,10 @@ public class SeasonCreatePanel extends JPanel {
 		});
 	}
 	
+	/**
+	 * Changes the other spinner value.
+	 * @param spn The JSpinner that called this function. 
+	 */
 	private void changeSpinnerValue(JSpinner spn){
 		programChange=true;
 		if(spn.equals(spnContestant))
