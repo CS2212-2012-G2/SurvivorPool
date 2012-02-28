@@ -44,12 +44,17 @@ public class Main extends JFrame{
 	ActionListener al = new AL();
 	
 	public Main(){
-		initGUI();
+		initSeasonCreateGUI();
+		//initGUI();
 			
 		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	private void initSeasonCreateGUI(){
+		this.add(new SeasonCreatePanel());
 	}
 	
 	private void initGUI(){
@@ -79,7 +84,9 @@ public class Main extends JFrame{
 		menuBar.add(mnuTheme);
 		
 		mnuItemExit.addActionListener(al);
-		
+		mnuItemSunset.addActionListener(al);
+		mnuItemUnderwater.addActionListener(al);
+		mnuItemJungle.addActionListener(al);
 		
 		this.setJMenuBar(menuBar);
 		this.add(tabPane);

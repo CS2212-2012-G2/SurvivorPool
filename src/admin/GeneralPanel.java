@@ -36,7 +36,7 @@ public class GeneralPanel extends JPanel {
 		pnlGenInfo.add(btnAdvWeek,BorderLayout.SOUTH);
 		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,pnlGenInfo,lblBonusInfo);
-		splitPane.setDividerSize(0);
+		splitPane.setDividerSize(1);
 		splitPane.setDividerLocation(320);
 		
 		pnlInfo.add(splitPane,BorderLayout.CENTER);
