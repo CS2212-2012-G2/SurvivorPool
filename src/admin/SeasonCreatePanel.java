@@ -64,15 +64,14 @@ public class SeasonCreatePanel extends JPanel {
 		this.add(lblTribe2);
 		this.add(txtTribe2);
 		this.add(btnCreate);
-		
+
 		spnWeek.addChangeListener(new ChangeListener(){
 
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				JSpinner spn = (JSpinner) ce.getSource();
-				if(!programChange)
-					changeSpinnerValue(spn);	
-				
+				if(!programChange) //makes sure that the code did not change the value
+					changeSpinnerValue(spn);				
 			}
 			
 		});
@@ -83,7 +82,6 @@ public class SeasonCreatePanel extends JPanel {
 				JSpinner spn = (JSpinner) ce.getSource();
 				if(!programChange)
 					changeSpinnerValue(spn);	
-				
 			}
 			
 		});
@@ -126,5 +124,5 @@ public class SeasonCreatePanel extends JPanel {
 		programChange=false;
 	}
 
+	
 }
-
