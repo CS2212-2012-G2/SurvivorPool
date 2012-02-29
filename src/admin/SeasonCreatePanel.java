@@ -9,6 +9,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Screen for creating a season. Controls the number of contestants and weeks
@@ -62,13 +64,15 @@ public class SeasonCreatePanel extends JPanel {
 		this.add(lblTribe2);
 		this.add(txtTribe2);
 		this.add(btnCreate);
+		
 		spnWeek.addChangeListener(new ChangeListener(){
 
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				JSpinner spn = (JSpinner) ce.getSource();
-				if(!programChange) //makes sure that the code did not change the value
-					changeSpinnerValue(spn);				
+				if(!programChange)
+					changeSpinnerValue(spn);	
+				
 			}
 			
 		});
@@ -78,7 +82,8 @@ public class SeasonCreatePanel extends JPanel {
 			public void stateChanged(ChangeEvent ce) {
 				JSpinner spn = (JSpinner) ce.getSource();
 				if(!programChange)
-					changeSpinnerValue(spn);				
+					changeSpinnerValue(spn);	
+				
 			}
 			
 		});
@@ -121,6 +126,5 @@ public class SeasonCreatePanel extends JPanel {
 		programChange=false;
 	}
 
-	
 }
 
