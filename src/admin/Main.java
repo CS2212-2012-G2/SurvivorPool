@@ -4,13 +4,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 public class Main extends JFrame{
 
@@ -19,12 +13,11 @@ public class Main extends JFrame{
 	private JMenu mnuTheme = new JMenu("Theme");
 	
 	private JMenuItem mnuItemExit;
-	private JMenuItem mnuItemSunset;
-	private JMenuItem mnuItemJungle;
-	private JMenuItem mnuItemUnderwater;
+	private JRadioButtonMenuItem mnuItemSunset;
+	private JRadioButtonMenuItem mnuItemJungle;
+	private JRadioButtonMenuItem mnuItemUnderwater;
 
-	private class AL implements ActionListener {
-
+	ActionListener al = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == mnuItemExit) {
@@ -38,10 +31,8 @@ public class Main extends JFrame{
 			}
 
 		}
-
-	}
-
-	ActionListener al = new AL();
+		
+	};
 	
 	public Main(){
 		initGUI();
@@ -65,13 +56,17 @@ public class Main extends JFrame{
 		
 		
 		mnuItemExit = new JMenuItem("Exit");
-		mnuItemSunset = new JMenuItem("Sunset");
-		mnuItemUnderwater = new JMenuItem("Underwater");
-		mnuItemJungle = new JMenuItem("Jungle");
+		mnuItemSunset = new JRadioButtonMenuItem("Sunset");
+		mnuItemUnderwater = new JRadioButtonMenuItem("Underwater");
+		mnuItemJungle = new JRadioButtonMenuItem("Jungle");
 		
+		ButtonGroup g = new ButtonGroup();
 		mnuTheme.add(mnuItemSunset);
+		g.add(mnuItemSunset);
 		mnuTheme.add(mnuItemUnderwater);
+		g.add(mnuItemUnderwater);
 		mnuTheme.add(mnuItemJungle);
+		g.add(mnuItemJungle);
 		
 		mnuFile.add(mnuItemExit);
 		

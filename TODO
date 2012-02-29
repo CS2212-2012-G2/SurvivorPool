@@ -55,6 +55,10 @@ Admin (SWING)
 		
 		- CHANGE TAB SIZE
 		- IMPLEMENT THEMES
+			- MARK WHICH THEME IS ACTIVE AT START
+				activeTheme.setSelected() or could use doClick() which would programatically call the action listener associated
+			- Create action listeners for each item to set the theme
+			- Set how to iterate updating items, easiest is probably setting most objects to have transparent backgrounds
 	
 	GeneralPanel.java
 	
