@@ -70,6 +70,7 @@ Admin (SWING)
 	PlayerPanel.java
 	
 		- EVERYTHING!
+		- Loading an image into the icon, should check size and resize if necessary
 	
 	UserPanel.java
 	

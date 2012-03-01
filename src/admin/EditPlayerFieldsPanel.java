@@ -15,8 +15,6 @@ import javax.swing.JTextField;
 import data.Contestant;
 
 public class EditPlayerFieldsPanel extends JPanel {
-	private ImageIcon imgDisplay;
-	
 	
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
@@ -26,7 +24,7 @@ public class EditPlayerFieldsPanel extends JPanel {
 	
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
-	// XXX: Can someone explain this?
+	// XXX: Can someone explain this, why is it <X>?
 	private JComboBox<String> cbTribe;
 	
 	private JPanel paneField;
