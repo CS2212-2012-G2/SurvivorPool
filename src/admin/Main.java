@@ -44,7 +44,7 @@ public class Main extends JFrame{
 	
 	public Main(){
 		//TODO:get gamedata from initGamedata
-		gd = GameData.intGameData("src/data/SeasonSettings");
+		gd = GameData.intGameData(getDataFile());
 		//TODO:change to use game data
 		if(gd!=null)
 			initGUI();
@@ -101,12 +101,18 @@ public class Main extends JFrame{
 	}
 	
 	public static void seasonCreated(){
+		gd = GameData.intGameData(getDataFile());
 		m.getContentPane().removeAll();
 		m.initGUI();
 	}
 	
 	public static GameData getGameData(){
 		return gd;
+	}
+	
+	
+	public static String getDataFile(){
+		return "res/data/Settings.dat";
 	}
 	
 	/**
@@ -122,6 +128,7 @@ public class Main extends JFrame{
 			return false;
 		return Pattern.matches(pattern, val);
 	}
+	
 	public static void main(String[] args) {
 		m = new Main();
 

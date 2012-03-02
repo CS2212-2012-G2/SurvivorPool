@@ -106,7 +106,7 @@ public class SeasonCreatePanel extends JPanel {
 					}
 					lblAlert.setText("valid tribe names!");
 					fileWrite = new FileWriter(
-							"src/data/SeasonSettings", false);
+							Main.getDataFile(), false);
 					buffWrite = new BufferedWriter(fileWrite);
 					 String tempString = spnContestant.getValue().toString();
 					buffWrite.write("Number_Of_Contestants: " + tempString); // first line
@@ -119,6 +119,7 @@ public class SeasonCreatePanel extends JPanel {
 					//TODO:Go to next panel
 					Main.seasonCreated();
 				} catch (Exception i) {
+					i.printStackTrace();
 				}
 				
 			}
