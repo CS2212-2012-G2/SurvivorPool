@@ -183,6 +183,43 @@ public class GameData {
 	}
 	
 	/**
+	 * Uses the stored first and last name, and the currently running Game to 
+	 * generate a unique user ID.
+	 * @param c contestant to use data from.
+	 */
+	public String generateContestantID(Contestant c) {
+		if (c.getLastName() == null ||
+				c.getFirstName() == null) {
+			System.out.println("generateContestantID: first or last name null");
+			return null;
+		}
+		
+		// build all the currently used IDs
+		ArrayList<String> idArr = new ArrayList<String>(allContestants.size());
+		for (Contestant cind: allContestants) {
+			if (cind.getID() != null) 
+				idArr.add(cind.getID());
+		}
+		
+		String newID;
+		int lastSub = Math.min(5, c.getLastName().length() - 1);
+		int num = 0;
+		do {
+			// take the first letter of first name
+			// take substring of lastName length 6 or full name
+			newID = c.getFirstName().charAt(0) 
+					+ c.getLastName().substring(0, lastSub);
+			if (num != 0) {
+				newID += Integer.toString(num);
+			}
+			num++;
+		} while (idArr.indexOf(newID) != -1); // check if the ID is present
+		
+		System.out.println("Generated: " + newID);
+		return newID;
+	}
+	
+	/**
 	 * reads in file and (supposed) to fill in appropriate game data
 	 * @param file the file that contains the data
 	 */
