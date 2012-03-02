@@ -114,8 +114,12 @@ public class SeasonCreatePanel extends JPanel {
 					tempString = spnWeek.getValue().toString();
 					buffWrite.write("Number_Of_Weeks: " + tempString); // second line
 					buffWrite.newLine();
+					buffWrite.write("Tribe_1_Name: " + txtTribe1.getText()); // 3rd line
+					buffWrite.newLine();
+					buffWrite.write("Tribe_2_Name: " + txtTribe2.getText()); // 4th line
+					buffWrite.newLine();
 					buffWrite.close(); // close the file
-					
+					//TODO:Go to next panel
 					
 				} catch (Exception i) {
 				}
@@ -137,13 +141,23 @@ public class SeasonCreatePanel extends JPanel {
 			spnContestant.setValue(Integer.parseInt(spnWeek.getValue().toString())+3);
 		programChange=false;
 	}
-
+	
+	/**
+	 * Checks if the tribe names are valid according to specifications.
+	 * @return boolean depending if tribe names are alphanumber and between 1-30 characters
+	 */
 	private boolean checkValidTribeNames(){
-		String pattern = "\\w{1,30}";//regex for alphanumeric and between 1-20 characters long
+		String pattern = "\\w{1,30}";//regex for alphanumeric and between 1-30 characters long
 		return checkString(txtTribe1.getText(),pattern)
 				&&checkString(txtTribe2.getText(),pattern);
 	}
 	
+	/**
+	 * Checks if string matches pattern.
+	 * @param val The string to check for validity
+	 * @param pattern A regex pattern that has all possible valid values
+	 * @return true if string matches pattern
+	 */
 	private boolean checkString(String val,String pattern){
 		if(val==null)
 			return false;
