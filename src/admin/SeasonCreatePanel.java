@@ -148,21 +148,8 @@ public class SeasonCreatePanel extends JPanel {
 	 */
 	private boolean checkValidTribeNames(){
 		String pattern = "\\w{1,30}";//regex for alphanumeric and between 1-30 characters long
-		return checkString(txtTribe1.getText(),pattern)
-				&&checkString(txtTribe2.getText(),pattern);
+		return Main.checkString(txtTribe1.getText(),pattern)
+				&&Main.checkString(txtTribe2.getText(),pattern);
 	}
-	
-	/**
-	 * Checks if string matches pattern.
-	 * @param val The string to check for validity
-	 * @param pattern A regex pattern that has all possible valid values
-	 * @return true if string matches pattern
-	 */
-	private boolean checkString(String val,String pattern){
-		if(val==null)
-			return false;
-		if(val.length()==0)
-			return false;
-		return Pattern.matches(pattern, val);
-	}
+
 }
