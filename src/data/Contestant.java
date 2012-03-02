@@ -1,11 +1,13 @@
 package data;
 
+import java.util.Comparator;
+
 /**
  * The contestant class will be used to create a person who will be competing in
  * the actual game of survivor, and can be chosen by people from the User class.
  * 
- * @author Graem Littleton, Justin McDonald, Ramesh Raj, Kevin Brightwell,
- *         Jonathan Demelo
+ * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, Justin McDonald,
+ * 			Ramesh Raj 
  */
 
 public class Contestant {
@@ -14,7 +16,6 @@ public class Contestant {
 	private String firstName, lastName, tribe, picture;
 	private int castDate = -1; // week that player was cast off
 	private int cID;
-	private GameData game;
 
 	/**
 	 * Constructor method for type contestant sets player info
@@ -153,5 +154,73 @@ public class Contestant {
 	 */
 	public int getID() {
 		return cID;
+	}
+	
+	//////////////////
+	/// SUBCLASSES
+	//////////////////
+	/**
+	 * Compares two Contestants by ID for sorting.
+	 * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, 
+	 * 			Justin McDonald, Ramesh Raj 
+	 *
+	 */
+	public static class ComparatorID implements Comparator<Contestant> {
+		@Override
+		public int compare(Contestant c1, Contestant c2) {
+			return (c1.getID() - c2.getID());
+		}
+	}
+	
+	/**
+	 * Compares two Contestants by ID for sorting.
+	 * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, 
+	 * 			Justin McDonald, Ramesh Raj 
+	 *
+	 */
+	public static class ComparatorFirstName implements Comparator<Contestant> {
+		@Override
+		public int compare(Contestant c1, Contestant c2) {
+			return (c1.getFirstName().compareTo(c2.getFirstName()));
+		}
+	}
+	
+	/**
+	 * Compares two Contestants by ID for sorting.
+	 * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, 
+	 * 			Justin McDonald, Ramesh Raj 
+	 *
+	 */
+	public static class ComparatorLastName implements Comparator<Contestant> {
+		@Override
+		public int compare(Contestant c1, Contestant c2) {
+			return (c1.getLastName().compareTo(c2.getLastName()));
+		}
+	}
+	
+	/**
+	 * Compares two Contestants by ID for sorting.
+	 * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, 
+	 * 			Justin McDonald, Ramesh Raj 
+	 *
+	 */
+	public static class ComparatorTribe implements Comparator<Contestant> {
+		@Override
+		public int compare(Contestant c1, Contestant c2) {
+			return (c1.getLastName().compareTo(c2.getLastName()));
+		}
+	}
+	
+	/**
+	 * Compares two Contestants by ID for sorting.
+	 * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, 
+	 * 			Justin McDonald, Ramesh Raj 
+	 *
+	 */
+	public static class ComparatorDate implements Comparator<Contestant> {
+		@Override
+		public int compare(Contestant c1, Contestant c2) {
+			return (c1.getCastDate() - c2.getCastDate());
+		}
 	}
 }

@@ -1,5 +1,8 @@
 package admin.playertab;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.event.TableModelListener;
@@ -12,7 +15,7 @@ import data.User;
 public class PlayerTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private String[] columnNames;
-	private Vector data;
+	private LinkedList<Contestant> data;
 	private boolean frozen = false;
 	
 	public static final int INDEX_ID = 0;
@@ -21,10 +24,12 @@ public class PlayerTableModel extends AbstractTableModel {
 	public static final int INDEX_TRIBE = 3;
 	public static final int INDEX_DATECAST = 4;
 	
+	private int sortColumn = INDEX_ID;
+	
 	
 	public PlayerTableModel(String[] _columnNames) {
 		columnNames = _columnNames;
-		data = new Vector<User>();
+		data = new LinkedList<Contestant>();
 	}
 	
 	@Override
@@ -157,6 +162,78 @@ public class PlayerTableModel extends AbstractTableModel {
 	 */
 	public boolean isFrozen() {
 		return frozen;
+	}
+	
+	/**
+	 * Sorts the table by the column specified, will update the table.
+	 * @param col -1 for stored value, else the column passed. Default
+	 * to no sorting otherwise.
+	 */
+	private void sortTableBy(int col) {
+		Comparator<Contestant> comp;
+		
+		// use the stored column if -1 is passed.
+		col = (col == -1 ? sortColumn : col);
+		
+		switch (col) {
+        case INDEX_ID:
+        	comp = new Contestant.ComparatorID();
+        	break;
+        
+        case INDEX_FIRSTNAME:
+        	comp = new Contestant.ComparatorFirstName();
+        	break;
+        
+        case INDEX_LASTNAME:
+        	comp = new Contestant.ComparatorFirstName();
+        	break;
+        
+        case INDEX_TRIBE:
+        	comp = new Contestant.ComparatorLastName();
+        	break;
+        	
+        case INDEX_DATECAST:
+        	comp = new Contestant.ComparatorDate();
+        	break;
+        	
+        default:
+        		return;
+        }
+		
+		Collections.sort(data, comp);
+		fireTableDataChanged();
+		
+		sortColumn = col;
+	}
+	
+	/**
+	 * Sorts the table using {@link PlayerTableModel.sortTableBy} with 
+	 * the current sorted column.
+	 */
+	private void sortTable() {
+		sortTableBy(-1);
+	}
+	
+	/**
+	 * Updates the stored contestant with the same ID to hold the currently
+	 * stored information. Overwrites everything in the current position, also
+	 * will resort the data table.
+	 * <br>
+	 * If the ID is not present, it WILL create a new entry (no sort).
+	 * @param c New contestant data.
+	 */
+	public void updateContestant(Contestant c) {
+		Contestant[] conData = (Contestant[])data.toArray();
+		for (int i = 0; i < conData.length; i++)
+			if (conData[i].getID() == c.getID()) {
+				data.set(i, c);
+				// force the table to update.
+				sortTable();
+				fireTableRowsUpdated(i, i);
+				return;
+			}
+		
+		data.add(c);
 	}
 
 }
