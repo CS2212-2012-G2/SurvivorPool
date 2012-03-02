@@ -3,19 +3,16 @@ package admin.playertab;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import data.Contestant;
-import data.User;
 
 public class PlayerTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private String[] columnNames;
-	private LinkedList<Contestant> data;
+	private List<Contestant> data;
 	private boolean frozen = false;
 	
 	public static final int INDEX_ID = 0;
@@ -26,10 +23,15 @@ public class PlayerTableModel extends AbstractTableModel {
 	
 	private int sortColumn = INDEX_ID;
 	
-	
-	public PlayerTableModel(String[] _columnNames) {
+	/**
+	 * Creates the table model which controls the table's actions and data.
+	 * @param _columnNames The column names
+	 * @param _data	The data to work on/with. This could be an empty list, but
+	 * 			NOT null.
+	 */
+	public PlayerTableModel(String[] _columnNames, List<Contestant> _data) {
 		columnNames = _columnNames;
-		data = new LinkedList<Contestant>();
+		data = _data;
 	}
 	
 	@Override
@@ -142,7 +144,7 @@ public class PlayerTableModel extends AbstractTableModel {
 
     public void addEmptyRow() {
     	// TOOD: Make this create a new contestant ID
-        data.add(new Contestant(-1));
+        data.add(new Contestant());
         fireTableRowsInserted(
            data.size() - 1,
            data.size() - 1);
@@ -225,7 +227,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	public void updateContestant(Contestant c) {
 		Contestant[] conData = (Contestant[])data.toArray();
 		for (int i = 0; i < conData.length; i++)
-			if (conData[i].getID() == c.getID()) {
+			if (conData[i].getID().equals(c.getID())) {
 				data.set(i, c);
 				// force the table to update.
 				sortTable();

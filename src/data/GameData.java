@@ -2,6 +2,7 @@ package data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -21,10 +22,12 @@ public class GameData {
 										// passed
 	private boolean gameStarted, seasonMade = false; // true if game has started and admin can no
 									// longer add players
-	private Contestant[] allContestants, activeContestants; // lits of
+	private ArrayList<Contestant> allContestants, activeContestants; // lits of
 															// all/remaining
 															// contestants
 	private String[] tribeNames = new String[2]; // string array storing both tribe names
+
+	// store the current running version.
 
 	private static GameData currentGame = null;
 	
@@ -35,12 +38,8 @@ public class GameData {
 	 * 
 	 * @param numContestants
 	 *            number of contestants to be in game
-	 * @throws Exception If game already started, won't init a new one.
 	 */
-	public GameData(int numContestants) throws Exception {
-		if (currentGame != null)
-			throw new Exception("ERROR: GAME ALREADY IN SESSION.");
-		
+	public GameData(int numContestants) {
 		// check if within parameters
 		if(numContestants > 15 || numContestants < 6)
 			return; // if not, do not create GameData item
@@ -48,6 +47,7 @@ public class GameData {
 		weeksRem = numContestants - 3;
 		weeksPassed = 0;
 		this.numContestants = numContestants;
+		allContestants = new ArrayList<Contestant>(numContestants);
 		
 		currentGame = this;
 	}
@@ -60,7 +60,7 @@ public class GameData {
 	 * 
 	 * @return this.activeContestants
 	 */
-	public Contestant[] getActiveContestants() {
+	public ArrayList<Contestant> getActiveContestants() {
 		return activeContestants;
 	}
 
@@ -70,7 +70,7 @@ public class GameData {
 	 * 
 	 * @return this.allContestants
 	 */
-	public Contestant[] getAllContestants() {
+	public ArrayList<Contestant> getAllContestants() {
 		return allContestants;
 	}
 
@@ -87,8 +87,8 @@ public class GameData {
 		Contestant j; 
 		// loop through array
 		for(int i = 0; i <= numContestants; i++){
-		j = activeContestants[i]; // get Contestant object for comparison 
-		if(first.equals(j.getFirstName()) && last.equals(j.getLastName())){ // ensure names match
+			j = activeContestants.get(i); // get Contestant object for comparison 
+			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
 				return j; // return info on player
 			}
 		}
@@ -175,9 +175,8 @@ public class GameData {
 	 * 
 	 * @param inputFile   file to be read in
 	 * @return GameData object made out of file or null if season not created
-	 * @throws Exception Thrown if game already started.
 	 */
-	public static GameData intGameData(String inputFile) throws Exception{
+	public static GameData intGameData(String inputFile) {
 		return readFile(inputFile);
 		
 	}
@@ -186,9 +185,8 @@ public class GameData {
 	 * reads in file and (supposed) to fill in appropriate game data
 	 * @param file the file that contains the data
 	 * @return a GameData object that contains the added data or null if no file found(no season created)
-	 * @throws Exception If game aleady started, will throw exception.
 	 */
-	private static GameData readFile(String file) throws Exception{
+	private static GameData readFile(String file) {
 		GameData g=null;
 		try {
 			/*
@@ -234,5 +232,4 @@ public class GameData {
 	public static void endCurrentGame() {
 		GameData.currentGame = null;
 	}
-
 }

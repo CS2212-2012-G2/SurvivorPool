@@ -9,6 +9,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import data.GameData;
+
 public class PlayerTablePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -23,8 +25,12 @@ public class PlayerTablePanel extends JPanel {
 	public PlayerTablePanel() {
 		super();
 		
-		tableModel = new PlayerTableModel(columnNames);
+		tableModel = new PlayerTableModel(columnNames, 
+				GameData.getCurrentGame().getAllContestants());
 		table = new JTable(tableModel);
+		table.getTableHeader().setReorderingAllowed(false); // no moving.
+		table.setColumnSelectionAllowed(true);
+		
 	
 		JScrollPane scroll = new JScrollPane(table);
 		

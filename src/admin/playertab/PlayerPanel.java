@@ -20,10 +20,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import data.Contestant;
+
 import admin.Main;
 
 
 public class PlayerPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 
 	private JLabel imgDisplay;
 
@@ -46,16 +50,16 @@ public class PlayerPanel extends JPanel {
 	
 	private PlayerTablePanel paneTable;
 	
+	private static Contestant INACTIVE_CONT = new Contestant();
+	private Contestant activeCon = INACTIVE_CONT;
+	
 	
 	public PlayerPanel(){
 		paneTop = new JPanel();
 		paneTop.setLayout(new BoxLayout(paneTop, BoxLayout.X_AXIS));
 		
 		// TODO: Resize?
-		String path = "res/test/defaultpic.png"; //apparently images have to be .png and alphanumeric
-		ImageIcon imgD = new ImageIcon(path);
-		imgDisplay = new JLabel("a");
-		imgDisplay.setIcon(imgD);
+		imgDisplay = new JLabel();
 		
 		/// Edit fields:
 		labelName = new JLabel("Name:");
@@ -64,9 +68,9 @@ public class PlayerPanel extends JPanel {
 		tfLastName = new JTextField();
 		tfLastName.setSize(200, 50);
 		
-		labelCastOff = new JLabel("Date Cast of:");
+		labelCastOff = new JLabel("Cast of:");
 		// TODO: FIx the init of this.. :>
-		labelCastStatus = new JLabel("ASDFasdfasdfasdfasdf");
+		labelCastStatus = new JLabel("-");
 		
 		labelTribe = new JLabel("Tribe:");
 		cbTribe = new JComboBox<String>(Main.getGameData().getTribeNames());
@@ -114,4 +118,74 @@ public class PlayerPanel extends JPanel {
 		add(paneTable);
 		
 	}
+	
+	private Contestant getCurrentContestant() {
+		//return new Contestant()
+		return null;
+	}
+	
+	/**
+	 * Updates the image displayed to have the path associated, helper method
+	 * <br>
+	 * <b>Note:</b> Pictures must be PNG format.
+	 * @param path Path to new image.
+	 */
+	private void updateContPicture(String path) {
+		//apparently images have to be .png and alphanumeric
+		try {
+			Image img = ImageIO.read(new File(path));
+			
+			// NO IO errors occured if getting here:
+			ImageIcon imgD = new ImageIcon(img);
+			imgDisplay.setIcon(imgD);
+		} catch (IOException e) {
+			System.out.println("Exception loading image for contestant " +
+					"picture [" + path + "]");
+			imgDisplay.setIcon(null);
+			imgDisplay.setText("Could not load: " + path);
+		}
+		
+	}
+	
+	private void setActiveContestant(Contestant c) {
+		if (c == INACTIVE_CONT) {
+			tfFirstName.setText("");
+			tfLastName.setText("");
+			labelCastStatus.setText("-");
+			cbTribe.setSelectedItem(0);
+			
+			// TODO: Make a picture of an X or some shit for nothing loaded
+			//updateContPicture(SOMEPATH);
+		}
+		
+		activeCon = c;
+		
+		tfFirstName.setText(c.getFirstName());
+		tfLastName.setText(c.getLastName());
+		
+		if (c.isCastOff()) {
+			labelCastStatus.setText("Week: " + c.getCastDate());
+		} else {
+			labelCastStatus.setText("Active");
+		}
+		
+		cbTribe.setSelectedItem(c.getTribe());
+		
+		updateContPicture(c.getPicture());
+	}
+	
+	private void buildActions() {
+		ActionListener addListener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// check if the contestant is active
+				if (activeCon == INACTIVE_CONT)
+					return;
+				
+			}
+			
+		};
+	}
+	
 }

@@ -15,7 +15,7 @@ public class Contestant {
 	// player information
 	private String firstName, lastName, tribe, picture;
 	private int castDate = -1; // week that player was cast off
-	private int cID;
+	private String cID;
 
 	/**
 	 * Constructor method for type contestant sets player info
@@ -30,17 +30,15 @@ public class Contestant {
 	 *            contestant's tribe
 	 */
 
-	public Contestant(int _id, String first, String last, String _tribe) {
+	public Contestant(String first, String last, String _tribe) {
 		firstName = first;
 		lastName = last;
 		tribe = _tribe;
-		cID = _id;
 	}
 
 	// ------------------ ACCESSOR METHODS -----------------//
 
-	public Contestant(int _id) {
-		cID = _id;
+	public Contestant() {
 	}
 
 	/**
@@ -149,16 +147,18 @@ public class Contestant {
 	}
 
 	/**
-	 * Returns the contestant's unique ID number
-	 * @return assigned ID number
+	 * Returns the contestant's unique ID tag
+	 * @return assigned ID tag
 	 */
-	public int getID() {
+	public String getID() {
 		return cID;
 	}
 	
 	//////////////////
 	/// SUBCLASSES
 	//////////////////
+	
+	// TODO: Fix the javadocs
 	/**
 	 * Compares two Contestants by ID for sorting.
 	 * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, 
@@ -168,7 +168,7 @@ public class Contestant {
 	public static class ComparatorID implements Comparator<Contestant> {
 		@Override
 		public int compare(Contestant c1, Contestant c2) {
-			return (c1.getID() - c2.getID());
+			return (c1.getID().compareTo(c2.getID()));
 		}
 	}
 	
