@@ -72,7 +72,7 @@ public class GameData {
 	 *            desired contestant
 	 * @return contestant or string object
 	 */
-	public Object getContestant(String first, String last) {
+	public Contestant getContestant(String first, String last) {
 		Contestant j; 
 		// loop through array
 		for(int i = 0; i <= numContestants; i++){
@@ -82,7 +82,7 @@ public class GameData {
 			}
 		}
 		// otherwise return message saying contestant is no longer/is not in the game
-		return new String("Contestant is not currently active in the game.");
+		return null;
 	}
 	
 	/**
