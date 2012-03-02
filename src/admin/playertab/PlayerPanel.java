@@ -23,6 +23,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import sun.awt.VerticalBagLayout;
+
 import data.Contestant;
 import data.GameData;
 
@@ -34,6 +36,7 @@ public class PlayerPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JButton imgDisplay;
+	private String imgPath;
 
 	private EditPlayerFieldsPanel paneEditFields;
 	// container for top stuff
@@ -93,19 +96,6 @@ public class PlayerPanel extends JPanel {
 		bCastOff = new JButton("Cast Off");
 		bSavePlayer = new JButton("Save");
 		
-		bSavePlayer.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String pattern = "[A-Za-z]{1,20}";
-				if(!Main.checkString(tfFirstName.getText(), pattern)||
-						!Main.checkString(tfLastName.getText(), pattern)){
-					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
-				}
-			}
-			
-		});
-		
 		imgDisplay.addActionListener(new ActionListener(){
 
 			@Override
@@ -114,9 +104,7 @@ public class PlayerPanel extends JPanel {
 				int ret = fc.showOpenDialog(null);
 				if(ret==JFileChooser.APPROVE_OPTION){
 					//File f = fc.getSelectedFile();
-					ImageIcon i = new ImageIcon(fc.getSelectedFile().getAbsolutePath());
-					imgDisplay.setIcon(i);
-					
+					updateContPicture(fc.getSelectedFile().getAbsolutePath());
 				}
 				
 				
@@ -141,6 +129,7 @@ public class PlayerPanel extends JPanel {
 		tableModel = new PlayerTableModel(GameData.getCurrentGame().getAllContestants());
 		paneTable = new PlayerTablePanel(tableModel);
 		
+		setLayout(new VerticalBagLayout(5));
 		
 		add(paneTop);
 		add(paneTable);
@@ -164,10 +153,13 @@ public class PlayerPanel extends JPanel {
 		activeCon.setFirstName(tfFirstName.getText());
 		activeCon.setLastName(tfLastName.getText());
 		activeCon.setTribe((String)cbTribe.getSelectedItem());
+		activeCon.setPicture(imgPath);
 		
-		if (newCont)
-			activeCon.generateID();
-		
+		if (newCont) {
+			String newID = GameData.getCurrentGame().generateContestantID(activeCon);
+			activeCon.setID(newID);
+		}
+			
 		x = activeCon;
 		activeCon = INACTIVE_CONT;
 		
@@ -185,9 +177,13 @@ public class PlayerPanel extends JPanel {
 		try {
 			Image img = ImageIO.read(new File(path));
 			
+			img = img.getScaledInstance(imgDisplay.getWidth()-2, 
+					imgDisplay.getHeight()-2, Image.SCALE_FAST);
+			
 			// NO IO errors occured if getting here:
 			ImageIcon imgD = new ImageIcon(img);
 			imgDisplay.setIcon(imgD);
+			imgPath = path;
 		} catch (IOException e) {
 			System.out.println("Exception loading image for contestant " +
 					"picture [" + path + "]");
@@ -230,6 +226,13 @@ public class PlayerPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String pattern = "[A-z\\s]{1,20}";
+				if(!Main.checkString(tfFirstName.getText().trim(), pattern)||
+						!Main.checkString(tfLastName.getText().trim(), pattern)){
+					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
+					return;
+				}
+				
 				// check if the contestant is active
 				Contestant con = getCurrentContestant();
 				

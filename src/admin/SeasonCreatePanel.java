@@ -116,7 +116,6 @@ public class SeasonCreatePanel extends JPanel {
 					buffWrite.write("Tribe_2_Name: " + txtTribe2.getText()); // 3rd line
 					buffWrite.newLine();
 					buffWrite.close(); // close the file
-					//TODO:Go to next panel
 					Main.seasonCreated();
 				} catch (Exception i) {
 					i.printStackTrace();
@@ -145,7 +144,7 @@ public class SeasonCreatePanel extends JPanel {
 	 * @return boolean depending if tribe names are alphanumber and between 1-30 characters
 	 */
 	private boolean checkValidTribeNames(){
-		String pattern = "\\w{1,30}";//regex for alphanumeric and between 1-30 characters long
+		String pattern = "[A-z\\s]{1,30}";//regex for alphanumeric and between 1-30 characters long
 		return Main.checkString(txtTribe1.getText(),pattern)
 				&&Main.checkString(txtTribe2.getText(),pattern);
 	}

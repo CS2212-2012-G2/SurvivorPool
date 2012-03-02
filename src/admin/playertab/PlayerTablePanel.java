@@ -29,7 +29,7 @@ public class PlayerTablePanel extends JPanel {
 	
 		JScrollPane scroll = new JScrollPane(table);
 		
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(5, 5));
 		add(scroll, BorderLayout.CENTER);
 	}
 	

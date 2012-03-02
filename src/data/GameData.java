@@ -191,7 +191,7 @@ public class GameData {
 		if (c.getLastName() == null ||
 				c.getFirstName() == null) {
 			System.out.println("generateContestantID: first or last name null");
-			return null;
+			return new String();
 		}
 		
 		// build all the currently used IDs
@@ -202,13 +202,14 @@ public class GameData {
 		}
 		
 		String newID;
-		int lastSub = Math.min(5, c.getLastName().length() - 1);
+		String lastName = c.getLastName().replaceAll("\\s+","");
+		int lastSub = Math.min(6, lastName.length());
 		int num = 0;
 		do {
 			// take the first letter of first name
 			// take substring of lastName length 6 or full name
 			newID = c.getFirstName().charAt(0) 
-					+ c.getLastName().substring(0, lastSub);
+					+ lastName.substring(0, lastSub);
 			if (num != 0) {
 				newID += Integer.toString(num);
 			}
