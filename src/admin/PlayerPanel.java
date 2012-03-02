@@ -1,13 +1,21 @@
 package admin;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class PlayerPanel extends JPanel {
 
@@ -21,19 +29,51 @@ public class PlayerPanel extends JPanel {
 	private JButton bCastOff;
 	private JButton bSavePlayer;
 	
+	private JLabel labelName;
+	// TODO: Refactor to something more obvious?
+	private JLabel labelCastOff;
+	private JLabel labelCastStatus;
+	private JLabel labelTribe;
+	
+	private JTextField tfFirstName;
+	private JTextField tfLastName;
+	private JComboBox<String> cbTribe;
+	
 	
 	public PlayerPanel(){
 		paneTop = new JPanel();
 		paneTop.setLayout(new BoxLayout(paneTop, BoxLayout.X_AXIS));
 		
-		// TODO: Resize?
-		String path = "res/test/Russel-hantzSmall.jpg";
-		imgData = new ImageIcon(path);
-		imgDisplay = new JLabel(imgData);
+		// TODO: Make the image load
+		String path = "res/test/Russell-hantzSmall.jpg";
+		Image img;
+		/*try {
+			img = ImageIO.read(new File(path));
+			imgData = new ImageIcon(img);
+		} catch (IOException e) {
+			// should never read unknown place.
+		}*/
+		imgDisplay = new JLabel();
+		imgDisplay.setIcon(imgData);
 		
+		/// Edit fields:
+		labelName = new JLabel("Name:");
+		tfFirstName = new JTextField();
+		tfFirstName.setSize(200, 50);
+		tfLastName = new JTextField();
+		tfLastName.setSize(200, 50);
+		
+		labelCastOff = new JLabel("Date Cast of:");
+		// TODO: FIx the init of this.. :>
+		labelCastStatus = new JLabel("ASDFasdfasdfasdfasdf");
+		
+		labelTribe = new JLabel("Tribe:");
+		cbTribe = new JComboBox<String>(new String[] {"SEXY", "MORE SEXY"});
 		
 		// holds all the fields
-		paneEditFields = new EditPlayerFieldsPanel(new String[] {"SEXY", "MORE SEXY"});
+		paneEditFields = new EditPlayerFieldsPanel(labelName, labelCastOff, 
+				labelCastStatus, labelTribe, tfFirstName, tfLastName, 
+				cbTribe);
 		
 		// buttons:
 		bCastOff = new JButton("Cast Off");

@@ -16,6 +16,7 @@ import data.Contestant;
 
 public class EditPlayerFieldsPanel extends JPanel {
 	
+	// Store external references:
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
@@ -24,18 +25,27 @@ public class EditPlayerFieldsPanel extends JPanel {
 	
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
-	// XXX: Can someone explain this, why is it <X>?
 	private JComboBox<String> cbTribe;
 	
+	// store internal
 	private JPanel paneField;
 	private GridBagLayout gbFields;
 	private GridBagConstraints gbFieldsConst;
 	
-	// TODO: Reorder the parameters
-	public EditPlayerFieldsPanel(String[] tribes) {
-		/*gridBag = new GridBagLayout();
-		gbConst = new GridBagConstraints();
-		setLayout(gridBag);*/
+	
+	public EditPlayerFieldsPanel(JLabel _labelName, JLabel _labelCastOff, 
+			JLabel _labelCastStatus, JLabel _labelTribe, 
+			JTextField _tfFirstName, JTextField _tfLastName, 
+			JComboBox<String> _cbTribe) {
+		// passed in
+		labelName = _labelName;
+		labelCastOff = _labelCastOff;
+		labelCastStatus = _labelCastStatus;
+		labelTribe = _labelTribe;
+		
+		tfFirstName = _tfFirstName;
+		tfLastName = _tfLastName;
+		cbTribe = _cbTribe;
 		
 		paneField = new JPanel();
 		paneField.setSize(500, 500);
@@ -43,19 +53,7 @@ public class EditPlayerFieldsPanel extends JPanel {
 		gbFieldsConst = new GridBagConstraints();
 		paneField.setLayout(gbFields);
 		
-		/// Edit fields:
-		labelName = new JLabel("Name:");
-		tfFirstName = new JTextField();
-		tfFirstName.setSize(200, 50);
-		tfLastName = new JTextField();
-		tfLastName.setSize(200, 50);
 		
-		labelCastOff = new JLabel("Date Cast of:");
-		// TODO: FIx the init of this.. :>
-		labelCastStatus = new JLabel("ASDFasdfasdfasdfasdf");
-		
-		labelTribe = new JLabel("Tribe:");
-		cbTribe = new JComboBox<String>(tribes);
 		
 		setupGridBag(gbFields, gbFieldsConst);
 		
@@ -123,8 +121,8 @@ public class EditPlayerFieldsPanel extends JPanel {
 			}
 		});
 		
-		EditPlayerFieldsPanel main = new EditPlayerFieldsPanel(new String[] {"SEXY", "MORE SEXY"});
-		f.add(main);
+		//EditPlayerFieldsPanel main = new EditPlayerFieldsPanel(new String[] {"SEXY", "MORE SEXY"});
+		//f.add(main);
 		
 		f.pack();
 		f.setSize(f.getPreferredSize());
