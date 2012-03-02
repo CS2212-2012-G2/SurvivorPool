@@ -47,7 +47,7 @@ public class GeneralPanel extends JPanel {
 		splitPane.setDividerLocation(320);
 		
 		//TODO: actually set info here rather than just weeks.
-		lblGenInfo.setText(Integer.toString(gd.weeksLeft())+" weeks left(DATA PERSISTENCE!)");
+		lblGenInfo.setText(Integer.toString(gd.weeksLeft())+" weeks left(DATA PERSISTENCE! Doesn't change unless season created)");
 		pnlInfo.add(splitPane,BorderLayout.CENTER);
 		pnlInfo.setPreferredSize(new Dimension(450,400));
 		this.add(pnlInfo);
