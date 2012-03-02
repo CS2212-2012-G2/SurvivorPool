@@ -1,5 +1,9 @@
 package data;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -166,7 +170,26 @@ public class GameData {
 	 * @return GameData object made out of file
 	 */
 	public static GameData intGameData(String inputFile){
-		throw new NotImplementedException();
+		return readFile(inputFile);
+		
+		//throw new NotImplementedException();
+	}
+	
+	private static GameData readFile(String file){
+		GameData g=null;
+		try {
+			Scanner scan = new Scanner(new File(file));
+			scan.next();
+			int numContestants =scan.nextInt();
+			
+			g = new GameData(numContestants);
+			
+			//TODO:might not need seasonmade..
+			g.seasonMade();
+		} catch (FileNotFoundException e) {
+					
+		}
+		return g;
 	}
 
 }

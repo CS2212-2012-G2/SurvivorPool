@@ -41,9 +41,9 @@ public class Main extends JFrame{
 	
 	public Main(){
 		//TODO:get gamedata from initGamedata
-		gd = new GameData(10);
+		gd = GameData.intGameData("src/data/SeasonSettings");
 		//TODO:change to use game data
-		if(false)
+		if(gd!=null)
 			initGUI();
 		else
 			initSeasonCreateGUI();
