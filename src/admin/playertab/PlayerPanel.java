@@ -7,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -29,9 +32,9 @@ import admin.Main;
 
 public class PlayerPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-
 	private JLabel imgDisplay;
+	private static final long serialVersionUID = 1L;
+	private JButton imgDisplay;
 
 	private EditPlayerFieldsPanel paneEditFields;
 	// container for top stuff
@@ -63,7 +66,10 @@ public class PlayerPanel extends JPanel {
 		paneTop.setLayout(new BoxLayout(paneTop, BoxLayout.X_AXIS));
 		
 		// TODO: Resize?
-		imgDisplay = new JLabel();
+		String path = "res/test/defaultpic.png"; //apparently images have to be .png and alphanumeric
+		ImageIcon imgD = new ImageIcon(path);
+		imgDisplay = new JButton();
+		imgDisplay.setIcon(imgD);
 		
 		/// Edit fields:
 		labelName = new JLabel("Name:");
@@ -97,6 +103,24 @@ public class PlayerPanel extends JPanel {
 						!Main.checkString(tfLastName.getText(), pattern)){
 					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
 				}
+			}
+			
+		});
+		
+		imgDisplay.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				int ret = fc.showOpenDialog(null);
+				if(ret==JFileChooser.APPROVE_OPTION){
+					//File f = fc.getSelectedFile();
+					ImageIcon i = new ImageIcon(fc.getSelectedFile().getAbsolutePath());
+					imgDisplay.setIcon(i);
+					
+				}
+				
+				
 			}
 			
 		});

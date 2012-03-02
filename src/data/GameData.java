@@ -179,7 +179,6 @@ public class GameData {
 	 */
 	public static GameData initGameData(String inputFile){
 		readFile(inputFile);
-		System.out.println(currentGame.weeksLeft());
 		return currentGame;
 	}
 	
