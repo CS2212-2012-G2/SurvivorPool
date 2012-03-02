@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -86,7 +87,7 @@ public class PlayerPanel extends JPanel {
 				String pattern = "[A-Za-z]{1,20}";
 				if(!Main.checkString(tfFirstName.getText(), pattern)||
 						!Main.checkString(tfLastName.getText(), pattern)){
-					System.out.println("invalid");
+					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
 				}
 			}
 			
