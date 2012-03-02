@@ -26,6 +26,8 @@ public class GameData {
 															// contestants
 	private String[] tribeNames = new String[2]; // string array storing both tribe names
 
+	private static GameData currentGame = null;
+	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
 	 * proceed if numContestants is NOT between 6 and 15, inclusive. Sets number
@@ -33,8 +35,12 @@ public class GameData {
 	 * 
 	 * @param numContestants
 	 *            number of contestants to be in game
+	 * @throws Exception If game already started, won't init a new one.
 	 */
-	public GameData(int numContestants) {
+	public GameData(int numContestants) throws Exception {
+		if (currentGame != null)
+			throw new Exception("ERROR: GAME ALREADY IN SESSION.");
+		
 		// check if within parameters
 		if(numContestants > 15 || numContestants < 6)
 			return; // if not, do not create GameData item
@@ -43,6 +49,7 @@ public class GameData {
 		weeksPassed = 0;
 		this.numContestants = numContestants;
 		
+		currentGame = this;
 	}
 
 	// ----------------- ACCESSOR METHODS -----------------//
@@ -168,8 +175,9 @@ public class GameData {
 	 * 
 	 * @param inputFile   file to be read in
 	 * @return GameData object made out of file or null if season not created
+	 * @throws Exception Thrown if game already started.
 	 */
-	public static GameData intGameData(String inputFile){
+	public static GameData intGameData(String inputFile) throws Exception{
 		return readFile(inputFile);
 		
 	}
@@ -178,8 +186,9 @@ public class GameData {
 	 * reads in file and (supposed) to fill in appropriate game data
 	 * @param file the file that contains the data
 	 * @return a GameData object that contains the added data or null if no file found(no season created)
+	 * @throws Exception If game aleady started, will throw exception.
 	 */
-	private static GameData readFile(String file){
+	private static GameData readFile(String file) throws Exception{
 		GameData g=null;
 		try {
 			/*
@@ -208,6 +217,22 @@ public class GameData {
 					
 		}
 		return g;
+	}
+	
+	/**
+	 * Returns the currently stored Game, this removed need to reference the
+	 * game data all the time. But also allows objects to read data, cleanly.
+	 * @return Currently started game, null if none present.
+	 */
+	public static GameData getCurrentGame() {
+		return GameData.currentGame;
+	}
+	
+	/**
+	 * Nulls the current game stored, allows a new game to start.
+	 */
+	public static void endCurrentGame() {
+		GameData.currentGame = null;
 	}
 
 }
