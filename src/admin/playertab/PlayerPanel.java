@@ -70,11 +70,9 @@ public class PlayerPanel extends JPanel {
 		paneTop = new JPanel();
 		paneTop.setLayout(new BorderLayout(10, 10));
 		
-		// TODO: Resize?
-		String path = "res/test/defaultpic.png"; //apparently images have to be .png and alphanumeric
-		ImageIcon imgD = new ImageIcon(path);
+		// TODO: Better Test picture
 		imgDisplay = new JButton();
-		imgDisplay.setIcon(imgD);
+		updateContPicture("res/test/defaultpic.png"); //apparently images have to be .png and alphanumeric
 		
 		/// Edit fields:
 		labelName = new JLabel("Name:");
