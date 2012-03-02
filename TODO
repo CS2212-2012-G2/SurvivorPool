@@ -1,6 +1,8 @@
 TODO
 ====
 
+If there is nothing written here, just grep the entire project for TODO
+
 Client (BB)
 ------
 
@@ -53,6 +55,10 @@ Admin (SWING)
 		
 		- CHANGE TAB SIZE
 		- IMPLEMENT THEMES
+			- MARK WHICH THEME IS ACTIVE AT START
+				activeTheme.setSelected() or could use doClick() which would programatically call the action listener associated
+			- Create action listeners for each item to set the theme
+			- Set how to iterate updating items, easiest is probably setting most objects to have transparent backgrounds
 	
 	GeneralPanel.java
 	
@@ -62,7 +68,24 @@ Admin (SWING)
 	PlayerPanel.java
 	
 		- EVERYTHING!
+		- Loading an image into the icon, should check size and resize if necessary
 	
 	UserPanel.java
 	
 		- EVERYTHING!
+		
+	SeasonCreatePanel.java
+		
+		-MAKE CREATE SEASON BUTTON TO SWITCH TO START SCREEN PANEL
+		-IMPLEMENT THEMES
+		
+Data
+----
+
+	GameData
+		- Constestant ID functions, generate new one, delete
+		- Statically get the current week for cast off options etc
+		
+	Contestant
+		- ID generation some how.. and when to call it!
+		
