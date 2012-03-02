@@ -27,10 +27,10 @@ public class PlayerPanel extends JPanel {
 		paneTop.setLayout(new BoxLayout(paneTop, BoxLayout.X_AXIS));
 		
 		// TODO: Resize?
-		String path = "res/test/Russel-hantzSmall.jpg";
-		imgData = new ImageIcon(path);
-		imgDisplay = new JLabel(imgData);
-		
+		String path = "res/test/defaultpic.png"; //apparently images have to be .png and alphanumeric
+		ImageIcon imgD = new ImageIcon(path);
+		imgDisplay = new JLabel("a");
+		imgDisplay.setIcon(imgD);
 		
 		// holds all the fields
 		paneEditFields = new EditPlayerFieldsPanel(new String[] {"SEXY", "MORE SEXY"});
