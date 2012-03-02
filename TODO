@@ -59,7 +59,8 @@ Admin (SWING)
 				activeTheme.setSelected() or could use doClick() which would programatically call the action listener associated
 			- Create action listeners for each item to set the theme
 			- Set how to iterate updating items, easiest is probably setting most objects to have transparent backgrounds
-	
+		- Implement a "status bar" at the bottom of the screen to show messages
+		
 	GeneralPanel.java
 	
 		- CHANGE LAYOUT TO USE ENTIRE SCREEN

@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import sun.awt.HorizBagLayout;
 import sun.awt.VerticalBagLayout;
 
 import data.Contestant;
@@ -61,11 +62,13 @@ public class PlayerPanel extends JPanel {
 	private Contestant activeCon = INACTIVE_CONT;
 
 	private PlayerTableModel tableModel;
+	private JTextField tfContID;
+	private JLabel labelID;
 	
 	
 	public PlayerPanel(){
 		paneTop = new JPanel();
-		paneTop.setLayout(new BoxLayout(paneTop, BoxLayout.X_AXIS));
+		paneTop.setLayout(new BorderLayout(10, 10));
 		
 		// TODO: Resize?
 		String path = "res/test/defaultpic.png"; //apparently images have to be .png and alphanumeric
@@ -87,10 +90,13 @@ public class PlayerPanel extends JPanel {
 		labelTribe = new JLabel("Tribe:");
 		cbTribe = new JComboBox<String>(GameData.getCurrentGame().getTribeNames());
 		
+		labelID = new JLabel("ID:");
+		tfContID = new JTextField();
+		
 		// holds all the fields
-		paneEditFields = new EditPlayerFieldsPanel(labelName, labelCastOff, 
-				labelCastStatus, labelTribe, tfFirstName, tfLastName, 
-				cbTribe);
+		paneEditFields = new EditPlayerFieldsPanel(labelName, tfFirstName, 
+				tfLastName, labelID, tfContID, labelCastOff, 
+				labelCastStatus, labelTribe, cbTribe);
 		
 		// buttons:
 		bCastOff = new JButton("Cast Off");
@@ -121,9 +127,9 @@ public class PlayerPanel extends JPanel {
 		paneButtons.add(bSavePlayer);
 		
 		// add all components on top:
-		paneTop.add(imgDisplay);
-		paneTop.add(paneEditFields);
-		paneTop.add(paneButtons);
+		paneTop.add(imgDisplay, BorderLayout.LINE_START);
+		paneTop.add(paneEditFields, BorderLayout.CENTER);
+		paneTop.add(paneButtons, BorderLayout.LINE_END);
 		
 		// bottom panel
 		tableModel = new PlayerTableModel(GameData.getCurrentGame().getAllContestants());

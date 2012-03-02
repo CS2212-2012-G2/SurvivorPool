@@ -2,6 +2,7 @@ package admin.playertab;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -23,20 +24,24 @@ public class EditPlayerFieldsPanel extends JPanel {
 	private JLabel labelCastStatus;
 	private JLabel labelTribe;
 	
+	private JLabel labelID;
+	private JTextField tfContID;
+	
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
 	private JComboBox<String> cbTribe;
 	
 	// store internal
-	private JPanel paneField;
 	private GridBagLayout gbFields;
 	private GridBagConstraints gbFieldsConst;
 	
 	
-	public EditPlayerFieldsPanel(JLabel _labelName, JLabel _labelCastOff, 
-			JLabel _labelCastStatus, JLabel _labelTribe, 
-			JTextField _tfFirstName, JTextField _tfLastName, 
-			JComboBox<String> _cbTribe) {
+	public EditPlayerFieldsPanel(JLabel _labelName, JTextField _tfFirstName, 
+			JTextField _tfLastName, JLabel _labelID, 
+			JTextField _tfContID, JLabel _labelCastOff, 
+			JLabel _labelCastStatus, JLabel _labelTribe, JComboBox<String> _cbTribe) {
+		super();
+		
 		// passed in
 		labelName = _labelName;
 		labelCastOff = _labelCastOff;
@@ -47,61 +52,87 @@ public class EditPlayerFieldsPanel extends JPanel {
 		tfLastName = _tfLastName;
 		cbTribe = _cbTribe;
 		
-		paneField = new JPanel();
-		paneField.setSize(500, 500);
+		labelID = _labelID;
+		tfContID = _tfContID;
+		
 		gbFields = new GridBagLayout();
 		gbFieldsConst = new GridBagConstraints();
-		paneField.setLayout(gbFields);
 		
-		
-		
+		setLayout(gbFields);
 		setupGridBag(gbFields, gbFieldsConst);
-		
-		add(paneField);
 	}
 	
 	private void setupGridBag(GridBagLayout gbl, GridBagConstraints gbc) {
+		//gbc.insets = new Insets(5, 5, 5, 5);
+		
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
 		gbc.weighty = 0.5;
 		gbc.weightx = 0.5;
-		
-		// first row: [Name Label] [First Name] [Last Name]
-		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.LINE_START;
-		paneField.add(labelName, gbc);
 		
+		// row: [Name Label] [First Name] [Last Name]
+		gbc.gridx = 0;
+		gbc.gridy++;
+		gbc.weightx = 0.25;
+		gbc.insets = new Insets(0, 0, 5, 10);
+		gbc.anchor = GridBagConstraints.LINE_START;
+		add(labelName, gbc);
+		
+		gbc.weightx = 0.5;
 		gbc.gridx = GridBagConstraints.RELATIVE;
 		gbc.anchor = GridBagConstraints.CENTER;
-		paneField.add(tfFirstName, gbc);
+		gbc.insets = new Insets(0, 0, 5, 5);
+		add(tfFirstName, gbc);
 		
 		gbc.anchor = GridBagConstraints.LINE_END;
-		paneField.add(tfLastName, gbc);
+		gbc.insets = new Insets(0, 0, 5, 0);
+		add(tfLastName, gbc);
 		
-		// second row: [Date Label] [Active Label]
+		// row: [ID Label] [ID TextEdit]
 		gbc.gridx = 0;
-		gbc.gridy = 1;
+		gbc.gridy++;
+		gbc.weightx = 0.25;
 		gbc.anchor = GridBagConstraints.LINE_START;
-		paneField.add(labelCastOff, gbc);
+		gbc.insets = new Insets(0, 0, 5, 10);
+		add(labelID, gbc);
 		
-		gbc.gridx = 1;
-		gbc.gridwidth = 2; // finish the row
-		gbc.anchor = GridBagConstraints.LINE_END;
-		paneField.add(labelCastStatus, gbc);
+		gbc.weightx = 0.5;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.gridx = GridBagConstraints.RELATIVE;
+		gbc.insets = new Insets(0, 0, 5, 0);
+		add(tfContID, gbc);
+		
+		
+		// row: [Date Label] [Active Label]
+		gbc.gridx = 0;
 		gbc.gridwidth = 1;
-		
-		// last row: [Combo Label] [Combo Box]
-		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridy++;
 		gbc.anchor = GridBagConstraints.LINE_START;
-		paneField.add(labelTribe, gbc);
+		gbc.insets = new Insets(0, 0, 5, 10);
+		add(labelCastOff, gbc);
 		
-		gbc.gridx = 1;
+		gbc.gridx = GridBagConstraints.RELATIVE;
+		gbc.gridwidth = GridBagConstraints.REMAINDER; // finish the row
+		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.insets = new Insets(0,0,5,0);
+		add(labelCastStatus, gbc);
+		
+		
+		// row: [Combo Label] [Combo Box]
+		gbc.gridx = 0;
+		gbc.gridy++;
+		gbc.gridwidth = 1;
+		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.insets = new Insets(0, 0, 5, 10);
+		add(labelTribe, gbc);
+		
+		gbc.gridx = GridBagConstraints.RELATIVE;
 		gbc.anchor = GridBagConstraints.LINE_END;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		paneField.add(cbTribe, gbc);
+		gbc.insets = new Insets(0, 0, 5, 0);
+		add(cbTribe, gbc);
 	}
 	
 	// TODO: Implement
@@ -111,22 +142,5 @@ public class EditPlayerFieldsPanel extends JPanel {
 	 */
 	public void setEditPane(Contestant c) {
 		return;
-	}
-	
-	public static void main(String args[]) {
-		JFrame f = new JFrame();
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		
-		//EditPlayerFieldsPanel main = new EditPlayerFieldsPanel(new String[] {"SEXY", "MORE SEXY"});
-		//f.add(main);
-		
-		f.pack();
-		f.setSize(f.getPreferredSize());
-		
-		f.setVisible(true);
 	}
 }
