@@ -38,6 +38,10 @@ public class Contestant {
 
 	// ------------------ ACCESSOR METHODS -----------------//
 
+	public Contestant(int _id) {
+		cID = _id;
+	}
+
 	/**
 	 * getFirstName returns the contestant's first name
 	 * 

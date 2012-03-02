@@ -1,4 +1,4 @@
-package admin;
+package admin.playertab;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -16,6 +16,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import admin.EditPlayerFieldsPanel;
 
 public class PlayerPanel extends JPanel {
 
@@ -38,6 +40,8 @@ public class PlayerPanel extends JPanel {
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
 	private JComboBox<String> cbTribe;
+	
+	private PlayerTablePanel paneTable;
 	
 	
 	public PlayerPanel(){
@@ -92,6 +96,12 @@ public class PlayerPanel extends JPanel {
 		paneTop.add(paneEditFields);
 		paneTop.add(paneButtons);
 		
+		// bottom panel
+		paneTable = new PlayerTablePanel();
+		
+		
 		add(paneTop);
+		add(paneTable);
+		
 	}
 }

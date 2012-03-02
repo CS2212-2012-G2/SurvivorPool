@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import admin.playertab.PlayerPanel;
+
 import data.GameData;
 
 public class Main extends JFrame{

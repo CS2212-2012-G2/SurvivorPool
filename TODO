@@ -80,3 +80,11 @@ Admin (SWING)
 		
 		-MAKE CREATE SEASON BUTTON TO SWITCH TO START SCREEN PANEL
 		-IMPLEMENT THEMES
+		
+Data
+----
+
+	GameData
+		- Constestant ID functions, generate new one, delete
+		- Statically get the current week for cast off options etc
+		
