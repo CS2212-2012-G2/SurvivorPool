@@ -1,5 +1,6 @@
 package admin.playertab;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -23,6 +24,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	public static final int INDEX_DATECAST = 5;
 	
 	private int sortColumn = INDEX_LASTNAME;
+	private List<Contestant> globalData;
 	
 	/**
 	 * Creates the table model which controls the table's actions and data.
@@ -30,11 +32,12 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * @param _data	The data to work on/with. This could be an empty list, but
 	 * 			NOT null.
 	 */
-	public PlayerTableModel(List<Contestant> _data) {
+	public PlayerTableModel(List<Contestant> _globaldata) {
 		columnNames = new String[] {
 				"Select", "ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
-		data = _data;
+		globalData = _globaldata;
+		data = new ArrayList<Contestant>(globalData.size());
 	}
 	
 	@Override
@@ -220,6 +223,24 @@ public class PlayerTableModel extends AbstractTableModel {
 	}
 	
 	/**
+	 * Adds a contestant, resorts the table. Updates the stored game data.
+	 * @param c 
+	 */
+	private void addContestant(Contestant c) {
+		data.add(c);
+		sortTable();
+		
+		globalData.add(c);
+	}
+	
+	private void removeContestant(Contestant c) {
+		data.remove(c);
+		sortTable();
+		
+		globalData.remove(c);
+	}
+	
+	/**
 	 * Updates the stored contestant with the same ID to hold the currently
 	 * stored information. Overwrites everything in the current position, also
 	 * will resort the data table.
@@ -231,16 +252,16 @@ public class PlayerTableModel extends AbstractTableModel {
 		boolean found = false;
 		
 		// update the contestant if they are present
-		/*for (Contestant dataCon: data)
+		for (Contestant dataCon: data)
 			if (dataCon.getID().equals(c.getID())) {
 				int i = data.indexOf(dataCon);
-				data.set(i, c);
+				dataCon.update(c);
 				found = true;
 				// force the table to update.
 				break;
-			}*/
+			}
 		if (!found)
-			data.add(c);
+			addContestant(c);
 		
 		sortTable();
 	}

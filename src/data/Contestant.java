@@ -114,10 +114,12 @@ public class Contestant {
 
 	/**
 	 * Sets the contestant's first name.
-	 * @param name	New first name of the contestant
+	 * @param name	New first name of the contestant, must be alphabetic, 
+	 * 		between 1 and 20 chars.
 	 */
 	public void setFirstName(String name) {
-		firstName = name;
+		if (name.matches("^[A-z]{1,20}$"))
+			firstName = name;
 		
 	}
 
@@ -126,7 +128,8 @@ public class Contestant {
 	 * @param name New last name of the contestant
 	 */
 	public void setLastName(String name) {
-		lastName = name;
+		if (name.matches("^[A-z\\s]{1,20}$"))
+			lastName = name;
 		
 	}
 
@@ -152,6 +155,16 @@ public class Contestant {
 	 */
 	public String getID() {
 		return cID;
+	}
+	
+	/**
+	 * Sets the user ID to the passed ID, checks that is is of the correct 
+	 * format
+	 * @param newID the new User ID, must adhere to correct syntax.
+	 */
+	public void setID(String newID) {
+		if (newID.matches("^[A-z]{2,7}[\\d]*$"))
+			cID = newID;
 	}
 	
 	//////////////////
@@ -224,14 +237,25 @@ public class Contestant {
 		}
 	}
 	
-	
-	/**
-	 * Uses the stored first and last name, and the currently running Game to 
-	 * generate a unique user ID.
-	 */
-	// XXX: Could be abstracted into GameData?
-	public void generateID() {
-		// TODO Auto-generated method stub
+	public void update(Contestant c) {
+		if (c.getFirstName() != null) {
+			setFirstName(c.getFirstName());
+		}
 		
+		if (c.getLastName() != null) {
+			setLastName(c.getLastName());
+		}
+		
+		if (c.getID() != null) {
+			cID = c.getID();
+		}
+		
+		if (c.getPicture() != null) {
+			setPicture(c.getPicture());
+		}
+		
+		if (c.getTribe() != null) {
+			setTribe(c.getTribe());
+		}
 	}
 }
