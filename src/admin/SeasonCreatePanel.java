@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -23,6 +24,11 @@ public class SeasonCreatePanel extends JPanel {
 	JSpinner spnWeek;
 	JSpinner spnContestant;
 	boolean programChange = false; //true when spinner value changed by program
+	
+	JTextField txtTribe1;
+	JTextField txtTribe2;
+	
+	JLabel lblAlert;
 	
 	private FileWriter fileWrite = null; // I/O
 	private BufferedWriter buffWrite = null;
@@ -48,8 +54,10 @@ public class SeasonCreatePanel extends JPanel {
 		spnContestant = new JSpinner(contestantModel);
 		
 		
-		JTextField txtTribe1 = new JTextField("");
-		JTextField txtTribe2 = new JTextField("");
+		txtTribe1 = new JTextField("");
+		txtTribe2 = new JTextField("");
+		
+		lblAlert = new JLabel("");
 		
 		JButton btnCreate = new JButton("Create Season");
 		
@@ -64,7 +72,7 @@ public class SeasonCreatePanel extends JPanel {
 		this.add(lblTribe2);
 		this.add(txtTribe2);
 		this.add(btnCreate);
-
+		this.add(lblAlert);
 		spnWeek.addChangeListener(new ChangeListener(){
 
 			@Override
@@ -92,7 +100,11 @@ public class SeasonCreatePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					
+					if(!checkValidTribeNames()){
+						lblAlert.setText("Invalid tribe names!");
+						return;
+					}
+					lblAlert.setText("valid tribe names!");
 					fileWrite = new FileWriter(
 							"src/data/SeasonSettings", false);
 					buffWrite = new BufferedWriter(fileWrite);
@@ -102,7 +114,13 @@ public class SeasonCreatePanel extends JPanel {
 					tempString = spnWeek.getValue().toString();
 					buffWrite.write("Number_Of_Weeks: " + tempString); // second line
 					buffWrite.newLine();
+					buffWrite.write("Tribe_1_Name: " + txtTribe1.getText()); // 3rd line
+					buffWrite.newLine();
+					buffWrite.write("Tribe_2_Name: " + txtTribe2.getText()); // 4th line
+					buffWrite.newLine();
 					buffWrite.close(); // close the file
+					//TODO:Go to next panel
+					Main.seasonCreated();
 				} catch (Exception i) {
 				}
 				
@@ -123,6 +141,28 @@ public class SeasonCreatePanel extends JPanel {
 			spnContestant.setValue(Integer.parseInt(spnWeek.getValue().toString())+3);
 		programChange=false;
 	}
-
 	
+	/**
+	 * Checks if the tribe names are valid according to specifications.
+	 * @return boolean depending if tribe names are alphanumber and between 1-30 characters
+	 */
+	private boolean checkValidTribeNames(){
+		String pattern = "\\w{1,30}";//regex for alphanumeric and between 1-30 characters long
+		return checkString(txtTribe1.getText(),pattern)
+				&&checkString(txtTribe2.getText(),pattern);
+	}
+	
+	/**
+	 * Checks if string matches pattern.
+	 * @param val The string to check for validity
+	 * @param pattern A regex pattern that has all possible valid values
+	 * @return true if string matches pattern
+	 */
+	private boolean checkString(String val,String pattern){
+		if(val==null)
+			return false;
+		if(val.length()==0)
+			return false;
+		return Pattern.matches(pattern, val);
+	}
 }
