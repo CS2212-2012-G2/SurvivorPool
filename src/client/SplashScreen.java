@@ -137,13 +137,8 @@ public class SplashScreen extends MainScreen implements FieldChangeListener {
 
 	public boolean checkLogIn(String userID) {
 		try {
-			/* **************************************************/
-			/* CHANGE THIS CLASS PATH STUFF BASED ON OUR ENVIRONMENT PLEASE
-			 ***************************************************/
-			Class classs = Class.forName("data.SplashScreen"); 
-			InputStream is = classs.getResourceAsStream("/userData");
-			
-			
+			Class classs = Class.forName("client.SplashScreen");
+			InputStream is = classs.getResourceAsStream("src/data/userData");
 			// retrieve input file
 			String str = new String(IOUtilities.streamToBytes(is), "UTF-8");
 			// extract userIDs from input
