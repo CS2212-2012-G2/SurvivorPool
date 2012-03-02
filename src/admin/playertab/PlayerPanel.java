@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import data.Contestant;
+import data.GameData;
+
 
 import admin.Main;
 
@@ -73,7 +75,7 @@ public class PlayerPanel extends JPanel {
 		labelCastStatus = new JLabel("-");
 		
 		labelTribe = new JLabel("Tribe:");
-		cbTribe = new JComboBox<String>(Main.getGameData().getTribeNames());
+		cbTribe = new JComboBox<String>(GameData.getCurrentGame().getTribeNames());
 		
 		// holds all the fields
 		paneEditFields = new EditPlayerFieldsPanel(labelName, labelCastOff, 

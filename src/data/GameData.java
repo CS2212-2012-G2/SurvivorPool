@@ -175,19 +175,19 @@ public class GameData {
 	 * 
 	 * @param inputFile   file to be read in
 	 * @return GameData object made out of file or null if season not created
+	 * 
 	 */
-	public static GameData intGameData(String inputFile) {
-		return readFile(inputFile);
-		
+	public static GameData initGameData(String inputFile){
+		readFile(inputFile);
+		System.out.println(currentGame.weeksLeft());
+		return currentGame;
 	}
 	
 	/**
 	 * reads in file and (supposed) to fill in appropriate game data
 	 * @param file the file that contains the data
-	 * @return a GameData object that contains the added data or null if no file found(no season created)
 	 */
-	private static GameData readFile(String file) {
-		GameData g=null;
+	private static void readFile(String file) {
 		try {
 			/*
 			 * first line num cont
@@ -198,7 +198,7 @@ public class GameData {
 			scan.next(); //key value
 			int numContestants =scan.nextInt();
 			
-			g = new GameData(numContestants);
+			currentGame = new GameData(numContestants);
 			
 			scan.next();		//tribe 1 name
 			String t1 = scan.next();
@@ -206,15 +206,14 @@ public class GameData {
 			scan.next();		//tribe 2 name
 			String t2 = scan.next();
 			
-			g.setTribeNames(t1, t2);
+			currentGame.setTribeNames(t1, t2);
 			
 			
 			//TODO:might not need seasonmade..
-			g.seasonMade();
+			currentGame.seasonMade();
 		} catch (FileNotFoundException e) {
 					
 		}
-		return g;
 	}
 	
 	/**
@@ -231,5 +230,6 @@ public class GameData {
 	 */
 	public static void endCurrentGame() {
 		GameData.currentGame = null;
+		//TODO:remove data persistence file
 	}
 }

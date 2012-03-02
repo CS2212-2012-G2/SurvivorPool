@@ -25,7 +25,7 @@ public class GeneralPanel extends JPanel {
 	GameData gd;
 	
 	public GeneralPanel(){
-		gd = Main.getGameData();
+		gd = GameData.getCurrentGame();
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		initPnlInfo();
 		initPnlBonus();
