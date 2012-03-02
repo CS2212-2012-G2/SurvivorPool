@@ -223,4 +223,15 @@ public class Contestant {
 			return (c1.getCastDate() - c2.getCastDate());
 		}
 	}
+	
+	
+	/**
+	 * Uses the stored first and last name, and the currently running Game to 
+	 * generate a unique user ID.
+	 */
+	// XXX: Could be abstracted into GameData?
+	public void generateID() {
+		// TODO Auto-generated method stub
+		
+	}
 }

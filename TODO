@@ -88,3 +88,6 @@ Data
 		- Constestant ID functions, generate new one, delete
 		- Statically get the current week for cast off options etc
 		
+	Contestant
+		- ID generation some how.. and when to call it!
+		

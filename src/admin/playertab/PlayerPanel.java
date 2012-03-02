@@ -54,6 +54,8 @@ public class PlayerPanel extends JPanel {
 	
 	private static Contestant INACTIVE_CONT = new Contestant();
 	private Contestant activeCon = INACTIVE_CONT;
+
+	private PlayerTableModel tableModel;
 	
 	
 	public PlayerPanel(){
@@ -113,17 +115,37 @@ public class PlayerPanel extends JPanel {
 		paneTop.add(paneButtons);
 		
 		// bottom panel
-		paneTable = new PlayerTablePanel();
+		tableModel = new PlayerTableModel(GameData.getCurrentGame().getAllContestants());
+		paneTable = new PlayerTablePanel(tableModel);
 		
 		
 		add(paneTop);
 		add(paneTable);
 		
+		buildActions();
 	}
 	
+	/**
+	 * gets the current information with the current contestant, will update 
+	 * from the fields associated.
+	 * @return Current contestant loaded
+	 */
 	private Contestant getCurrentContestant() {
-		//return new Contestant()
-		return null;
+		boolean newCont = false;
+		
+		if (activeCon == INACTIVE_CONT) {
+			activeCon = new Contestant();
+			newCont = true;
+		}
+		
+		activeCon.setFirstName(tfFirstName.getText());
+		activeCon.setLastName(tfLastName.getText());
+		activeCon.setTribe((String)cbTribe.getSelectedItem());
+		
+		if (newCont)
+			activeCon.generateID();
+		
+		return activeCon;
 	}
 	
 	/**
@@ -182,12 +204,16 @@ public class PlayerPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// check if the contestant is active
-				if (activeCon == INACTIVE_CONT)
-					return;
+				Contestant con = getCurrentContestant();
+				
+				tableModel.updateContestant(con);
+				
+				System.out.println("We here");
 				
 			}
 			
 		};
+		bSavePlayer.addActionListener(addListener);
 	}
 	
 }

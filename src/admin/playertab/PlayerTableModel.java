@@ -29,8 +29,10 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * @param _data	The data to work on/with. This could be an empty list, but
 	 * 			NOT null.
 	 */
-	public PlayerTableModel(String[] _columnNames, List<Contestant> _data) {
-		columnNames = _columnNames;
+	public PlayerTableModel(List<Contestant> _data) {
+		columnNames = new String[] {
+				"Select", "ID", "Last Name", "First Name", "Tribe", "Date Cast"
+		};
 		data = _data;
 	}
 	
@@ -54,7 +56,7 @@ public class PlayerTableModel extends AbstractTableModel {
         Contestant player = (Contestant)data.get(row);
         switch (col) {
         case INDEX_ID:
-        	return new Integer(player.getID());
+        	return player.getID();
         
         case INDEX_FIRSTNAME:
         	return player.getFirstName();
@@ -199,7 +201,7 @@ public class PlayerTableModel extends AbstractTableModel {
         	break;
         	
         default:
-        		return;
+        	return;
         }
 		
 		Collections.sort(data, comp);
@@ -225,17 +227,20 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * @param c New contestant data.
 	 */
 	public void updateContestant(Contestant c) {
-		Contestant[] conData = (Contestant[])data.toArray();
-		for (int i = 0; i < conData.length; i++)
-			if (conData[i].getID().equals(c.getID())) {
-				data.set(i, c);
-				// force the table to update.
-				sortTable();
-				fireTableRowsUpdated(i, i);
-				return;
-			}
+		boolean found = false;
 		
-		data.add(c);
+		for (Contestant dataCon: data)
+			if (dataCon.getID().equals(c.getID())) {
+				int i = data.indexOf(dataCon);
+				data.set(i, c);
+				found = true;
+				// force the table to update.
+				break;
+			}
+		if (!found)
+			data.add(c);
+		
+		sortTable();
 	}
 
 }

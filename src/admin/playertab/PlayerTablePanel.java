@@ -16,17 +16,12 @@ public class PlayerTablePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private JTable table;
-	protected PlayerTableModel tableModel;
+	protected PlayerTableModel tableModel; 
 	
-	private String[] columnNames = new String[] {
-			"Select", "ID", "Last Name", "First Name", "Tribe", "Date Cast"
-	};
-	
-	public PlayerTablePanel() {
+	public PlayerTablePanel(PlayerTableModel model) {
 		super();
 		
-		tableModel = new PlayerTableModel(columnNames, 
-				GameData.getCurrentGame().getAllContestants());
+		tableModel = model;
 		table = new JTable(tableModel);
 		table.getTableHeader().setReorderingAllowed(false); // no moving.
 		table.setColumnSelectionAllowed(true);
