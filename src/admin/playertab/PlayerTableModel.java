@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import data.Contestant;
+import data.GameData;
 
 public class PlayerTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
@@ -23,7 +24,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	public static final int INDEX_TRIBE = 3;
 	public static final int INDEX_DATECAST = 4;
 	
-	private int sortColumn = INDEX_LASTNAME;
+	private int sortColumn = INDEX_ID;
 	private List<Contestant> globalData;
 	
 	/**
@@ -230,14 +231,14 @@ public class PlayerTableModel extends AbstractTableModel {
 		data.add(c);
 		sortTable();
 		
-		globalData.add(c);
+		GameData.getCurrentGame().addContestant(c);
 	}
 	
 	private void removeContestant(Contestant c) {
 		data.remove(c);
 		sortTable();
 		
-		globalData.remove(c);
+		GameData.getCurrentGame().removeContestant(c);
 	}
 	
 	/**
@@ -252,16 +253,22 @@ public class PlayerTableModel extends AbstractTableModel {
 		boolean found = false;
 		
 		// update the contestant if they are present
-		for (Contestant dataCon: data)
+		/*for (Contestant dataCon: data)
 			if (dataCon.getID().equals(c.getID())) {
 				int i = data.indexOf(dataCon);
 				dataCon.update(c);
 				found = true;
 				// force the table to update.
 				break;
-			}
-		if (!found)
+			}*/
+		int index = Collections.binarySearch(globalData, c,
+				new Contestant.ComparatorID());
+		
+		if (index >= 0) {
+			globalData.get(index).update(c);
+		} else {
 			addContestant(c);
+		}
 		
 		sortTable();
 	}

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+import admin.Main;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -23,7 +25,7 @@ public class GameData {
 										// passed
 	private boolean gameStarted, seasonMade = false; // true if game has started and admin can no
 									// longer add players
-	private ArrayList<Contestant> allContestants, activeContestants; // lits of
+	private ArrayList<Contestant> allContestants; // lits of
 															// all/remaining
 															// contestants
 	private String[] tribeNames = new String[2]; // string array storing both tribe names
@@ -31,6 +33,10 @@ public class GameData {
 	// store the current running version.
 
 	private static GameData currentGame = null;
+	
+	public final static String REGEX_CONTEST_ID = "^[A-z]{2,7}[\\d]*$";
+	public final static String REGEX_FIRST_NAME = "^[A-z]{1,20}$";
+	public final static String REGEX_LAST_NAME  = "^[A-z\\s]{1,20}$";
 	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -59,10 +65,16 @@ public class GameData {
 	 * getActiveContestants returns an array (list) of the contestants that are
 	 * still competing in the game.
 	 * 
-	 * @return this.activeContestants
+	 * @return The contestants active
 	 */
 	public ArrayList<Contestant> getActiveContestants() {
-		return activeContestants;
+		ArrayList<Contestant> active = new ArrayList<Contestant>(allContestants.size());
+		
+		for (Contestant c: allContestants) 
+			if (!c.isCastOff())
+				active.add(c);
+		
+		return active;
 	}
 
 	/**
@@ -88,7 +100,7 @@ public class GameData {
 		Contestant j; 
 		// loop through array
 		for(int i = 0; i <= numContestants; i++){
-			j = activeContestants.get(i); // get Contestant object for comparison 
+			j = allContestants.get(i); // get Contestant object for comparison 
 			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
 				return j; // return info on player
 			}
@@ -114,8 +126,8 @@ public class GameData {
 			System.out.println("Invalid contestant ID specified, generating.");
 		}
 		
-		activeContestants.add(c);
-		Collections.sort(activeContestants, new Contestant.ComparatorID());
+		allContestants.add(c);
+		Collections.sort(allContestants, new Contestant.ComparatorID());
 	}
 	
 	/**
@@ -158,7 +170,7 @@ public class GameData {
 	 */
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
-		int i = Collections.binarySearch(activeContestants, target,
+		int i = Collections.binarySearch(allContestants, target,
 				new Contestant.ComparatorID());
 		
 		if (i < 0) {
@@ -166,8 +178,8 @@ public class GameData {
 			return;
 		}
 		
-		activeContestants.remove(i);
-		Collections.sort(activeContestants, new Contestant.ComparatorID());
+		allContestants.remove(i);
+		Collections.sort(allContestants, new Contestant.ComparatorID());
 	}
 
 	/**
@@ -227,15 +239,6 @@ public class GameData {
 			return new String();
 		}
 		
-		// build all the currently used IDs, this is done to speed up the 
-		// checks by using a binary search algorithm later
-		ArrayList<String> idArr = new ArrayList<String>(allContestants.size());
-		for (Contestant cind: allContestants) {
-			if (cind.getID() != null) 
-				idArr.add(cind.getID());
-		}
-		Collections.sort(idArr);
-		
 		String newID;
 		String lastName = c.getLastName().replaceAll("\\s+","");
 		int lastSub = Math.min(6, lastName.length());
@@ -249,7 +252,7 @@ public class GameData {
 				newID += Integer.toString(num);
 			}
 			num++;
-		} while (Collections.binarySearch(idArr, newID) < 0); // check if the ID is present
+		} while (!isIDValid(newID)); // check if the ID is present
 		
 		System.out.println("Generated: " + newID);
 		return newID;
@@ -257,17 +260,37 @@ public class GameData {
 	
 	/**
 	 * Checks if an ID string passed in is valid amongst the currently loaded
-	 * ID tags.
+	 * ID tags. Also checks if the syntax is valid.
 	 * @param id The ID tag to check
 	 * @return True if valid to use
 	 */
 	public boolean isIDValid(String id) {
 		// build all the currently used IDs
-		for (Contestant c: allContestants) {
-			if (c.getID().equalsIgnoreCase(id))
-				return false;
-		}
-		return true;
+		return Main.checkString(id, REGEX_CONTEST_ID) 
+				&& !isIDInUse(id);
+	}
+	
+	/**
+	 * Helper method to get the index of a contestant ID in the 
+	 * activeContestants array
+	 * @param id Search Contestant ID
+	 * @return Index in activeContestants where ID is stored, else < 0.
+	 */
+	private int getContestantIndexID(String id) {
+		Contestant t = new Contestant();
+		t.setID(id);
+		
+		return Collections.binarySearch(allContestants, t, 
+				new Contestant.ComparatorID());
+	}
+	
+	/**
+	 * Tells whether an ID is in use.
+	 * @param id The Contestant ID is in use.
+	 * @return True if in use.
+	 */
+	public boolean isIDInUse(String id) {
+		return (getContestantIndexID(id) >= 0);
 	}
 	
 	/**

@@ -102,22 +102,6 @@ public class PlayerPanel extends JPanel {
 		bCastOff = new JButton("Cast Off");
 		bSavePlayer = new JButton("Save");
 		
-		imgDisplay.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				int ret = fc.showOpenDialog(null);
-				if(ret==JFileChooser.APPROVE_OPTION){
-					//File f = fc.getSelectedFile();
-					updateContPicture(fc.getSelectedFile().getAbsolutePath());
-				}
-				
-				
-			}
-			
-		});
-		
 		// this does not need to be referenced else where, only for layout
 		JPanel paneButtons = new JPanel();
 		GridLayout bl = new GridLayout(2, 1);
@@ -161,9 +145,14 @@ public class PlayerPanel extends JPanel {
 		activeCon.setTribe((String)cbTribe.getSelectedItem());
 		activeCon.setPicture(imgPath);
 		
+		String id = tfContID.getText();
 		if (newCont) {
-			String newID = GameData.getCurrentGame().generateContestantID(activeCon);
-			activeCon.setID(newID);
+			if (GameData.getCurrentGame().isIDValid(id)) {
+				activeCon.setID(id);
+			} else {
+				id = GameData.getCurrentGame().generateContestantID(activeCon);
+				activeCon.setID(id);
+			}
 		}
 			
 		x = activeCon;
@@ -183,6 +172,7 @@ public class PlayerPanel extends JPanel {
 		try {
 			Image img = ImageIO.read(new File(path));
 			
+			// scale the image!
 			img = img.getScaledInstance(imgDisplay.getWidth()-2, 
 					imgDisplay.getHeight()-2, Image.SCALE_FAST);
 			
@@ -232,11 +222,16 @@ public class PlayerPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String pattern = "[A-z\\s]{1,20}";
-				if(!Main.checkString(tfFirstName.getText().trim(), pattern)||
-						!Main.checkString(tfLastName.getText().trim(), pattern)){
+				if(!Main.checkString(tfFirstName.getText().trim(), GameData.REGEX_FIRST_NAME) ||
+						!Main.checkString(tfLastName.getText().trim(), GameData.REGEX_LAST_NAME)){
 					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
 					return;
+				}
+				
+				if(!Main.checkString(tfContID.getText(), GameData.REGEX_CONTEST_ID)){
+					JOptionPane.showMessageDialog(null, 
+							"Invalid ID! (Generating new ID)");
+					//return;
 				}
 				
 				// check if the contestant is active
