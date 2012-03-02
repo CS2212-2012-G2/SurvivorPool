@@ -8,6 +8,8 @@ package client;
  * Description: 
  * */
 
+import java.io.InputStream;
+import java.util.Vector;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.*;
 import net.rim.device.api.ui.component.*;
@@ -15,6 +17,7 @@ import net.rim.device.api.ui.container.*;
 import net.rim.device.api.ui.toolbar.*;
 import net.rim.device.api.util.StringProvider;
 import net.rim.device.api.command.*;
+import net.rim.device.api.io.IOUtilities;
 
 public class SplashScreen extends MainScreen implements FieldChangeListener {
 	/* Variables */
@@ -23,14 +26,9 @@ public class SplashScreen extends MainScreen implements FieldChangeListener {
 	private Font font1; // fonts.
 	private EditField edit; // editable text field
 	private Bitmap backgroundBitmap; // background image
-	private String userName;
 
 	public SplashScreen() {
 		super(NO_VERTICAL_SCROLL);
-
-		/* FOR TESTING PURPOSES ONLY */
-		userName = "USER";
-		/* REMOVE WHEN DATA PERSISTANCE IS ADDED */
 
 		backgroundBitmap = Bitmap.getBitmapResource("Splash.png"); // background
 
@@ -124,13 +122,71 @@ public class SplashScreen extends MainScreen implements FieldChangeListener {
 
 	public void fieldChanged(Field arg0, int arg1) {
 		if (arg0 == button1) { // if the log in button is clicked
-			if (userName.equals(edit.getText().toUpperCase())) { 
+			if (checkLogIn(edit.getText().toLowerCase())) {
 				UiApplication.getUiApplication().pushScreen(
-						new MainMenuScreen(userName));
+						new MainMenuScreen("TESTING")); /*
+														 * CHANGE THIS WHEN
+														 * NEEDED
+														 */
+				/* ------------------------------------------------------ */
 			} else
 				edit.setText(""); // bad username, clear the field
 		}
 
 	}
 
+	public boolean checkLogIn(String userID) {
+		try {
+			Class classs = Class.forName("client.SplashScreen");
+			InputStream is = classs.getResourceAsStream("src/data/userData");
+			// retrieve input file
+			String str = new String(IOUtilities.streamToBytes(is), "UTF-8");
+			// extract userIDs from input
+			Vector userIDVec = splitUserID(str, " "); 
+			// check valid userIDs
+			for (int i = 0; i < userIDVec.capacity(); i++) {
+				if (userIDVec.elementAt(i).equals(userID)) {
+					return true;
+				}
+			}
+		} catch (Exception ex) {
+		}
+		return false; // match is not found
+	}
+
+	public static Vector splitUserID(String inString, String delimeter) {
+		Vector vec = new Vector();
+		char newLine = 10;
+
+		try {
+			int indexA = 0; // start
+			int indexB = inString.indexOf(delimeter); // first delimeter
+														// location
+
+			while (indexB != -1) { // while there's still more in file
+				if (indexB > indexA) {
+					// strip the current word
+					String temp = new String(inString.substring(indexA, indexB));
+					if (indexA == 0)
+						vec.addElement(temp); // add to vector
+
+					// if the current string section contains a new line
+					if (temp.indexOf(newLine) != -1) {
+						String tempUser = temp.substring(
+								temp.indexOf(newLine) + 1, temp.length());
+						vec.addElement(tempUser); // add to vector
+					}
+
+				}
+
+				// Increment to next word
+				// A starts at the character after the previous's last
+				indexA = indexB + delimeter.length();
+				// B ends at the next delimeter
+				indexB = inString.indexOf(delimeter, indexA);
+			}
+		} catch (Exception e) {
+		}
+		return vec;
+	}
 }
