@@ -16,12 +16,12 @@ public class PlayerTableModel extends AbstractTableModel {
 	private List<Contestant> data;
 	private boolean frozen = false;
 	
-	public static final int INDEX_SELECT = 0;
-	public static final int INDEX_ID = 1;
-	public static final int INDEX_LASTNAME = 2;
-	public static final int INDEX_FIRSTNAME = 3;
-	public static final int INDEX_TRIBE = 4;
-	public static final int INDEX_DATECAST = 5;
+	//public static final int INDEX_SELECT = 0;
+	public static final int INDEX_ID = 0;
+	public static final int INDEX_LASTNAME = 1;
+	public static final int INDEX_FIRSTNAME = 2;
+	public static final int INDEX_TRIBE = 3;
+	public static final int INDEX_DATECAST = 4;
 	
 	private int sortColumn = INDEX_LASTNAME;
 	private List<Contestant> globalData;
@@ -34,7 +34,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	 */
 	public PlayerTableModel(List<Contestant> _globaldata) {
 		columnNames = new String[] {
-				"Select", "ID", "Last Name", "First Name", "Tribe", "Date Cast"
+				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
 		globalData = _globaldata;
 		data = new ArrayList<Contestant>(globalData.size());
@@ -75,7 +75,7 @@ public class PlayerTableModel extends AbstractTableModel {
         	if (player.isCastOff()) 
         		return new Integer(player.getCastDate());
         	else
-        		return new Integer(-1);
+        		return "Active";
         
         default:
         	return null;

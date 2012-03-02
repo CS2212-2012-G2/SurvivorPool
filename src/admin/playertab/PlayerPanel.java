@@ -112,24 +112,6 @@ public class PlayerPanel extends JPanel {
 			
 		});
 		
-		imgDisplay.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				int ret = fc.showOpenDialog(null);
-				if(ret==JFileChooser.APPROVE_OPTION){
-					//File f = fc.getSelectedFile();
-					ImageIcon i = new ImageIcon(fc.getSelectedFile().getAbsolutePath());
-					imgDisplay.setIcon(i);
-					
-				}
-				
-				
-			}
-			
-		});
-		
 		// this does not need to be referenced else where, only for layout
 		JPanel paneButtons = new JPanel();
 		GridLayout bl = new GridLayout(2, 1);
@@ -240,7 +222,7 @@ public class PlayerPanel extends JPanel {
 	}
 	
 	private void buildActions() {
-		ActionListener addListener = new ActionListener() {
+		bSavePlayer.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -260,8 +242,21 @@ public class PlayerPanel extends JPanel {
 				
 			}
 			
-		};
-		bSavePlayer.addActionListener(addListener);
+		});
+		
+		imgDisplay.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+				int ret = fc.showOpenDialog(null);
+				if(ret==JFileChooser.APPROVE_OPTION){
+					//File f = fc.getSelectedFile();
+					updateContPicture(fc.getSelectedFile().getAbsolutePath());
+				}	
+			}
+			
+		});
 	}
 	
 }
