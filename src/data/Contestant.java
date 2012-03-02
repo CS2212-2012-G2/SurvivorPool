@@ -12,13 +12,15 @@ public class Contestant {
 
 	// player information
 	private String firstName, lastName, tribe, picture;
-	private boolean castOff; // true when player is no longer active
-	private int weekCastOff; // week that player was cast off
+	private int castDate = -1; // week that player was cast off
+	private int cID;
 	private GameData game;
 
 	/**
 	 * Constructor method for type contestant sets player info
 	 * 
+	 * @param _id
+	 * 			  The ID of the contestant, should be maintained from the game
 	 * @param first
 	 *            first name
 	 * @param last
@@ -27,12 +29,11 @@ public class Contestant {
 	 *            contestant's tribe
 	 */
 
-	public Contestant(String first, String last, String tribe) {
+	public Contestant(int _id, String first, String last, String _tribe) {
 		firstName = first;
 		lastName = last;
-		this.tribe = tribe;
-		castOff = false;
-
+		tribe = _tribe;
+		cID = _id;
 	}
 
 	// ------------------ ACCESSOR METHODS -----------------//
@@ -74,7 +75,7 @@ public class Contestant {
 	 */
 
 	public boolean isCastOff() {
-		return castOff;
+		return castDate == -1;
 	}
 
 	// ----------------- MUTATOR METHODS -----------------//
@@ -84,7 +85,8 @@ public class Contestant {
 	 */
 
 	public void castOff() {
-		castOff = true;
+		// TODO: Implement:
+		//castDate = getGameData.date();
 		// weekCastOff = game.weeksLeft();
 	}
 
@@ -103,8 +105,49 @@ public class Contestant {
 	 * @param name
 	 *            name of new tribe
 	 */
-
 	public void setTribe(String name) {
 		tribe = name;
+	}
+
+	/**
+	 * Sets the contestant's first name.
+	 * @param name	New first name of the contestant
+	 */
+	public void setFirstName(String name) {
+		firstName = name;
+		
+	}
+
+	/**
+	 * Sets the contestant's last name.
+	 * @param name New last name of the contestant
+	 */
+	public void setLastName(String name) {
+		lastName = name;
+		
+	}
+
+	/**
+	 * Returns the tribe of the Contestant
+	 * @return Tribe name of the contestant.
+	 */
+	public String getTribe() {
+		return tribe;
+	}
+
+	/**
+	 * Returns the date the contestant was cast off on. 
+	 * @return Date cast off, -1 if still active.
+	 */
+	public int getCastDate() {
+		return castDate;
+	}
+
+	/**
+	 * Returns the contestant's unique ID number
+	 * @return assigned ID number
+	 */
+	public int getID() {
+		return cID;
 	}
 }
