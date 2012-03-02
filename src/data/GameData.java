@@ -3,6 +3,7 @@ package data;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -97,6 +98,27 @@ public class GameData {
 	}
 	
 	/**
+	 * Adds a new contestant into the Game, this will maintain the list of 
+	 * contestants as sorted by ID.
+	 * @param c New contestant, will not add if ID of contestant is null.
+	 */
+	public void addContestant(Contestant c) {
+		if (c.getID() == null || 
+				c.getID().equals("")) {
+			System.out.println("Contestant must have valid ID");
+			return;
+		}
+		
+		if (!isIDValid(c.getID())) {
+			c.setID(generateContestantID(c));
+			System.out.println("Invalid contestant ID specified, generating.");
+		}
+		
+		activeContestants.add(c);
+		Collections.sort(activeContestants, new Contestant.ComparatorID());
+	}
+	
+	/**
 	 * getTribeName returns a String array with two entries: the name of the first tribe,
 	 * and the name of the second tribe.
 	 * 
@@ -128,13 +150,24 @@ public class GameData {
 
 	/**
 	 * removeContestant takes a Contestant object as input and attempts to
-	 * remove it from the array of active contestants.
+	 * remove it from the array of active contestants. Maintains sorted ID 
+	 * order
 	 * 
 	 * @param target
 	 *            eliminated contestant
 	 */
 	public void removeContestant(Contestant target) {
-		throw new NotImplementedException();
+		// is the contestant there?
+		int i = Collections.binarySearch(activeContestants, target,
+				new Contestant.ComparatorID());
+		
+		if (i < 0) {
+			// i < 0 implies not found.
+			return;
+		}
+		
+		activeContestants.remove(i);
+		Collections.sort(activeContestants, new Contestant.ComparatorID());
 	}
 
 	/**
@@ -194,12 +227,14 @@ public class GameData {
 			return new String();
 		}
 		
-		// build all the currently used IDs
+		// build all the currently used IDs, this is done to speed up the 
+		// checks by using a binary search algorithm later
 		ArrayList<String> idArr = new ArrayList<String>(allContestants.size());
 		for (Contestant cind: allContestants) {
 			if (cind.getID() != null) 
 				idArr.add(cind.getID());
 		}
+		Collections.sort(idArr);
 		
 		String newID;
 		String lastName = c.getLastName().replaceAll("\\s+","");
@@ -214,10 +249,25 @@ public class GameData {
 				newID += Integer.toString(num);
 			}
 			num++;
-		} while (idArr.indexOf(newID) != -1); // check if the ID is present
+		} while (Collections.binarySearch(idArr, newID) < 0); // check if the ID is present
 		
 		System.out.println("Generated: " + newID);
 		return newID;
+	}
+	
+	/**
+	 * Checks if an ID string passed in is valid amongst the currently loaded
+	 * ID tags.
+	 * @param id The ID tag to check
+	 * @return True if valid to use
+	 */
+	public boolean isIDValid(String id) {
+		// build all the currently used IDs
+		for (Contestant c: allContestants) {
+			if (c.getID().equalsIgnoreCase(id))
+				return false;
+		}
+		return true;
 	}
 	
 	/**
