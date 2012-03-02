@@ -132,7 +132,7 @@ public class PlayerPanel extends JPanel {
 	 */
 	private Contestant getCurrentContestant() {
 		boolean newCont = false;
-		
+		Contestant x = null;
 		if (activeCon == INACTIVE_CONT) {
 			activeCon = new Contestant();
 			newCont = true;
@@ -145,7 +145,10 @@ public class PlayerPanel extends JPanel {
 		if (newCont)
 			activeCon.generateID();
 		
-		return activeCon;
+		x = activeCon;
+		activeCon = INACTIVE_CONT;
+		
+		return x;
 	}
 	
 	/**
@@ -180,6 +183,7 @@ public class PlayerPanel extends JPanel {
 			
 			// TODO: Make a picture of an X or some shit for nothing loaded
 			//updateContPicture(SOMEPATH);
+			return;
 		}
 		
 		activeCon = c;

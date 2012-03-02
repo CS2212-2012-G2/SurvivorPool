@@ -15,13 +15,14 @@ public class PlayerTableModel extends AbstractTableModel {
 	private List<Contestant> data;
 	private boolean frozen = false;
 	
-	public static final int INDEX_ID = 0;
-	public static final int INDEX_LASTNAME = 1;
-	public static final int INDEX_FIRSTNAME = 2;
-	public static final int INDEX_TRIBE = 3;
-	public static final int INDEX_DATECAST = 4;
+	public static final int INDEX_SELECT = 0;
+	public static final int INDEX_ID = 1;
+	public static final int INDEX_LASTNAME = 2;
+	public static final int INDEX_FIRSTNAME = 3;
+	public static final int INDEX_TRIBE = 4;
+	public static final int INDEX_DATECAST = 5;
 	
-	private int sortColumn = INDEX_ID;
+	private int sortColumn = INDEX_LASTNAME;
 	
 	/**
 	 * Creates the table model which controls the table's actions and data.
@@ -229,14 +230,15 @@ public class PlayerTableModel extends AbstractTableModel {
 	public void updateContestant(Contestant c) {
 		boolean found = false;
 		
-		for (Contestant dataCon: data)
+		// update the contestant if they are present
+		/*for (Contestant dataCon: data)
 			if (dataCon.getID().equals(c.getID())) {
 				int i = data.indexOf(dataCon);
 				data.set(i, c);
 				found = true;
 				// force the table to update.
 				break;
-			}
+			}*/
 		if (!found)
 			data.add(c);
 		
