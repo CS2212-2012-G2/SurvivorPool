@@ -6,8 +6,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import data.GameData;
+
 public class Main extends JFrame{
 
+	static Main m;
+	
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu mnuFile = new JMenu("File");
 	private JMenu mnuTheme = new JMenu("Theme");
@@ -35,8 +39,12 @@ public class Main extends JFrame{
 	};
 	
 	public Main(){
-		//initSeasonCreateGUI();
-		initGUI();
+		//GameData gd = new GameData(10);
+		//TODO:change to use game data
+		if(false)
+			initGUI();
+		else
+			initSeasonCreateGUI();
 			
 		this.setSize(640, 480);
 		this.setVisible(true);
@@ -87,9 +95,12 @@ public class Main extends JFrame{
 		this.add(tabPane);
 	}
 	
-	
+	public static void seasonCreated(){
+		m.getContentPane().removeAll();
+		m.initGUI();
+	}
 	public static void main(String[] args) {
-		Main m = new Main();
+		m = new Main();
 
 	}
 

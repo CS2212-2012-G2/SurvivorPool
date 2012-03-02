@@ -120,7 +120,7 @@ public class SeasonCreatePanel extends JPanel {
 					buffWrite.newLine();
 					buffWrite.close(); // close the file
 					//TODO:Go to next panel
-					
+					Main.seasonCreated();
 				} catch (Exception i) {
 				}
 				
