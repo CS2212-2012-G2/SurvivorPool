@@ -3,6 +3,7 @@ package admin;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 
@@ -106,6 +107,20 @@ public class Main extends JFrame{
 	
 	public static GameData getGameData(){
 		return gd;
+	}
+	
+	/**
+	 * Checks if string matches pattern.
+	 * @param val The string to check for validity
+	 * @param pattern A regex pattern that has all possible valid values
+	 * @return true if string matches pattern
+	 */
+	public static boolean checkString(String val,String pattern){
+		if(val==null)
+			return false;
+		if(val.length()==0)
+			return false;
+		return Pattern.matches(pattern, val);
 	}
 	public static void main(String[] args) {
 		m = new Main();
