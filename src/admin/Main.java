@@ -35,8 +35,8 @@ public class Main extends JFrame{
 	};
 	
 	public Main(){
-		initSeasonCreateGUI();
-		//initGUI();
+		//initSeasonCreateGUI();
+		initGUI();
 			
 		this.setSize(640, 480);
 		this.setVisible(true);
