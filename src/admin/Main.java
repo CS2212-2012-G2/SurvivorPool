@@ -11,6 +11,7 @@ import data.GameData;
 public class Main extends JFrame{
 
 	static Main m;
+	static GameData gd;
 	
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu mnuFile = new JMenu("File");
@@ -39,7 +40,8 @@ public class Main extends JFrame{
 	};
 	
 	public Main(){
-		//GameData gd = new GameData(10);
+		//TODO:get gamedata from initGamedata
+		gd = new GameData(10);
 		//TODO:change to use game data
 		if(false)
 			initGUI();
@@ -98,6 +100,10 @@ public class Main extends JFrame{
 	public static void seasonCreated(){
 		m.getContentPane().removeAll();
 		m.initGUI();
+	}
+	
+	public static GameData getGameData(){
+		return gd;
 	}
 	public static void main(String[] args) {
 		m = new Main();
