@@ -177,7 +177,7 @@ public class GameData {
 	 * @return GameData object made out of file or null if season not created
 	 * @throws Exception Thrown if game already started.
 	 */
-	public static GameData intGameData(String inputFile) throws Exception{
+	public static GameData initGameData(String inputFile) throws Exception{
 		return readFile(inputFile);
 		
 	}
