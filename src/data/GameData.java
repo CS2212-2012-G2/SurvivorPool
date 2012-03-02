@@ -167,14 +167,18 @@ public class GameData {
 	 * of it, returning it to the user.
 	 * 
 	 * @param inputFile   file to be read in
-	 * @return GameData object made out of file
+	 * @return GameData object made out of file or null if season not created
 	 */
 	public static GameData intGameData(String inputFile){
 		return readFile(inputFile);
 		
-		//throw new NotImplementedException();
 	}
 	
+	/**
+	 * reads in file and (supposed) to fill in appropriate game data
+	 * @param file the file that contains the data
+	 * @return a GameData object that contains the added data or null if no file found(no season created)
+	 */
 	private static GameData readFile(String file){
 		GameData g=null;
 		try {
