@@ -69,7 +69,7 @@ public class PlayerPanel extends JPanel {
 		labelCastStatus = new JLabel("ASDFasdfasdfasdfasdf");
 		
 		labelTribe = new JLabel("Tribe:");
-		cbTribe = new JComboBox<String>(new String[] {"SEXY", "MORE SEXY"});
+		cbTribe = new JComboBox<String>(Main.getGameData().getTribeNames());
 		
 		// holds all the fields
 		paneEditFields = new EditPlayerFieldsPanel(labelName, labelCastOff, 

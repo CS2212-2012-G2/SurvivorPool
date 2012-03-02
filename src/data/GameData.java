@@ -24,7 +24,7 @@ public class GameData {
 	private Contestant[] allContestants, activeContestants; // lits of
 															// all/remaining
 															// contestants
-	private String[] tribeNames; // string array storing both tribe names
+	private String[] tribeNames = new String[2]; // string array storing both tribe names
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -182,11 +182,25 @@ public class GameData {
 	private static GameData readFile(String file){
 		GameData g=null;
 		try {
+			/*
+			 * first line num cont
+			 * second line tribe 1 name
+			 * 3rd line tribe 2 name
+			 */
 			Scanner scan = new Scanner(new File(file));
-			scan.next();
+			scan.next(); //key value
 			int numContestants =scan.nextInt();
 			
 			g = new GameData(numContestants);
+			
+			scan.next();		//tribe 1 name
+			String t1 = scan.next();
+			
+			scan.next();		//tribe 2 name
+			String t2 = scan.next();
+			
+			g.setTribeNames(t1, t2);
+			
 			
 			//TODO:might not need seasonmade..
 			g.seasonMade();

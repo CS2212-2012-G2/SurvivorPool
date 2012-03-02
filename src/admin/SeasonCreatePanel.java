@@ -111,12 +111,9 @@ public class SeasonCreatePanel extends JPanel {
 					 String tempString = spnContestant.getValue().toString();
 					buffWrite.write("Number_Of_Contestants: " + tempString); // first line
 					buffWrite.newLine();
-					tempString = spnWeek.getValue().toString();
-					buffWrite.write("Number_Of_Weeks: " + tempString); // second line
+					buffWrite.write("Tribe_1_Name: " + txtTribe1.getText()); // 2nd line
 					buffWrite.newLine();
-					buffWrite.write("Tribe_1_Name: " + txtTribe1.getText()); // 3rd line
-					buffWrite.newLine();
-					buffWrite.write("Tribe_2_Name: " + txtTribe2.getText()); // 4th line
+					buffWrite.write("Tribe_2_Name: " + txtTribe2.getText()); // 3rd line
 					buffWrite.newLine();
 					buffWrite.close(); // close the file
 					//TODO:Go to next panel
