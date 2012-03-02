@@ -15,11 +15,13 @@ public class GameData {
 
 	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
 										// passed
-	private boolean gameStarted; // true if game has started and admin can no
+	private boolean gameStarted, seasonMade = false; // true if game has started and admin can no
 									// longer add players
 	private Contestant[] allContestants, activeContestants; // lits of
 															// all/remaining
 															// contestants
+	private String tribeOneName, tribeTwoName; // names of participating tribes
+	private String[] tribeNames; // string array storing both tribe names
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -67,6 +69,17 @@ public class GameData {
 	public Contestant getContestant(Contestant target) {
 		throw new NotImplementedException();
 	}
+	
+	/**
+	 * getTribeName returns a String array with two entries: the name of the first tribe,
+	 * and the name of the second tribe.
+	 * 
+	 * @return String array  tribe names
+	 */
+	
+	public String[] getTribeNames(){
+		return tribeNames;
+	}
 
 	/**
 	 * weeksLeft returns the number of weeks remaining before the game ends.
@@ -103,6 +116,26 @@ public class GameData {
 	 */
 
 	private void startGame() {
+		throw new NotImplementedException();
+	}
+	
+	/**
+	 * seasonCreated sets the seasonMade boolean to true, indicating that there exists
+	 * a GameData object to be used.
+	 */
+	
+	private void seasonMade(){
+		seasonMade = true;
+	}
+	
+	/**
+	 * setTribeNames sets both tribe names accordingly and stores them in 
+	 * the tribeNames string array.
+	 * 
+	 * @param tribeOne   name of tribe one
+	 * @param tribeTwo   name of tribe two
+	 */
+	private void setTribeNames(String tribeOne, String tribeTwo){
 		throw new NotImplementedException();
 	}
 
