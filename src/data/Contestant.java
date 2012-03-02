@@ -118,8 +118,7 @@ public class Contestant {
 	 * 		between 1 and 20 chars.
 	 */
 	public void setFirstName(String name) {
-		if (name.matches("^[A-z]{1,20}$"))
-			firstName = name;
+		firstName = name;
 		
 	}
 
@@ -128,8 +127,7 @@ public class Contestant {
 	 * @param name New last name of the contestant
 	 */
 	public void setLastName(String name) {
-		if (name.matches("^[A-z\\s]{1,20}$"))
-			lastName = name;
+		lastName = name;
 		
 	}
 

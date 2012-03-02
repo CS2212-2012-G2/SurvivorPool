@@ -226,9 +226,9 @@ public class PlayerPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String pattern = "[A-Za-z]{1,20}";
-				if(!Main.checkString(tfFirstName.getText(), pattern)||
-						!Main.checkString(tfLastName.getText(), pattern)){
+				String pattern = "[A-z\\s]{1,20}";
+				if(!Main.checkString(tfFirstName.getText().trim(), pattern)||
+						!Main.checkString(tfLastName.getText().trim(), pattern)){
 					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
 					return;
 				}
