@@ -35,11 +35,9 @@ public class GameData {
 	 * 
 	 * @param numContestants
 	 *            number of contestants to be in game
-	 * @throws Exception If game already started, won't init a new one.
+	 * 
 	 */
-	public GameData(int numContestants) throws Exception {
-		if (currentGame != null)
-			throw new Exception("ERROR: GAME ALREADY IN SESSION.");
+	private GameData(int numContestants){
 		
 		// check if within parameters
 		if(numContestants > 15 || numContestants < 6)
@@ -175,21 +173,19 @@ public class GameData {
 	 * 
 	 * @param inputFile   file to be read in
 	 * @return GameData object made out of file or null if season not created
-	 * @throws Exception Thrown if game already started.
+	 * 
 	 */
-	public static GameData initGameData(String inputFile) throws Exception{
-		return readFile(inputFile);
-		
+	public static GameData initGameData(String inputFile){
+		readFile(inputFile);
+		return getCurrentGame();
 	}
 	
 	/**
 	 * reads in file and (supposed) to fill in appropriate game data
 	 * @param file the file that contains the data
-	 * @return a GameData object that contains the added data or null if no file found(no season created)
-	 * @throws Exception If game aleady started, will throw exception.
+	 * 
 	 */
-	private static GameData readFile(String file) throws Exception{
-		GameData g=null;
+	private static void readFile(String file){
 		try {
 			/*
 			 * first line num cont
@@ -200,7 +196,7 @@ public class GameData {
 			scan.next(); //key value
 			int numContestants =scan.nextInt();
 			
-			g = new GameData(numContestants);
+			currentGame = new GameData(numContestants);
 			
 			scan.next();		//tribe 1 name
 			String t1 = scan.next();
@@ -208,15 +204,14 @@ public class GameData {
 			scan.next();		//tribe 2 name
 			String t2 = scan.next();
 			
-			g.setTribeNames(t1, t2);
+			currentGame.setTribeNames(t1, t2);
 			
 			
 			//TODO:might not need seasonmade..
-			g.seasonMade();
+			currentGame.seasonMade();
 		} catch (FileNotFoundException e) {
 					
 		}
-		return g;
 	}
 	
 	/**
@@ -233,6 +228,7 @@ public class GameData {
 	 */
 	public static void endCurrentGame() {
 		GameData.currentGame = null;
+		//TODO:remove data persistence file
 	}
 
 }
