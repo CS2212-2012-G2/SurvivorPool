@@ -9,6 +9,8 @@ import java.awt.GridBagLayout;
 
 import javax.swing.*;
 
+import data.GameData;
+
 
 public class GeneralPanel extends JPanel {
 
@@ -20,11 +22,15 @@ public class GeneralPanel extends JPanel {
 	JRadioButton rbShortAnswer = new JRadioButton("Short Answer");
 	JTextField txtQuestion = new JTextField("");
 	
+	GameData gd;
+	
 	public GeneralPanel(){
+		gd = Main.getGameData();
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		initPnlInfo();
 		initPnlBonus();
 		initPnlAnswer();
+		
 	}
 	
 	private void initPnlInfo(){
@@ -40,6 +46,8 @@ public class GeneralPanel extends JPanel {
 		splitPane.setDividerSize(1);
 		splitPane.setDividerLocation(320);
 		
+		//TODO: actually set info here rather than just weeks.
+		lblGenInfo.setText(Integer.toString(gd.weeksLeft())+" weeks left(DATA PERSISTENCE!)");
 		pnlInfo.add(splitPane,BorderLayout.CENTER);
 		pnlInfo.setPreferredSize(new Dimension(450,400));
 		this.add(pnlInfo);

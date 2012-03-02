@@ -1,5 +1,9 @@
 package data;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -72,7 +76,7 @@ public class GameData {
 	 *            desired contestant
 	 * @return contestant or string object
 	 */
-	public Object getContestant(String first, String last) {
+	public Contestant getContestant(String first, String last) {
 		Contestant j; 
 		// loop through array
 		for(int i = 0; i <= numContestants; i++){
@@ -82,7 +86,7 @@ public class GameData {
 			}
 		}
 		// otherwise return message saying contestant is no longer/is not in the game
-		return new String("Contestant is not currently active in the game.");
+		return null;
 	}
 	
 	/**
@@ -163,10 +167,33 @@ public class GameData {
 	 * of it, returning it to the user.
 	 * 
 	 * @param inputFile   file to be read in
-	 * @return GameData object made out of file
+	 * @return GameData object made out of file or null if season not created
 	 */
 	public static GameData intGameData(String inputFile){
-		throw new NotImplementedException();
+		return readFile(inputFile);
+		
+	}
+	
+	/**
+	 * reads in file and (supposed) to fill in appropriate game data
+	 * @param file the file that contains the data
+	 * @return a GameData object that contains the added data or null if no file found(no season created)
+	 */
+	private static GameData readFile(String file){
+		GameData g=null;
+		try {
+			Scanner scan = new Scanner(new File(file));
+			scan.next();
+			int numContestants =scan.nextInt();
+			
+			g = new GameData(numContestants);
+			
+			//TODO:might not need seasonmade..
+			g.seasonMade();
+		} catch (FileNotFoundException e) {
+					
+		}
+		return g;
 	}
 
 }

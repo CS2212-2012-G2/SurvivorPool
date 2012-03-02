@@ -17,11 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import admin.EditPlayerFieldsPanel;
 
 public class PlayerPanel extends JPanel {
 
-	private ImageIcon imgData;
 	private JLabel imgDisplay;
 
 	private EditPlayerFieldsPanel paneEditFields;
@@ -48,17 +46,11 @@ public class PlayerPanel extends JPanel {
 		paneTop = new JPanel();
 		paneTop.setLayout(new BoxLayout(paneTop, BoxLayout.X_AXIS));
 		
-		// TODO: Make the image load
-		String path = "res/test/Russell-hantzSmall.jpg";
-		Image img;
-		/*try {
-			img = ImageIO.read(new File(path));
-			imgData = new ImageIcon(img);
-		} catch (IOException e) {
-			// should never read unknown place.
-		}*/
-		imgDisplay = new JLabel();
-		imgDisplay.setIcon(imgData);
+		// TODO: Resize?
+		String path = "res/test/defaultpic.png"; //apparently images have to be .png and alphanumeric
+		ImageIcon imgD = new ImageIcon(path);
+		imgDisplay = new JLabel("a");
+		imgDisplay.setIcon(imgD);
 		
 		/// Edit fields:
 		labelName = new JLabel("Name:");
