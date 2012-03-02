@@ -20,7 +20,6 @@ public class GameData {
 	private Contestant[] allContestants, activeContestants; // lits of
 															// all/remaining
 															// contestants
-	private String tribeOneName, tribeTwoName; // names of participating tribes
 	private String[] tribeNames; // string array storing both tribe names
 
 	/**
@@ -76,7 +75,7 @@ public class GameData {
 	public Object getContestant(String first, String last) {
 		Contestant j; 
 		// loop through array
-		for(int i = 0; i < numContestants; i++){
+		for(int i = 0; i <= numContestants; i++){
 		j = activeContestants[i]; // get Contestant object for comparison 
 		if(first.equals(j.getFirstName()) && last.equals(j.getLastName())){ // ensure names match
 				return j; // return info on player
