@@ -177,7 +177,8 @@ public class GameData {
 	 */
 	public static GameData initGameData(String inputFile){
 		readFile(inputFile);
-		return getCurrentGame();
+		System.out.println(currentGame.weeksLeft());
+		return currentGame;
 	}
 	
 	/**
