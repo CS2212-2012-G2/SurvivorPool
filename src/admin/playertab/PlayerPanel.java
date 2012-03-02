@@ -32,7 +32,6 @@ import admin.Main;
 
 public class PlayerPanel extends JPanel {
 
-	private JLabel imgDisplay;
 	private static final long serialVersionUID = 1L;
 	private JButton imgDisplay;
 
