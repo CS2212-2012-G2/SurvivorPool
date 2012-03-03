@@ -69,7 +69,7 @@ public class Main extends JFrame{
 		
 		//can do this by setting a jlabel as a tab and changing its prefered size
 		//<html><body leftmargin=30 topmargin=8 marginwidth=50 marginheight=5>General</body></html>
-		
+		//TODO:fix the general tab so it changes color when theme changed. Might work if we used Jlabel
 		tabPane.addTab("<html><body><table width='150'>General</table></body></html>",new GeneralPanel());
 		tabPane.addTab("Contestants",new ContestantPanel());
 		tabPane.addTab("Players", new PlayerPanel());
