@@ -258,15 +258,6 @@ public class PlayerTableModel extends AbstractTableModel {
 	public void updateContestant(Contestant c) {
 		boolean found = false;
 		
-		// update the contestant if they are present
-		/*for (Contestant dataCon: data)
-			if (dataCon.getID().equals(c.getID())) {
-				int i = data.indexOf(dataCon);
-				dataCon.update(c);
-				found = true;
-				// force the table to update.
-				break;
-			}*/
 		int index = Collections.binarySearch(globalData, c,
 				new Contestant.ComparatorID());
 		
