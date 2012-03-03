@@ -290,5 +290,16 @@ public class PlayerTableModel extends AbstractTableModel {
 	        sortTableBy(mIndex);
 	    }
 	}
+	
+	protected class RowSelectorAdapter extends MouseAdapter {
+		
+		public void mouseClicked(MouseEvent e) {
+	        JTable table = (JTable)e.getSource();
+	        
+	        int row = table.getSelectedRow();
+	        
+	        table.addRowSelectionInterval(row, row);
+	    }
+	}
 
 }
