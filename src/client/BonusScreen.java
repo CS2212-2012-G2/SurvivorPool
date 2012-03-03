@@ -222,19 +222,20 @@ public class BonusScreen extends MainScreen implements FieldChangeListener {
 			});
 		}
 
-		buttonPrevious = new ButtonField("Prev");
+		/* Top manager bar setup */
+		buttonPrevious = new ButtonField("Prev"); // previous button
 		buttonPrevious.setChangeListener(this);
 		if (currentQuestionNumber == 0)
 			buttonPrevious.setEnabled(false);
 		horFieldManager.add(buttonPrevious);
 		labelTitle = new LabelField("  Bonus Questions ");
-		labelTitle.setFont(font1);
+		labelTitle.setFont(font1); // centre label
 		horFieldManager.add(labelTitle);
-		buttonNext = new ButtonField("Next");
+		buttonNext = new ButtonField("Next"); // next button
 		buttonNext.setChangeListener(this);
 		if (currentQuestionNumber == bonusCollection.length - 1)
 			buttonNext.setEnabled(false);
-		horFieldManager.add(buttonNext);
+		horFieldManager.add(buttonNext); 
 
 		this.setTitle(horFieldManager);
 		this.add(vertFieldManager);
