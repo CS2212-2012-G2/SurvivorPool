@@ -48,7 +48,8 @@ public class Main extends JFrame{
 			initGUI();
 		else
 			initSeasonCreateGUI();
-			
+		
+		applyTheme();
 		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
@@ -97,22 +98,29 @@ public class Main extends JFrame{
 		
 		this.setJMenuBar(menuBar);
 		this.add(tabPane);
-		applyTheme();
 	}
 	
+	/**
+	 * Apply the theme to current components.
+	 */
 	private void applyTheme(){
 		Utils.style(this);
 	}
 	
+	/**
+	 * Change the current theme.
+	 * @param name The theme name
+	 */
 	private void changeTheme(String name){
 		Utils.changeTheme(name);
-		Utils.style(this);
+		applyTheme();
 	}
 	
 	public static void seasonCreated(){
 		GameData.initGameData(getDataFile());
 		m.getContentPane().removeAll();
 		m.initGUI();
+		m.applyTheme();
 	}
 	
 	public static String getDataFile(){

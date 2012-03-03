@@ -80,7 +80,13 @@ public class Utils {
 		return themeString;
 	}
 	
-	//modified from http://today.java.net/pub/a/today/2003/10/14/swingcss.html
+	/**
+	 *modified from http://today.java.net/pub/a/today/2003/10/14/swingcss.html
+	 *Changes theme of the current component.If a component is a container(Panel,frame,etc.)
+	 *The background and foreground of all the components within the container. 
+	 * @param comp The component to apply the theme
+	 */
+	//
 	public static void style(Component comp) {
 	
 		comp.setForeground(theme.getForeground());
