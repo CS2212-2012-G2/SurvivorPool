@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.*;
 
-import admin.playertab.PlayerPanel;
+import admin.contestanttab.ContestantPanel;
 
 import data.GameData;
 
@@ -67,8 +67,8 @@ public class Main extends JFrame{
 		//<html><body leftmargin=30 topmargin=8 marginwidth=50 marginheight=5>General</body></html>
 		
 		tabPane.addTab("<html><body><table width='150'>General</table></body></html>",new GeneralPanel());
-		tabPane.addTab("Player",new PlayerPanel());
-		tabPane.addTab("Users", new UserPanel());
+		tabPane.addTab("Contestants",new ContestantPanel());
+		tabPane.addTab("Players", new PlayerPanel());
 		tabPane.setBackground(Color.cyan);//tab background color,not the panel
 		
 		

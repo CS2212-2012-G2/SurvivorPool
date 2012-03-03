@@ -1,4 +1,4 @@
-package admin.playertab;
+package admin.contestanttab;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -17,7 +17,7 @@ import javax.swing.table.TableColumnModel;
 import data.Contestant;
 import data.GameData;
 
-public class PlayerTableModel extends AbstractTableModel {
+public class ContestantTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private String[] columnNames;
 	private List<Contestant> data;
@@ -39,7 +39,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * @param _data	The data to work on/with. This could be an empty list, but
 	 * 			NOT null.
 	 */
-	public PlayerTableModel(List<Contestant> _globaldata) {
+	public ContestantTableModel(List<Contestant> _globaldata) {
 		columnNames = new String[] {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
@@ -223,7 +223,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	}
 	
 	/**
-	 * Sorts the table using {@link PlayerTableModel.sortTableBy} with 
+	 * Sorts the table using {@link ContestantTableModel.sortTableBy} with 
 	 * the current sorted column.
 	 */
 	protected void sortTable() {

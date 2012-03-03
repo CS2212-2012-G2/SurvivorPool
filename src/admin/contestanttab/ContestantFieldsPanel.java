@@ -1,4 +1,4 @@
-package admin.playertab;
+package admin.contestanttab;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 
 import data.Contestant;
 
-public class EditPlayerFieldsPanel extends JPanel {
+public class ContestantFieldsPanel extends JPanel {
 	
 	// Store external references:
 	private JLabel labelName;
@@ -36,7 +36,7 @@ public class EditPlayerFieldsPanel extends JPanel {
 	private GridBagConstraints gbFieldsConst;
 	
 	
-	public EditPlayerFieldsPanel(JLabel _labelName, JTextField _tfFirstName, 
+	public ContestantFieldsPanel(JLabel _labelName, JTextField _tfFirstName, 
 			JTextField _tfLastName, JLabel _labelID, 
 			JTextField _tfContID, JLabel _labelCastOff, 
 			JLabel _labelCastStatus, JLabel _labelTribe, JComboBox<String> _cbTribe) {

@@ -1,4 +1,4 @@
-package admin.playertab;
+package admin.contestanttab;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -41,16 +41,16 @@ import data.GameData;
 
 
 import admin.Main;
-import admin.playertab.PlayerTableModel.SortColumnAdapter;
+import admin.contestanttab.ContestantTableModel.SortColumnAdapter;
 
 
-public class PlayerPanel extends JPanel {
+public class ContestantPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JButton imgDisplay;
 	private String imgPath;
 
-	private EditPlayerFieldsPanel paneEditFields;
+	private ContestantFieldsPanel paneEditFields;
 	// container for top stuff
 	private JPanel paneTop;
 	
@@ -74,7 +74,7 @@ public class PlayerPanel extends JPanel {
 	private Contestant activeCon = INACTIVE_CONT;
 
 	private JTable table;
-	private PlayerTableModel tableModel; 
+	private ContestantTableModel tableModel; 
 	private JTableHeader header;
 	
 	private JButton bAddNew;
@@ -83,7 +83,7 @@ public class PlayerPanel extends JPanel {
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
 	
 	
-	public PlayerPanel(){
+	public ContestantPanel(){
 		super();
 		
 		//////////////////////////////
@@ -110,7 +110,7 @@ public class PlayerPanel extends JPanel {
 		tfContID = new JTextField();
 		
 		// holds all the fields
-		paneEditFields = new EditPlayerFieldsPanel(labelName, tfFirstName, 
+		paneEditFields = new ContestantFieldsPanel(labelName, tfFirstName, 
 					tfLastName, labelID, tfContID, labelCastOff, 
 					labelCastStatus, labelTribe, cbTribe);
 		
@@ -122,7 +122,7 @@ public class PlayerPanel extends JPanel {
 		//////////////////////////////
 		// Mid
 		//////////////////////////////
-		tableModel = new PlayerTableModel(GameData.getCurrentGame().getAllContestants());
+		tableModel = new ContestantTableModel(GameData.getCurrentGame().getAllContestants());
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
 		

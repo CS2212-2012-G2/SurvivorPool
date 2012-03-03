@@ -2,6 +2,6 @@ package admin;
 
 import javax.swing.JPanel;
 
-public class UserPanel extends JPanel{
+public class PlayerPanel extends JPanel{
 
 }
