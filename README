@@ -74,4 +74,5 @@ letters
 27. This system must allow the player to: enter his/her userid
 	- Test by creating users/players and then entering in the desired userID, 
 	then press the log in button. Valid userIDs will reach the main menu, invalid 
-	ones will have their input field cleared for another log in attempt
+	ones will have their input field cleared for another log in attempt. current
+	taken from the userData flat file. 
