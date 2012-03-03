@@ -1,3 +1,57 @@
-NO FREAKING COPYING.
+GROUP2README
 
-See COPYING for more information. 
+SECTIONS TO BE MARKED
+
+1. The administrative user must be able to enter the number of Survivor contestants 
+this year. This number must be greater than or equal to 6 but less than or equal to 
+15.
+	-
+
+2. The administrative user must be able to add the names, first and last of each 
+contestant, unique id for each contestant and the tribe names of each contestant. 
+The first and last name must be 1-20 characters long, the unique id must be 2 
+characters long, where the characters can only be numbers or letters, it must be 
+case insensitive. 
+The tribe name must be 1-30 characters long.
+	-
+
+3. The administrative user should be able to upload a picture for each user. 
+(For testing purposed just use any .gif or .jpg of a head shot)
+	-
+
+4. The last week of Survivor always has 3 contestants, so the system should calculate 
+how many weeks the show will run based on the number of contestants and based on the 
+fact that one person will be voted off each week until there are 3 left. 
+This indicates how many rounds there will be.
+	-
+
+5. Up until the point that the game starts the administrative user should be able 
+to change/add/delete contestants, change names, tribes, unique ids and pictures. 
+The admin user should always be allowed to change the team name, even after the 
+game has started.
+	-
+
+7. When adding a player, the administrative user must enter Unique userid - this 
+id should be the same as the western userid: first initial, last name up to 6 
+character and then a number if that first initial and 1-6 characters are already used
+	-
+
+8. When adding a player, the administrative user must enter First name - 1 to 20 
+letters
+	-
+
+9. When adding a player, the administrative user must enter Last name - 1 to 20 
+letters
+	-
+
+12. The administrative user must be able to start the game (at this point no new 
+players or contestants can be added). At this point the administrative user should 
+also enter 
+the amount of money that each player is going to pitch in (for example each player 
+might be pitching in 5 dollars or 1 dollar).
+	-
+
+27. This system must allow the player to: enter his/her userid
+	- Test by creating users/players and then entering in the desired userID, 
+	then press the log in button. Valid userIDs will reach the main menu, invalid 
+	ones will have their input field cleared for another log in attempt
