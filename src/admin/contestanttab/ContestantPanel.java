@@ -136,11 +136,6 @@ public class ContestantPanel extends JPanel {
 		
 		buildActions();
 		
-		new FileDrop( this, new FileDrop.Listener(){   
-			public void filesDropped( java.io.File[] files ){   
-				updateContPicture(files[0].getAbsolutePath());
-			}  
-		});
 	}
 	
 	/**
@@ -381,6 +376,12 @@ public class ContestantPanel extends JPanel {
 		        
 		        setActiveContestant(c);
 		    }
+		});
+		
+		new FileDrop( this, new FileDrop.Listener(){   
+			public void filesDropped( java.io.File[] files ){   
+				updateContPicture(files[0].getAbsolutePath());
+			}  
 		});
 	}
 	
