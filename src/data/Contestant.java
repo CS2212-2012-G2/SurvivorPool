@@ -10,7 +10,7 @@ import java.util.Comparator;
  * 			Ramesh Raj 
  */
 
-public class Contestant {
+public class Contestant implements Person {
 
 	// player information
 	private String firstName, lastName, tribe, picture;
@@ -154,7 +154,7 @@ public class Contestant {
 	 */
 	public void setID(String newID) {
 		newID = newID.toLowerCase();
-		if (newID.matches(GameData.REGEX_CONTEST_ID))
+		if (newID.matches(REGEX_CONTEST_ID))
 			cID = newID;
 	}
 	

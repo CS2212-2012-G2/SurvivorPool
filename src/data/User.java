@@ -8,7 +8,7 @@ package data;
  *         Justin McDonald
  */
 
-public class User {
+public class User implements Person {
 
 	private String firstName, lastName, unID; // first and last names and unique
 												// ID (UWO ID format)
@@ -145,6 +145,14 @@ public class User {
 	public void setWinPick(Contestant winner) {
 		winPick = winner;
 		winPoints = 2 * game.weeksLeft();
+	}
+
+	@Override
+	public void setID(String id) {
+		id = id.toLowerCase();
+		if (id.matches(REGEX_CONTEST_ID))
+			unID = id;
+		
 	}
 
 	// ----------------- HELPER METHODS ----------------- //

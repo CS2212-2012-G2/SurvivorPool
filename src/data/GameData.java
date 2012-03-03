@@ -34,10 +34,6 @@ public class GameData {
 
 	private static GameData currentGame = null;
 	
-	public final static String REGEX_CONTEST_ID = "^[a-z]{2,7}[\\d]*$";
-	public final static String REGEX_FIRST_NAME = "^[A-z]{1,20}$";
-	public final static String REGEX_LAST_NAME  = "^[A-z\\s]{1,20}$";
-	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
 	 * proceed if numContestants is NOT between 6 and 15, inclusive. Sets number
@@ -124,7 +120,11 @@ public class GameData {
 		}
 		
 		if (!isIDValid(c.getID())) {
-			c.setID(generateContestantID(c));
+			ArrayList<Person> a = new ArrayList<Person>(15);
+			for (Contestant t: getAllContestants())
+				a.add((Person)t);
+			
+			c.setID(StringUtil.generateID(c, a));
 			System.out.println("Invalid contestant ID specified, generating.");
 		}
 		
@@ -238,38 +238,6 @@ public class GameData {
 	}
 	
 	/**
-	 * Uses the stored first and last name, and the currently running Game to 
-	 * generate a unique user ID.
-	 * @param c contestant to use data from.
-	 */
-	public String generateContestantID(Contestant c) {
-		if (c.getLastName() == null ||
-				c.getFirstName() == null) {
-			System.out.println("generateContestantID: first or last name null");
-			return new String();
-		}
-		
-		String newID;
-		String lastName = c.getLastName().toLowerCase().replaceAll("\\s+","");
-		String firstName = c.getFirstName().toLowerCase();
-		int lastSub = Math.min(6, lastName.length());
-		int num = 0;
-		do {
-			// take the first letter of first name
-			// take substring of lastName length 6 or full name
-			newID = firstName.charAt(0) 
-					+ lastName.substring(0, lastSub);
-			if (num != 0) {
-				newID += Integer.toString(num);
-			}
-			num++;
-		} while (!isIDValid(newID)); // check if the ID is present
-		
-		System.out.println("Generated: " + newID);
-		return newID;
-	}
-	
-	/**
 	 * Checks if an ID string passed in is valid amongst the currently loaded
 	 * ID tags. Also checks if the syntax is valid.
 	 * @param id The ID tag to check
@@ -277,7 +245,7 @@ public class GameData {
 	 */
 	public boolean isIDValid(String id) {
 		// build all the currently used IDs
-		return Main.checkString(id, REGEX_CONTEST_ID) 
+		return Main.checkString(id, Person.REGEX_CONTEST_ID) 
 				&& !isIDInUse(id);
 	}
 	

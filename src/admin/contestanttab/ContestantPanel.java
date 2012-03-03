@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -38,6 +39,8 @@ import sun.awt.VerticalBagLayout;
 
 import data.Contestant;
 import data.GameData;
+import data.Person;
+import data.StringUtil;
 
 
 import admin.Main;
@@ -280,7 +283,12 @@ public class ContestantPanel extends JPanel {
 			if (GameData.getCurrentGame().isIDValid(id)) {
 				activeCon.setID(id);
 			} else {
-				id = GameData.getCurrentGame().generateContestantID(activeCon);
+				// TODO: FIX
+				ArrayList<Person> a = new ArrayList<Person>(15);
+				for (Contestant c: GameData.getCurrentGame().getAllContestants())
+					a.add((Person)c);
+				
+				id = StringUtil.generateID(activeCon, a);
 				activeCon.setID(id);
 			}
 		}
@@ -313,13 +321,13 @@ public class ContestantPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!Main.checkString(tfFirstName.getText().trim(), GameData.REGEX_FIRST_NAME) ||
-						!Main.checkString(tfLastName.getText().trim(), GameData.REGEX_LAST_NAME)){
+				if(!Main.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME) ||
+						!Main.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
 					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
 					return;
 				}
 				
-				if(!Main.checkString(tfContID.getText(), GameData.REGEX_CONTEST_ID)){
+				if(!Main.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
 					JOptionPane.showMessageDialog(null, 
 							"Invalid ID! (Generating new ID)");
 					//return;
