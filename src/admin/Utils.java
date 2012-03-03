@@ -2,6 +2,7 @@ package admin;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -92,7 +93,19 @@ public class Utils {
 			comp.setForeground(theme.getForeground());
 		}
 	}
-	
+
+	//modified from http://today.java.net/pub/a/today/2003/10/14/swingcss.html
+	public void style(Component comp) {
+        if(! (comp instanceof Container)) {
+            return;
+        }
+        
+        Component[] comps = ((Container)comp).getComponents();
+        for(int i=0; i<comps.length; i++) {
+            comp.setBackground(theme.getBackground());
+            comp.setForeground(theme.getForeground());
+        }
+    }
 	/**
 	 * Checks if string matches pattern.
 	 * @param val The string to check for validity

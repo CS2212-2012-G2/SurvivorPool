@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Scanner;
 
 import admin.Main;
+import admin.Utils;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -245,7 +246,7 @@ public class GameData {
 	 */
 	public boolean isIDValid(String id) {
 		// build all the currently used IDs
-		return Main.checkString(id, Person.REGEX_CONTEST_ID) 
+		return Utils.checkString(id, Person.REGEX_CONTEST_ID) 
 				&& !isIDInUse(id);
 	}
 	

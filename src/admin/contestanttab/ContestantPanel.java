@@ -44,6 +44,7 @@ import data.StringUtil;
 
 
 import admin.Main;
+import admin.Utils;
 import admin.contestanttab.ContestantTableModel.SortColumnAdapter;
 
 
@@ -321,13 +322,13 @@ public class ContestantPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!Main.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME) ||
-						!Main.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
+				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME) ||
+						!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
 					JOptionPane.showMessageDialog(null,"Invalid name!(dialog box not permanent)");
 					return;
 				}
 				
-				if(!Main.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
+				if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
 					JOptionPane.showMessageDialog(null, 
 							"Invalid ID! (Generating new ID)");
 					//return;

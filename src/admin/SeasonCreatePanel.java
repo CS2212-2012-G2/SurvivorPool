@@ -145,8 +145,8 @@ public class SeasonCreatePanel extends JPanel {
 	 */
 	private boolean checkValidTribeNames(){
 		String pattern = "[A-z\\s]{1,30}";//regex for alphanumeric and between 1-30 characters long
-		return Main.checkString(txtTribe1.getText(),pattern)
-				&&Main.checkString(txtTribe2.getText(),pattern);
+		return Utils.checkString(txtTribe1.getText(),pattern)
+				&&Utils.checkString(txtTribe2.getText(),pattern);
 	}
 
 }
