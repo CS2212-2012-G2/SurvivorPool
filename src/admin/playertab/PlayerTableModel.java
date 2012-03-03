@@ -155,12 +155,13 @@ public class PlayerTableModel extends AbstractTableModel {
         	return false;
     }
 
-    public void addEmptyRow() {
-    	// TOOD: Make this create a new contestant ID
-        data.add(new Contestant());
-        fireTableRowsInserted(
-           data.size() - 1,
-           data.size() - 1);
+	/**
+	 * Gets a Contestant based on the row passed, this is used to read clicks.
+	 * @param row The row to gather from
+	 * @return Data contained in the Row in a Contestant form
+	 */
+    public Contestant getByRow(int row) {
+    	return data.get(row);
     }
 
 	/**

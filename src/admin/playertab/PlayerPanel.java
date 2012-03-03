@@ -2,6 +2,7 @@ package admin.playertab;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -73,13 +74,17 @@ public class PlayerPanel extends JPanel {
 	private Contestant activeCon = INACTIVE_CONT;
 
 	private JTable table;
-	protected PlayerTableModel tableModel; 
+	private PlayerTableModel tableModel; 
 	private JTableHeader header;
+	
+	private JButton bAddNew;
+	private JButton bDelete;
 	
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
 	
 	
 	public PlayerPanel(){
+		super();
 		
 		//////////////////////////////
 		// Top Panel:
@@ -109,31 +114,65 @@ public class PlayerPanel extends JPanel {
 					tfLastName, labelID, tfContID, labelCastOff, 
 					labelCastStatus, labelTribe, cbTribe);
 		
+		
 		// buttons:
 		bCastOff = new JButton("Cast Off");
 		bSavePlayer = new JButton("Save");
 		
 		//////////////////////////////
-		// Bottom Panel
+		// Mid
 		//////////////////////////////
 		tableModel = new PlayerTableModel(GameData.getCurrentGame().getAllContestants());
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
 		
+		//////////////////////////////
+		// Bottom
+		//////////////////////////////
+		bAddNew = new JButton("Add");
+		bDelete = new JButton("Delete");
+		
 		// build the two panes
-		setLayout(new VerticalBagLayout(5));
-		add(buildTopPanel());
-		add(buildTablePanel());
+		//setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		setLayout(new BorderLayout(5, 5));
+		buildTopPanel();
+		buildTablePanel();
+		buildBottomPanel();
+		//revalidate();
 		
 		buildActions();
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Builds the top panel including all the editable information
+	 * @return A panel containing editable information
 	 */
-	private JPanel buildTablePanel() {
-		JPanel pane = new JPanel();
+	private void buildTopPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout(10, 10));
+		
+		// this does not need to be referenced else where, only for layout
+		JPanel paneButtons = new JPanel();
+		GridLayout bl = new GridLayout(2, 1);
+		paneButtons.setLayout(bl);
+		
+		paneButtons.add(bCastOff);
+		paneButtons.add(bSavePlayer);
+		
+		// add all components on top:
+		panel.add(imgDisplay, BorderLayout.LINE_START);
+		panel.add(paneEditFields, BorderLayout.CENTER);
+		panel.add(paneButtons, BorderLayout.LINE_END);
+		
+		add(panel, BorderLayout.PAGE_START);
+	}
+	
+	/**
+	 * Builds the panel containing the JTable
+	 * @return JPanel containing the JTable and components
+	 */
+	private void buildTablePanel() {
+		JPanel panel = new JPanel();
 		
 		// settings:
 		header.setReorderingAllowed(false); // no moving.
@@ -169,30 +208,55 @@ public class PlayerPanel extends JPanel {
 	    
 	    JScrollPane scroll = new JScrollPane(table);
 		
-		setLayout(new BorderLayout(5, 5));
-		pane.add(scroll, BorderLayout.CENTER);
+		panel.setLayout(new BorderLayout(5, 5));
+		panel.add(scroll, BorderLayout.CENTER);
 	    
-	    return pane;
+	    add(panel, BorderLayout.CENTER);
 	}
 	
-	private JPanel buildTopPanel() {
+	private void buildBottomPanel() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout(10, 10));
+		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
-		// this does not need to be referenced else where, only for layout
-		JPanel paneButtons = new JPanel();
-		GridLayout bl = new GridLayout(2, 1);
-		paneButtons.setLayout(bl);
+		panel.add(bAddNew);
+		panel.add(bDelete);
 		
-		paneButtons.add(bCastOff);
-		paneButtons.add(bSavePlayer);
+		add(panel, BorderLayout.PAGE_END);
+	}
+	
+	/**
+	 * Updates the image displayed to have the path associated, helper method
+	 * <br>
+	 * <b>Note:</b> Pictures must be PNG format.
+	 * @param path Path to new image.
+	 */
+	//apparently images have to be .png and alphanumeric
+	private void updateContPicture(String path) {
+		// don't update if its already correct!
+		if (imgPath == path) {
+			return;
+		}
 		
-		// add all components on top:
-		panel.add(imgDisplay, BorderLayout.LINE_START);
-		panel.add(paneEditFields, BorderLayout.CENTER);
-		panel.add(paneButtons, BorderLayout.LINE_END);
+		try {
+			Image img = ImageIO.read(new File(path));
+			
+			// scale the image!
+			if (img.getWidth(null) > 200 ||
+					img.getHeight(null) > 200) {
+				img = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			}
+			
+			// NO IO errors occured if getting here:
+			ImageIcon imgD = new ImageIcon(img);
+			imgDisplay.setIcon(imgD);
+			imgPath = path;
+		} catch (IOException e) {
+			System.out.println("Exception loading image for contestant " +
+					"picture [" + path + "]");
+			imgDisplay.setIcon(null);
+			imgDisplay.setText("Could not load: " + path);
+		}
 		
-		return panel;
 	}
 	
 	/**
@@ -229,45 +293,7 @@ public class PlayerPanel extends JPanel {
 		return x;
 	}
 	
-	/**
-	 * Updates the image displayed to have the path associated, helper method
-	 * <br>
-	 * <b>Note:</b> Pictures must be PNG format.
-	 * @param path Path to new image.
-	 */
-	private void updateContPicture(String path) {
-		//apparently images have to be .png and alphanumeric
-		try {
-			Image img = ImageIO.read(new File(path));
-			
-			// scale the image!
-			img = img.getScaledInstance(imgDisplay.getWidth()-2, 
-					imgDisplay.getHeight()-2, Image.SCALE_FAST);
-			
-			// NO IO errors occured if getting here:
-			ImageIcon imgD = new ImageIcon(img);
-			imgDisplay.setIcon(imgD);
-			imgPath = path;
-		} catch (IOException e) {
-			System.out.println("Exception loading image for contestant " +
-					"picture [" + path + "]");
-			imgDisplay.setIcon(null);
-			imgDisplay.setText("Could not load: " + path);
-		}
-		
-	}
-	
 	private void setActiveContestant(Contestant c) {
-		if (c == INACTIVE_CONT) {
-			tfFirstName.setText("");
-			tfLastName.setText("");
-			labelCastStatus.setText("-");
-			cbTribe.setSelectedItem(0);
-			
-			updateContPicture(DEFAULT_PICTURE);
-			return;
-		}
-		
 		activeCon = c;
 		
 		tfFirstName.setText(c.getFirstName());
@@ -345,7 +371,11 @@ public class PlayerPanel extends JPanel {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
+		        int row = table.getSelectedRow();
 		        
+		        Contestant c = tableModel.getByRow(row);
+		        
+		        setActiveContestant(c);
 		    }
 		});
 	}
