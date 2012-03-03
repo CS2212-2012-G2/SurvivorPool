@@ -7,8 +7,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +25,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
@@ -365,17 +365,15 @@ public class ContestantPanel extends JPanel {
 				System.out.println("Casting off: " + activeCon.getID());
 			}
 		});
-		
-		table.addMouseListener(new MouseAdapter() {
-			
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
-		        int row = table.getSelectedRow();
-		        
-		        Contestant c = tableModel.getByRow(row);
-		        
-		        setActiveContestant(c);
-		    }
+			public void valueChanged(ListSelectionEvent arg0) {
+				 int row = table.getSelectedRow();
+				 Contestant c = tableModel.getByRow(row);
+			     setActiveContestant(c);
+				
+			}
 		});
 		
 		new FileDrop( this, new FileDrop.Listener(){   
