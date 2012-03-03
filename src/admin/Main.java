@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 
 import admin.contestanttab.ContestantPanel;
+import admin.playertab.PlayerPanel;
 
 import data.GameData;
 
