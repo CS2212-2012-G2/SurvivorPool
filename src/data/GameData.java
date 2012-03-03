@@ -92,8 +92,10 @@ public class GameData {
 	 * searches the array of current contestants for him/her. Returns
 	 * information found in the Contestant class to the caller.
 	 * 
-	 * @param target
-	 *            desired contestant
+	 * @param first
+	 * 				First name
+	 * @param last
+	 * 				Last name
 	 * @return contestant or string object
 	 */
 	public Contestant getContestant(String first, String last) {

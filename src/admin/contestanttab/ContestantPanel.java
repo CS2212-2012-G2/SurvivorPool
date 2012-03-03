@@ -145,7 +145,6 @@ public class ContestantPanel extends JPanel {
 	
 	/**
 	 * Builds the top panel including all the editable information
-	 * @return A panel containing editable information
 	 */
 	private void buildTopPanel() {
 		JPanel panel = new JPanel();
@@ -169,7 +168,6 @@ public class ContestantPanel extends JPanel {
 	
 	/**
 	 * Builds the panel containing the JTable
-	 * @return JPanel containing the JTable and components
 	 */
 	private void buildTablePanel() {
 		JPanel panel = new JPanel();

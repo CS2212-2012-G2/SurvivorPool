@@ -24,9 +24,7 @@ public class Contestant {
 	 *            first name
 	 * @param last
 	 *            last name
-	 * @param _id
-	 * 			  The ID of the contestant, should be maintained from the game
-	 * @param tribe
+	 * @param _tribe
 	 *            contestant's tribe
 	 */
 	public Contestant(String _id, String first, String last, String _tribe) {
