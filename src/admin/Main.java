@@ -43,9 +43,7 @@ public class Main extends JFrame{
 	};
 	
 	public Main(){
-		//TODO:get gamedata from initGamedata
 		GameData g = GameData.initGameData(getDataFile());
-		//TODO:change to use game data
 		if(g!=null)
 			initGUI();
 		else
