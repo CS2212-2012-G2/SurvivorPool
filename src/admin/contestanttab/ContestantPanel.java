@@ -43,6 +43,7 @@ import data.Person;
 import data.StringUtil;
 
 
+import admin.FileDrop;
 import admin.Main;
 import admin.Utils;
 import admin.contestanttab.ContestantTableModel.SortColumnAdapter;
@@ -145,6 +146,12 @@ public class ContestantPanel extends JPanel {
 		//revalidate();
 		
 		buildActions();
+		
+		new FileDrop( this, new FileDrop.Listener(){   
+			public void filesDropped( java.io.File[] files ){   
+				updateContPicture(files[0].getAbsolutePath());
+			}  
+		});
 	}
 	
 	/**
@@ -241,7 +248,8 @@ public class ContestantPanel extends JPanel {
 		
 		try {
 			Image img = ImageIO.read(new File(path));
-			
+			if(img==null)
+				throw new IOException();
 			// scale the image!
 			if (img.getWidth(null) > 200 ||
 					img.getHeight(null) > 200) {
