@@ -10,9 +10,9 @@ SECTIONS TO BE MARKED
 
 4a4
 Admin Data Persistence Example: 
-BB Data Persistence Example: The Blackberry log in screen reads input from a flat file userData. It takes data from
-the file, extracts the userIDs of all users, and then checks to see if the inputted
-log in was successful.
+BB Data Persistence Example: The Blackberry log in screen reads input from a flat 
+file userData. It takes data from the file, extracts the userIDs of all users,
+ and then checks to see if the inputted log in was successful.
 
 1. The administrative user must be able to enter the number of Survivor contestants 
 this year. This number must be greater than or equal to 6 but less than or equal to 
