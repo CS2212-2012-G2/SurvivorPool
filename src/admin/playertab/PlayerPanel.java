@@ -1,12 +1,14 @@
 package admin.playertab;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -17,11 +19,18 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 
 import sun.awt.HorizBagLayout;
 import sun.awt.VerticalBagLayout;
@@ -31,6 +40,7 @@ import data.GameData;
 
 
 import admin.Main;
+import admin.playertab.PlayerTableModel.SortColumnAdapter;
 
 
 public class PlayerPanel extends JPanel {
@@ -56,27 +66,30 @@ public class PlayerPanel extends JPanel {
 	private JTextField tfLastName;
 	private JComboBox<String> cbTribe;
 	
-	private PlayerTablePanel paneTable;
+	private JTextField tfContID;
+	private JLabel labelID;
 	
 	private static Contestant INACTIVE_CONT = new Contestant();
 	private Contestant activeCon = INACTIVE_CONT;
 
-	private PlayerTableModel tableModel;
-	private JTextField tfContID;
-	private JLabel labelID;
+	private JTable table;
+	protected PlayerTableModel tableModel; 
+	private JTableHeader header;
 	
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
 	
 	
 	public PlayerPanel(){
-		paneTop = new JPanel();
-		paneTop.setLayout(new BorderLayout(10, 10));
 		
+		//////////////////////////////
+		// Top Panel:
+		//////////////////////////////
 		// TODO: Better Test picture
 		imgDisplay = new JButton();
 		updateContPicture(DEFAULT_PICTURE); //apparently images have to be .png and alphanumeric
 		
-		/// Edit fields:
+		
+		// Edit fields:
 		labelName = new JLabel("Name:");
 		tfFirstName = new JTextField();
 		tfLastName = new JTextField();
@@ -93,12 +106,78 @@ public class PlayerPanel extends JPanel {
 		
 		// holds all the fields
 		paneEditFields = new EditPlayerFieldsPanel(labelName, tfFirstName, 
-				tfLastName, labelID, tfContID, labelCastOff, 
-				labelCastStatus, labelTribe, cbTribe);
+					tfLastName, labelID, tfContID, labelCastOff, 
+					labelCastStatus, labelTribe, cbTribe);
 		
 		// buttons:
 		bCastOff = new JButton("Cast Off");
 		bSavePlayer = new JButton("Save");
+		
+		//////////////////////////////
+		// Bottom Panel
+		//////////////////////////////
+		tableModel = new PlayerTableModel(GameData.getCurrentGame().getAllContestants());
+		table = new JTable(tableModel);
+		header = table.getTableHeader();
+		
+		// build the two panes
+		setLayout(new VerticalBagLayout(5));
+		add(buildTopPanel());
+		add(buildTablePanel());
+		
+		buildActions();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private JPanel buildTablePanel() {
+		JPanel pane = new JPanel();
+		
+		// settings:
+		header.setReorderingAllowed(false); // no moving.
+		table.setColumnSelectionAllowed(true);
+		table.setRowSelectionAllowed(true);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		header.addMouseListener(tableModel.new SortColumnAdapter());
+			
+		TableCellRenderer renderer = new TableCellRenderer() {
+
+			JLabel label = new JLabel();
+			
+			@Override
+	        public JComponent getTableCellRendererComponent(JTable table,
+	                Object value, boolean isSelected, boolean hasFocus,
+	                int row, int column) {
+	            
+				if (table.isRowSelected(row)) {
+					label.setBackground(Color.RED);
+				} else {
+					label.setBackground(UIManager.getColor("Table.background"));
+				}
+				
+				label.setOpaque(true);
+				label.setText("" + value);
+				
+	            return label;
+	        }
+
+	    };
+	    table.setDefaultRenderer(Object.class, renderer);
+	    
+	    JScrollPane scroll = new JScrollPane(table);
+		
+		setLayout(new BorderLayout(5, 5));
+		pane.add(scroll, BorderLayout.CENTER);
+	    
+	    return pane;
+	}
+	
+	private JPanel buildTopPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout(10, 10));
 		
 		// this does not need to be referenced else where, only for layout
 		JPanel paneButtons = new JPanel();
@@ -109,20 +188,11 @@ public class PlayerPanel extends JPanel {
 		paneButtons.add(bSavePlayer);
 		
 		// add all components on top:
-		paneTop.add(imgDisplay, BorderLayout.LINE_START);
-		paneTop.add(paneEditFields, BorderLayout.CENTER);
-		paneTop.add(paneButtons, BorderLayout.LINE_END);
+		panel.add(imgDisplay, BorderLayout.LINE_START);
+		panel.add(paneEditFields, BorderLayout.CENTER);
+		panel.add(paneButtons, BorderLayout.LINE_END);
 		
-		// bottom panel
-		tableModel = new PlayerTableModel(GameData.getCurrentGame().getAllContestants());
-		paneTable = new PlayerTablePanel(tableModel);
-		
-		setLayout(new VerticalBagLayout(5));
-		
-		add(paneTop);
-		add(paneTable);
-		
-		buildActions();
+		return panel;
 	}
 	
 	/**
@@ -269,6 +339,14 @@ public class PlayerPanel extends JPanel {
 				
 				System.out.println("Casting off: " + activeCon.getID());
 			}
+		});
+		
+		table.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+		        
+		    }
 		});
 	}
 	
