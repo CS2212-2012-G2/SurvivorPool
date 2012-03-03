@@ -3,12 +3,8 @@ package admin.contestanttab;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;

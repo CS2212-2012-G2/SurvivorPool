@@ -3,13 +3,17 @@ package admin;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.Pattern;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JTabbedPane;
 
 import admin.contestanttab.ContestantPanel;
 import admin.playertab.PlayerPanel;
-
 import data.GameData;
 
 public class Main extends JFrame{

@@ -11,6 +11,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,8 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import data.Person;
-
-import java.util.StringTokenizer;
 
 // TODO: REWRITE AND REBUILD. 
 

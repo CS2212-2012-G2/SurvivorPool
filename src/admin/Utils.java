@@ -3,12 +3,7 @@ package admin;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.regex.Pattern;
-
-import javax.swing.JComponent;
 
 
 public class Utils {

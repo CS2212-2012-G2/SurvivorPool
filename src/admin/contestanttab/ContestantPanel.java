@@ -3,21 +3,17 @@ package admin.contestanttab;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -34,19 +30,12 @@ import javax.swing.UIManager;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import sun.awt.HorizBagLayout;
-import sun.awt.VerticalBagLayout;
-
+import admin.FileDrop;
+import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.Person;
 import data.StringUtil;
-
-
-import admin.FileDrop;
-import admin.Main;
-import admin.Utils;
-import admin.contestanttab.ContestantTableModel.SortColumnAdapter;
 
 
 public class ContestantPanel extends JPanel {
