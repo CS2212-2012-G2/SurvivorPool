@@ -6,11 +6,11 @@ SECTIONS TO BE MARKED
 
 4a2 DONE
 
-4a3
+4a3 DONE 
 
 4a4
 Admin Data Persistence Example: 
-BB Data Persistence Example: The Blackberry log in screen reads input from a flat file. It takes data from
+BB Data Persistence Example: The Blackberry log in screen reads input from a flat file userData. It takes data from
 the file, extracts the userIDs of all users, and then checks to see if the inputted
 log in was successful.
 
