@@ -35,9 +35,9 @@ public class ContestantTableModel extends AbstractTableModel {
 	
 	/**
 	 * Creates the table model which controls the table's actions and data.
-	 * @param _columnNames The column names
-	 * @param _data	The data to work on/with. This could be an empty list, but
-	 * 			NOT null.
+	 * @param _globaldata The global data stored in GameData, this is done to
+	 * 			maintain data persistance with the two, while allowing order 
+	 * 			manipulation.
 	 */
 	public ContestantTableModel(List<Contestant> _globaldata) {
 		columnNames = new String[] {
@@ -174,7 +174,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	
 	/**
 	 * Used to check if data is Frozen, only some fields are editable if frozen
-	 * @return
+	 * @return wether the model's data is frozen or not. 
 	 */
 	public boolean isFrozen() {
 		return frozen;
@@ -223,8 +223,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	}
 	
 	/**
-	 * Sorts the table using {@link ContestantTableModel.sortTableBy} with 
-	 * the current sorted column.
+	 * Sorts the table using sortTableBy with the current sorted column.
 	 */
 	protected void sortTable() {
 		sortTableBy(-1);
