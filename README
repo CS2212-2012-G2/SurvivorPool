@@ -53,12 +53,15 @@ This indicates how many rounds there will be.
 7. When adding a player, the administrative user must enter Unique userid - this 
 id should be the same as the western userid: first initial, last name up to 6 
 character and then a number if that first initial and 1-6 characters are already used
-	- This will be generated based off first name, last name, and previous userIDs
+	- This will be generated based off first name and last name
+	- Currently we do not display these, but this will be implemented
+	  similarly to the Contestants for showing the data
 
 8. When adding a player, the administrative user must enter First name - 1 to 20 
 letters
 	- Warnings occur if smaller than 1 char, or larger than 20. 
 	  The player will not be added.
+	- this also works for contestants (in a cleaner, prettier fashion)
 
 9. When adding a player, the administrative user must enter Last name - 1 to 20 
 letters
@@ -72,7 +75,7 @@ letters
 	  sort "lowest to highest" according to lexographics or int value.
 
 27. This system must allow the player to: enter his/her userid
-	- Test by creating users/players and then entering in the desired userID, 
-	then press the log in button. Valid userIDs will reach the main menu, invalid 
-	ones will have their input field cleared for another log in attempt. current
-	taken from the userData flat file. 
+	- Test by creating users/players and then entering in the desired 
+	  userID, then press the log in button. Valid userIDs will reach the
+	  main menu, invalid ones will have their input field cleared for
+	  another log in attempt. current taken from the userData flat file. 
