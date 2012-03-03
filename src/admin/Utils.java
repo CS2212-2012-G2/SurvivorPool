@@ -35,7 +35,7 @@ public class Utils {
 		}
 	};
 
-	private static THEMES theme = THEMES.Snow;
+	private static THEMES theme = THEMES.Western;
 
 	
 	/**
@@ -80,30 +80,19 @@ public class Utils {
 		return themeString;
 	}
 	
-	/**
-	 * Apply theme to componenets
-	 * @param lstComp a LinkedList containing the components to apply the current theme
-	 */
-	public static void applyTheme(LinkedList<Component> lstComp){
-		Component comp;
-		Iterator<Component> it = lstComp.iterator();
-		while (it.hasNext()) {
-			comp = it.next();
-			comp.setBackground(theme.getBackground());
-			comp.setForeground(theme.getForeground());
-		}
-	}
-
 	//modified from http://today.java.net/pub/a/today/2003/10/14/swingcss.html
-	public void style(Component comp) {
-        if(! (comp instanceof Container)) {
-            return;
+	public static void style(Component comp) {
+	
+		comp.setForeground(theme.getForeground());
+        comp.setBackground(theme.getBackground());
+    	if(! (comp instanceof Container)) {
+    	    return;
         }
-        
+       
         Component[] comps = ((Container)comp).getComponents();
+        System.out.println(comps.length);
         for(int i=0; i<comps.length; i++) {
-            comp.setBackground(theme.getBackground());
-            comp.setForeground(theme.getForeground());
+            style(comps[i]);
         }
     }
 	/**

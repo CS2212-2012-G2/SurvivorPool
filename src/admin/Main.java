@@ -21,21 +21,21 @@ public class Main extends JFrame{
 	private JMenu mnuTheme = new JMenu("Theme");
 	
 	private JMenuItem mnuItemExit;
-	private JRadioButtonMenuItem mnuItemSunset;
-	private JRadioButtonMenuItem mnuItemJungle;
-	private JRadioButtonMenuItem mnuItemUnderwater;
+	private JRadioButtonMenuItem mnuItemTheme1;
+	private JRadioButtonMenuItem mnuItemTheme2;
+	private JRadioButtonMenuItem mnuItemTheme3;
 
 	ActionListener al = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == mnuItemExit) {
 				System.exit(0);
-			} else if (ae.getSource() == mnuItemSunset) {
-				System.out.println("Need to implement themes");
-			}else if (ae.getSource() == mnuItemJungle) {
-				System.out.println("Need to implement themes");
-			}else if (ae.getSource() == mnuItemUnderwater) {
-				System.out.println("Need to implement themes");
+			} else if (ae.getSource() == mnuItemTheme1) {
+				changeTheme(ae.getActionCommand());
+			}else if (ae.getSource() == mnuItemTheme3) {
+				changeTheme(ae.getActionCommand());
+			}else if (ae.getSource() == mnuItemTheme2) {
+				changeTheme(ae.getActionCommand());
 			}
 
 		}
@@ -72,17 +72,18 @@ public class Main extends JFrame{
 		
 		
 		mnuItemExit = new JMenuItem("Exit");
-		mnuItemSunset = new JRadioButtonMenuItem("Sunset");
-		mnuItemUnderwater = new JRadioButtonMenuItem("Underwater");
-		mnuItemJungle = new JRadioButtonMenuItem("Jungle");
+		String[] themeName = Utils.getThemes();
+		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
+		mnuItemTheme3 = new JRadioButtonMenuItem(themeName[1]);
+		mnuItemTheme2 = new JRadioButtonMenuItem(themeName[2]);
 		
 		ButtonGroup g = new ButtonGroup();
-		mnuTheme.add(mnuItemSunset);
-		g.add(mnuItemSunset);
-		mnuTheme.add(mnuItemUnderwater);
-		g.add(mnuItemUnderwater);
-		mnuTheme.add(mnuItemJungle);
-		g.add(mnuItemJungle);
+		mnuTheme.add(mnuItemTheme1);
+		g.add(mnuItemTheme1);
+		mnuTheme.add(mnuItemTheme3);
+		g.add(mnuItemTheme3);
+		mnuTheme.add(mnuItemTheme2);
+		g.add(mnuItemTheme2);
 		
 		mnuFile.add(mnuItemExit);
 		
@@ -90,12 +91,22 @@ public class Main extends JFrame{
 		menuBar.add(mnuTheme);
 		
 		mnuItemExit.addActionListener(al);
-		mnuItemSunset.addActionListener(al);
-		mnuItemUnderwater.addActionListener(al);
-		mnuItemJungle.addActionListener(al);
+		mnuItemTheme1.addActionListener(al);
+		mnuItemTheme3.addActionListener(al);
+		mnuItemTheme2.addActionListener(al);
 		
 		this.setJMenuBar(menuBar);
 		this.add(tabPane);
+		applyTheme();
+	}
+	
+	private void applyTheme(){
+		Utils.style(this);
+	}
+	
+	private void changeTheme(String name){
+		Utils.changeTheme(name);
+		Utils.style(this);
 	}
 	
 	public static void seasonCreated(){
