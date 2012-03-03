@@ -34,7 +34,7 @@ public class GameData {
 
 	private static GameData currentGame = null;
 	
-	public final static String REGEX_CONTEST_ID = "^[A-z]{2,7}[\\d]*$";
+	public final static String REGEX_CONTEST_ID = "^[a-z]{2,7}[\\d]*$";
 	public final static String REGEX_FIRST_NAME = "^[A-z]{1,20}$";
 	public final static String REGEX_LAST_NAME  = "^[A-z\\s]{1,20}$";
 	
@@ -149,6 +149,14 @@ public class GameData {
 	public int weeksLeft() {
 		return weeksRem;
 	}
+	
+	/**
+	 * Get the current week in play. Starts from Week 1.
+	 * @return Current week
+	 */
+	public int getCurrentWeek() {
+		return weeksPassed+1;
+	}
 
 	// ----------------- MUTATOR METHODS ------------------//
 
@@ -240,13 +248,14 @@ public class GameData {
 		}
 		
 		String newID;
-		String lastName = c.getLastName().replaceAll("\\s+","");
+		String lastName = c.getLastName().toLowerCase().replaceAll("\\s+","");
+		String firstName = c.getFirstName().toLowerCase();
 		int lastSub = Math.min(6, lastName.length());
 		int num = 0;
 		do {
 			// take the first letter of first name
 			// take substring of lastName length 6 or full name
-			newID = c.getFirstName().charAt(0) 
+			newID = firstName.charAt(0) 
 					+ lastName.substring(0, lastSub);
 			if (num != 0) {
 				newID += Integer.toString(num);

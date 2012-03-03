@@ -65,25 +65,23 @@ public class PlayerPanel extends JPanel {
 	private JTextField tfContID;
 	private JLabel labelID;
 	
+	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
+	
 	
 	public PlayerPanel(){
 		paneTop = new JPanel();
 		paneTop.setLayout(new BorderLayout(10, 10));
 		
-		// TODO: Resize?
-		String path = "res/test/defaultpic.png"; //apparently images have to be .png and alphanumeric
-		ImageIcon imgD = new ImageIcon(path);
+		// TODO: Better Test picture
 		imgDisplay = new JButton();
-		imgDisplay.setIcon(imgD);
+		updateContPicture(DEFAULT_PICTURE); //apparently images have to be .png and alphanumeric
 		
 		/// Edit fields:
 		labelName = new JLabel("Name:");
 		tfFirstName = new JTextField();
-		tfFirstName.setSize(200, 50);
 		tfLastName = new JTextField();
-		tfLastName.setSize(200, 50);
 		
-		labelCastOff = new JLabel("Cast of:");
+		labelCastOff = new JLabel("Cast off:");
 		// TODO: FIx the init of this.. :>
 		labelCastStatus = new JLabel("-");
 		
@@ -196,8 +194,7 @@ public class PlayerPanel extends JPanel {
 			labelCastStatus.setText("-");
 			cbTribe.setSelectedItem(0);
 			
-			// TODO: Make a picture of an X or some shit for nothing loaded
-			//updateContPicture(SOMEPATH);
+			updateContPicture(DEFAULT_PICTURE);
 			return;
 		}
 		
@@ -257,6 +254,21 @@ public class PlayerPanel extends JPanel {
 				}	
 			}
 			
+		});
+		
+		bCastOff.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// can't cast off someone already off.
+				if (activeCon.isCastOff())
+					return;
+				
+				activeCon.castOff();
+				
+				labelCastStatus.setText("Week " + activeCon.getCastDate());
+				
+				System.out.println("Casting off: " + activeCon.getID());
+			}
 		});
 	}
 	

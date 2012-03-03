@@ -1,12 +1,18 @@
 package admin.playertab;
 
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 import data.Contestant;
 import data.GameData;
@@ -178,7 +184,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * @param col -1 for stored value, else the column passed. Default
 	 * to no sorting otherwise.
 	 */
-	private void sortTableBy(int col) {
+	protected void sortTableBy(int col) {
 		Comparator<Contestant> comp;
 		
 		// use the stored column if -1 is passed.
@@ -219,7 +225,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * Sorts the table using {@link PlayerTableModel.sortTableBy} with 
 	 * the current sorted column.
 	 */
-	private void sortTable() {
+	protected void sortTable() {
 		sortTableBy(-1);
 	}
 	
@@ -252,15 +258,6 @@ public class PlayerTableModel extends AbstractTableModel {
 	public void updateContestant(Contestant c) {
 		boolean found = false;
 		
-		// update the contestant if they are present
-		/*for (Contestant dataCon: data)
-			if (dataCon.getID().equals(c.getID())) {
-				int i = data.indexOf(dataCon);
-				dataCon.update(c);
-				found = true;
-				// force the table to update.
-				break;
-			}*/
 		int index = Collections.binarySearch(globalData, c,
 				new Contestant.ComparatorID());
 		
@@ -271,6 +268,27 @@ public class PlayerTableModel extends AbstractTableModel {
 		}
 		
 		sortTable();
+	}
+	
+	protected class SortColumnAdapter extends MouseAdapter {
+		
+		public void mouseClicked(MouseEvent e) {
+	        JTable table = ((JTableHeader)e.getSource()).getTable();
+	        TableColumnModel colModel = table.getColumnModel();
+
+	        // The index of the column whose header was clicked
+	        int vIndex = colModel.getColumnIndexAtX(e.getX());
+
+	        // Return if not clicked on any column header
+	        if (vIndex == -1) {
+	            return;
+	        }
+	        
+	        int mIndex = table.convertColumnIndexToModel(vIndex);
+	        
+	        // we have the column index, sort the data
+	        sortTableBy(mIndex);
+	    }
 	}
 
 }

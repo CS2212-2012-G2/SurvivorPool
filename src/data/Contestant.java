@@ -19,26 +19,27 @@ public class Contestant {
 
 	/**
 	 * Constructor method for type contestant sets player info
-	 * 
-	 * @param _id
-	 * 			  The ID of the contestant, should be maintained from the game
+	 * @param _id ID tag
 	 * @param first
 	 *            first name
 	 * @param last
 	 *            last name
+	 * @param _id
+	 * 			  The ID of the contestant, should be maintained from the game
 	 * @param tribe
 	 *            contestant's tribe
 	 */
-
-	public Contestant(String first, String last, String _tribe) {
-		firstName = first;
-		lastName = last;
-		tribe = _tribe;
+	public Contestant(String _id, String first, String last, String _tribe) {
+		setID(_id);
+		setFirstName(first);
+		setLastName(last);
+		setTribe(_tribe);
 	}
 
 	// ------------------ ACCESSOR METHODS -----------------//
 
 	public Contestant() {
+		castDate = -2;
 	}
 
 	/**
@@ -46,7 +47,6 @@ public class Contestant {
 	 * 
 	 * @return this.firstName
 	 */
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -56,7 +56,6 @@ public class Contestant {
 	 * 
 	 * @return this.lastName
 	 */
-
 	public String getLastName() {
 		return lastName;
 	}
@@ -66,7 +65,6 @@ public class Contestant {
 	 * 
 	 * @return this.picture
 	 */
-
 	public String getPicture() {
 		return picture;
 	}
@@ -76,9 +74,8 @@ public class Contestant {
 	 * 
 	 * @return this.castOff
 	 */
-
 	public boolean isCastOff() {
-		return castDate == -1;
+		return castDate > -1;
 	}
 
 	// ----------------- MUTATOR METHODS -----------------//
@@ -86,11 +83,8 @@ public class Contestant {
 	/**
 	 * castOff indicates that a contestant has been removed from the show
 	 */
-
 	public void castOff() {
-		// TODO: Implement:
-		//castDate = getGameData.date();
-		// weekCastOff = game.weeksLeft();
+		castDate = GameData.getCurrentGame().getCurrentWeek();
 	}
 
 	/**
@@ -161,7 +155,8 @@ public class Contestant {
 	 * @param newID the new User ID, must adhere to correct syntax.
 	 */
 	public void setID(String newID) {
-		if (newID.matches("^[A-z]{2,7}[\\d]*$"))
+		newID = newID.toLowerCase();
+		if (newID.matches(GameData.REGEX_CONTEST_ID))
 			cID = newID;
 	}
 	
@@ -192,7 +187,9 @@ public class Contestant {
 	public static class ComparatorFirstName implements Comparator<Contestant> {
 		@Override
 		public int compare(Contestant c1, Contestant c2) {
-			return (c1.getFirstName().compareTo(c2.getFirstName()));
+			String f1 = c1.getFirstName().toLowerCase();
+			String f2 = c2.getFirstName().toLowerCase();
+			return (f1.compareTo(f2));
 		}
 	}
 	
@@ -205,7 +202,9 @@ public class Contestant {
 	public static class ComparatorLastName implements Comparator<Contestant> {
 		@Override
 		public int compare(Contestant c1, Contestant c2) {
-			return (c1.getLastName().compareTo(c2.getLastName()));
+			String l1 = c1.getLastName().toLowerCase();
+			String l2 = c2.getLastName().toLowerCase();
+			return (l1.compareTo(l2));
 		}
 	}
 	
@@ -218,7 +217,7 @@ public class Contestant {
 	public static class ComparatorTribe implements Comparator<Contestant> {
 		@Override
 		public int compare(Contestant c1, Contestant c2) {
-			return (c1.getLastName().compareTo(c2.getLastName()));
+			return (c1.getTribe().compareTo(c2.getTribe()));
 		}
 	}
 	
@@ -245,7 +244,7 @@ public class Contestant {
 		}
 		
 		if (c.getID() != null) {
-			cID = c.getID();
+			setID(c.getID());
 		}
 		
 		if (c.getPicture() != null) {
@@ -254,6 +253,10 @@ public class Contestant {
 		
 		if (c.getTribe() != null) {
 			setTribe(c.getTribe());
+		}
+		
+		if (c.isCastOff()) {
+			castDate = c.getCastDate();
 		}
 	}
 }
