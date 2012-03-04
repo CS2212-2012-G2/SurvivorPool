@@ -19,6 +19,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import json.JSONObject;
+import json.JSONUtils;
 
 /**
  * Screen for creating a season. Controls the number of contestants and weeks
@@ -112,18 +113,9 @@ public class SeasonCreatePanel extends JPanel {
 						return;
 					}
 					lblAlert.setText("valid tribe names!");
-					FileWriter fileWrite = new FileWriter(Main.getDataFile(), false);
-					BufferedWriter buffWrite = new BufferedWriter(fileWrite);
-					
-					JSONObject json = new JSONObject();
-					String tempString = spnContestant.getValue().toString();
-					json.put("Number of Contestants",tempString);
-					
-					json.put("Tribe 1 Name",txtTribe1.getText());
-					json.put("Tribe 2 Name",txtTribe2.getText());
-					String s = json.toString(4);
-					System.out.println(s);
-					buffWrite.close(); // close the file
+					JSONUtils.changeTribe1(txtTribe1.getText());
+					JSONUtils.changeTribe2(txtTribe2.getText());
+					JSONUtils.changeNumContestant(spnContestant.getValue().toString());
 					//Main.seasonCreated();
 				} catch (Exception i) {
 					i.printStackTrace();

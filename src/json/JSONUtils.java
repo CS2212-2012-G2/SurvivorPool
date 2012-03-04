@@ -23,10 +23,47 @@ public class JSONUtils extends JSONObject{
 	private static String contestantFile = "res/data/Contestant.dat";
 	private static String playerFile = "res/data/Player.dat";
 	
+	//TODO:Need to store keys in a constant rather than hardcoded
 	
+	/*------------------------------Updating Values--------------------*/
+	public static void changeTribe1(String name){
+		try {
+			jsonSeason.put("Tribe1", name);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void changeTribe2(String name){
+		try {
+			jsonSeason.put("Tribe2", name);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//the reason why this is String num and not int num is 
+	//because a spinner returns a string, not an integer
+	public static void changeNumContestant(String num){
+		try {
+			jsonSeason.put("Num Contestants",num);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	 
 	/*----------------------------READING FROM FILE---------------------*/
 	//TODO:methods for file input
-	
+	public static int getContestants(){
+		if(jsonSeason.has("Num Contestants")){
+			try {
+				return jsonSeason.getInt("Num Contestants");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return -1;
+	}
 	/*------------------------------WRITING TO FILE----------------------*/
 	/**
 	 * Write season information to file
@@ -68,7 +105,7 @@ public class JSONUtils extends JSONObject{
 			FileWriter fileWrite = new FileWriter(filePath, false);
 			BufferedWriter buffWrite = new BufferedWriter(fileWrite);
 			
-			String s = json.toString(4);
+			String s = json.toString(4);//makes it pretty so we can debug if needed
 			buffWrite.write(s);
 			
 			buffWrite.close();
