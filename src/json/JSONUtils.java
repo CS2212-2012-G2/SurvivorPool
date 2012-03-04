@@ -4,20 +4,18 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import admin.Main;
-
 /**
  * Use this class to get the keys, to write to a file, and getting values.
  * This differs from justing using the JSON classes directly as we keep
  * references to the object centralized. We can take care of any additional
  * code that is needed to read/write to files rather.
  */
-public class JSONUtils extends JSONObject{
+public class JSONUtils{
 
 	//we could combine all of this into one file.
-	public static JSONObject jsonSeason = new JSONObject();
-	public static JSONObject jsonContestants = new JSONObject();
-	public static JSONObject jsonPlayers = new JSONObject();
+	public static JSONObject jsonSeason = null;
+	public static JSONObject jsonContestants = null;
+	public static JSONObject jsonPlayers = null;
 	
 	private static String seasonFile = "res/data/Settings.dat";
 	private static String contestantFile = "res/data/Contestant.dat";
@@ -28,7 +26,7 @@ public class JSONUtils extends JSONObject{
 	/*------------------------------Updating Values--------------------*/
 	public static void changeTribe1(String name){
 		try {
-			jsonSeason.put("Tribe1", name);
+			jsonSeason.put("Tribe 1", name);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -36,7 +34,7 @@ public class JSONUtils extends JSONObject{
 	
 	public static void changeTribe2(String name){
 		try {
-			jsonSeason.put("Tribe2", name);
+			jsonSeason.put("Tribe 2", name);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -50,10 +48,9 @@ public class JSONUtils extends JSONObject{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	}
-	 
-	/*----------------------------READING FROM FILE---------------------*/
-	//TODO:methods for file input
+	} 
+	
+	/*----------------------------GETTING VALUES-----------------------*/
 	public static int getContestants(){
 		if(jsonSeason.has("Num Contestants")){
 			try {
@@ -64,6 +61,68 @@ public class JSONUtils extends JSONObject{
 		}
 		return -1;
 	}
+	
+	public static String getTribe1(){
+		return getString("Tribe 1");
+	}
+	
+	public static String getTribe2(){
+		return getString("Tribe 2");
+	}
+	
+	private static String getString(String key){
+		if(jsonSeason.has(key)){
+			try {
+				return jsonSeason.getString(key);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	
+	/*----------------------------READING FROM FILE---------------------*/
+	
+	/**
+	 * Read values from Season file for use
+	 */
+	public static void readSeasonFile(){
+		readFile(seasonFile);
+	}
+	
+	/**
+	 * Read values from Contestant file for use
+	 */
+	public static void readContestantFile(){
+		readFile(contestantFile);
+	}
+	
+	/**
+	 * Read values from Player file for use
+	 */
+	public static void readPlayerFile(){
+		readFile(playerFile);
+	}
+	
+	/**
+	 * Equivalent to calling all the read functions
+	 */
+	public static void readAllFiles(){
+		readSeasonFile();
+		readContestantFile();
+		readPlayerFile();
+	}
+	
+	private static void readFile(String path){
+		try {
+			jsonSeason = new JSONObject(path);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	/*------------------------------WRITING TO FILE----------------------*/
 	/**
 	 * Write season information to file
