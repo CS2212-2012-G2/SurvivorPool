@@ -18,6 +18,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import json.JSONObject;
+
 /**
  * Screen for creating a season. Controls the number of contestants and weeks
  * and the two tribes name.
@@ -110,18 +112,19 @@ public class SeasonCreatePanel extends JPanel {
 						return;
 					}
 					lblAlert.setText("valid tribe names!");
-					fileWrite = new FileWriter(
-							Main.getDataFile(), false);
-					buffWrite = new BufferedWriter(fileWrite);
-					 String tempString = spnContestant.getValue().toString();
-					buffWrite.write("Number_Of_Contestants: " + tempString); // first line
-					buffWrite.newLine();
-					buffWrite.write("Tribe_1_Name: " + txtTribe1.getText()); // 2nd line
-					buffWrite.newLine();
-					buffWrite.write("Tribe_2_Name: " + txtTribe2.getText()); // 3rd line
-					buffWrite.newLine();
+					FileWriter fileWrite = new FileWriter(Main.getDataFile(), false);
+					BufferedWriter buffWrite = new BufferedWriter(fileWrite);
+					
+					JSONObject json = new JSONObject();
+					String tempString = spnContestant.getValue().toString();
+					json.put("Number of Contestants",tempString);
+					
+					json.put("Tribe 1 Name",txtTribe1.getText());
+					json.put("Tribe 2 Name",txtTribe2.getText());
+					String s = json.toString(4);
+					System.out.println(s);
 					buffWrite.close(); // close the file
-					Main.seasonCreated();
+					//Main.seasonCreated();
 				} catch (Exception i) {
 					i.printStackTrace();
 				}
