@@ -23,18 +23,46 @@ public class JSONUtils extends JSONObject{
 	private static String contestantFile = "res/data/Contestant.dat";
 	private static String playerFile = "res/data/Player.dat";
 	
+	
+	/*----------------------------READING FROM FILE---------------------*/
+	//TODO:methods for file input
+	
+	/*------------------------------WRITING TO FILE----------------------*/
+	/**
+	 * Write season information to file
+	 */
 	public static void writeSeason(){
 		writeJSON(seasonFile,jsonSeason);
 	}
 	
+	/**
+	 * Write contestants' information to file
+	 */
 	public static void writeContestant(){
 		writeJSON(contestantFile,jsonSeason);
 	}
 	
+	/**
+	 * Write players' information to file
+	 */
 	public static void writePlayer(){
 		writeJSON(playerFile,jsonSeason);
 	}
 	
+	/**
+	 * Writes to all files.
+	 */
+	public static void writeAll(){
+		writeSeason();
+		writeContestant();
+		writePlayer();
+	}
+	
+	/**
+	 * Writes to file using a json object
+	 * @param filePath The file path to write to
+	 * @param json A json object that has the keys and teh values
+	 */
 	private static void writeJSON(String filePath, JSONObject json){
 		try {
 			FileWriter fileWrite = new FileWriter(filePath, false);
