@@ -1,3 +1,25 @@
+***The Merge master commit**********
+For those that wanted to know how to get rid of the commit that said merge master
+or something similar, here is how to fix it.
+
+First as always make sure you are working on the newest copy by:
+	git pull     (note that pull merges everything without allowing you to check)
+Then, we will do:
+	git branch branchName
+where branchName can be anything you want. Usually it's what you are working on.
+
+Now do whatever you wanted to add,change, etc and commit as usual.
+
+After you are ready to push your commits to github, do the following:
+	git checkout master
+	git pull origin master
+	git merge branchName (same branchName from before)
+	//at this part, there might be merge issues.
+	git push origin master
+
+This will stop that merge branch master commit.
+
+
 ****Help for using git********:
 Always do git fetch before working
     git fetch
