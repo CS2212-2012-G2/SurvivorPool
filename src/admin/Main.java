@@ -1,11 +1,13 @@
 package admin;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -67,13 +69,24 @@ public class Main extends JFrame{
 	private void initGUI(){
 		JTabbedPane tabPane = new JTabbedPane();
 		
-		//can do this by setting a jlabel as a tab and changing its prefered size
-		//<html><body leftmargin=30 topmargin=8 marginwidth=50 marginheight=5>General</body></html>
-		//TODO:fix the general tab so it changes color when theme changed. Might work if we used Jlabel
-		tabPane.addTab("<html><body><table width='150'>General</table></body></html>",new GeneralPanel());
-		tabPane.addTab("Contestants",new ContestantPanel());
-		tabPane.addTab("Players", new PlayerPanel());
-		tabPane.setBackground(Color.cyan);//tab background color,not the panel
+		JLabel lblGeneral = new JLabel("General");
+		JLabel lblContestants = new JLabel("Contestants");
+		JLabel lblPlayers = new JLabel("Players");
+		
+		Dimension d = new Dimension(150,20);
+		
+		lblGeneral.setPreferredSize(d);
+		lblContestants.setPreferredSize(d);
+		lblPlayers.setPreferredSize(d);
+		
+		tabPane.addTab(lblGeneral.getText(),new GeneralPanel());
+		tabPane.addTab(lblContestants.getText(),new ContestantPanel());
+		tabPane.addTab(lblPlayers.getText(), new PlayerPanel());
+		
+		tabPane.setTabComponentAt(0, lblGeneral);
+		tabPane.setTabComponentAt(1, lblContestants);
+		tabPane.setTabComponentAt(2, lblPlayers);
+		//tabPane.setBackground(Color.cyan);//tab background color,not the panel
 		
 		
 		mnuItemExit = new JMenuItem("Exit");
