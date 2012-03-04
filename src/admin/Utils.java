@@ -91,7 +91,6 @@ public class Utils {
         }
        
         Component[] comps = ((Container)comp).getComponents();
-        System.out.println(comps.length);
         for(int i=0; i<comps.length; i++) {
             style(comps[i]);
         }
