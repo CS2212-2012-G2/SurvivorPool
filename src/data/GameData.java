@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+import json.JSONUtils;
+
 import admin.Main;
 import admin.Utils;
 
@@ -26,7 +28,7 @@ public class GameData {
 										// passed
 	private boolean gameStarted, seasonMade = false; // true if game has started and admin can no
 									// longer add players
-	private ArrayList<Contestant> allContestants; // lits of
+	private ArrayList<Contestant> allContestants = new ArrayList<Contestant>(); // lits of
 															// all/remaining
 															// contestants
 	private String[] tribeNames = new String[2]; // string array storing both tribe names
@@ -225,18 +227,6 @@ public class GameData {
 	
 	// ----------------- HELPER METHODS ----------------- //
 	
-	/**
-	 * intGameData reads in a data file and builds a GameData object out
-	 * of it, returning it to the user.
-	 * 
-	 * @param inputFile   file to be read in
-	 * @return GameData object made out of file or null if season not created
-	 * 
-	 */
-	public static GameData initGameData(String inputFile){
-		readFile(inputFile);
-		return currentGame;
-	}
 	
 	/**
 	 * Checks if an ID string passed in is valid amongst the currently loaded
@@ -274,37 +264,29 @@ public class GameData {
 	}
 	
 	/**
-	 * reads in file and (supposed) to fill in appropriate game data
-	 * @param file the file that contains the data
+	 * intGameData reads in a data file and builds a GameData object out
+	 * of it, returning it to the user.
+	 * 
+	 * @param inputFile   file to be read in
+	 * @return GameData object made out of file or null if season not created
+	 * 
 	 */
-	private static void readFile(String file) {
+	public static GameData initGameData(){
 		try {
-			/*
-			 * first line num cont
-			 * second line tribe 1 name
-			 * 3rd line tribe 2 name
-			 */
-			Scanner scan = new Scanner(new File(file));
-			scan.next(); //key value
-			int numContestants =scan.nextInt();
-			
-			currentGame = new GameData(numContestants);
-			
-			scan.next();		//tribe 1 name
-			String t1 = scan.next();
-			
-			scan.next();		//tribe 2 name
-			String t2 = scan.next();
-			
-			currentGame.setTribeNames(t1, t2);
-			
-			
-			//TODO:might not need seasonmade..
-			currentGame.seasonMade();
+			JSONUtils.readSeasonFile();
 		} catch (FileNotFoundException e) {
-					
+			return null; 
 		}
+		currentGame = new GameData(JSONUtils.getContestants());
+		currentGame.setTribeNames(JSONUtils.getTribe1(), JSONUtils.getTribe2());
+		try {
+			JSONUtils.readContestantFile();
+			JSONUtils.readPlayerFile();
+		} catch (FileNotFoundException e) { 
+		}
+		return currentGame;
 	}
+	
 	
 	/**
 	 * Returns the currently stored Game, this removed need to reference the

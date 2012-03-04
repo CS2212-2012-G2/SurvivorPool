@@ -18,7 +18,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import json.JSONObject;
 import json.JSONUtils;
 
 /**
@@ -38,9 +37,6 @@ public class SeasonCreatePanel extends JPanel {
 	
 	JLabel lblAlert;
 	
-	private FileWriter fileWrite = null; // I/O
-	private BufferedWriter buffWrite = null;
-
 	public SeasonCreatePanel(){
 		this.setPreferredSize(new Dimension(400,400));
 		this.setLayout(new GridLayout(6,2));
@@ -116,7 +112,9 @@ public class SeasonCreatePanel extends JPanel {
 					JSONUtils.changeTribe1(txtTribe1.getText());
 					JSONUtils.changeTribe2(txtTribe2.getText());
 					JSONUtils.changeNumContestant(spnContestant.getValue().toString());
-					//Main.seasonCreated();
+					JSONUtils.writeSeason();
+					
+					Main.seasonCreated();
 				} catch (Exception i) {
 					i.printStackTrace();
 				}

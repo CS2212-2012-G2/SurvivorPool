@@ -30,7 +30,7 @@ public class Utils {
 		}
 	};
 
-	private static THEMES theme = THEMES.Western;
+	private static THEMES theme = THEMES.Snow;
 
 	
 	/**

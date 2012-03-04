@@ -1,8 +1,14 @@
 package json;
 
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import json.parser.JSONParser;
+import json.parser.ParseException;
 
 /**
  * Use this class to get the keys, to write to a file, and getting values.
@@ -13,72 +19,51 @@ import java.io.IOException;
 public class JSONUtils{
 
 	//we could combine all of this into one file.
-	public static JSONObject jsonSeason = null;
-	public static JSONObject jsonContestants = null;
-	public static JSONObject jsonPlayers = null;
+	public static JSONObject jsonSeason = new JSONObject();
+	public static JSONObject jsonContestants = new JSONObject();
+	public static JSONObject jsonPlayers = new JSONObject();
 	
+
 	private static String seasonFile = "res/data/Settings.dat";
 	private static String contestantFile = "res/data/Contestant.dat";
 	private static String playerFile = "res/data/Player.dat";
 	
 	//TODO:Need to store keys in a constant rather than hardcoded
+	final static String sCont = "Num contestant";
+	final static String sTribe1 = "Tribe 1";
+	final static String sTribe2 = "Tribe 2";
 	
 	/*------------------------------Updating Values--------------------*/
 	public static void changeTribe1(String name){
-		try {
-			jsonSeason.put("Tribe 1", name);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		jsonSeason.put(sTribe1, name);
 	}
 	
 	public static void changeTribe2(String name){
-		try {
-			jsonSeason.put("Tribe 2", name);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		jsonSeason.put(sTribe2, name);
 	}
 
 	//the reason why this is String num and not int num is 
 	//because a spinner returns a string, not an integer
 	public static void changeNumContestant(String num){
-		try {
-			jsonSeason.put("Num Contestants",num);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		jsonSeason.put(sCont,num);
 	} 
 	
 	/*----------------------------GETTING VALUES-----------------------*/
 	public static int getContestants(){
-		if(jsonSeason.has("Num Contestants")){
-			try {
-				return jsonSeason.getInt("Num Contestants");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		return -1;
+		return Integer.parseInt(jsonSeason.get(sCont).toString());
 	}
 	
 	public static String getTribe1(){
-		return getString("Tribe 1");
+		return getString(sTribe1);
 	}
 	
 	public static String getTribe2(){
-		return getString("Tribe 2");
+		return getString(sTribe2);
 	}
 	
 	private static String getString(String key){
-		if(jsonSeason.has(key)){
-			try {
-				return jsonSeason.getString(key);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
+		return (String) jsonSeason.get(key);
+
 	}
 	
 	
@@ -86,41 +71,54 @@ public class JSONUtils{
 	
 	/**
 	 * Read values from Season file for use
+	 * @throws FileNotFoundException 
 	 */
-	public static void readSeasonFile(){
-		readFile(seasonFile);
+	public static void readSeasonFile() throws FileNotFoundException{
+		jsonSeason=readFile(seasonFile);
 	}
 	
 	/**
 	 * Read values from Contestant file for use
+	 * @throws FileNotFoundException 
 	 */
-	public static void readContestantFile(){
-		readFile(contestantFile);
+	public static void readContestantFile() throws FileNotFoundException{
+		jsonContestants=readFile(contestantFile);
 	}
 	
 	/**
 	 * Read values from Player file for use
+	 * @throws FileNotFoundException 
 	 */
-	public static void readPlayerFile(){
-		readFile(playerFile);
+	public static void readPlayerFile() throws FileNotFoundException{
+		jsonPlayers=readFile(playerFile);
 	}
 	
 	/**
 	 * Equivalent to calling all the read functions
+	 * @throws FileNotFoundException 
 	 */
-	public static void readAllFiles(){
+	public static void readAllFiles() throws FileNotFoundException{
 		readSeasonFile();
 		readContestantFile();
 		readPlayerFile();
 	}
 	
-	private static void readFile(String path){
-		try {
-			jsonSeason = new JSONObject(path);
-		} catch (JSONException e) {
+	private static JSONObject readFile(String path) throws FileNotFoundException{
+		File f = new File(path);
+		if(!f.exists())
+			throw new FileNotFoundException();
+		try{
+			JSONParser parser = new JSONParser();
+			Object obj = parser.parse(new FileReader(path));
+			return (JSONObject) obj;
+			
+		}catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			
+		return null;
 	}
 	
 	/*------------------------------WRITING TO FILE----------------------*/
@@ -162,20 +160,13 @@ public class JSONUtils{
 	private static void writeJSON(String filePath, JSONObject json){
 		try {
 			FileWriter fileWrite = new FileWriter(filePath, false);
-			BufferedWriter buffWrite = new BufferedWriter(fileWrite);
-			
-			String s = json.toString(4);//makes it pretty so we can debug if needed
-			buffWrite.write(s);
-			
-			buffWrite.close();
+			fileWrite.write(json.toJSONString());
 			fileWrite.close();
 			
 		} catch (IOException e) {
 			System.out.println("JSONObject: writeJson: could not write to file");
 			e.printStackTrace();
-		} catch (JSONException e) {
-			System.out.println("JSONObject: writeJson: Jsonexception");
-			e.printStackTrace();
 		}
 	}
+
 }

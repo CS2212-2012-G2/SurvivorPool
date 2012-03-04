@@ -1,6 +1,5 @@
 package admin;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +48,8 @@ public class Main extends JFrame{
 	};
 	
 	public Main(){
-		GameData g = GameData.initGameData(getDataFile());
+		
+		GameData g = GameData.initGameData();
 		if(g!=null)
 			initGUI();
 		else
@@ -134,14 +134,10 @@ public class Main extends JFrame{
 	}
 	
 	public static void seasonCreated(){
-		GameData.initGameData(getDataFile());
+		GameData.initGameData();
 		m.getContentPane().removeAll();
 		m.initGUI();
 		m.applyTheme();
-	}
-	
-	public static String getDataFile(){
-		return "res/data/Settings.dat";
 	}
 	
 	public static void main(String[] args) {
