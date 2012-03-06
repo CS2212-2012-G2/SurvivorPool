@@ -17,7 +17,7 @@ import json.parser.ParseException;
  * code that is needed to read/write to files rather.
  */
 public class JSONUtils{
-
+	//TODO:NEED TO MAKE JSON UTILS USE SERIALIZATION!
 	//we could combine all of this into one file.
 	public static JSONObject jsonSeason = new JSONObject();
 	public static JSONObject jsonContestants = new JSONObject();
