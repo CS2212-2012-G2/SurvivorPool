@@ -110,6 +110,7 @@ public class GeneralPanel extends JPanel {
 				if(!GameData.getCurrentGame().getSeasonStarted()){
 					GameData.getCurrentGame().startSeason();
 					btnAdvWeek.setText("Advance Week");
+					//TODO: have a dialog box or something similar for weekly bet amount!.
 				}else
 					GameData.getCurrentGame().advanceWeek();
 			}
