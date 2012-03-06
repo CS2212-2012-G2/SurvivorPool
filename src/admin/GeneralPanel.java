@@ -19,7 +19,7 @@ import data.GameData;
 public class GeneralPanel extends JPanel {
 
 	JLabel lblGenInfo = new JLabel("General infos.");
-	JButton btnAdvWeek = new JButton("Advance week");
+	JButton btnAdvWeek = new JButton("Start season");
 	JLabel lblBonusInfo = new JLabel("Bonus info.");
 	
 	JRadioButton rbMultChoice = new JRadioButton("Multiple Choice");
@@ -45,6 +45,8 @@ public class GeneralPanel extends JPanel {
 		pnlGenInfo.add(lblGenInfo,BorderLayout.CENTER);
 		pnlGenInfo.add(btnAdvWeek,BorderLayout.SOUTH);
 		
+		if(GameData.getCurrentGame().getSeasonStarted())
+			btnAdvWeek.setText("Advance Week");
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,pnlGenInfo,lblBonusInfo);
 		splitPane.setDividerSize(1);
 		splitPane.setDividerLocation(320);

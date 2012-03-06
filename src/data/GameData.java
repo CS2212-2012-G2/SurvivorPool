@@ -26,7 +26,7 @@ public class GameData {
 
 	private int weeksRem, weeksPassed, numContestants; // keep track of weeks remaining/weeks
 										// passed
-	private boolean gameStarted, seasonMade = false; // true if game has started and admin can no
+	private boolean seasonStarted= false; // true if game has started and admin can no
 									// longer add players
 	private ArrayList<Contestant> allContestants = new ArrayList<Contestant>(); // lits of
 															// all/remaining
@@ -163,6 +163,14 @@ public class GameData {
 		return weeksPassed+1;
 	}
 
+	/**
+	 * Checks if a season has been started
+	 * @see startGame to set to true.
+	 * @return true if a season has started(different from created)
+	 */
+	public boolean getSeasonStarted(){
+		return seasonStarted;
+	}
 	// ----------------- MUTATOR METHODS ------------------//
 
 	/**
@@ -201,16 +209,7 @@ public class GameData {
 	 */
 
 	public void startGame() {
-		gameStarted = true;
-	}
-	
-	/**
-	 * seasonCreated sets the seasonMade boolean to true, indicating that there exists
-	 * a GameData object to be used.
-	 */
-	
-	public void seasonMade(){
-		seasonMade = true;
+		seasonStarted = true;
 	}
 	
 	/**
