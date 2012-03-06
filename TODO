@@ -51,6 +51,9 @@ BonusQuestion
 Admin (SWING)
 ------
 
+	ALL
+		- FORCE CHARACTER LIMIT FOR INPUT BOX (20 CHARS FOR NAMES, 30 FOR TRIBES)
+		
 	Main.java
 		
 		- CHANGE TAB SIZE
