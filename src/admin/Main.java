@@ -25,6 +25,7 @@ public class Main extends JFrame{
 	private JMenu mnuFile = new JMenu("File");
 	private JMenu mnuTheme = new JMenu("Theme");
 	
+	private JMenuItem mnuItemReset;
 	private JMenuItem mnuItemExit;
 	private JRadioButtonMenuItem mnuItemTheme1;
 	private JRadioButtonMenuItem mnuItemTheme2;
@@ -35,7 +36,9 @@ public class Main extends JFrame{
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == mnuItemExit) {
 				System.exit(0);
-			} else if (ae.getSource() == mnuItemTheme1) {
+			}else if (ae.getSource() == mnuItemReset){
+				resetSeason();
+			}else if (ae.getSource() == mnuItemTheme1) {
 				changeTheme(ae.getActionCommand());
 			}else if (ae.getSource() == mnuItemTheme3) {
 				changeTheme(ae.getActionCommand());
@@ -89,6 +92,7 @@ public class Main extends JFrame{
 		//tabPane.setBackground(Color.cyan);//tab background color,not the panel
 		
 		
+		mnuItemReset = new JMenuItem("Reset");
 		mnuItemExit = new JMenuItem("Exit");
 		String[] themeName = Utils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
@@ -103,11 +107,13 @@ public class Main extends JFrame{
 		mnuTheme.add(mnuItemTheme2);
 		g.add(mnuItemTheme2);
 		
+		mnuFile.add(mnuItemReset);
 		mnuFile.add(mnuItemExit);
 		
 		menuBar.add(mnuFile);
 		menuBar.add(mnuTheme);
 		
+		mnuItemReset.addActionListener(al);
 		mnuItemExit.addActionListener(al);
 		mnuItemTheme1.addActionListener(al);
 		mnuItemTheme3.addActionListener(al);
@@ -138,6 +144,11 @@ public class Main extends JFrame{
 		m.getContentPane().removeAll();
 		m.initGUI();
 		m.applyTheme();
+	}
+	
+	private void resetSeason() {
+		//TODO: Using json, need to remove the settings.dat file and reset season.
+		System.out.println("need to implement");
 	}
 	
 	public static void main(String[] args) {
