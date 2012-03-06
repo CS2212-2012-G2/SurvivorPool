@@ -3,6 +3,8 @@ package admin;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -34,6 +36,7 @@ public class GeneralPanel extends JPanel {
 		initPnlInfo();
 		initPnlBonus();
 		initPnlAnswer();
+		initListeners();
 		
 	}
 	
@@ -98,4 +101,19 @@ public class GeneralPanel extends JPanel {
 		pnlAnswer.setPreferredSize(new Dimension(480,200));
 		this.add(pnlAnswer);
 	}	
+
+	private void initListeners(){
+		btnAdvWeek.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(!GameData.getCurrentGame().getSeasonStarted()){
+					GameData.getCurrentGame().startSeason();
+					btnAdvWeek.setText("Advance Week");
+				}else
+					GameData.getCurrentGame().advanceWeek();
+			}
+			
+		});
+	}
 }

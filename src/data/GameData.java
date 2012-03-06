@@ -208,7 +208,7 @@ public class GameData {
 	 * more players/Contestants to the pool/game.
 	 */
 
-	public void startGame() {
+	public void startSeason() {
 		seasonStarted = true;
 	}
 	
