@@ -142,6 +142,7 @@ public class GameData {
 	 * @return String array  tribe names
 	 */
 	
+	
 	public String[] getTribeNames(){
 		return tribeNames;
 	}
@@ -239,6 +240,7 @@ public class GameData {
 				&& !isIDInUse(id);
 	}
 	
+	
 	/**
 	 * Helper method to get the index of a contestant ID in the 
 	 * activeContestants array
@@ -285,7 +287,7 @@ public class GameData {
 		}
 		return currentGame;
 	}
-	
+
 	
 	/**
 	 * Returns the currently stored Game, this removed need to reference the
@@ -302,5 +304,25 @@ public class GameData {
 	public static void endCurrentGame() {
 		GameData.currentGame = null;
 		//TODO:remove data persistence file
+	}
+	
+// ----------------- JSON ----------------- //
+	
+	/**
+	 * 
+	 */
+	public Object JSONForward(String str){
+		return new GameData(9);
+	}
+	
+	/**
+	 * 
+	 */
+	public String JSONback(String str){
+		String one = "\"tribe1\"";
+		String two = ("\"" + getCurrentGame().getTribeNames()[0] + "\"");
+		String three = "\"tribe2\"";
+		String four = ("\"" + getCurrentGame().getTribeNames()[1] + "\"");
+		return new String("{" + one + ":" + two + "," + three + ":" + four + "}");
 	}
 }

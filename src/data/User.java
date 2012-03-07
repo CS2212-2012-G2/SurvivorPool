@@ -155,6 +155,24 @@ public class User implements Person {
 		
 	}
 
-	// ----------------- HELPER METHODS ----------------- //
+// ----------------- JSON ----------------- //
+	
+	/**
+	 * 
+	 */
+	public Object JSONForward(String str){
+		return new User(null,null,null);
+	}
+	
+	/**
+	 * 
+	 */
+	public String JSONback(String str){
+		String one = "\"firstName\"";
+		String two = ("\"" + getFirstName() + "\"");
+		String three = "\"lastName\"";
+		String four = ("\"" + getLastName() + "\"");
+		return new String("{" + one + ":" + two + "," + three + ":" + four + "}");
+	}
 
 }

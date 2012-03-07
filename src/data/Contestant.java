@@ -158,6 +158,26 @@ public class Contestant implements Person {
 			cID = newID;
 	}
 	
+	
+	// ----------------- JSON ----------------- //
+	
+	/**
+	 * STUB
+	 */
+	public Object JSONForward(String str){
+		return new Contestant(null,null,null,null);
+	}
+	
+	/**
+	 * STUB
+	 */
+	public String JSONback(String str){
+		String one = "\"firstName\"";
+		String two = ("\"" + getFirstName() + "\"");
+		String three = "\"lastName\"";
+		String four = ("\"" + getLastName()+ "\"");
+		return new String("{" + one + ":" + two + "," + three + ":" + four + "}");
+	}
 	//////////////////
 	/// SUBCLASSES
 	//////////////////
@@ -256,5 +276,10 @@ public class Contestant implements Person {
 		if (c.isCastOff()) {
 			castDate = c.getCastDate();
 		}
+	}
+	
+	public static void main(String[] args){
+		Contestant fun = new Contestant("first","last","id", "String");
+		System.out.println(fun.JSONForward("string"));
 	}
 }
