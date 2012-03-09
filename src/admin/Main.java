@@ -13,9 +13,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
 
+import admin.data.GameData;
+
 import admin.contestanttab.ContestantPanel;
 import admin.playertab.PlayerPanel;
-import data.GameData;
 
 public class Main extends JFrame{
 

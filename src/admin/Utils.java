@@ -3,7 +3,11 @@ package admin;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
+
+import admin.data.Person;
 
 
 public class Utils {
@@ -107,6 +111,53 @@ public class Utils {
 		if(val.length()==0)
 			return false;
 		return Pattern.matches(pattern, val);
+	}
+	
+	/**
+	 * Uses the stored first and last name, and the currently running Game to 
+	 * generate a unique user ID.
+	 * @param activeCon person to use data from.
+	 * @param a Data to check through
+	 */
+	public static String generateID(admin.data.Person activeCon, List<admin.data.Person> a) {
+		if (activeCon.getLastName() == null ||
+				activeCon.getFirstName() == null) {
+			System.out.println("generateContestantID: first or last name null");
+			return new String();
+		}
+		
+		ArrayList<String> ids = new ArrayList<String>(a.size());
+		for (Person p: a)
+			if (p.getID() != null)
+				ids.add(p.getID());
+		
+		String newID;
+		String lastName = activeCon.getLastName().toLowerCase().replaceAll("\\s+","");
+		String firstName = activeCon.getFirstName().toLowerCase();
+		int lastSub = Math.min(6, lastName.length());
+		int num = 0;
+		boolean valid = false;
+		
+		do {
+			// take the first letter of first name
+			// take substring of lastName length 6 or full name
+			newID = firstName.charAt(0) 
+					+ lastName.substring(0, lastSub);
+			if (num != 0) {
+				newID += Integer.toString(num);
+			}
+			num++;
+			
+			valid = true;
+			for (String id: ids) 
+				if (id.equalsIgnoreCase(newID)) {
+					valid = false;
+					break;
+				}	
+		} while (!valid); // check if the ID is present
+		
+		System.out.println("Generated: " + newID);
+		return newID;
 	}
 	
 	

@@ -18,6 +18,8 @@ import javax.swing.JTextField;
 import data.GameData;
 
 
+
+
 public class GeneralPanel extends JPanel {
 
 	JLabel lblGenInfo = new JLabel("General infos.");

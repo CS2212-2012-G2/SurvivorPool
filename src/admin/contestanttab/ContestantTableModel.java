@@ -14,8 +14,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import data.Contestant;
 import data.GameData;
+
+import admin.ComparatorFactory;
+
+import admin.data.*;
 
 public class ContestantTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
@@ -193,23 +196,23 @@ public class ContestantTableModel extends AbstractTableModel {
 		
 		switch (col) {
         case INDEX_ID:
-        	comp = new Contestant.ComparatorID();
+        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID);
         	break;
         
         case INDEX_FIRSTNAME:
-        	comp = new Contestant.ComparatorFirstName();
+        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_FIRST_NAME);
         	break;
         
         case INDEX_LASTNAME:
-        	comp = new Contestant.ComparatorFirstName();
+        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_LAST_NAME);
         	break;
         
         case INDEX_TRIBE:
-        	comp = new Contestant.ComparatorLastName();
+        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_TRIBE);
         	break;
         	
         case INDEX_DATECAST:
-        	comp = new Contestant.ComparatorDate();
+        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_DATE);
         	break;
         	
         default:
@@ -259,7 +262,7 @@ public class ContestantTableModel extends AbstractTableModel {
 		boolean found = false;
 		
 		int index = Collections.binarySearch(globalData, c,
-				new Contestant.ComparatorID());
+				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_DATE));
 		
 		if (index >= 0) {
 			globalData.get(index).update(c);

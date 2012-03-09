@@ -5,9 +5,14 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import json.JSONUtils;
 
+import json.JSONObject;
+import json.JSONUtils;
+import json.parser.ParseException;
+
+import admin.ComparatorFactory;
 import admin.Utils;
+import admin.data.Contestant;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -18,20 +23,19 @@ import admin.Utils;
  *         Brightwell
  */
 
-public class GameData {
+public abstract class GameData {
 
-	private int weeksRem, weeksPassed, numContestants; // keep track of weeks remaining/weeks
+	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
+	protected int numContestants;
 										// passed
 	private boolean seasonStarted= false; // true if game has started and admin can no
 									// longer add players
-	private ArrayList<Contestant> allContestants = new ArrayList<Contestant>(); // lits of
-															// all/remaining
-															// contestants
+	
 	private String[] tribeNames = new String[2]; // string array storing both tribe names
 
 	// store the current running version.
 
-	private static GameData currentGame = null;
+	protected static GameData currentGame = null;
 	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -49,7 +53,6 @@ public class GameData {
 		weeksRem = numContestants - 3;
 		weeksPassed = 0;
 		this.numContestants = numContestants;
-		allContestants = new ArrayList<Contestant>(numContestants);
 		
 		currentGame = this;
 	}
@@ -62,15 +65,9 @@ public class GameData {
 	 * 
 	 * @return The contestants active
 	 */
-	public ArrayList<Contestant> getActiveContestants() {
-		ArrayList<Contestant> active = new ArrayList<Contestant>(allContestants.size());
-		
-		for (Contestant c: allContestants) 
-			if (!c.isCastOff())
-				active.add(c);
-		
-		return active;
-	}
+	public abstract Contestant[] getActiveContestants();
+	
+	
 
 	/**
 	 * getAllContestants returns a list of all current and former contestants
@@ -78,9 +75,7 @@ public class GameData {
 	 * 
 	 * @return this.allContestants
 	 */
-	public ArrayList<Contestant> getAllContestants() {
-		return allContestants;
-	}
+	public abstract Contestant[] getAllContestants();
 
 	/**
 	 * getContestant takes the first and last name of a contestant as input and
@@ -93,57 +88,17 @@ public class GameData {
 	 * 				Last name
 	 * @return contestant or string object
 	 */
-	public Contestant getContestant(String first, String last) {
-		Contestant j; 
-		// loop through array
-		for(int i = 0; i <= numContestants; i++){
-			j = allContestants.get(i); // get Contestant object for comparison 
-			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
-				return j; // return info on player
-			}
-		}
-		// otherwise return message saying contestant is no longer/is not in the game
-		return null;
-	}
+	public abstract Contestant getContestant(String first, String last);
 	
 	// TODO: Doc
-	public Contestant getContestant(String id) {
-		Contestant j; 
-		// loop through array
-		for(int i = 0; i <= numContestants; i++){
-			j = allContestants.get(i); // get Contestant object for comparison 
-			if(j.getID().equals(id)) { // ensure names match
-				return j; // return info on player
-			}
-		}
-		// otherwise return message saying contestant is no longer/is not in the game
-		return null;
-	}
+	public abstract Contestant getContestant(String id);
 	
 	/**
 	 * Adds a new contestant into the Game, this will maintain the list of 
 	 * contestants as sorted by ID.
 	 * @param c New contestant, will not add if ID of contestant is null.
 	 */
-	public void addContestant(Contestant c) {
-		if (c.getID() == null || 
-				c.getID().equals("")) {
-			System.out.println("Contestant must have valid ID");
-			return;
-		}
-		
-		if (!isIDValid(c.getID())) {
-			ArrayList<Person> a = new ArrayList<Person>(15);
-			for (Contestant t: getAllContestants())
-				a.add((Person)t);
-			
-			c.setID(StringUtil.generateID(c, a));
-			System.out.println("Invalid contestant ID specified, generating.");
-		}
-		
-		allContestants.add(c);
-		Collections.sort(allContestants, new Contestant.ComparatorID());
-	}
+	public abstract void addContestant(Contestant c);
 	
 	/**
 	 * getTribeName returns a String array with two entries: the name of the first tribe,
@@ -200,19 +155,7 @@ public class GameData {
 	 * @param target
 	 *            eliminated contestant
 	 */
-	public void removeContestant(Contestant target) {
-		// is the contestant there?
-		int i = Collections.binarySearch(allContestants, target,
-				new Contestant.ComparatorID());
-		
-		if (i < 0) {
-			// i < 0 implies not found.
-			return;
-		}
-		
-		allContestants.remove(i);
-		Collections.sort(allContestants, new Contestant.ComparatorID());
-	}
+	public abstract void removeContestant(Contestant target);
 
 	/**
 	 * startGame sets gameStarted to true, not allowing the admin to add any
@@ -257,13 +200,7 @@ public class GameData {
 	 * @param id Search Contestant ID
 	 * @return Index in activeContestants where ID is stored, else < 0.
 	 */
-	private int getContestantIndexID(String id) {
-		Contestant t = new Contestant();
-		t.setID(id);
-		
-		return Collections.binarySearch(allContestants, t, 
-				new Contestant.ComparatorID());
-	}
+	protected abstract int getContestantIndexID(String id); 
 	
 	/**
 	 * Tells whether an ID is in use.
@@ -273,31 +210,6 @@ public class GameData {
 	public boolean isIDInUse(String id) {
 		return (getContestantIndexID(id) >= 0);
 	}
-	
-	/**
-	 * intGameData reads in a data file and builds a GameData object out
-	 * of it, returning it to the user.
-	 * 
-	 * @param inputFile   file to be read in
-	 * @return GameData object made out of file or null if season not created
-	 * 
-	 */
-	public static GameData initGameData(){
-		try {
-			JSONUtils.readSeasonFile();
-		} catch (FileNotFoundException e) {
-			return null; 
-		}
-		currentGame = new GameData(JSONUtils.getContestants());
-		currentGame.setTribeNames(JSONUtils.getTribe1(), JSONUtils.getTribe2());
-		try {
-			JSONUtils.readContestantFile();
-			JSONUtils.readPlayerFile();
-		} catch (FileNotFoundException e) { 
-		}
-		return currentGame;
-	}
-
 	
 	/**
 	 * Returns the currently stored Game, this removed need to reference the
@@ -314,25 +226,5 @@ public class GameData {
 	public static void endCurrentGame() {
 		GameData.currentGame = null;
 		//TODO:remove data persistence file
-	}
-	
-// ----------------- JSON ----------------- //
-	
-	/**
-	 * 
-	 */
-	public Object JSONForward(String str){
-		return new GameData(9);
-	}
-	
-	/**
-	 * 
-	 */
-	public String JSONback(String str){
-		String one = "\"tribe1\"";
-		String two = ("\"" + getCurrentGame().getTribeNames()[0] + "\"");
-		String three = "\"tribe2\"";
-		String four = ("\"" + getCurrentGame().getTribeNames()[1] + "\"");
-		return new String("{" + one + ":" + two + "," + three + ":" + four + "}");
 	}
 }

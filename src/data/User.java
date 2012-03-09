@@ -13,14 +13,13 @@ import json.parser.ParseException;
  *         Justin McDonald
  */
 
-public class User implements Person, JSONAware {
+public abstract class User implements Person {
 
 	private String firstName, lastName, unID; // first and last names and unique
 												// ID (UWO ID format)
-	private int points, winPoints; // point total, points user receives if that
+	private int points; // point total, points user receives if that
 									// pick wins
-	private Contestant winPick, weeklyPick; // users pick of the winner and
-											// their weekly pick
+	protected int winPoints;
 
 	/**
 	 * Constructor method for the type User sets names, initializes points
@@ -77,9 +76,7 @@ public class User implements Person, JSONAware {
 	 * getWeeklyPick returns the users pick for which contestant will be
 	 * eliminated @ return this.weeklyPick
 	 */
-	public Contestant getWeeklyPick() {
-		return weeklyPick;
-	}
+	public abstract Contestant getWeeklyPick(); 
 	
 	public int getPoints() {
 		return points;
@@ -99,9 +96,7 @@ public class User implements Person, JSONAware {
 	 * 
 	 * @return this.winPick
 	 */
-	public Contestant getWinPick() {
-		return winPick;
-	}
+	public abstract Contestant getWinPick();
 
 	// ---------------- MUTATOR METHODS ----------------- //
 
@@ -141,9 +136,7 @@ public class User implements Person, JSONAware {
 	 * @param pick
 	 *            contestant choice
 	 */
-	public void setWeeklyPick(Contestant pick) {
-		weeklyPick = pick;
-	}
+	public abstract void setWeeklyPick(Contestant pick);
 
 	/**
 	 * setWinPick sets the users choice for which contestant will win the
@@ -153,16 +146,11 @@ public class User implements Person, JSONAware {
 	 * @param winner
 	 *            contestant choice
 	 */
-	public void setWinPick(Contestant winner) {
-		winPick = winner;
-		winPoints = 2 * GameData.getCurrentGame().weeksLeft();
-	}
+	public abstract void setWinPick(Contestant winner);
 	
 	// TODO: Doc
 	// just sets the same as prior without setting pts.
-	public void setWinPickNoSetPts(Contestant winner) {
-		winPick = winner;
-	}
+	public abstract void setWinPickNoSetPts(Contestant winner);
 	
 	public int getWinPoints() {
 		return winPoints;
@@ -193,71 +181,15 @@ public class User implements Person, JSONAware {
 	public static final String KEY_WIN_PICK_POINTS = "win_points";
 	public static final String KEY_ULT_PICK_ID	= "ult_pick";
 	public static final String KEY_WEEKLY_PICK_ID = "week_pick";
-	
-	@SuppressWarnings("unchecked")
-	public JSONObject toJSONObject() {
-		JSONObject obj = new JSONObject();
-		
-		obj.put(KEY_FIRST_NAME, getFirstName());
-		obj.put(KEY_LAST_NAME, getLastName());
-		obj.put(KEY_ID, getID());
-		obj.put(KEY_POINTS, new Integer(getPoints()));
-		
-		Contestant c = getWeeklyPick();
-		if (c != null)
-			obj.put(KEY_WEEKLY_PICK_ID, c.getID());
-		else 
-			obj.put(KEY_WEEKLY_PICK_ID, null);
-		
-		c = getWinPick();
-		if (c != null) 
-			obj.put(KEY_ULT_PICK_ID, c.getID());
-		else
-			obj.put(KEY_ULT_PICK_ID, null);
-		
-		obj.put(KEY_WIN_PICK_POINTS, new Integer(getWinPoints()));
-		
-		return obj;
-	}
-	
-	@Override
-	public String toJSONString() {
-		return toJSONObject().toJSONString();
-	}
-	
-	public static User fromJSONString(String json) throws ParseException {
-		JSONObject o = (JSONObject)JSONValue.parse(json);
-		
-		User u = new User();
-		GameData g = GameData.getCurrentGame();
-		
-		u.setID((String)o.remove(KEY_ID));
-		u.setFirstName((String)o.remove(KEY_FIRST_NAME));
-		u.setLastName((String)o.remove(KEY_LAST_NAME));
-		u.setPoints((Number)o.remove(KEY_POINTS));
-		u.setWeeklyPick(g.getContestant((String)o.remove(KEY_WEEKLY_PICK_ID)));
-		u.setWinPickNoSetPts(g.getContestant((String)o.remove(KEY_ULT_PICK_ID)));
-		u.setWinPickPts((Number)o.remove(KEY_WIN_PICK_POINTS));
-		
-		return u;
-	}
 
-	private void setWinPickPts(Number n) {
+	public abstract JSONObject toJSONObject(); 
+	
+	public abstract String toJSONString(); 
+	
+	public abstract void fromJSONString(String json) throws ParseException; 
+
+	protected void setWinPickPts(Number n) {
 		winPoints = n.intValue();
 		
 	}
-	
-	public static void main(String[] args) {
-		User u = new User("bob", "builder", "bbuilde");
-		
-		System.out.println(u.toJSONString());
-		
-		try {
-			User p  = User.fromJSONString(u.toJSONString());
-			System.out.println(p);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-
 }

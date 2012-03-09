@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -32,10 +34,7 @@ import javax.swing.table.TableCellRenderer;
 
 import admin.FileDrop;
 import admin.Utils;
-import data.Contestant;
-import data.GameData;
-import data.Person;
-import data.StringUtil;
+import admin.data.*;
 
 
 public class ContestantPanel extends JPanel {
@@ -116,7 +115,8 @@ public class ContestantPanel extends JPanel {
 		//////////////////////////////
 		// Mid
 		//////////////////////////////
-		tableModel = new ContestantTableModel(GameData.getCurrentGame().getAllContestants());
+		Contestant[] contestants = GameData.getCurrentGame().getAllContestants();
+		tableModel = new ContestantTableModel(Arrays.asList(contestants));
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
 		
@@ -281,7 +281,7 @@ public class ContestantPanel extends JPanel {
 				for (Contestant c: GameData.getCurrentGame().getAllContestants())
 					a.add((Person)c);
 				
-				id = StringUtil.generateID(activeCon, a);
+				id = Utils.generateID((Person)activeCon, (List<Person>)a);
 				activeCon.setID(id);
 			}
 		}
