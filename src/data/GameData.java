@@ -4,14 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 import json.JSONUtils;
 
-import admin.Main;
 import admin.Utils;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -103,6 +99,20 @@ public class GameData {
 		for(int i = 0; i <= numContestants; i++){
 			j = allContestants.get(i); // get Contestant object for comparison 
 			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
+				return j; // return info on player
+			}
+		}
+		// otherwise return message saying contestant is no longer/is not in the game
+		return null;
+	}
+	
+	// TODO: Doc
+	public Contestant getContestant(String id) {
+		Contestant j; 
+		// loop through array
+		for(int i = 0; i <= numContestants; i++){
+			j = allContestants.get(i); // get Contestant object for comparison 
+			if(j.getID().equals(id)) { // ensure names match
 				return j; // return info on player
 			}
 		}

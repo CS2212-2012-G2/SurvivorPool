@@ -23,6 +23,13 @@ public class Contestant implements Person, JSONAware {
 	private String firstName, lastName, tribe, picture;
 	private int castDate = -1; // week that player was cast off
 	private String cID;
+	
+	private final static String KEY_FIRST_NAME = "first";
+	private final static String KEY_LAST_NAME	= "last";
+	private final static String KEY_ID	= "id";
+	private final static String KEY_PICTURE = "picture";
+	private final static String KEY_TRIBE = "tribe";
+	private final static String KEY_DATE = "date";
 
 	/**
 	 * Constructor method for type contestant sets player info
@@ -279,16 +286,8 @@ public class Contestant implements Person, JSONAware {
 		return "CONTESTANT";
 	}
 	
-	private final static String KEY_FIRST_NAME = "first";
-	private final static String KEY_LAST_NAME	= "last";
-	private final static String KEY_ID	= "id";
-	private final static String KEY_PICTURE = "picture";
-	private final static String KEY_TRIBE = "tribe";
-	private final static String KEY_DATE = "date";
-
 	@SuppressWarnings("unchecked")
-	@Override
-	public String toJSONString() {
+	public JSONObject toJSONObject() {
 		JSONObject obj = new JSONObject();
 		
 		obj.put(KEY_FIRST_NAME, getFirstName());
@@ -298,7 +297,12 @@ public class Contestant implements Person, JSONAware {
 		obj.put(KEY_TRIBE, getTribe());
 		obj.put(KEY_DATE, new Integer(getCastDate()));
 		
-		return obj.toJSONString();
+		return obj;
+	}
+	
+	@Override
+	public String toJSONString() {
+		return toJSONObject().toJSONString();
 	}
 	
 	public static Contestant fromJSONString(String json) throws ParseException {
