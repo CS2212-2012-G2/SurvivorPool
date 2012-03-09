@@ -1,6 +1,13 @@
 package data;
 
 import java.util.Comparator;
+import java.util.HashMap;
+
+import json.JSONAware;
+import json.JSONObject;
+import json.JSONValue;
+import json.parser.JSONParser;
+import json.parser.ParseException;
 
 /**
  * The contestant class will be used to create a person who will be competing in
@@ -10,7 +17,7 @@ import java.util.Comparator;
  * 			Ramesh Raj 
  */
 
-public class Contestant implements Person {
+public class Contestant implements Person, JSONAware {
 
 	// player information
 	private String firstName, lastName, tribe, picture;
@@ -158,26 +165,14 @@ public class Contestant implements Person {
 			cID = newID;
 	}
 	
-	
-	// ----------------- JSON ----------------- //
-	
-	/**
-	 * STUB
-	 */
-	public Object JSONForward(String str){
-		return new Contestant(null,null,null,null);
+	public void setCastDate(int date) {
+		castDate = date;
 	}
 	
-	/**
-	 * STUB
-	 */
-	public String JSONback(String str){
-		String one = "\"firstName\"";
-		String two = ("\"" + getFirstName() + "\"");
-		String three = "\"lastName\"";
-		String four = ("\"" + getLastName()+ "\"");
-		return new String("{" + one + ":" + two + "," + three + ":" + four + "}");
+	public void setCastDate(Integer date) {
+		setCastDate(date.intValue());
 	}
+	
 	//////////////////
 	/// SUBCLASSES
 	//////////////////
@@ -278,8 +273,59 @@ public class Contestant implements Person {
 		}
 	}
 	
-	public static void main(String[] args){
-		Contestant fun = new Contestant("first","last","id", "String");
-		System.out.println(fun.JSONForward("string"));
+	@Override
+	public String toString() {
+		// TODO: IMPLEMENT
+		return "CONTESTANT";
+	}
+	
+	private final static String KEY_FIRST_NAME = "first";
+	private final static String KEY_LAST_NAME	= "last";
+	private final static String KEY_ID	= "id";
+	private final static String KEY_PICTURE = "picture";
+	private final static String KEY_TRIBE = "tribe";
+	private final static String KEY_DATE = "date";
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String toJSONString() {
+		JSONObject obj = new JSONObject();
+		
+		obj.put(KEY_FIRST_NAME, getFirstName());
+		obj.put(KEY_LAST_NAME, getLastName());
+		obj.put(KEY_ID, getID());
+		obj.put(KEY_PICTURE, getPicture());
+		obj.put(KEY_TRIBE, getTribe());
+		obj.put(KEY_DATE, new Integer(getCastDate()));
+		
+		return obj.toJSONString();
+	}
+	
+	public static Contestant fromJSONString(String json) throws ParseException {
+		JSONObject o = (JSONObject)JSONValue.parse(json);
+		
+		Contestant c = new Contestant();
+		
+		c.setID((String)o.remove(KEY_ID));
+		c.setFirstName((String)o.remove(KEY_FIRST_NAME));
+		c.setLastName((String)o.remove(KEY_LAST_NAME));
+		c.setPicture((String)o.remove(KEY_PICTURE));
+		c.setTribe((String)o.remove(KEY_TRIBE));
+		c.setCastDate(((Number)o.remove(KEY_DATE)).intValue());
+		
+		return c;
+	}
+	
+	public static void main(String[] args) {
+		Contestant c = new Contestant("ad", "Jon", "silver", "booby");
+		
+		System.out.println(c.toJSONString());
+		
+		try {
+			Contestant p = Contestant.fromJSONString(c.toJSONString());
+			System.out.println(p);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 }
