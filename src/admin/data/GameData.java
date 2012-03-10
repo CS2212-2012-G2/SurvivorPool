@@ -90,15 +90,20 @@ public class GameData extends data.GameData {
 		try {
 			JSONUtils.readSeasonFile();
 		} catch (FileNotFoundException e) {
-			return null; 
+			return (GameData) currentGame; 
 		}
+		
 		currentGame = new GameData(JSONUtils.getContestants());
 		currentGame.setTribeNames(JSONUtils.getTribe1(), JSONUtils.getTribe2());
+		
 		try {
 			JSONUtils.readContestantFile();
+		} catch (FileNotFoundException e) {}
+		try {
 			JSONUtils.readPlayerFile();
-		} catch (FileNotFoundException e) { 
-		}
+		} catch (FileNotFoundException e) {}
+		
+		
 		return (GameData)currentGame;
 	}
 
@@ -162,10 +167,17 @@ public class GameData extends data.GameData {
 	// TODO: Implement:
 	@Override
 	public String toString() {
-		return "GameData<...>";
+		return super.toString();
 	}
 	
-
+	/**
+	 * Used by SeasonCreate to create a new season.
+	 * @param num
+	 */
+	public static void initSeason(int num){
+		currentGame = new GameData(num);
+	}
+	
 	public static void main(String[] args) {
 		GameData g = new GameData(6);
 		

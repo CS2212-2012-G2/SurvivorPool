@@ -1,13 +1,5 @@
 package data;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
-
-
-
-import admin.ComparatorFactory;
 import admin.Utils;
 import admin.data.Contestant;
 import admin.data.JSONUtils;
@@ -336,6 +328,15 @@ public abstract class GameData {
 				", TN: {" + "\"" + tribeNames[0] + "\", " + " + \"" + tribeNames[1] + "\"}>");
 	}
 	
+	public void writeData(){
+		//TODO: remove the driver
+		System.out.println(this.toJSONObject().toJSONString());
+	}
+	
+	public void readData(){
+		//TODO:implement read function
+		System.out.println("read the data!");
+	}
 	// TODO: DOC THESE THREE
 	 
 	
