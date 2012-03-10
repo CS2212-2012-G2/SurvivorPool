@@ -2,7 +2,9 @@ package admin.data;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
@@ -11,106 +13,45 @@ import admin.ComparatorFactory;
 import admin.Utils;
 import admin.json.JSONArray;
 import admin.json.JSONObject;
-import admin.json.JSONUtils;
 import admin.json.JSONValue;
 import admin.json.parser.ParseException;
 
 //import data.Contestant;
+import data.InvalidFieldException;
 import data.Person;
 
 public class GameData extends data.GameData {
 
-	private ArrayList<Contestant> allContestants = new ArrayList<Contestant>(); // lits of
+	private List<Contestant> allList; // lits of
 	// all/remaining
 	// contestants
 	
 	public GameData(int numContestants) {
 		super(numContestants);
 		
-		allContestants = new ArrayList<Contestant>(numContestants);
+		allList = Arrays.asList(allContestants);
 	}
 	
-	@Override
-	public Contestant[] getActiveContestants() {
-		//ArrayList<ContestantAdmin> active = new ArrayList<ContestantAdmin>(allContestants.size());
-		
-		Contestant[] active = new Contestant[allContestants.size()];
-		
-		int newSize = 0;
-		for (int i = 0; i < allContestants.size(); i++) {
-			Contestant c = allContestants.get(i);
-			if (!c.isCastOff()) {
-				active[newSize++] = c;
-			}
-		}
-		
-		return active;
-	}
-	
-	@Override
-	public Contestant[] getAllContestants() {
-		return allContestants.toArray(new Contestant[0]);
+	private void updateSortAllContestants(int compFactID) {
+		allList = Arrays.asList(allContestants);
+		Collections.sort(allList, 
+				ComparatorFactory.getComparator(compFactID));
+		allContestants = allList.toArray(new Contestant[0]);
 	}
 
-	@Override
-	public Contestant getContestant(String first, String last) {
-		Contestant j; 
-		// loop through array
-		for(int i = 0; i <= numContestants; i++){
-			j = allContestants.get(i); // get Contestant object for comparison 
-			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
-				return j; // return info on player
-			}
-		}
-		// otherwise return message saying contestant is no longer/is not in the game
-		return null;
-	}
-
-	@Override
-	public Contestant getContestant(String id) {
-		Contestant j; 
-		// loop through array
-		for(int i = 0; i <= numContestants; i++){
-			j = allContestants.get(i); // get Contestant object for comparison 
-			if(j.getID().equals(id)) { // ensure names match
-				return j; // return info on player
-			}
-		}
-		// otherwise return message saying contestant is no longer/is not in the game
-		return null;
-	}
-	
-	// TODO: Should Add contestant check if there are already the max number?
-
+	// extends the method in super class to sort it.
 	@Override
 	public void addContestant(Contestant c) {
-		if (c.getID() == null || 
-				c.getID().equals("")) {
-			System.out.println("Contestant must have valid ID");
-			return;
-		}
+		super.addContestant(c);
 		
-		if (!isIDValid(c.getID())) {
-			ArrayList<Person> a = new ArrayList<Person>(15);
-			for (Contestant t: getAllContestants())
-				a.add((Person)t);
-			
-			// TODO: Exception or something?
-			//c.setID(Utils.generateID(c, a));
-			//System.out.println("Invalid contestant ID specified, generating.");
-			System.out.println("Contestant must have valid ID");
-			return;
-		}
-		
-		allContestants.add(c);
-		Collections.sort(allContestants, 
-				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
+		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
 	}
 
+	// overridden to use binary search for speeeeed.
 	@Override
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
-		int i = Collections.binarySearch(allContestants, (Contestant)target,
+		int i = Collections.binarySearch(allList, (Contestant)target,
 				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 		
 		if (i < 0) {
@@ -118,16 +59,22 @@ public class GameData extends data.GameData {
 			return;
 		}
 		
-		allContestants.remove(i);
-		Collections.sort(allContestants, ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
+		allList.remove(i);
+		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
 	}
 
 	@Override
 	protected int getContestantIndexID(String id) {
 		Contestant t = new Contestant();
-		t.setID(id);
-
-		return Collections.binarySearch(allContestants, t,
+		try { 
+			t.setID(id);
+		} catch (InvalidFieldException e) 
+		{ 
+			System.out.println("getContestantIndexID:\t" + e.getMessage());
+			return -1;
+		}
+	
+		return Collections.binarySearch(allList, t,
 				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 	}
 	
@@ -164,7 +111,7 @@ public class GameData extends data.GameData {
 		
 		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
 		JSONArray cons = new JSONArray();
-		for (Contestant c: allContestants) {
+		for (Contestant c: allList) {
 			cons.add(c.toJSONObject());
 		}
 		
@@ -194,13 +141,13 @@ public class GameData extends data.GameData {
 		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
 		
 		
-		allContestants = new ArrayList<Contestant>(numContestants);
+		allList = new ArrayList<Contestant>(numContestants);
 		// load the contestant array.
 		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
 		for (Object o: cons) {
 			Contestant c = new Contestant();
 			c.fromJSONObject((JSONObject)o);
-			allContestants.add(c);
+			allList.add(c);
 		}
 		
 		// tribes
@@ -226,8 +173,13 @@ public class GameData extends data.GameData {
 		
 		g.setTribeNames(tribes[0], tribes[1]);
 		
-		Contestant c1 = new Contestant("asd2", "Al", "Sd", tribes[1]);
-		Contestant c2 = new Contestant("as", "John", "Silver", tribes[0]);
+		Contestant c1 = null, c2 = null;
+		try {
+			c1 = new Contestant("asd2", "Al", "Sd", tribes[1]);
+			c2 = new Contestant("as", "John", "Silver", tribes[0]);
+		} catch (InvalidFieldException e) {
+			// wont happen.
+		}
 		
 		g.addContestant(c1);
 		g.addContestant(c2);

@@ -10,8 +10,8 @@ import java.util.Collections;
 import admin.ComparatorFactory;
 import admin.Utils;
 import admin.data.Contestant;
+import admin.data.JSONUtils;
 import admin.json.JSONObject;
-import admin.json.JSONUtils;
 import admin.json.parser.ParseException;
 
 /**
@@ -33,6 +33,9 @@ public abstract class GameData {
 	
 	protected String[] tribeNames = new String[2]; // string array storing both tribe names
 
+	protected Contestant[] allContestants;
+	private int newContestIndex = 0;
+	
 	// store the current running version.
 
 	protected static GameData currentGame = null;
@@ -67,6 +70,8 @@ public abstract class GameData {
 		weeksPassed = 0;
 		this.numContestants = numContestants;
 		
+		allContestants = new Contestant[numContestants];
+		
 		currentGame = this;
 	}
 
@@ -78,7 +83,25 @@ public abstract class GameData {
 	 * 
 	 * @return The contestants active
 	 */
-	public abstract Contestant[] getActiveContestants();
+	public Contestant[] getActiveContestants() {
+		//ArrayList<ContestantAdmin> active = new ArrayList<ContestantAdmin>(allContestants.size());
+		
+		Contestant[] active = new Contestant[allContestants.length];
+		
+		int newSize = 0;
+		for (int i = 0; i < allContestants.length; i++) {
+			Contestant c = allContestants[i];
+			if (!c.isCastOff()) {
+				active[newSize++] = c;
+			}
+		}
+		
+		Contestant[] cArr = new Contestant[newSize];
+		// TODO: Swap for a J2ME complient version with a for loop?
+		System.arraycopy(active, 0, cArr, 0, newSize);
+		
+		return cArr;
+	}
 	
 	
 
@@ -88,7 +111,9 @@ public abstract class GameData {
 	 * 
 	 * @return this.allContestants
 	 */
-	public abstract Contestant[] getAllContestants();
+	public Contestant[] getAllContestants() {
+		return allContestants;
+	}
 
 	/**
 	 * getContestant takes the first and last name of a contestant as input and
@@ -101,17 +126,45 @@ public abstract class GameData {
 	 * 				Last name
 	 * @return contestant or string object
 	 */
-	public abstract Contestant getContestant(String first, String last);
+	public Contestant getContestant(String first, String last) {
+		Contestant j; 
+		// loop through array
+		for(int i = 0; i <= numContestants; i++){
+			j = allContestants[i]; // get Contestant object for comparison 
+			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
+				return j; // return info on player
+			}
+		}
+		// otherwise return message saying contestant is no longer/is not in the game
+		return null;
+	}
 	
 	// TODO: Doc
-	public abstract Contestant getContestant(String id);
+	public Contestant getContestant(String id) {
+		int index = getContestantIndexID(id);
+		
+		return (index > -1 ? allContestants[index] : null);
+	}
 	
 	/**
 	 * Adds a new contestant into the Game, this will maintain the list of 
 	 * contestants as sorted by ID.
 	 * @param c New contestant, will not add if ID of contestant is null.
 	 */
-	public abstract void addContestant(Contestant c);
+	public void addContestant(Contestant c) {
+		if (c.getID() == null || 
+				!isIDValid(c.getID())) {
+			System.out.println("Contestant must have valid ID");
+			return;
+		}
+		
+		if (newContestIndex == numContestants) {
+			System.out.println("Too many contestants.");
+			return;
+		}
+		
+		allContestants[newContestIndex++] = c;
+	}
 	
 	/**
 	 * getTribeName returns a String array with two entries: the name of the first tribe,
@@ -162,13 +215,35 @@ public abstract class GameData {
 
 	/**
 	 * removeContestant takes a Contestant object as input and attempts to
-	 * remove it from the array of active contestants. Maintains sorted ID 
-	 * order
+	 * remove it from the array of active contestants. Maintains order of data
 	 * 
 	 * @param target
-	 *            eliminated contestant
+	 *            Contestant to remove
 	 */
-	public abstract void removeContestant(Contestant target);
+	public void removeContestant(Contestant target) {
+		// is the contestant there?
+		int index = -1;
+		for (int i = 0; i < numContestants && allContestants[i]	!= null; i++) {
+			if (target.getID().equalsIgnoreCase(allContestants[i].getID())) {
+				index = i;
+				break;
+			}
+		}
+		
+		if (index == -1) {
+			// no found index.			
+			return;
+		}
+		
+		for (int i = index; i < numContestants && allContestants[i] != null; i++) {
+			Contestant c = allContestants[i];
+			allContestants[i] = allContestants[i+1];
+			allContestants[i+1] = c;
+		}
+		
+		allContestants[newContestIndex-1] = null;
+		newContestIndex--;
+	}
 
 	/**
 	 * startGame sets gameStarted to true, not allowing the admin to add any
@@ -213,7 +288,18 @@ public abstract class GameData {
 	 * @param id Search Contestant ID
 	 * @return Index in activeContestants where ID is stored, else < 0.
 	 */
-	protected abstract int getContestantIndexID(String id); 
+	protected int getContestantIndexID(String id) {
+		Contestant j; 
+		// loop through array
+		for(int i = 0; i <= numContestants; i++){
+			j = allContestants[i]; // get Contestant object for comparison 
+			if(j.getID().equals(id)) { // ensure names match
+				return i; // return info on player
+			}
+		}
+		// otherwise return message saying contestant is no longer/is not in the game
+		return -1;
+	}
 	
 	/**
 	 * Tells whether an ID is in use.
@@ -245,9 +331,9 @@ public abstract class GameData {
 	 * toString returns a string of the contestant's information in JSON format.
 	 */
 	public String toString() {
-		return new String("GameData<WR: " + "\"" + weeksRem + "\"" + ", WP: " + "\"" + weeksPassed + "\"" + 
-				", #C: " + "\"" + numContestants + "\"" + ", SS: " + "\"" + seasonStarted + "\"" + 
-				", TN: " + "\"" + tribeNames[0] + "\"" + " + \"" + tribeNames[1] + "\">");
+		return new String("GameData<WR:\"" + weeksRem + "\"" + ", WP:\"" + weeksPassed + "\"" + 
+				", #C:\"" + numContestants + "\"" + ", SS: " + "\"" + seasonStarted + "\"" + 
+				", TN: {" + "\"" + tribeNames[0] + "\", " + " + \"" + tribeNames[1] + "\"}>");
 	}
 	
 	// TODO: DOC THESE THREE

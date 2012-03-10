@@ -19,9 +19,9 @@ public interface Person {
 	
 	public String getLastName();
 	
-	public void setFirstName(String name);
+	public void setFirstName(String name) throws InvalidFieldException;
 	
-	public void setLastName(String name);
+	public void setLastName(String name) throws InvalidFieldException;
 	
-	public void setID(String id);
+	public void setID(String id) throws InvalidFieldException;
 }

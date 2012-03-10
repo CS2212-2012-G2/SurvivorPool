@@ -9,7 +9,7 @@ package admin.data;
  */
 public interface Person {
 	
-	public final static String REGEX_CONTEST_ID = "^[a-z]{2,7}[\\d]*$";
+	public final static String REGEX_CONTEST_ID = "^[a-z]{2}$";
 	public final static String REGEX_FIRST_NAME = "^[A-z]{1,20}$";
 	public final static String REGEX_LAST_NAME  = "^[A-z\\s]{1,20}$";
 	

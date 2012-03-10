@@ -1,4 +1,4 @@
-package admin.contestanttab;
+package admin.playertab;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -14,14 +14,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import data.GameData;
-import data.InvalidFieldException;
-
-import admin.ComparatorFactory;
-
 import admin.data.*;
 
-public class ContestantTableModel extends AbstractTableModel {
+
+public class PlayerTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private String[] columnNames;
 	private List<Contestant> data;
@@ -43,7 +39,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * 			maintain data persistance with the two, while allowing order 
 	 * 			manipulation.
 	 */
-	public ContestantTableModel(List<Contestant> _globaldata) {
+	public PlayerTableModel(List<Contestant> _globaldata) {
 		columnNames = new String[] {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
@@ -123,23 +119,17 @@ public class ContestantTableModel extends AbstractTableModel {
         	break;
         
         case INDEX_FIRSTNAME:
-        	if (!frozen)
-        		try { 
-        			player.setFirstName((String)value); 
-        		} catch (InvalidFieldException e) { }
+        	//if (!frozen)
+        		//player.setFirstName((String)value);
         	break;
         
         case INDEX_LASTNAME:
-        	if (!frozen)
-        		try {
-        			player.setLastName((String)value);
-        		} catch (InvalidFieldException e) { }
+        	//if (!frozen)
+        		//player.setLastName((String)value);
         	break;
         
         case INDEX_TRIBE:
-        	try {
-        		player.setTribe((String)value);
-        	} catch (InvalidFieldException e) { }
+        	//player.setTribe((String)value);
         	break;
         	
         case INDEX_DATECAST:
@@ -202,34 +192,34 @@ public class ContestantTableModel extends AbstractTableModel {
 		col = (col == -1 ? sortColumn : col);
 		
 		switch (col) {
-        case INDEX_ID:
-        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID);
+        /*case INDEX_ID:
+        	comp = new Contestant.ComparatorID();
         	break;
         
         case INDEX_FIRSTNAME:
-        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_FIRST_NAME);
+        	comp = new Contestant.ComparatorFirstName();
         	break;
         
         case INDEX_LASTNAME:
-        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_LAST_NAME);
+        	comp = new Contestant.ComparatorFirstName();
         	break;
         
         case INDEX_TRIBE:
-        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_TRIBE);
+        	comp = new Contestant.ComparatorLastName();
         	break;
         	
         case INDEX_DATECAST:
-        	comp = ComparatorFactory.getComparator(ComparatorFactory.CONTNT_DATE);
-        	break;
+        	comp = new Contestant.ComparatorDate();
+        	break; */
         	
         default:
         	return;
         }
 		
-		Collections.sort(data, comp);
+		/*Collections.sort(data, comp);
 		fireTableDataChanged();
 		
-		sortColumn = col;
+		sortColumn = col;*/
 	}
 	
 	/**
@@ -266,18 +256,18 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * @param c New contestant data.
 	 */
 	public void updateContestant(Contestant c) {
+		/*boolean found = false;
+		
 		int index = Collections.binarySearch(globalData, c,
-				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_DATE));
+				new Contestant.ComparatorID());
 		
 		if (index >= 0) {
-			try { 
-				globalData.get(index).update(c); 
-			} catch (InvalidFieldException e) { }
+			globalData.get(index).update(c);
 		} else {
 			addContestant(c);
 		}
 		
-		sortTable();
+		sortTable();*/
 	}
 	
 	protected class SortColumnAdapter extends MouseAdapter {

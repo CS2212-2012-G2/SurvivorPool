@@ -43,7 +43,8 @@ public abstract class Contestant implements Person {
 	 * @param _tribe
 	 *            contestant's tribe
 	 */
-	public Contestant(String _id, String first, String last, String _tribe) {
+	public Contestant(String _id, String first, String last, String _tribe) 
+			throws InvalidFieldException {
 		setID(_id);
 		setFirstName(first);
 		setLastName(last);
@@ -116,8 +117,15 @@ public abstract class Contestant implements Person {
 	 * 
 	 * @param name
 	 *            name of new tribe
+	 * @throws InvalidFieldException If tribe is not used.
 	 */
-	public void setTribe(String name) {
+	public void setTribe(String name) throws InvalidFieldException {
+		String[] s = GameData.getCurrentGame().getTribeNames();
+		
+		if (name != s[0] && name != s[1]) {
+			throw new InvalidFieldException("Invalid Tribe.");
+		}
+		
 		tribe = name;
 	}
 
@@ -125,8 +133,12 @@ public abstract class Contestant implements Person {
 	 * Sets the contestant's first name.
 	 * @param name	New first name of the contestant, must be alphabetic, 
 	 * 		between 1 and 20 chars.
+	 * @throws InvalidFieldException 
 	 */
-	public void setFirstName(String name) {
+	public void setFirstName(String name) throws InvalidFieldException {
+		if (!name.matches(REGEX_FIRST_NAME))
+			throw new InvalidFieldException("Invalid First Name");
+		
 		firstName = name;
 		
 	}
@@ -135,9 +147,11 @@ public abstract class Contestant implements Person {
 	 * Sets the contestant's last name.
 	 * @param name New last name of the contestant
 	 */
-	public void setLastName(String name) {
-		lastName = name;
+	public void setLastName(String name) throws InvalidFieldException {
+		if (!name.matches(REGEX_LAST_NAME))
+			throw new InvalidFieldException("Invalid Last Name");
 		
+		lastName = name;
 	}
 
 	/**
@@ -168,11 +182,13 @@ public abstract class Contestant implements Person {
 	 * Sets the user ID to the passed ID, checks that is is of the correct 
 	 * format
 	 * @param newID the new User ID, must adhere to correct syntax.
+	 * @throws InvalidFieldException 
 	 */
-	public void setID(String newID) {
+	public void setID(String newID) throws InvalidFieldException {
 		newID = newID.toLowerCase();
-		if (newID.matches(REGEX_CONTEST_ID))
-			cID = newID;
+		if (!newID.matches(REGEX_CONTEST_ID))
+			throw new InvalidFieldException("Invalid contestant ID");
+		cID = newID;
 	}
 	
 	public void setCastDate(int date) {
@@ -183,7 +199,7 @@ public abstract class Contestant implements Person {
 		setCastDate(date.intValue());
 	}
 	
-	public void update(Contestant c) {
+	public void update(Contestant c) throws InvalidFieldException {
 		if (c.getFirstName() != null) {
 			setFirstName(c.getFirstName());
 		}

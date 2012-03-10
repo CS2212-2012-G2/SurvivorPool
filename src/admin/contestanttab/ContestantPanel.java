@@ -32,6 +32,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
+import data.InvalidFieldException;
+
 import admin.FileDrop;
 import admin.Utils;
 import admin.data.*;
@@ -259,37 +261,42 @@ public class ContestantPanel extends JPanel {
 	 * @return Current contestant loaded
 	 */
 	private Contestant getCurrentContestant() {
-		boolean newCont = false;
+		//boolean newCont = false;
 		Contestant x = null;
-		if (activeCon == INACTIVE_CONT) {
+		/*if (activeCon == INACTIVE_CONT) {
 			activeCon = new Contestant();
 			newCont = true;
-		}
+		} */
 		
-		activeCon.setFirstName(tfFirstName.getText());
-		activeCon.setLastName(tfLastName.getText());
-		activeCon.setTribe((String)cbTribe.getSelectedItem());
-		activeCon.setPicture(imgPath);
+		Contestant t = activeCon;
 		
-		String id = tfContID.getText();
-		if (newCont) {
+		activeCon = new Contestant();
+		
+		try {
+			String id = tfContID.getText();
 			if (GameData.getCurrentGame().isIDValid(id)) {
 				activeCon.setID(id);
 			} else {
 				// TODO: FIX
-				ArrayList<Person> a = new ArrayList<Person>(15);
-				for (Contestant c: GameData.getCurrentGame().getAllContestants())
-					a.add((Person)c);
-				
-				id = Utils.generateID((Person)activeCon, (List<Person>)a);
-				activeCon.setID(id);
+				throw new InvalidFieldException("Invalid ID by double occurance.");
 			}
+			
+			activeCon.setFirstName(tfFirstName.getText());
+			activeCon.setLastName(tfLastName.getText());
+			activeCon.setTribe((String)cbTribe.getSelectedItem());
+			activeCon.setPicture(imgPath);
+		} catch (InvalidFieldException ife) {
+			System.out.println("Invalid field:");
+			System.out.println("\t" + ife.getMessage());
+			
+			activeCon = t;
+			return null;
 		}
 			
-		x = activeCon;
+		t = activeCon;
 		activeCon = INACTIVE_CONT;
 		
-		return x;
+		return t;
 	}
 	
 	private void setActiveContestant(Contestant c) {
@@ -306,6 +313,8 @@ public class ContestantPanel extends JPanel {
 		
 		cbTribe.setSelectedItem(c.getTribe());
 		
+		tfContID.setText(c.getID());
+		
 		updateContPicture(c.getPicture());
 	}
 	
@@ -321,15 +330,19 @@ public class ContestantPanel extends JPanel {
 				}
 				
 				if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
+					// TODO: Make this better looking?
 					JOptionPane.showMessageDialog(null, 
-							"Invalid ID! (Generating new ID)");
-					//return;
+							"Invalid ID!");
+					return;
 				}
 				
 				// check if the contestant is active
 				Contestant con = getCurrentContestant();
 				
-				tableModel.updateContestant(con);
+				if (con != null) {
+					// null if something went wrong.
+					tableModel.updateContestant(con);
+				}
 				
 				System.out.println("We here");
 				
