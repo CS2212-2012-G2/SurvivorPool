@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,8 +16,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import admin.json.JSONUtils;
-
+import admin.data.GameData;
 
 /**
  * Screen for creating a season. Controls the number of contestants and weeks
@@ -110,10 +107,8 @@ public class SeasonCreatePanel extends JPanel {
 						return;
 					}
 					lblAlert.setText("valid tribe names!");
-					JSONUtils.changeTribe1(txtTribe1.getText());
-					JSONUtils.changeTribe2(txtTribe2.getText());
-					JSONUtils.changeNumContestant(spnContestant.getValue().toString());
-					JSONUtils.writeSeason();
+					GameData.initSeason(Integer.parseInt(spnContestant.getValue().toString()));
+					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(),txtTribe2.getText());
 					
 					Main.seasonCreated();
 				} catch (Exception i) {

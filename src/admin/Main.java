@@ -3,6 +3,8 @@ package admin;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -13,9 +15,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
 
-import admin.data.GameData;
-
 import admin.contestanttab.ContestantPanel;
+import admin.data.GameData;
 import admin.playertab.PlayerPanel;
 
 public class Main extends JFrame{
@@ -63,7 +64,13 @@ public class Main extends JFrame{
 		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent we) {
+				if(GameData.getCurrentGame()!=null)
+					GameData.getCurrentGame().writeData();
+			    System.exit(0);
+			}
+		});
 	}
 	
 	private void initSeasonCreateGUI(){
