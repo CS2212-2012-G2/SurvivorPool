@@ -2,7 +2,7 @@
  * $Id: ItemList.java,v 1.1 2006/04/15 14:10:48 platform Exp $
  * Created on 2006-3-24
  */
-package json;
+package admin.json;
 
 import java.util.ArrayList;
 import java.util.List;

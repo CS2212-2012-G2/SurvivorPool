@@ -3,12 +3,13 @@ package data;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import admin.json.JSONAware;
+import admin.json.JSONObject;
+import admin.json.JSONValue;
+import admin.json.parser.JSONParser;
+import admin.json.parser.ParseException;
 
-import json.JSONAware;
-import json.JSONObject;
-import json.JSONValue;
-import json.parser.JSONParser;
-import json.parser.ParseException;
+
 
 /**
  * The contestant class will be used to create a person who will be competing in
@@ -217,24 +218,13 @@ public abstract class Contestant implements Person {
 	// TODO: DOC THESE THREE
 	public abstract JSONObject toJSONObject(); 
 	
-	public abstract String toJSONString();
-	
 	public abstract void fromJSONString(String json) throws ParseException;
 	
+	public abstract void fromJSONObject(JSONObject o);
 	
-	
-	////
-	public static void main(String[] args) {
-		Contestant c = new admin.data.Contestant("ad", "Jon", "silver", "booby");
-		
-		System.out.println(c.toJSONString());
-		
-		try {
-			Contestant p = new admin.data.Contestant();
-			p.fromJSONString(c.toJSONString());
-			System.out.println(p);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public String toJSONString() {
+		return toJSONObject().toJSONString();
 	}
+
+	
 }

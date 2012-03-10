@@ -1,4 +1,4 @@
-package json;
+package admin.json;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,8 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import json.parser.JSONParser;
-import json.parser.ParseException;
+import admin.json.parser.JSONParser;
+import admin.json.parser.ParseException;
+
 
 /**
  * Use this class to get the keys, to write to a file, and getting values.

@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-import json.JSONObject;
-import json.JSONUtils;
-import json.parser.ParseException;
 
 import admin.ComparatorFactory;
 import admin.Utils;
 import admin.data.Contestant;
+import admin.json.JSONObject;
+import admin.json.JSONUtils;
+import admin.json.parser.ParseException;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -25,17 +25,29 @@ import admin.data.Contestant;
 
 public abstract class GameData {
 
-	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
+	protected int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
 	protected int numContestants;
 										// passed
-	private boolean seasonStarted= false; // true if game has started and admin can no
+	protected boolean seasonStarted= false; // true if game has started and admin can no
 									// longer add players
 	
-	private String[] tribeNames = new String[2]; // string array storing both tribe names
+	protected String[] tribeNames = new String[2]; // string array storing both tribe names
 
 	// store the current running version.
 
 	protected static GameData currentGame = null;
+	
+	
+	/**
+	 * JSON Keys
+	 */
+	protected static final String KEY_CONTESTANTS = "cons"; 
+	protected static final String KEY_NUM_CONTEST	= "cons_num";
+	
+	protected static final String KEY_WEEKS_REMAIN = "weeks_rem";
+	protected static final String KEY_WEEKS_PASSED = "weeks_pass";
+	
+	protected static final String KEY_TRIBES = "tribes_arr";
 	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -45,6 +57,7 @@ public abstract class GameData {
 	 * @param numContestants
 	 *            number of contestants to be in game
 	 */
+	// TODO: Make throw exception, its not enough to return, the object is still created.
 	public GameData(int numContestants) {
 		// check if within parameters
 		if(numContestants > 15 || numContestants < 6)
@@ -227,4 +240,17 @@ public abstract class GameData {
 		GameData.currentGame = null;
 		//TODO:remove data persistence file
 	}
+	
+	// TODO: DOC THESE THREE
+	 
+	
+	public String toJSONString() {
+		return toJSONObject().toJSONString();
+	}
+	
+	public abstract JSONObject toJSONObject();
+	
+	public abstract void fromJSONObject(JSONObject o);
+	
+	public abstract void fromJSONString(String json) throws ParseException;
 }

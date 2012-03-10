@@ -4,10 +4,16 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import json.JSONUtils;
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 
 import admin.ComparatorFactory;
 import admin.Utils;
+import admin.json.JSONArray;
+import admin.json.JSONObject;
+import admin.json.JSONUtils;
+import admin.json.JSONValue;
+import admin.json.parser.ParseException;
 
 //import data.Contestant;
 import data.Person;
@@ -73,6 +79,8 @@ public class GameData extends data.GameData {
 		// otherwise return message saying contestant is no longer/is not in the game
 		return null;
 	}
+	
+	// TODO: Should Add contestant check if there are already the max number?
 
 	@Override
 	public void addContestant(Contestant c) {
@@ -146,6 +154,94 @@ public class GameData extends data.GameData {
 		}
 		return (GameData)currentGame;
 	}
+
+	
+	
+	
+	@Override
+	public JSONObject toJSONObject() {
+		JSONObject obj = new JSONObject();
+		
+		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
+		JSONArray cons = new JSONArray();
+		for (Contestant c: allContestants) {
+			cons.add(c.toJSONObject());
+		}
+		
+		JSONArray ts = new JSONArray();
+		// TODO: only two tribes?
+		ts.add(tribeNames[0]);
+		ts.add(tribeNames[1]);
+		
+		
+		obj.put(KEY_CONTESTANTS, cons);
+		obj.put(KEY_TRIBES, ts);
+		obj.put(KEY_WEEKS_REMAIN, new Integer(weeksRem));
+		obj.put(KEY_WEEKS_PASSED, new Integer(weeksPassed));
+		
+		return obj;
+	}
+	
+	@Override
+	public void fromJSONString(String json) throws ParseException {
+		JSONObject o = (JSONObject)JSONValue.parse(json);
+		
+		fromJSONObject(o);
+	}
+
+	@Override
+	public void fromJSONObject(JSONObject obj) {
+		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
+		
+		
+		allContestants = new ArrayList<Contestant>(numContestants);
+		// load the contestant array.
+		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
+		for (Object o: cons) {
+			Contestant c = new Contestant();
+			c.fromJSONObject((JSONObject)o);
+			allContestants.add(c);
+		}
+		
+		// tribes
+		JSONArray ts = (JSONArray)obj.get(KEY_TRIBES);
+		tribeNames = new String[] { (String)ts.get(0), (String)ts.get(1) };
+		
+		// week info:
+		weeksRem = ((Number)obj.get(KEY_WEEKS_REMAIN)).intValue();
+		weeksPassed = ((Number)obj.get(KEY_WEEKS_PASSED)).intValue();
+	}
+	
+	// TODO: Implement:
+	@Override
+	public String toString() {
+		return "GameData<...>";
+	}
 	
 
+	public static void main(String[] args) {
+		GameData g = new GameData(6);
+		
+		String[] tribes = new String[] {"banana", "apple"};
+		
+		g.setTribeNames(tribes[0], tribes[1]);
+		
+		Contestant c1 = new Contestant("asd2", "Al", "Sd", tribes[1]);
+		Contestant c2 = new Contestant("as", "John", "Silver", tribes[0]);
+		
+		g.addContestant(c1);
+		g.addContestant(c2);
+		
+		System.out.println(g.toJSONString());
+		
+		GameData g2 = new GameData(6);
+		try {
+			g2.fromJSONString(g.toJSONString());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 }

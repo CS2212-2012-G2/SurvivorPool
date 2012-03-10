@@ -2,7 +2,7 @@
  * $Id: JSONObject.java,v 1.1 2006/04/15 14:10:48 platform Exp $
  * Created on 2006-4-10
  */
-package json;
+package admin.json;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -15,7 +15,7 @@ import java.util.Map;
  * 
  * @author FangYidong<fangyidong@yahoo.com.cn>
  */
-public class JSONObject extends HashMap implements Map, JSONAware, JSONStreamAware{
+public class JSONObject extends HashMap<Object, Object> implements Map<Object, Object>, JSONAware, JSONStreamAware{
 	private static final long serialVersionUID = -503443796854799292L;
 
     /**
@@ -27,14 +27,14 @@ public class JSONObject extends HashMap implements Map, JSONAware, JSONStreamAwa
      * @param map
      * @param out
      */
-	public static void writeJSONString(Map map, Writer out) throws IOException {
+	public static void writeJSONString(Map<Object, Object> map, Writer out) throws IOException {
 		if(map == null){
 			out.write("null");
 			return;
 		}
 		
 		boolean first = true;
-		Iterator iter=map.entrySet().iterator();
+		Iterator<Entry<Object, Object>> iter=map.entrySet().iterator();
 		
         out.write('{');
 		while(iter.hasNext()){
@@ -42,7 +42,7 @@ public class JSONObject extends HashMap implements Map, JSONAware, JSONStreamAwa
                 first = false;
             else
                 out.write(',');
-			Map.Entry entry=(Map.Entry)iter.next();
+			Map.Entry<Object, Object> entry=iter.next();
             out.write('\"');
             out.write(escape(String.valueOf(entry.getKey())));
             out.write('\"');
@@ -65,13 +65,13 @@ public class JSONObject extends HashMap implements Map, JSONAware, JSONStreamAwa
 	 * @param map
 	 * @return JSON text, or "null" if map is null.
 	 */
-	public static String toJSONString(Map map){
+	public static String toJSONString(Map<Object, Object> map){
 		if(map == null)
 			return "null";
 		
         StringBuffer sb = new StringBuffer();
         boolean first = true;
-		Iterator iter=map.entrySet().iterator();
+		Iterator<Entry<Object, Object>> iter=map.entrySet().iterator();
 		
         sb.append('{');
 		while(iter.hasNext()){
@@ -80,7 +80,7 @@ public class JSONObject extends HashMap implements Map, JSONAware, JSONStreamAwa
             else
                 sb.append(',');
             
-			Map.Entry entry=(Map.Entry)iter.next();
+			Map.Entry<Object, Object> entry=iter.next();
 			toJSONString(String.valueOf(entry.getKey()),entry.getValue(), sb);
 		}
         sb.append('}');

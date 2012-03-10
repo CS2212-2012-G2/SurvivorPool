@@ -1,4 +1,4 @@
-package json.parser;
+package admin.json.parser;
 
 import java.io.IOException;
 

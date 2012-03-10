@@ -1,9 +1,9 @@
 package admin.data;
 
+import admin.json.JSONObject;
+import admin.json.JSONValue;
+import admin.json.parser.ParseException;
 import data.Contestant;
-import json.JSONObject;
-import json.JSONValue;
-import json.parser.ParseException;
 
 public class User extends data.User {
 

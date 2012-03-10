@@ -1,4 +1,4 @@
-package json.parser;
+package admin.json.parser;
 
 import java.util.List;
 import java.util.Map;

@@ -82,6 +82,13 @@ Admin (SWING)
 		-MAKE IT LOOK BETTER!
 
 	-MAKE THEME ACTUALLY LOOK GOOD(LOW PRIORITY)	
+	
+	data
+	~~~~
+		ALL: 
+			Add documentation, the overridden methods do not need it (they 
+			inheret there parents), but if their parents are not done, do them.
+
 Data
 ----
 

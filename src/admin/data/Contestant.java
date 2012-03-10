@@ -1,8 +1,8 @@
 package admin.data;
 
-import json.JSONObject;
-import json.JSONValue;
-import json.parser.ParseException;
+import admin.json.JSONObject;
+import admin.json.JSONValue;
+import admin.json.parser.ParseException;
 
 public class Contestant extends data.Contestant {
 
@@ -47,6 +47,11 @@ public class Contestant extends data.Contestant {
 	public void fromJSONString(String json) throws ParseException {
 		JSONObject o = (JSONObject)JSONValue.parse(json);
 		
+		fromJSONObject(o);
+	}
+	
+	@Override
+	public void fromJSONObject(JSONObject o) {
 		setID((String)o.remove(KEY_ID));
 		setFirstName((String)o.remove(KEY_FIRST_NAME));
 		setLastName((String)o.remove(KEY_LAST_NAME));
@@ -55,4 +60,18 @@ public class Contestant extends data.Contestant {
 		setCastDate(((Number)o.remove(KEY_DATE)).intValue());
 	}
 
+	/// Driver for Contestant JSON 
+	public static void main(String[] args) {
+		Contestant c = new admin.data.Contestant("ad", "Jon", "silver", "booby");
+		
+		System.out.println(c.toJSONString());
+		
+		try {
+			Contestant p = new admin.data.Contestant();
+			p.fromJSONString(c.toJSONString());
+			System.out.println(p);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 }

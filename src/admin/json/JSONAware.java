@@ -1,4 +1,4 @@
-package json;
+package admin.json;
 
 /**
  * Beans that support customized output of JSON text shall implement this interface.  

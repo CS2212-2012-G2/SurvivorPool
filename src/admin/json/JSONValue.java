@@ -2,7 +2,7 @@
  * $Id: JSONValue.java,v 1.1 2006/04/15 14:37:04 platform Exp $
  * Created on 2006-4-15
  */
-package json;
+package admin.json;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -11,8 +11,9 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-import json.parser.JSONParser;
-import json.parser.ParseException;
+import admin.json.parser.JSONParser;
+import admin.json.parser.ParseException;
+
 
 
 /**

@@ -2,7 +2,7 @@
  * $Id: JSONParser.java,v 1.1 2006/04/15 14:10:48 platform Exp $
  * Created on 2006-4-15
  */
-package json.parser;
+package admin.json.parser;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -11,8 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import json.JSONArray;
-import json.JSONObject;
+import admin.json.JSONArray;
+import admin.json.JSONObject;
+
 
 
 /**

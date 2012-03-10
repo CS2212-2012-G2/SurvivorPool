@@ -1,9 +1,8 @@
 package data;
 
-import json.JSONAware;
-import json.JSONObject;
-import json.JSONValue;
-import json.parser.ParseException;
+import admin.json.JSONAware;
+import admin.json.JSONObject;
+import admin.json.parser.ParseException;
 
 /**
  * The user class will be used to create an individual who will be participating
@@ -13,13 +12,23 @@ import json.parser.ParseException;
  *         Justin McDonald
  */
 
-public abstract class User implements Person {
+public abstract class User implements Person, JSONAware {
 
 	private String firstName, lastName, unID; // first and last names and unique
 												// ID (UWO ID format)
 	private int points; // point total, points user receives if that
 									// pick wins
 	protected int winPoints;
+	
+	// JSON Keys:
+	
+	protected static final String KEY_ID = "id";
+	protected static final String KEY_FIRST_NAME = "first";
+	protected static final String KEY_LAST_NAME = "last";
+	protected static final String KEY_POINTS = "curr_points";
+	protected static final String KEY_WIN_PICK_POINTS = "win_points";
+	protected static final String KEY_ULT_PICK_ID	= "ult_pick";
+	protected static final String KEY_WEEKLY_PICK_ID = "week_pick";
 
 	/**
 	 * Constructor method for the type User sets names, initializes points
@@ -174,19 +183,16 @@ public abstract class User implements Person {
 
 	// ----------------- JSON ----------------- //
 	
-	public static final String KEY_ID = "id";
-	public static final String KEY_FIRST_NAME = "first";
-	public static final String KEY_LAST_NAME = "last";
-	public static final String KEY_POINTS = "curr_points";
-	public static final String KEY_WIN_PICK_POINTS = "win_points";
-	public static final String KEY_ULT_PICK_ID	= "ult_pick";
-	public static final String KEY_WEEKLY_PICK_ID = "week_pick";
+	
 
+	// TODO: DOCS:
 	public abstract JSONObject toJSONObject(); 
 	
-	public abstract String toJSONString(); 
+	public abstract void fromJSONString(String json) throws ParseException;
 	
-	public abstract void fromJSONString(String json) throws ParseException; 
+	public String toJSONString() {
+		return toJSONObject().toJSONString();
+	}
 
 	protected void setWinPickPts(Number n) {
 		winPoints = n.intValue();

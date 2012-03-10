@@ -18,7 +18,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import json.JSONUtils;
+import admin.json.JSONUtils;
+
 
 /**
  * Screen for creating a season. Controls the number of contestants and weeks

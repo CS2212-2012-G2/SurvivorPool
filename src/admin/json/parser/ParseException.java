@@ -1,4 +1,4 @@
-package json.parser;
+package admin.json.parser;
 
 /**
  * ParseException explains why and where the error occurs in source JSON text.
