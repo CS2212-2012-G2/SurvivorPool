@@ -329,8 +329,6 @@ public abstract class GameData {
 	}
 	
 	public void writeData(){
-		//TODO: remove the driver
-	//	System.out.println(this.toJSONObject().toJSONString());
 		JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
 	}
 

@@ -122,7 +122,7 @@ public abstract class Contestant implements Person {
 	public void setTribe(String name) throws InvalidFieldException {
 		String[] s = GameData.getCurrentGame().getTribeNames();
 		
-		if (name != s[0] && name != s[1]) {
+		if (!name.equals(s[0]) && name.equals(s[1])) {
 			throw new InvalidFieldException("Invalid Tribe.");
 		}
 		
