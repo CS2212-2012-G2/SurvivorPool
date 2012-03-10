@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
-
 import admin.ComparatorFactory;
 import admin.Utils;
 import admin.json.JSONArray;
@@ -18,7 +15,6 @@ import admin.json.parser.ParseException;
 
 //import data.Contestant;
 import data.InvalidFieldException;
-import data.Person;
 
 public class GameData extends data.GameData {
 
@@ -34,7 +30,7 @@ public class GameData extends data.GameData {
 	
 	private void updateSortAllContestants(int compFactID) {
 		allList = Arrays.asList(allContestants);
-		Collections.sort(allList, 
+		Collections.sort(Utils.noNullList(allList), 
 				ComparatorFactory.getComparator(compFactID));
 		allContestants = allList.toArray(new Contestant[0]);
 	}
@@ -51,7 +47,7 @@ public class GameData extends data.GameData {
 	@Override
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
-		int i = Collections.binarySearch(allList, (Contestant)target,
+		int i = Utils.BinSearchSafe(allList, (Contestant)target,
 				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 		
 		if (i < 0) {
@@ -62,7 +58,7 @@ public class GameData extends data.GameData {
 		allList.remove(i);
 		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
 	}
-
+	
 	@Override
 	protected int getContestantIndexID(String id) {
 		Contestant t = new Contestant();
@@ -74,7 +70,7 @@ public class GameData extends data.GameData {
 			return -1;
 		}
 	
-		return Collections.binarySearch(allList, t,
+		return Utils.BinSearchSafe(allList, t,
 				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 	}
 	
@@ -117,7 +113,8 @@ public class GameData extends data.GameData {
 		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
 		JSONArray cons = new JSONArray();
 		for (Contestant c: allList) {
-			cons.add(c.toJSONObject());
+			if (c != null)
+				cons.add(c.toJSONObject());
 		}
 		
 		JSONArray ts = new JSONArray();

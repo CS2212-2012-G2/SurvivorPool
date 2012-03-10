@@ -18,6 +18,7 @@ import data.GameData;
 import data.InvalidFieldException;
 
 import admin.ComparatorFactory;
+import admin.Utils;
 
 import admin.data.*;
 
@@ -266,8 +267,8 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * @param c New contestant data.
 	 */
 	public void updateContestant(Contestant c) {
-		int index = Collections.binarySearch(globalData, c,
-				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_DATE));
+		int index = Utils.BinSearchSafe(globalData, c,
+				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 		
 		if (index >= 0) {
 			try { 

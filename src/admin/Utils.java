@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import admin.data.Contestant;
 import admin.data.Person;
 
 
@@ -158,6 +161,34 @@ public class Utils {
 		
 		System.out.println("Generated: " + newID);
 		return newID;
+	}
+	
+	/**
+	 * Removes all 'null' items from a list.
+	 * @param l
+	 * @return
+	 */
+	public static <T> List<T> noNullList(List<T> l) {
+		List<T> list = new ArrayList<T>(l);
+		
+		int i = 0;
+		while ((i = list.indexOf(null)) != -1)
+			list.remove(i);
+		
+		return list;
+	}
+	
+	/**
+	 * removes null entries before performing binary search on a list.
+	 * @param list
+	 * @param target
+	 * @param comp
+	 * @return
+	 */
+	public static <T> int BinSearchSafe(List<T> list, T target, Comparator<T> comp) 
+	{
+		List<T> newList = noNullList(list);
+		return Collections.binarySearch(newList, target, comp);
 	}
 	
 	
