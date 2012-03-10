@@ -178,7 +178,14 @@ public abstract class User implements Person, JSONAware {
 		id = id.toLowerCase();
 		if (id.matches(REGEX_CONTEST_ID))
 			unID = id;
-		
+	}
+	
+	/**
+	 * toString returns a string of the contestant's information in JSON format.
+	 */
+	public String toString() {
+		return new String("User<FN: " + "\"" + firstName + "\"" + ", LN: " + "\"" + lastName + "\"" + 
+				", Points: " + "\"" + points + "\"" + ", ID: " + "\"" + unID + "\">");
 	}
 
 	// ----------------- JSON ----------------- //

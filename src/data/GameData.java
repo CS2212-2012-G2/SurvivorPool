@@ -241,6 +241,15 @@ public abstract class GameData {
 		//TODO:remove data persistence file
 	}
 	
+	/**
+	 * toString returns a string of the contestant's information in JSON format.
+	 */
+	public String toString() {
+		return new String("GameData<WR: " + "\"" + weeksRem + "\"" + ", WP: " + "\"" + weeksPassed + "\"" + 
+				", #C: " + "\"" + numContestants + "\"" + ", SS: " + "\"" + seasonStarted + "\"" + 
+				", TN: " + "\"" + tribeNames[0] + "\"" + " + \"" + tribeNames[1] + "\">");
+	}
+	
 	// TODO: DOC THESE THREE
 	 
 	

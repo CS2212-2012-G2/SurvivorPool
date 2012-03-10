@@ -209,11 +209,14 @@ public abstract class Contestant implements Person {
 		}
 	}
 	
-	@Override
+	/**
+	 * toString returns a string of the contestant's information in JSON format.
+	 */
 	public String toString() {
-		// TODO: IMPLEMENT
-		return "CONTESTANT";
+		return new String("Contestant<FN: " + "\"" + firstName + "\"" + ", LN: " + "\"" + lastName + "\"" + 
+				", Tribe: " + "\"" + tribe + "\"" + ", ID: " + "\"" + cID + "\">");
 	}
+	
 	
 	// TODO: DOC THESE THREE
 	public abstract JSONObject toJSONObject(); 
