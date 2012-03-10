@@ -83,22 +83,14 @@ public class GameData extends data.GameData {
 	 * 
 	 */
 	public static GameData initGameData() {
+		JSONObject json;
 		try {
-			JSONUtils.readSeasonFile();
+			json = JSONUtils.readFile(JSONUtils.seasonFile);
 		} catch (FileNotFoundException e) {
 			return (GameData) currentGame; 
 		}
-		
-		currentGame = new GameData(JSONUtils.getContestants());
-		currentGame.setTribeNames(JSONUtils.getTribe1(), JSONUtils.getTribe2());
-		
-		try {
-			JSONUtils.readContestantFile();
-		} catch (FileNotFoundException e) {}
-		try {
-			JSONUtils.readPlayerFile();
-		} catch (FileNotFoundException e) {}
-		
+		currentGame = new GameData(((Number)json.get(KEY_NUM_CONTEST)).intValue());
+		GameData.getCurrentGame().fromJSONObject(json);
 		
 		return (GameData)currentGame;
 	}
