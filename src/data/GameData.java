@@ -330,13 +330,10 @@ public abstract class GameData {
 	
 	public void writeData(){
 		//TODO: remove the driver
-		System.out.println(this.toJSONObject().toJSONString());
+	//	System.out.println(this.toJSONObject().toJSONString());
+		JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
 	}
-	
-	public void readData(){
-		//TODO:implement read function
-		System.out.println("read the data!");
-	}
+
 	// TODO: DOC THESE THREE
 	 
 	
