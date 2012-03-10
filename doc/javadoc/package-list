@@ -1,5 +1,8 @@
 admin
 admin.contestanttab
-client
+admin.data
+admin.json
+admin.json.parser
+admin.playertab
 data
 data.bonus
