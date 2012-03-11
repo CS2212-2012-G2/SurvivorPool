@@ -2,11 +2,14 @@ package admin.contestanttab;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,11 +38,13 @@ import javax.swing.table.TableCellRenderer;
 import data.InvalidFieldException;
 
 import admin.FileDrop;
+import admin.MainFrame;
+import admin.StatusPanel;
 import admin.Utils;
 import admin.data.*;
 
 
-public class ContestantPanel extends JPanel {
+public class ContestantPanel extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JButton imgDisplay;
@@ -108,6 +113,10 @@ public class ContestantPanel extends JPanel {
 		paneEditFields = new ContestantFieldsPanel(labelName, tfFirstName, 
 					tfLastName, labelID, tfContID, labelCastOff, 
 					labelCastStatus, labelTribe, cbTribe);
+		// add the mouse listener to all components.
+		for (Component c: paneEditFields.getComponents()) {
+			c.addMouseListener(this);
+		}
 		
 		
 		// buttons:
@@ -134,7 +143,6 @@ public class ContestantPanel extends JPanel {
 		buildTopPanel();
 		buildTablePanel();
 		buildBottomPanel();
-		//revalidate();
 		
 		buildActions();
 		
@@ -161,6 +169,14 @@ public class ContestantPanel extends JPanel {
 		panel.add(paneButtons, BorderLayout.LINE_END);
 		
 		add(panel, BorderLayout.PAGE_START);
+		
+		// add the mouse listener to all components.
+		for (Component c: panel.getComponents()) {
+			c.addMouseListener(this);
+		}
+		
+		for (Component c: paneButtons.getComponents())
+			c.addMouseListener(this);
 	}
 	
 	/**
@@ -207,6 +223,11 @@ public class ContestantPanel extends JPanel {
 		panel.add(scroll, BorderLayout.CENTER);
 	    
 	    add(panel, BorderLayout.CENTER);
+	    
+	    // add the mouse listener to all components.
+ 		for (Component c: scroll.getComponents()) {
+ 			c.addMouseListener(this);
+ 		}
 	}
 	
 	private void buildBottomPanel() {
@@ -217,6 +238,10 @@ public class ContestantPanel extends JPanel {
 		panel.add(bDelete);
 		
 		add(panel, BorderLayout.PAGE_END);
+		// add the mouse listener to all components.
+		for (Component c: panel.getComponents()) {
+			c.addMouseListener(this);
+		}
 	}
 	
 	/**
@@ -277,7 +302,6 @@ public class ContestantPanel extends JPanel {
 			if (GameData.getCurrentGame().isIDValid(id)) {
 				activeCon.setID(id);
 			} else {
-				// TODO: FIX
 				throw new InvalidFieldException("Invalid ID by double occurance.");
 			}
 			
@@ -378,13 +402,16 @@ public class ContestantPanel extends JPanel {
 				System.out.println("Casting off: " + activeCon.getID());
 			}
 		});
+		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
 				 int row = table.getSelectedRow();
 				 Contestant c = tableModel.getByRow(row);
-			     setActiveContestant(c);
+			     
+				 if (c != null)
+					 setActiveContestant(c);
 				
 			}
 		});
@@ -394,6 +421,51 @@ public class ContestantPanel extends JPanel {
 				updateContPicture(files[0].getAbsolutePath());
 			}  
 		});
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		return;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		Component c = e.getComponent();
+		StatusPanel sb = MainFrame.getRunningFrame().getStatusBar();
+		
+		if (c == labelName || c == tfFirstName || c == tfLastName) {
+			sb.setMsgLabel("First and Last name must be alphabetic");
+		} else if (c == labelID || c == tfContID) {
+			sb.setMsgLabel("ID must be two characters long and alpha-numeric");
+		} else if (c == labelTribe || c == cbTribe) {
+			sb.setMsgLabel("Select a tribe");
+		} else if (c == imgDisplay) {
+			sb.setMsgLabel("Click to select image");
+		} else if (c == table) {
+			sb.setMsgLabel("Click row to edit contestant");
+		} else if (c == bAddNew) {
+			sb.setMsgLabel("Click to add new contestant");
+		} else if (c == bSavePlayer) {
+			sb.setMsgLabel("Click to save contestant data");
+		}
+		//System.out.println("MouseEntered: " + c.toString());
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		mouseEntered(e);
+	}
+
+	// unused
+	@Override
+	public void mousePressed(MouseEvent e) {
+		return;
+	}
+
+	// unused
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		return;
 	}
 	
 }

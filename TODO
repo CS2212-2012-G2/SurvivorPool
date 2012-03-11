@@ -68,10 +68,12 @@ Admin (SWING)
 	
 		- MAKE IT LOOK BETTER!
 
-	PlayerPanel.java
+	ContestantPanel
+	~~~~~~~~~~~~~~~
 	
 		- EVERYTHING!
-		- Loading an image into the icon, should check size and resize if necessary
+		- Get the table to reselect the row after you reorder the columns
+		- Add a way to change the cast off date
 	
 	UserPanel.java
 	

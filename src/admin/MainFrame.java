@@ -22,16 +22,16 @@ import admin.contestanttab.ContestantPanel;
 import admin.data.GameData;
 import admin.playertab.PlayerPanel;
 
-public class Main extends JFrame{
+public class MainFrame extends JFrame{
 
-	static Main m;
+	static MainFrame m;
 	
 
 	private JTabbedPane tabPane = new JTabbedPane();
 	
-	private JLabel lblGeneral = new JLabel("General");
-	private JLabel lblContestants = new JLabel("Contestants");
-	private JLabel lblPlayers = new JLabel("Players");
+	private JLabel lblGeneral = new JLabel(GENERAL_PANEL);
+	private JLabel lblContestants = new JLabel(CONTESTANT_PANEL);
+	private JLabel lblPlayers = new JLabel(PLAYER_PANEL);
 	
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu mnuFile = new JMenu("File");
@@ -43,7 +43,11 @@ public class Main extends JFrame{
 	private JRadioButtonMenuItem mnuItemTheme2;
 	private JRadioButtonMenuItem mnuItemTheme3;
 	
-	private JLabel statusBar = new JLabel();
+	private static final String GENERAL_PANEL 		= "General",
+							 	CONTESTANT_PANEL 	= "Contestants",
+							 	PLAYER_PANEL 		= "Players";
+	
+	private StatusPanel statusBar;
 
 	ActionListener al = new ActionListener() {
 		@Override
@@ -66,17 +70,11 @@ public class Main extends JFrame{
 		public void stateChanged(ChangeEvent ce) {
 			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
 		    String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
-		    if (tab.equals("General")) {
-		    	setStatusBarMessage("General Panel");
-		    } else if (tab.equals("Contestants")) {
-		    	setStatusBarMessage("Contestents Panel");
-		    } else if (tab.equals("Players")) {
-		    	setStatusBarMessage("Players Panel");
-		    }
+		    statusBar.setTabLabel(tab);
 		}
 	};
 	
-	public Main(){
+	public MainFrame(){
 		
 		GameData g = GameData.initGameData();
 		if(g!=null)
@@ -138,7 +136,7 @@ public class Main extends JFrame{
 		menuBar.add(mnuFile);
 		menuBar.add(mnuTheme);
 		
-		statusBar = new JLabel("General Panel");
+		statusBar = new StatusPanel();
 		
 		mnuItemReset.addActionListener(al);
 		mnuItemExit.addActionListener(al);
@@ -146,6 +144,7 @@ public class Main extends JFrame{
 		mnuItemTheme3.addActionListener(al);
 		mnuItemTheme2.addActionListener(al);
 		tabPane.addChangeListener(cl);
+		statusBar.setTabLabel(GENERAL_PANEL);
 		
 		this.setLayout(new BorderLayout());
 		
@@ -170,6 +169,7 @@ public class Main extends JFrame{
 		applyTheme();
 	}
 	
+	// TODO: Less ambiguous name?
 	public static void seasonCreated(){
 		GameData.initGameData();
 		m.getContentPane().removeAll();
@@ -182,18 +182,20 @@ public class Main extends JFrame{
 		System.out.println("need to implement");
 	}
 	
-	//Status bar message getter
-	public String getStatusBarMessage() {
-		return statusBar.getText();
+	public StatusPanel getStatusBar() {
+		return statusBar;
 	}
 	
-	//Status bar message setter
-	public void setStatusBarMessage(String newMessage) {
-		statusBar.setText(newMessage);
+	/**
+	 * Used to get reference to the running GUI.
+	 * @return Gets the running MainFrame.
+	 */
+	public static MainFrame getRunningFrame() {
+		return m;
 	}
 	
 	public static void main(String[] args) {
-		m = new Main();
+		m = new MainFrame();
 	}
 
 }

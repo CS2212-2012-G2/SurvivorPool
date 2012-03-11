@@ -174,7 +174,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * @return Data contained in the Row in a Contestant form
 	 */
     public Contestant getByRow(int row) {
-    	return data.get(row);
+    	return (row > -1 ? data.get(row) : null);
     }
 
 	/**

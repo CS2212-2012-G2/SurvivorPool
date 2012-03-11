@@ -111,7 +111,7 @@ public class SeasonCreatePanel extends JPanel {
 					GameData.initSeason(Integer.parseInt(spnContestant.getValue().toString()));
 					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(),txtTribe2.getText());
 					
-					Main.seasonCreated();
+					MainFrame.seasonCreated();
 				} catch (Exception i) {
 					i.printStackTrace();
 				}

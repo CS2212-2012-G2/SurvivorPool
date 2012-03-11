@@ -31,8 +31,7 @@ public class GameData extends data.GameData {
 		Collections.sort(t, ComparatorFactory.getComparator(compFactID));
 		// t holds the sorted array, replace all the values with their
 		// new index. When the entry is null, it means we are done.
-		for (int i = 0; i < numContestants && allContestants[i] != null;
-			 i++) {
+		for (int i = 0; i < numContestants && allContestants[i] != null; i++) {
 			allContestants[i] = t.get(i);
 		}
 
