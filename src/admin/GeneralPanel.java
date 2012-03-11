@@ -111,6 +111,7 @@ public class GeneralPanel extends JPanel {
 				if(!GameData.getCurrentGame().getSeasonStarted()){
 					GameData.getCurrentGame().startSeason();
 					//TODO: implement weekly bet amount
+					MainFrame.getRunningFrame().seasonStarted();
 					System.out.println("Need to implement weekly bet amount.");
 					btnAdvWeek.setText("Advance Week");
 					

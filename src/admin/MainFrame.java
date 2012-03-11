@@ -50,6 +50,9 @@ public class MainFrame extends JFrame{
 	
 	private StatusPanel statusBar;
 
+	private ContestantPanel conPanel;
+	private PlayerPanel playerPanel;
+	
 	ActionListener al = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
@@ -111,9 +114,11 @@ public class MainFrame extends JFrame{
 		lblContestants.setPreferredSize(d);
 		lblPlayers.setPreferredSize(d);
 		
+		conPanel = new ContestantPanel();
+		playerPanel = new PlayerPanel();
 		tabPane.addTab(lblGeneral.getText(),new GeneralPanel());
-		tabPane.addTab(lblContestants.getText(),new ContestantPanel());
-		tabPane.addTab(lblPlayers.getText(), new PlayerPanel());
+		tabPane.addTab(lblContestants.getText(),conPanel);
+		tabPane.addTab(lblPlayers.getText(), playerPanel);
 		
 		tabPane.setTabComponentAt(0, lblGeneral);
 		tabPane.setTabComponentAt(1, lblContestants);
@@ -175,11 +180,24 @@ public class MainFrame extends JFrame{
 	}
 	
 	// TODO: Less ambiguous name?
+	/**
+	 * Called by SeasonCreatePanel when a new season has been created/
+	 */
 	public static void seasonCreated(){
 		GameData.initGameData();
 		m.getContentPane().removeAll();
 		m.initGUI();
 		m.applyTheme();
+	}
+	
+	/**
+	 * Used when a season has been started(from gen panel)
+	 * 
+	 */
+	public void seasonStarted(){
+		//TODO: change enabled status of components
+		conPanel.seasonStarted();
+		//TODO: add season started method for users
 	}
 	
 	private void resetSeason() {

@@ -424,6 +424,12 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		});
 	}
 
+	public void seasonStarted(){
+		bAddNew.setVisible(false);
+		bDelete.setVisible(false);
+		bSavePlayer.setVisible(false);
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		return;
