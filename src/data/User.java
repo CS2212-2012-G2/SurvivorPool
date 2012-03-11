@@ -172,7 +172,8 @@ public class User implements Person {
 	 */
 	public void setWinPick(Contestant winner)  {
 		winPick = winner;
-		winPoints = 2 * GameData.getCurrentGame().weeksLeft();
+		//winPoints = 2 * GameData.getCurrentGame().weeksLeft();
+		winPoints=10;
 	}
 	
 	// just sets the same as prior without setting pts.
@@ -209,18 +210,14 @@ public class User implements Person {
 	
 	
 
-	// TODO: DOCS:
-	public String toJSONString() throws JSONException {
-		return toJSONObject().toString();
-	}
-	
+
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 		obj.put(KEY_FIRST_NAME, getFirstName());
 		obj.put(KEY_LAST_NAME, getLastName());
 		obj.put(KEY_ID, getID());
-		obj.put(KEY_POINTS, new Integer(getPoints()));
+		obj.put(KEY_POINTS, getPoints());
 		
 		Contestant c = getWeeklyPick();
 		if (c != null)
@@ -238,49 +235,46 @@ public class User implements Person {
 		
 		return obj;
 	}
-
-	public void fromJSONString(String json) throws JSONException {
-		JSONObject o = new JSONObject(json);
-		
-		GameData g = (GameData)GameData.getCurrentGame();
-		
-		try {
-			setID((String)o.remove(KEY_ID));
-		} catch (InvalidFieldException e) { };
+	
+	public void fromJSONObject(JSONObject o) {
 		try {
 			setFirstName((String)o.remove(KEY_FIRST_NAME));
-		} catch (InvalidFieldException e) { };
-		try {
 			setLastName((String)o.remove(KEY_LAST_NAME));
-		} catch (InvalidFieldException e) { };
-		
-		setPoints(((Integer)o.remove(KEY_POINTS)).intValue());
-		try {
-			String weeklyID = (String)o.remove(KEY_WEEKLY_PICK_ID);
-			setWeeklyPick(g.getContestant(weeklyID));
-		} catch (ClassCastException e) {
-			// it was null so lets just ignore it.
+			setID((String)o.remove(KEY_ID));
+			setPoints(((Integer)o.remove(KEY_POINTS)).intValue());
+			
+			String id = (String)o.remove(KEY_WEEKLY_PICK_ID);
+			Contestant c = GameData.getCurrentGame().getContestant(id);
+			setWeeklyPick(c);
+			
+			id = (String)o.remove(KEY_ULT_PICK_ID);
+			c = GameData.getCurrentGame().getContestant(id);
+			setWinPick(c);
+			
+			setPoints(((Integer)o.remove(KEY_WIN_PICK_POINTS)).intValue());
+		} catch (InvalidFieldException e) {
+			System.out.println("Warning: InvalidFieldException in fromJSONObject");
+			System.out.println(e.getMessage());
 		}
-		
-		try {
-			String ultID = (String)o.remove(KEY_ULT_PICK_ID);
-			setWinPickNoSetPts(g.getContestant(ultID));
-			setWinPoints(((Integer)o.remove(KEY_WIN_PICK_POINTS)).intValue());
-		} catch (ClassCastException e) {
-			// it was null so lets just ignore it.
-		}
-		
-	}
 
+	}
+	
 	public static void main(String[] args) {
 		User u = new User("bob", "builder", "bbuilde");
-		
+		Contestant c = new Contestant();
+		Contestant ul = new Contestant();
 		try {
-			System.out.println(u.toJSONString());
-			User p  = new User();
-			
-			p.fromJSONString(u.toJSONString());
-			System.out.println(p);
+			c.setID("aa");
+			ul.setID("ab");
+		} catch (InvalidFieldException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		u.setWeeklyPick(c);
+		u.setWinPick(ul);
+		try {
+			System.out.println(u.toJSONObject().toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

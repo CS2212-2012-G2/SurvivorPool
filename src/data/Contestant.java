@@ -241,18 +241,6 @@ public class Contestant implements Person {
 	}
 	
 	
-	// TODO: DOC THESE
-	
-	public String toJSONString() throws JSONException {
-		return toJSONObject().toString();
-	}
-	
-	public void fromJSONString(String json) throws JSONException{
-		JSONObject o = new JSONObject(json);
-		
-		fromJSONObject(o);
-	}
-	
 	public void fromJSONObject(JSONObject o) {
 		try {
 			setID((String)o.remove(KEY_ID));
@@ -272,7 +260,7 @@ public class Contestant implements Person {
 			Contestant c = new data.Contestant("ad", "Jon", "silver", "booby");
 			
 			try {
-				System.out.println(c.toJSONString());
+				System.out.println(c.toJSONObject().toString());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -280,7 +268,7 @@ public class Contestant implements Person {
 			
 			try {
 				Contestant p = new data.Contestant();
-				p.fromJSONString(c.toJSONString());
+				p.fromJSONObject(c.toJSONObject());
 				System.out.println(p);
 			} catch (Exception e) {
 				e.printStackTrace();
