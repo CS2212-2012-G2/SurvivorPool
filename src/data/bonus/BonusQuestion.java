@@ -1,6 +1,5 @@
 package data.bonus;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * BonusQuestion is the class that will deal with the numerous bonus questions
@@ -29,7 +28,7 @@ public class BonusQuestion {
 	protected int type;
 	
 	public BonusQuestion() {
-		throw new NotImplementedException();
+		System.out.println("Not implemented");
 	}
 
 	// ----------------- ACCESSOR METHODS ----------------- //

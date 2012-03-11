@@ -130,7 +130,8 @@ public abstract class Contestant implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setFirstName(String name) throws InvalidFieldException {
-		if (!name.matches(REGEX_FIRST_NAME))
+		
+		if (!DataUtils.checkString(name,REGEX_FIRST_NAME))
 			throw new InvalidFieldException("Invalid First Name");
 		
 		firstName = name;
@@ -142,7 +143,7 @@ public abstract class Contestant implements Person {
 	 * @param name New last name of the contestant
 	 */
 	public void setLastName(String name) throws InvalidFieldException {
-		if (!name.matches(REGEX_LAST_NAME))
+		if (!DataUtils.checkString(name,REGEX_LAST_NAME))
 			throw new InvalidFieldException("Invalid Last Name");
 		
 		lastName = name;
@@ -180,7 +181,7 @@ public abstract class Contestant implements Person {
 	 */
 	public void setID(String newID) throws InvalidFieldException {
 		newID = newID.toLowerCase();
-		if (!newID.matches(REGEX_CONTEST_ID))
+		if (!DataUtils.checkString(newID,REGEX_CONTEST_ID))
 			throw new InvalidFieldException("Invalid contestant ID");
 		cID = newID;
 	}
