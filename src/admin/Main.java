@@ -1,5 +1,6 @@
 package admin;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +33,8 @@ public class Main extends JFrame{
 	private JRadioButtonMenuItem mnuItemTheme1;
 	private JRadioButtonMenuItem mnuItemTheme2;
 	private JRadioButtonMenuItem mnuItemTheme3;
+	
+	private JLabel statusBar = new JLabel();
 
 	ActionListener al = new ActionListener() {
 		@Override
@@ -121,14 +124,19 @@ public class Main extends JFrame{
 		menuBar.add(mnuFile);
 		menuBar.add(mnuTheme);
 		
+		statusBar = new JLabel("General Panel");
+		
 		mnuItemReset.addActionListener(al);
 		mnuItemExit.addActionListener(al);
 		mnuItemTheme1.addActionListener(al);
 		mnuItemTheme3.addActionListener(al);
 		mnuItemTheme2.addActionListener(al);
 		
+		this.setLayout(new BorderLayout());
+		
 		this.setJMenuBar(menuBar);
 		this.add(tabPane);
+		this.add(statusBar, BorderLayout.SOUTH);
 	}
 	
 	/**
@@ -157,6 +165,16 @@ public class Main extends JFrame{
 	private void resetSeason() {
 		//TODO: Using json, need to remove the settings.dat file and reset season.
 		System.out.println("need to implement");
+	}
+	
+	//Status bar message getter
+	public String getStatusBarMessage() {
+		return statusBar.getText();
+	}
+	
+	//Status bar message setter
+	public void setStatusBarMessage(String newMessage) {
+		statusBar.setText(newMessage);
 	}
 	
 	public static void main(String[] args) {
