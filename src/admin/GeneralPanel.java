@@ -39,7 +39,7 @@ public class GeneralPanel extends JPanel {
 		initPnlBonus();
 		initPnlAnswer();
 		initListeners();
-		
+		btnAdvWeek.setVisible(!GameData.getCurrentGame().getSeasonEnded());
 	}
 	
 	private void initPnlInfo(){
@@ -117,8 +117,8 @@ public class GeneralPanel extends JPanel {
 					
 				}else{
 					GameData.getCurrentGame().advanceWeek();
-					System.out.println(GameData.getCurrentGame().getCurrentWeek());
-					btnAdvWeek.setEnabled(!GameData.getCurrentGame().getSeasonStarted());
+					lblGenInfo.setText("<html>"+Integer.toString(gd.weeksLeft())+" weeks left. File -> Reset to start new season</html>");
+					btnAdvWeek.setVisible(!GameData.getCurrentGame().getSeasonEnded());
 				}
 			}
 			

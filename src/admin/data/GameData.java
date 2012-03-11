@@ -159,7 +159,7 @@ public class GameData extends data.GameData {
 		g.addContestant(c2);
 		
 		try {
-			System.out.println(g.toJSONString());
+			System.out.println(g.toJSONObject().toString());
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -168,7 +168,7 @@ public class GameData extends data.GameData {
 		GameData g2 = new GameData(6);
 		
 			try {
-				g2.fromJSONString(g.toJSONString());
+				g2.fromJSONObject(g.toJSONObject());
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

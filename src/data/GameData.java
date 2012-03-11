@@ -197,6 +197,14 @@ public abstract class GameData {
 	public boolean getSeasonStarted(){
 		return seasonStarted;
 	}
+	
+	/**
+	 * Checks if there are any more weeks remaining
+	 * @return true if weeks remaining = 0
+	 */
+	public boolean getSeasonEnded(){
+		return weeksRem==0;
+	}
 	// ----------------- MUTATOR METHODS ------------------//
 
 	/**
@@ -205,8 +213,6 @@ public abstract class GameData {
 	public void advanceWeek() {
 		weeksRem -= 1;    // reduce num of weeks remaining
 		weeksPassed += 1;  // increment number of weeks passed
-		if(weeksRem ==0)
-			seasonStarted=false;//TODO: better implementation of season ended
 	}
 
 	/**
@@ -333,19 +339,7 @@ public abstract class GameData {
 
 	// TODO: DOC THESE THREE
 	 
-	
-	public String toJSONString() throws JSONException {
-		return toJSONObject().toString();
-	}
-	
-	
-	
-	public void fromJSONString(String json) throws JSONException {
-		JSONObject o = new JSONObject(json);
-		
-		fromJSONObject(o);
-	}
-	
+
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
