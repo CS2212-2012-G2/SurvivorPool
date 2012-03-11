@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"weeks_rem":2,"weeks_pass":1,"tribes_arr":["a","b"],"cons_num":6,"cons":[]}
+=======
+{"weeks_rem":3,"weeks_pass":0,"tribes_arr":["apple","banana"],"cons_num":6,"cons":[{"picture":"res\/test\/defaultpic.png","id":"aa","last":"l","tribe":"apple","date":-1,"first":"f"}]}
+>>>>>>> 2eb7354776458af8788c00eb829dc316d245f7f9
