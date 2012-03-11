@@ -58,10 +58,10 @@ public class User extends data.User {
 		setID((String)o.remove(KEY_ID));
 		setFirstName((String)o.remove(KEY_FIRST_NAME));
 		setLastName((String)o.remove(KEY_LAST_NAME));
-		setPoints((Number)o.remove(KEY_POINTS));
+		setPoints((Integer)o.remove(KEY_POINTS));
 		setWeeklyPick(g.getContestant((String)o.remove(KEY_WEEKLY_PICK_ID)));
 		setWinPickNoSetPts(g.getContestant((String)o.remove(KEY_ULT_PICK_ID)));
-		setWinPickPts((Number)o.remove(KEY_WIN_PICK_POINTS));
+		setWinPoints((Integer)o.remove(KEY_WIN_PICK_POINTS));
 	}
 	
 	public static void main(String[] args) {

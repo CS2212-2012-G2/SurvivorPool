@@ -92,10 +92,7 @@ public abstract class User implements Person {
 	public void setPoints(int points) {
 		this.points = points;
 	}
-	
-	public void setPoints(Number n) {
-		points = n.intValue();
-	}
+
 
 	/**
 	 * getWinPick returns the users selection for which contestant will win the
@@ -166,15 +163,10 @@ public abstract class User implements Person {
 	public void setWinPoints(int winPts) {
 		winPoints = winPts;
 	}
-	
-	public void setWinPoints(Number n) {
-		setWinPoints(n.intValue());
-	}
 
-	@Override
 	public void setID(String id) {
 		id = id.toLowerCase();
-		if (id.matches(REGEX_CONTEST_ID))
+		if (DataUtils.checkString(id,REGEX_CONTEST_ID))
 			unID = id;
 	}
 	
@@ -199,8 +191,4 @@ public abstract class User implements Person {
 		return toJSONObject().toString();
 	}
 
-	protected void setWinPickPts(Number n) {
-		winPoints = n.intValue();
-		
-	}
 }
