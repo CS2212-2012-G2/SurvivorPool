@@ -19,6 +19,7 @@ import common.Utils;
 import data.GameData;
 import data.InvalidFieldException;
 
+import admin.AdminUtils;
 import admin.ComparatorFactory;
 
 import data.Contestant;
@@ -50,7 +51,7 @@ public class ContestantTableModel extends AbstractTableModel {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
 		globalData = _globaldata;
-		data = new ArrayList<Contestant>(Utils.noNullList(globalData));
+		data = new ArrayList<Contestant>(AdminUtils.noNullList(globalData));
 		
 	}
 	
@@ -270,7 +271,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * @param c New contestant data.
 	 */
 	public void updateContestant(Contestant c) {
-		int index = Utils.BinSearchSafe(globalData, c,
+		int index = AdminUtils.BinSearchSafe(globalData, c,
 				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 		
 		if (index >= 0) {

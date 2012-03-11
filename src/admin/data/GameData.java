@@ -8,6 +8,7 @@ import java.util.List;
 
 import common.Utils;
 
+import admin.AdminUtils;
 import admin.ComparatorFactory;
 import data.me.json.*;
 import data.Contestant;
@@ -29,7 +30,7 @@ public class GameData extends data.GameData {
 	
 	private void updateSortAllContestants(int compFactID) {
 		allList = Arrays.asList(allContestants);
-		List<Contestant> t = Utils.noNullList(allList);
+		List<Contestant> t = AdminUtils.noNullList(allList);
 		Collections.sort(t, ComparatorFactory.getComparator(compFactID));
 		// t holds the sorted array, replace all the values with their
 		// new index. When the entry is null, it means we are done.
@@ -52,7 +53,7 @@ public class GameData extends data.GameData {
 	@Override
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
-		int i = Utils.BinSearchSafe(allList, (Contestant)target,
+		int i = AdminUtils.BinSearchSafe(allList, (Contestant)target,
 				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 		
 		if (i < 0) {
@@ -75,7 +76,7 @@ public class GameData extends data.GameData {
 			return -1;
 		}
 	
-		return Utils.BinSearchSafe(allList, t,
+		return AdminUtils.BinSearchSafe(allList, t,
 				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
 	}
 	

@@ -18,8 +18,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import common.Utils;
-
 import admin.contestanttab.ContestantPanel;
 import admin.data.GameData;
 import admin.playertab.PlayerPanel;
@@ -119,7 +117,7 @@ public class MainFrame extends JFrame{
 		
 		mnuItemReset = new JMenuItem("Reset");
 		mnuItemExit = new JMenuItem("Exit");
-		String[] themeName = Utils.getThemes();
+		String[] themeName = AdminUtils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
 		mnuItemTheme3 = new JRadioButtonMenuItem(themeName[1]);
 		mnuItemTheme2 = new JRadioButtonMenuItem(themeName[2]);
@@ -159,7 +157,7 @@ public class MainFrame extends JFrame{
 	 * Apply the theme to current components.
 	 */
 	private void applyTheme(){
-		Utils.style(this);
+		AdminUtils.style(this);
 	}
 	
 	/**
@@ -167,7 +165,7 @@ public class MainFrame extends JFrame{
 	 * @param name The theme name
 	 */
 	private void changeTheme(String name){
-		Utils.changeTheme(name);
+		AdminUtils.changeTheme(name);
 		applyTheme();
 	}
 	
