@@ -8,10 +8,7 @@ import java.util.List;
 
 import admin.ComparatorFactory;
 import admin.Utils;
-import admin.json.JSONArray;
-import admin.json.JSONObject;
-import admin.json.JSONValue;
-import admin.json.parser.ParseException;
+import data.me.json.*;
 
 //import data.Contestant;
 import data.InvalidFieldException;
@@ -97,8 +94,18 @@ public class GameData extends data.GameData {
 			return (GameData) currentGame; 
 		}
 		
-		currentGame = new GameData(((Number)json.get(KEY_NUM_CONTEST)).intValue());
-		GameData.getCurrentGame().fromJSONObject(json);
+		try {
+			currentGame = new GameData(((Number)json.get(KEY_NUM_CONTEST)).intValue());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			GameData.getCurrentGame().fromJSONObject(json);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return (GameData)currentGame;
 	}
@@ -107,20 +114,20 @@ public class GameData extends data.GameData {
 	
 	
 	@Override
-	public JSONObject toJSONObject() {
+	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
 		JSONArray cons = new JSONArray();
 		for (Contestant c: allList) {
 			if (c != null)
-				cons.add(c.toJSONObject());
+				cons.put(c.toJSONObject());
 		}
 		
 		JSONArray ts = new JSONArray();
 		// TODO: only two tribes?
-		ts.add(tribeNames[0]);
-		ts.add(tribeNames[1]);
+		ts.put(tribeNames[0]);
+		ts.put(tribeNames[1]);
 		
 		
 		obj.put(KEY_CONTESTANTS, cons);
@@ -132,14 +139,14 @@ public class GameData extends data.GameData {
 	}
 	
 	@Override
-	public void fromJSONString(String json) throws ParseException {
-		JSONObject o = (JSONObject)JSONValue.parse(json);
+	public void fromJSONString(String json) throws JSONException {
+		JSONObject o = new JSONObject(json);
 		
 		fromJSONObject(o);
 	}
 
 	@Override
-	public void fromJSONObject(JSONObject obj) {
+	public void fromJSONObject(JSONObject obj) throws JSONException {
 		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
 				
 		// tribes
@@ -153,9 +160,9 @@ public class GameData extends data.GameData {
 		allList = new ArrayList<Contestant>(numContestants);
 		// load the contestant array. 
 		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
-		for (Object o: cons) {
+		for (int i =0;i<cons.length();i++) {
 			Contestant c = new Contestant();
-			c.fromJSONObject((JSONObject)o);
+			c.fromJSONObject(cons.getJSONObject(i));
 			addContestant(c);
 		}
 
@@ -193,15 +200,22 @@ public class GameData extends data.GameData {
 		g.addContestant(c1);
 		g.addContestant(c2);
 		
-		System.out.println(g.toJSONString());
+		try {
+			System.out.println(g.toJSONString());
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		GameData g2 = new GameData(6);
-		try {
-			g2.fromJSONString(g.toJSONString());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+			try {
+				g2.fromJSONString(g.toJSONString());
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		
 	}
 	

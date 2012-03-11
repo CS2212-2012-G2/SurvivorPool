@@ -1,7 +1,6 @@
 package data;
 
-import admin.json.JSONObject;
-import admin.json.parser.ParseException;
+import data.me.json.*;
 
 
 
@@ -230,14 +229,14 @@ public abstract class Contestant implements Person {
 	
 	
 	// TODO: DOC THESE THREE
-	public abstract JSONObject toJSONObject(); 
+	public abstract JSONObject toJSONObject() throws JSONException; 
 	
-	public abstract void fromJSONString(String json) throws ParseException;
+	public abstract void fromJSONString(String json) throws JSONException;
 	
 	public abstract void fromJSONObject(JSONObject o);
 	
-	public String toJSONString() {
-		return toJSONObject().toJSONString();
+	public String toJSONString() throws JSONException {
+		return toJSONObject().toString();
 	}
 
 	

@@ -1,15 +1,13 @@
 package admin.data;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
-import admin.json.JSONObject;
-import admin.json.parser.JSONParser;
-import admin.json.parser.ParseException;
+import data.me.json.JSONException;
+import data.me.json.JSONObject;
 
 
 /**
@@ -28,18 +26,34 @@ public class JSONUtils{
 		if(!f.exists())
 			throw new FileNotFoundException();
 		try{
-			JSONParser parser = new JSONParser();
-			Object obj = parser.parse(new FileReader(path));
-			return (JSONObject) obj;
+			String jString = fileToString(path);
+			JSONObject obj = new JSONObject(jString);
+			return obj;
 			
 		}catch (IOException e) {
 			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (JSONException e) {
 			e.printStackTrace();
-		}			
+		}		
 		return null;
 	}
 	
+	private static String fileToString(String pathname) throws IOException {
+
+	    File file = new File(pathname);
+	    StringBuilder fileContents = new StringBuilder((int)file.length());
+	    Scanner scanner = new Scanner(file);
+	    String lineSeparator = System.getProperty("line.separator");
+
+	    try {
+	        while(scanner.hasNextLine()) {        
+	            fileContents.append(scanner.nextLine() + lineSeparator);
+	        }
+	        return fileContents.toString();
+	    } finally {
+	        scanner.close();
+	    }
+	}
 	
 	/**
 	 * Writes to file using a json object
@@ -49,7 +63,7 @@ public class JSONUtils{
 	public static void writeJSON(String filePath, JSONObject json){
 		try {
 			FileWriter fileWrite = new FileWriter(filePath, false);
-			fileWrite.write(json.toJSONString());
+			fileWrite.write(json.toString());
 			fileWrite.close();
 			
 		} catch (IOException e) {

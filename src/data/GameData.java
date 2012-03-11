@@ -3,8 +3,7 @@ package data;
 import admin.Utils;
 import admin.data.Contestant;
 import admin.data.JSONUtils;
-import admin.json.JSONObject;
-import admin.json.parser.ParseException;
+import data.me.json.*;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -329,19 +328,26 @@ public abstract class GameData {
 	}
 	
 	public void writeData(){
-		JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
+		
+		try {
+			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// TODO: DOC THESE THREE
 	 
 	
-	public String toJSONString() {
-		return toJSONObject().toJSONString();
+	public String toJSONString() throws JSONException {
+		return toJSONObject().toString();
 	}
 	
-	public abstract JSONObject toJSONObject();
+	public abstract JSONObject toJSONObject() throws JSONException;
 	
-	public abstract void fromJSONObject(JSONObject o);
+	public abstract void fromJSONObject(JSONObject o) throws JSONException;
 	
-	public abstract void fromJSONString(String json) throws ParseException;
+	public abstract void fromJSONString(String json) throws JSONException;
+
 }

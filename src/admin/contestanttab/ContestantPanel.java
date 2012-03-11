@@ -117,7 +117,7 @@ public class ContestantPanel extends JPanel {
 		//////////////////////////////
 		// Mid
 		//////////////////////////////
-		Contestant[] contestants = GameData.getCurrentGame().getAllContestants();
+		Contestant[] contestants = (Contestant[]) GameData.getCurrentGame().getAllContestants();
 		tableModel = new ContestantTableModel(Arrays.asList(contestants));
 		table = new JTable(tableModel);
 		header = table.getTableHeader();

@@ -1,8 +1,6 @@
 package admin.data;
 
-import admin.json.JSONObject;
-import admin.json.JSONValue;
-import admin.json.parser.ParseException;
+import data.me.json.*;
 import data.Contestant;
 
 public class User extends data.User {
@@ -21,7 +19,7 @@ public class User extends data.User {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public JSONObject toJSONObject() {
+	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 		obj.put(KEY_FIRST_NAME, getFirstName());
@@ -47,13 +45,13 @@ public class User extends data.User {
 	}
 
 	@Override
-	public String toJSONString() {
-		return toJSONObject().toJSONString();
+	public String toJSONString() throws JSONException {
+		return toJSONObject().toString();
 	}
 
 	@Override
-	public void fromJSONString(String json) throws ParseException {
-		JSONObject o = (JSONObject)JSONValue.parse(json);
+	public void fromJSONString(String json) throws JSONException {
+		JSONObject o = new JSONObject(json);
 		
 		GameData g = (GameData)GameData.getCurrentGame();
 		
@@ -69,15 +67,17 @@ public class User extends data.User {
 	public static void main(String[] args) {
 		User u = new User("bob", "builder", "bbuilde");
 		
-		System.out.println(u.toJSONString());
-		
 		try {
+			System.out.println(u.toJSONString());
 			User p  = new User();
+			
 			p.fromJSONString(u.toJSONString());
 			System.out.println(p);
-		} catch (ParseException e) {
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 	@Override

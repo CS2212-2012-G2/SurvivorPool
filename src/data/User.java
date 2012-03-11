@@ -1,8 +1,6 @@
 package data;
 
-import admin.json.JSONAware;
-import admin.json.JSONObject;
-import admin.json.parser.ParseException;
+import data.me.json.*;
 
 /**
  * The user class will be used to create an individual who will be participating
@@ -12,7 +10,7 @@ import admin.json.parser.ParseException;
  *         Justin McDonald
  */
 
-public abstract class User implements Person, JSONAware {
+public abstract class User implements Person {
 
 	private String firstName, lastName, unID; // first and last names and unique
 												// ID (UWO ID format)
@@ -193,12 +191,12 @@ public abstract class User implements Person, JSONAware {
 	
 
 	// TODO: DOCS:
-	public abstract JSONObject toJSONObject(); 
+	public abstract JSONObject toJSONObject() throws JSONException; 
 	
-	public abstract void fromJSONString(String json) throws ParseException;
+	public abstract void fromJSONString(String json) throws JSONException;
 	
-	public String toJSONString() {
-		return toJSONObject().toJSONString();
+	public String toJSONString() throws JSONException {
+		return toJSONObject().toString();
 	}
 
 	protected void setWinPickPts(Number n) {

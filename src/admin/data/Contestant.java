@@ -1,9 +1,7 @@
 package admin.data;
 
 import data.InvalidFieldException;
-import admin.json.JSONObject;
-import admin.json.JSONValue;
-import admin.json.parser.ParseException;
+import data.me.json.*;
 
 public class Contestant extends data.Contestant {
 
@@ -26,7 +24,7 @@ public class Contestant extends data.Contestant {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public JSONObject toJSONObject() {
+	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 		obj.put(KEY_FIRST_NAME, getFirstName());
@@ -40,13 +38,13 @@ public class Contestant extends data.Contestant {
 	}
 	
 	@Override
-	public String toJSONString() {
-		return toJSONObject().toJSONString();
+	public String toJSONString() throws JSONException {
+		return toJSONObject().toString();
 	}
 	
 	@Override
-	public void fromJSONString(String json) throws ParseException {
-		JSONObject o = (JSONObject)JSONValue.parse(json);
+	public void fromJSONString(String json) throws JSONException{
+		JSONObject o = new JSONObject(json);
 		
 		fromJSONObject(o);
 	}
@@ -70,13 +68,18 @@ public class Contestant extends data.Contestant {
 	public static void main(String[] args) throws InvalidFieldException {
 		Contestant c = new admin.data.Contestant("ad", "Jon", "silver", "booby");
 		
-		System.out.println(c.toJSONString());
+		try {
+			System.out.println(c.toJSONString());
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try {
 			Contestant p = new admin.data.Contestant();
 			p.fromJSONString(c.toJSONString());
 			System.out.println(p);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
