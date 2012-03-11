@@ -71,5 +71,11 @@ public class JSONUtils{
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public static void resetSeason(){
+		File f = new File(seasonFile);
+		f.delete(); //TODO: return if actually deleted.
+	}
 
 }

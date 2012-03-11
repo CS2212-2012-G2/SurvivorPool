@@ -1,20 +1,17 @@
 package admin.data;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import common.Utils;
-
 import admin.AdminUtils;
 import admin.ComparatorFactory;
-import data.me.json.*;
 import data.Contestant;
-
-//import data.Contestant;
 import data.InvalidFieldException;
+import data.me.json.JSONArray;
+import data.me.json.JSONException;
+import data.me.json.JSONObject;
 
 public class GameData extends data.GameData {
 
@@ -174,6 +171,22 @@ public class GameData extends data.GameData {
 		currentGame = new GameData(num);
 	}
 	
+	public void endCurrentGame() {
+		super.endCurrentGame();
+		JSONUtils.resetSeason();
+	}
+	// TODO: DOC
+	@Override
+	public void writeData(){
+		
+		try {
+			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		GameData g = new GameData(6);
 		
@@ -211,17 +224,5 @@ public class GameData extends data.GameData {
 		
 	}
 	
-	
-	// TODO: DOC
-	@Override
-	public void writeData(){
-		
-		try {
-			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 }

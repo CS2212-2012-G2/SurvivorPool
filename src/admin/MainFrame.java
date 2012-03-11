@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -178,8 +179,14 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void resetSeason() {
-		//TODO: Using json, need to remove the settings.dat file and reset season.
-		System.out.println("need to implement");
+		int response = JOptionPane.showConfirmDialog(null,
+							"Would you like to delete current season?","Reset Season",
+									JOptionPane.YES_NO_OPTION);
+		if(response == JOptionPane.YES_OPTION){
+			GameData.getCurrentGame().endCurrentGame();
+			m.dispose();
+			m = new MainFrame();
+		}
 	}
 	
 	public StatusPanel getStatusBar() {

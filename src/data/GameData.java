@@ -312,7 +312,7 @@ public abstract class GameData {
 	/**
 	 * Nulls the current game stored, allows a new game to start.
 	 */
-	public static void endCurrentGame() {
+	public void endCurrentGame() {
 		GameData.currentGame = null;
 		//TODO:remove data persistence file
 	}
