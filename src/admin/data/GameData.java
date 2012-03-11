@@ -30,9 +30,16 @@ public class GameData extends data.GameData {
 	
 	private void updateSortAllContestants(int compFactID) {
 		allList = Arrays.asList(allContestants);
-		Collections.sort(Utils.noNullList(allList), 
-				ComparatorFactory.getComparator(compFactID));
-		allContestants = allList.toArray(new Contestant[0]);
+		List<Contestant> t = Utils.noNullList(allList);
+		Collections.sort(t, ComparatorFactory.getComparator(compFactID));
+		// t holds the sorted array, replace all the values with their
+		// new index. When the entry is null, it means we are done.
+		for (int i = 0; i < numContestants && allContestants[i] != null;
+			 i++) {
+			allContestants[i] = t.get(i);
+		}
+
+		allList = Arrays.asList(allContestants);
 	}
 
 	// extends the method in super class to sort it.
