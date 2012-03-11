@@ -111,14 +111,14 @@ public class GameData extends data.GameData {
 
 	
 	
-	
+	// should be OK on bb:
 	@Override
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
 		JSONArray cons = new JSONArray();
-		for (Contestant c: allList) {
+		for (Contestant c: allContestants) {
 			if (c != null)
 				cons.put(c.toJSONObject());
 		}
@@ -138,13 +138,6 @@ public class GameData extends data.GameData {
 	}
 	
 	@Override
-	public void fromJSONString(String json) throws JSONException {
-		JSONObject o = new JSONObject(json);
-		
-		fromJSONObject(o);
-	}
-
-	@Override
 	public void fromJSONObject(JSONObject obj) throws JSONException {
 		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
 				
@@ -156,21 +149,18 @@ public class GameData extends data.GameData {
 		weeksPassed = ((Number)obj.get(KEY_WEEKS_PASSED)).intValue();
 		
 		//Contestants must be loaded last!
-		allList = new ArrayList<Contestant>(numContestants);
+		allContestants = new Contestant[numContestants];
+		
+		// if we can move this back into the subclass, put this after a super.fromJSONObject() call.
+		allList = Arrays.asList(allContestants);
+		
 		// load the contestant array. 
 		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
 		for (int i =0;i<cons.length();i++) {
 			Contestant c = new Contestant();
 			c.fromJSONObject(cons.getJSONObject(i));
-			addContestant(c);
+			addContestant(c); // this would be valid in a subclass..
 		}
-
-	}
-	
-	// TODO: Implement:
-	@Override
-	public String toString() {
-		return super.toString();
 	}
 	
 	/**

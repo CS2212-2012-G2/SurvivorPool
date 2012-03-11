@@ -95,9 +95,12 @@ Data
 ----
 
 	GameData
-		- Constestant ID functions, generate new one, delete
-		- Statically get the current week for cast off options etc
+		- Check what needs to be abstracted and what doesn't
+		- JSON might not need to be
+		- Sorting will need to be done in the subclass and methods overridden where necessary
 		
-	Contestant
-		- ID generation some how.. and when to call it!
+	Contestant & User
+		- Make as little abstract as possible (saves time for Jon)
+			~ With J2ME JSON, one should be able to use all the same JSON methods
+			~ Pretty sure admin version is obsolete
 		

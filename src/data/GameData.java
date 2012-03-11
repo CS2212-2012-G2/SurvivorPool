@@ -344,10 +344,15 @@ public abstract class GameData {
 		return toJSONObject().toString();
 	}
 	
+	
+	
+	public void fromJSONString(String json) throws JSONException {
+		JSONObject o = new JSONObject(json);
+		
+		fromJSONObject(o);
+	}
+	
 	public abstract JSONObject toJSONObject() throws JSONException;
 	
 	public abstract void fromJSONObject(JSONObject o) throws JSONException;
-	
-	public abstract void fromJSONString(String json) throws JSONException;
-
 }
