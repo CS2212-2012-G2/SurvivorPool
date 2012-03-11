@@ -8,6 +8,8 @@ package client;
  * Description:
  * */
 
+import client.data.GameData;
+import data.Contestant;
 import net.rim.device.api.system.Bitmap;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.command.Command;
@@ -35,24 +37,16 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 	/* Variables */
 	private LabelField labelTempName, labelTempTribe, labelTempStatus; // various
 																		// labels.
-	private int score, numberOfPlayers;
-	private String name, tribe, voteType, status;
+	private String name, voteType;
 	private FontFamily ff1; // fonts.
 	private Font font2; // fonts.
-	private Bitmap picture;
 	private ButtonField button1;
+	private Contestant tempCont;
 
 	public PickScreen(String voteType, String userData) {
 		super();
 
-		/* TESTING PURPOSES, REMOVE WHEN DATA PERSISTANCE IS ACTIVE */
-		status = "Active";
-		picture = Bitmap.getBitmapResource("Russell-hantzSmall.jpg");
-		name = "TimmyTimmyTimmyTimmy JonesJonesJonesJones";
-		tribe = "WakahWakahWakahWakahWakahWakah";
-		score = 102;
-		numberOfPlayers = 120;
-		/*--------------------------------------------------------*/
+		Contestant[] contList = GameData.getCurrentGame().getAllContestants();
 
 		this.voteType = voteType;
 
@@ -110,10 +104,9 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		/*
-		 * FIX LIST FOR IMAGES AND OTHER MULTILINE CONTESTANT FORMATTING
-		 * ----------------------
-		 */
+		
+		
+		/* build contestant list */
 		RichList list = new RichList(vertFieldManager, true, 3, 0);
 
 		try { // set up the smaller list font
@@ -138,13 +131,17 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 		 * -----------------------------------------------------------
 		 */
 
-		for (int i = 1; i <= numberOfPlayers; i++) {
-			// Formatting decisions)
-
-			/*---------- CHECK IF ACTIVE, IF SO, ADD TO DROPDOWN --------*/
-
+		/* build choices drop down*/
+		String[] choices = new String[contList.length];
+		int iSetTo = 0;
+		
+		for (int i = 0; i < contList.length; i++) {
+			tempCont = contList[i];
+			if(!tempCont.isCastOff())
+				choices[i]= tempCont.getFirstName() + " " + tempCont.getLastName();
+			
 			/* list contains labels so that the text colour can change */
-			labelTempName = new LabelField(name, LabelField.ELLIPSIS) {
+			labelTempName = new LabelField(tempCont.getFirstName() + " " + tempCont.getLastName(), LabelField.ELLIPSIS) {
 				public void paint(Graphics g) {
 					g.setColor(Color.WHITE);
 					super.paint(g);
@@ -152,7 +149,7 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 			};
 			labelTempName.setFont(font2);
 
-			labelTempTribe = new LabelField(tribe, LabelField.ELLIPSIS) {
+			labelTempTribe = new LabelField(tempCont.getTribe(), LabelField.ELLIPSIS) {
 				public void paint(Graphics g) {
 					g.setColor(Color.WHITE);
 					super.paint(g);
@@ -160,7 +157,7 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 			};
 			labelTempName.setFont(font2);
 
-			labelTempStatus = new LabelField(status, LabelField.ELLIPSIS) {
+			labelTempStatus = new LabelField(tempCont.isCastOff(), LabelField.ELLIPSIS) {
 				public void paint(Graphics g) {
 					g.setColor(Color.WHITE);
 					super.paint(g);
@@ -168,13 +165,8 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 			};
 			labelTempName.setFont(font2);
 
-			list.add(new Object[] { picture, labelTempName, labelTempTribe,
+			list.add(new Object[] { tempCont.getPicture(), labelTempName, labelTempTribe,
 					labelTempStatus });
-
-			/* ------------------------------------------------------- */
-			if (score > 0) // TESTING
-				score--; // TESTING PURPOSES
-			/* ------------------------------------------------------- */
 		}
 
 		HorizontalFieldManager horFieldManager = new HorizontalFieldManager(
@@ -191,10 +183,7 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 
 		/* Build the banner */
 
-		/* BUILD THE CHOICES BASED OFF OF ACTIVE CONTESTANTS */
-		String choices[] = { "Contestants", name, name, name, name, name, name,
-				name, name, name, name, name, name, name };
-		int iSetTo = 0;
+
 
 		button1 = new ButtonField("Okay");
 		button1.setChangeListener(this);

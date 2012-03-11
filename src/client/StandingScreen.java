@@ -8,6 +8,7 @@ package client;
  * Description:
  * */
 
+import client.data.GameData;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.command.Command;
 import net.rim.device.api.command.CommandHandler;
@@ -37,7 +38,7 @@ public class StandingScreen extends MainScreen implements FieldChangeListener {
 
 	public StandingScreen(String userData) {
 		super();
-
+		
 		/* TESTING PURPOSES, REMOVE WHEN DATA PERSISTANCE IS ACTIVE */
 		name = "TimmyTimmyTimmyTimmy JonesJonesJonesJones";
 		score = 102;
