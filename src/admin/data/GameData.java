@@ -180,7 +180,7 @@ public class GameData extends data.GameData {
 		
 		Contestant c1 = null, c2 = null;
 		try {
-			c1 = new Contestant("asd2", "Al", "Sd", tribes[1]);
+			c1 = new Contestant("a2", "Al", "Sd", tribes[1]);
 			c2 = new Contestant("as", "John", "Silver", tribes[0]);
 		} catch (InvalidFieldException e) {
 			// wont happen.
