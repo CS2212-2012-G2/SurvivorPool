@@ -1,15 +1,5 @@
 package common;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import data.Person;
 import data.me.regexp.RE;
 
 
