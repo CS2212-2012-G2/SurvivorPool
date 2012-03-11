@@ -15,6 +15,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import admin.contestanttab.ContestantPanel;
 import admin.data.GameData;
@@ -23,6 +25,13 @@ import admin.playertab.PlayerPanel;
 public class Main extends JFrame{
 
 	static Main m;
+	
+
+	private JTabbedPane tabPane = new JTabbedPane();
+	
+	private JLabel lblGeneral = new JLabel("General");
+	private JLabel lblContestants = new JLabel("Contestants");
+	private JLabel lblPlayers = new JLabel("Players");
 	
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu mnuFile = new JMenu("File");
@@ -50,9 +59,21 @@ public class Main extends JFrame{
 			}else if (ae.getSource() == mnuItemTheme2) {
 				changeTheme(ae.getActionCommand());
 			}
-
 		}
-		
+	};
+	
+	ChangeListener cl = new ChangeListener() {
+		public void stateChanged(ChangeEvent ce) {
+			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
+		    String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
+		    if (tab.equals("General")) {
+		    	setStatusBarMessage("General Panel");
+		    } else if (tab.equals("Contestants")) {
+		    	setStatusBarMessage("Contestents Panel");
+		    } else if (tab.equals("Players")) {
+		    	setStatusBarMessage("Players Panel");
+		    }
+		}
 	};
 	
 	public Main(){
@@ -80,13 +101,7 @@ public class Main extends JFrame{
 		this.add(new SeasonCreatePanel());
 	}
 	
-	private void initGUI(){
-		JTabbedPane tabPane = new JTabbedPane();
-		
-		JLabel lblGeneral = new JLabel("General");
-		JLabel lblContestants = new JLabel("Contestants");
-		JLabel lblPlayers = new JLabel("Players");
-		
+	private void initGUI(){		
 		Dimension d = new Dimension(150,20);
 		
 		lblGeneral.setPreferredSize(d);
@@ -101,7 +116,6 @@ public class Main extends JFrame{
 		tabPane.setTabComponentAt(1, lblContestants);
 		tabPane.setTabComponentAt(2, lblPlayers);
 		//tabPane.setBackground(Color.cyan);//tab background color,not the panel
-		
 		
 		mnuItemReset = new JMenuItem("Reset");
 		mnuItemExit = new JMenuItem("Exit");
@@ -131,6 +145,7 @@ public class Main extends JFrame{
 		mnuItemTheme1.addActionListener(al);
 		mnuItemTheme3.addActionListener(al);
 		mnuItemTheme2.addActionListener(al);
+		tabPane.addChangeListener(cl);
 		
 		this.setLayout(new BorderLayout());
 		
