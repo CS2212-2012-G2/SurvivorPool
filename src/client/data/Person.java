@@ -1,7 +1,7 @@
 /**
  * 
  */
-package admin.data;
+package client.data;
 
 /**
  * @author kevin
