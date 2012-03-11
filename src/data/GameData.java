@@ -201,6 +201,8 @@ public abstract class GameData {
 	public void advanceWeek() {
 		weeksRem -= 1;    // reduce num of weeks remaining
 		weeksPassed += 1;  // increment number of weeks passed
+		if(weeksRem ==0)
+			seasonStarted=false;//TODO: better implementation of season ended
 	}
 
 	/**
