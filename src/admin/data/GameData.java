@@ -156,7 +156,7 @@ public class GameData extends data.GameData {
 		for (Object o: cons) {
 			Contestant c = new Contestant();
 			c.fromJSONObject((JSONObject)o);
-			allList.add(c);
+			addContestant(c);
 		}
 
 	}

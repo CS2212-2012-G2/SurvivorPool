@@ -49,7 +49,8 @@ public class ContestantTableModel extends AbstractTableModel {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
 		globalData = _globaldata;
-		data = new ArrayList<Contestant>(globalData.size());
+		data = new ArrayList<Contestant>(Utils.noNullList(globalData));
+		
 	}
 	
 	@Override
@@ -70,6 +71,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int row, int col) {
         Contestant player = (Contestant)data.get(row);
+
         switch (col) {
         case INDEX_ID:
         	return player.getID();
