@@ -1,8 +1,11 @@
 package client.data;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Vector;
 
 import net.rim.device.api.io.FileNotFoundException;
+import net.rim.device.api.io.IOUtilities;
 
 import data.me.json.JSONException;
 import data.me.json.JSONObject;
@@ -20,38 +23,19 @@ public class JSONUtils{
 	public static String seasonFile = "res/data/Settings.dat";
 	
 	public static JSONObject readFile(String path) throws FileNotFoundException{
-		File f = new File(path);
-		if(!f.exists())
-			throw new FileNotFoundException();
-		try{
-			String jString = fileToString(path);
-			JSONObject obj = new JSONObject(jString);
-			return obj;
+		try {
 			
-		}catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}		
-		return null;
+			Class classs = Class.forName("client.SplashScreen");
+			InputStream is = classs.getResourceAsStream(seasonFile);
+			String str = new String(IOUtilities.streamToBytes(is), "UTF-8");
+			JSONObject obj = new JSONObject(str);
+			return obj;
+
+		} catch (Exception ex) {
+			throw new FileNotFoundException();
+		}
 	}
 	
-	private static String fileToString(String pathname) throws IOException {
-
-	    File file = new File(pathname);
-	    StringBuilder fileContents = new StringBuilder((int)file.length());
-	    Scanner scanner = new Scanner(file);
-	    String lineSeparator = System.getProperty("line.separator");
-
-	    try {
-	        while(scanner.hasNextLine()) {        
-	            fileContents.append(scanner.nextLine() + lineSeparator);
-	        }
-	        return fileContents.toString();
-	    } finally {
-	        scanner.close();
-	    }
-	}
 	
 	/**
 	 * Writes to file using a json object
@@ -59,7 +43,7 @@ public class JSONUtils{
 	 * @param json A json object that has the keys and teh values
 	 */
 	public static void writeJSON(String filePath, JSONObject json){
-		try {
+		/*try {
 			FileWriter fileWrite = new FileWriter(filePath, false);
 			fileWrite.write(json.toString());
 			fileWrite.close();
@@ -67,7 +51,7 @@ public class JSONUtils{
 		} catch (IOException e) {
 			System.out.println("JSONObject: writeJson: could not write to file");
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 }
