@@ -6,9 +6,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import common.Utils;
+
 import admin.ComparatorFactory;
-import admin.Utils;
 import data.me.json.*;
+import data.Contestant;
 
 //import data.Contestant;
 import data.InvalidFieldException;
@@ -206,6 +208,19 @@ public class GameData extends data.GameData {
 			}
 		
 		
+	}
+	
+	
+	// TODO: DOC
+	@Override
+	public void writeData(){
+		
+		try {
+			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

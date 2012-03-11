@@ -2,7 +2,7 @@ package admin;
 
 import java.util.Comparator;
 
-import admin.data.Contestant;
+import data.Contestant;
 
 public class ComparatorFactory {
 

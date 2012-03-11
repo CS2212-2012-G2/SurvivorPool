@@ -14,13 +14,14 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import common.Utils;
+
 import data.GameData;
 import data.InvalidFieldException;
 
 import admin.ComparatorFactory;
-import admin.Utils;
 
-import admin.data.*;
+import data.Contestant;
 
 public class ContestantTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;

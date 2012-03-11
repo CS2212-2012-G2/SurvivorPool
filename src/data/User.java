@@ -1,5 +1,8 @@
 package data;
 
+import common.Utils;
+
+import admin.data.GameData;
 import data.me.json.*;
 
 /**
@@ -10,13 +13,16 @@ import data.me.json.*;
  *         Justin McDonald
  */
 
-public abstract class User implements Person {
+public class User implements Person {
 
 	private String firstName, lastName, unID; // first and last names and unique
 												// ID (UWO ID format)
 	private int points; // point total, points user receives if that
 									// pick wins
 	protected int winPoints;
+	
+	private Contestant winPick, weeklyPick; // users pick of the winner and
+										    // their weekly pick
 	
 	// JSON Keys:
 	
@@ -83,7 +89,9 @@ public abstract class User implements Person {
 	 * getWeeklyPick returns the users pick for which contestant will be
 	 * eliminated @ return this.weeklyPick
 	 */
-	public abstract Contestant getWeeklyPick(); 
+	public Contestant getWeeklyPick() {
+		return weeklyPick;
+	}
 	
 	public int getPoints() {
 		return points;
@@ -100,7 +108,11 @@ public abstract class User implements Person {
 	 * 
 	 * @return this.winPick
 	 */
-	public abstract Contestant getWinPick();
+	public Contestant getWinPick()  {
+		return winPick;
+	}
+	
+	
 
 	// ---------------- MUTATOR METHODS ----------------- //
 
@@ -119,8 +131,11 @@ public abstract class User implements Person {
 	 * 
 	 * @param first
 	 *            users first name
+	 * @throws InvalidFieldException 
 	 */
-	public void setFirstName(String first) {
+	public void setFirstName(String first) throws InvalidFieldException {
+		if (!Utils.checkString(first, REGEX_FIRST_NAME))
+			throw new InvalidFieldException("Invalid First Name (User)");
 		firstName = first;
 	}
 
@@ -129,8 +144,11 @@ public abstract class User implements Person {
 	 * 
 	 * @param last
 	 *            users last name
+	 * @throws InvalidFieldException 
 	 */
-	public void setLastName(String last) {
+	public void setLastName(String last) throws InvalidFieldException {
+		if (!Utils.checkString(last, REGEX_LAST_NAME))
+			throw new InvalidFieldException("Invalid Last Name (User)");
 		lastName = last;
 	}
 
@@ -140,7 +158,9 @@ public abstract class User implements Person {
 	 * @param pick
 	 *            contestant choice
 	 */
-	public abstract void setWeeklyPick(Contestant pick);
+	public void setWeeklyPick(Contestant pick)  {
+		weeklyPick = pick;
+	}
 
 	/**
 	 * setWinPick sets the users choice for which contestant will win the
@@ -150,12 +170,17 @@ public abstract class User implements Person {
 	 * @param winner
 	 *            contestant choice
 	 */
-	public abstract void setWinPick(Contestant winner);
+	public void setWinPick(Contestant winner)  {
+		winPick = winner;
+		winPoints = 2 * GameData.getCurrentGame().weeksLeft();
+	}
+	
+	// just sets the same as prior without setting pts.
+	public void setWinPickNoSetPts(Contestant winner)  {
+		winPick = winner;
+	}
 	
 	// TODO: Doc
-	// just sets the same as prior without setting pts.
-	public abstract void setWinPickNoSetPts(Contestant winner);
-	
 	public int getWinPoints() {
 		return winPoints;
 	}
@@ -164,10 +189,12 @@ public abstract class User implements Person {
 		winPoints = winPts;
 	}
 
-	public void setID(String id) {
+	public void setID(String id) throws InvalidFieldException {
 		id = id.toLowerCase();
-		if (DataUtils.checkString(id,REGEX_CONTEST_ID))
+		if (Utils.checkString(id,REGEX_PLAYER_ID))
 			unID = id;
+		else 
+			throw new InvalidFieldException("Invalid Player ID");
 	}
 	
 	/**
@@ -183,12 +210,81 @@ public abstract class User implements Person {
 	
 
 	// TODO: DOCS:
-	public abstract JSONObject toJSONObject() throws JSONException; 
-	
-	public abstract void fromJSONString(String json) throws JSONException;
-	
 	public String toJSONString() throws JSONException {
 		return toJSONObject().toString();
 	}
+	
+	public JSONObject toJSONObject() throws JSONException {
+		JSONObject obj = new JSONObject();
+		
+		obj.put(KEY_FIRST_NAME, getFirstName());
+		obj.put(KEY_LAST_NAME, getLastName());
+		obj.put(KEY_ID, getID());
+		obj.put(KEY_POINTS, new Integer(getPoints()));
+		
+		Contestant c = getWeeklyPick();
+		if (c != null)
+			obj.put(KEY_WEEKLY_PICK_ID, c.getID());
+		else 
+			obj.put(KEY_WEEKLY_PICK_ID, null);
+		
+		c = getWinPick();
+		if (c != null) 
+			obj.put(KEY_ULT_PICK_ID, c.getID());
+		else
+			obj.put(KEY_ULT_PICK_ID, null);
+		
+		obj.put(KEY_WIN_PICK_POINTS, new Integer(getWinPoints()));
+		
+		return obj;
+	}
 
+	public void fromJSONString(String json) throws JSONException {
+		JSONObject o = new JSONObject(json);
+		
+		GameData g = (GameData)GameData.getCurrentGame();
+		
+		try {
+			setID((String)o.remove(KEY_ID));
+		} catch (InvalidFieldException e) { };
+		try {
+			setFirstName((String)o.remove(KEY_FIRST_NAME));
+		} catch (InvalidFieldException e) { };
+		try {
+			setLastName((String)o.remove(KEY_LAST_NAME));
+		} catch (InvalidFieldException e) { };
+		
+		setPoints((Integer)o.remove(KEY_POINTS));
+		try {
+			String weeklyID = (String)o.remove(KEY_WEEKLY_PICK_ID);
+			setWeeklyPick(g.getContestant(weeklyID));
+		} catch (ClassCastException e) {
+			// it was null so lets just ignore it.
+		}
+		
+		try {
+			String ultID = (String)o.remove(KEY_ULT_PICK_ID);
+			setWinPickNoSetPts(g.getContestant(ultID));
+			setWinPoints((Integer)o.remove(KEY_WIN_PICK_POINTS));
+		} catch (ClassCastException e) {
+			// it was null so lets just ignore it.
+		}
+		
+	}
+
+	public static void main(String[] args) {
+		User u = new User("bob", "builder", "bbuilde");
+		
+		try {
+			System.out.println(u.toJSONString());
+			User p  = new User();
+			
+			p.fromJSONString(u.toJSONString());
+			System.out.println(p);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 }

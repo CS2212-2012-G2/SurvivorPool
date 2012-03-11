@@ -18,6 +18,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import common.Utils;
+
 import admin.contestanttab.ContestantPanel;
 import admin.data.GameData;
 import admin.playertab.PlayerPanel;
@@ -43,9 +45,9 @@ public class MainFrame extends JFrame{
 	private JRadioButtonMenuItem mnuItemTheme2;
 	private JRadioButtonMenuItem mnuItemTheme3;
 	
-	private static final String GENERAL_PANEL 		= "General",
-							 	CONTESTANT_PANEL 	= "Contestants",
-							 	PLAYER_PANEL 		= "Players";
+	public static final String GENERAL_PANEL 		= "General",
+							   CONTESTANT_PANEL 	= "Contestants",
+							   PLAYER_PANEL 		= "Players";
 	
 	private StatusPanel statusBar;
 

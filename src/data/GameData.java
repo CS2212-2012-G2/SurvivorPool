@@ -1,8 +1,7 @@
 package data;
 
-import admin.Utils;
-import admin.data.Contestant;
-import admin.data.JSONUtils;
+import common.Utils;
+//import admin.data.JSONUtils;
 import data.me.json.*;
 
 /**
@@ -326,16 +325,6 @@ public abstract class GameData {
 				", #C:\"" + numContestants + "\"" + ", SS: " + "\"" + seasonStarted + "\"" + 
 				", TN: {" + "\"" + tribeNames[0] + "\", " + " + \"" + tribeNames[1] + "\"}>");
 	}
-	
-	public void writeData(){
-		
-		try {
-			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	// TODO: DOC THESE THREE
 	 
@@ -355,4 +344,6 @@ public abstract class GameData {
 	public abstract JSONObject toJSONObject() throws JSONException;
 	
 	public abstract void fromJSONObject(JSONObject o) throws JSONException;
+	
+	public abstract void writeData();
 }

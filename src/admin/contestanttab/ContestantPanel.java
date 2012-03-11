@@ -35,14 +35,17 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
+import common.Utils;
+
 import data.InvalidFieldException;
 
 import admin.FileDrop;
 import admin.MainFrame;
 import admin.StatusPanel;
-import admin.Utils;
-import admin.data.*;
+import admin.data.GameData;
 
+import data.Contestant;
+import data.Person;
 
 public class ContestantPanel extends JPanel implements MouseListener {
 

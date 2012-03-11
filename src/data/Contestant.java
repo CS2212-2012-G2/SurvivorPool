@@ -1,7 +1,7 @@
 package data;
 
 import data.me.json.*;
-
+import common.Utils;
 
 
 /**
@@ -12,7 +12,7 @@ import data.me.json.*;
  * 			Ramesh Raj 
  */
 
-public abstract class Contestant implements Person {
+public class Contestant implements Person {
 
 	// player information
 	protected String firstName, lastName, tribe, picture;
@@ -130,7 +130,7 @@ public abstract class Contestant implements Person {
 	 */
 	public void setFirstName(String name) throws InvalidFieldException {
 		
-		if (!DataUtils.checkString(name,REGEX_FIRST_NAME))
+		if (!Utils.checkString(name,REGEX_FIRST_NAME))
 			throw new InvalidFieldException("Invalid First Name");
 		
 		firstName = name;
@@ -142,7 +142,7 @@ public abstract class Contestant implements Person {
 	 * @param name New last name of the contestant
 	 */
 	public void setLastName(String name) throws InvalidFieldException {
-		if (!DataUtils.checkString(name,REGEX_LAST_NAME))
+		if (!Utils.checkString(name,REGEX_LAST_NAME))
 			throw new InvalidFieldException("Invalid Last Name");
 		
 		lastName = name;
@@ -180,7 +180,7 @@ public abstract class Contestant implements Person {
 	 */
 	public void setID(String newID) throws InvalidFieldException {
 		newID = newID.toLowerCase();
-		if (!DataUtils.checkString(newID,REGEX_CONTEST_ID))
+		if (!Utils.checkString(newID,REGEX_CONTEST_ID))
 			throw new InvalidFieldException("Invalid contestant ID");
 		cID = newID;
 	}
@@ -227,17 +227,63 @@ public abstract class Contestant implements Person {
 				", Tribe: " + "\"" + tribe + "\"" + ", ID: " + "\"" + cID + "\">");
 	}
 	
+	public JSONObject toJSONObject() throws JSONException {
+		JSONObject obj = new JSONObject();
+		
+		obj.put(KEY_FIRST_NAME, getFirstName());
+		obj.put(KEY_LAST_NAME, getLastName());
+		obj.put(KEY_ID, getID());
+		obj.put(KEY_PICTURE, getPicture());
+		obj.put(KEY_TRIBE, getTribe());
+		obj.put(KEY_DATE, new Integer(getCastDate()));
+		System.out.println(obj.get(KEY_TRIBE)+"a");
+		return obj;
+	}
 	
-	// TODO: DOC THESE THREE
-	public abstract JSONObject toJSONObject() throws JSONException; 
 	
-	public abstract void fromJSONString(String json) throws JSONException;
-	
-	public abstract void fromJSONObject(JSONObject o);
+	// TODO: DOC THESE
 	
 	public String toJSONString() throws JSONException {
 		return toJSONObject().toString();
 	}
-
 	
+	public void fromJSONString(String json) throws JSONException{
+		JSONObject o = new JSONObject(json);
+		
+		fromJSONObject(o);
+	}
+	
+	public void fromJSONObject(JSONObject o) {
+		try {
+			setID((String)o.remove(KEY_ID));
+			setFirstName((String)o.remove(KEY_FIRST_NAME));
+			setLastName((String)o.remove(KEY_LAST_NAME));
+			setTribe((String)o.remove(KEY_TRIBE));
+			setPicture((String)o.remove(KEY_PICTURE));
+			setCastDate(((Number)o.remove(KEY_DATE)).intValue());
+		} catch (InvalidFieldException e) {
+			System.out.println("Warning: InvalidFieldException in fromJSONObject");
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	/// Driver for Contestant JSON 
+		public static void main(String[] args) throws InvalidFieldException {
+			Contestant c = new data.Contestant("ad", "Jon", "silver", "booby");
+			
+			try {
+				System.out.println(c.toJSONString());
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			try {
+				Contestant p = new data.Contestant();
+				p.fromJSONString(c.toJSONString());
+				System.out.println(p);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 }

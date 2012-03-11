@@ -1,4 +1,4 @@
-package admin;
+package common;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -9,7 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import admin.data.Person;
+import data.Person;
+import data.me.regexp.RE;
 
 
 public class Utils {
@@ -101,6 +102,7 @@ public class Utils {
             style(comps[i]);
         }
     }
+	
 	/**
 	 * Checks if string matches pattern.
 	 * @param val The string to check for validity
@@ -112,7 +114,8 @@ public class Utils {
 			return false;
 		if(val.length()==0)
 			return false;
-		return Pattern.matches(pattern, val);
+		RE r = new RE(pattern);
+		return r.match(val);                
 	}
 	
 	/**
@@ -121,7 +124,7 @@ public class Utils {
 	 * @param activeCon person to use data from.
 	 * @param a Data to check through
 	 */
-	public static String generateID(admin.data.Person activeCon, List<admin.data.Person> a) {
+	public static String generateID(Person activeCon, List<Person> a) {
 		if (activeCon.getLastName() == null ||
 				activeCon.getFirstName() == null) {
 			System.out.println("generateContestantID: first or last name null");
