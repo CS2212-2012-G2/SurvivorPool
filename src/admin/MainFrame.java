@@ -97,7 +97,11 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void initSeasonCreateGUI(){
-		this.add(new SeasonCreatePanel());
+		this.setLayout(new BorderLayout());
+		statusBar = new StatusPanel();
+		this.add(new SeasonCreatePanel(),BorderLayout.CENTER);
+		this.add(statusBar, BorderLayout.SOUTH);
+		statusBar.setTabLabel("SEASON CREATE");
 	}
 	
 	private void initGUI(){		

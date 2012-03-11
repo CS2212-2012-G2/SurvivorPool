@@ -22,7 +22,4 @@ public class Utils {
 		return r.match(val);                
 	}
 	
-
-	
-	
 }

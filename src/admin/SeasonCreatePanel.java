@@ -36,8 +36,6 @@ public class SeasonCreatePanel extends JPanel {
 	JTextField txtTribe1;
 	JTextField txtTribe2;
 	
-	JLabel lblAlert;
-	
 	public SeasonCreatePanel(){
 		this.setPreferredSize(new Dimension(400,400));
 		this.setLayout(new GridLayout(6,2));
@@ -62,7 +60,7 @@ public class SeasonCreatePanel extends JPanel {
 		txtTribe1 = new JTextField("");
 		txtTribe2 = new JTextField("");
 		
-		lblAlert = new JLabel("");
+		
 		
 		JButton btnCreate = new JButton("Create Season");
 		
@@ -77,7 +75,7 @@ public class SeasonCreatePanel extends JPanel {
 		this.add(lblTribe2);
 		this.add(txtTribe2);
 		this.add(btnCreate);
-		this.add(lblAlert);
+		
 		spnWeek.addChangeListener(new ChangeListener(){
 
 			@Override
@@ -106,10 +104,11 @@ public class SeasonCreatePanel extends JPanel {
 			public void actionPerformed(ActionEvent ae) {
 				try {
 					if(!checkValidTribeNames()){
-						lblAlert.setText("Invalid tribe names!");
+						MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid tribe names");
+						//lblAlert.setText("Invalid tribe names!");
 						return;
 					}
-					lblAlert.setText("valid tribe names!");
+					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Valid tribe names");
 					GameData.initSeason(Integer.parseInt(spnContestant.getValue().toString()));
 					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(),txtTribe2.getText());
 					
@@ -141,9 +140,9 @@ public class SeasonCreatePanel extends JPanel {
 	 * @return boolean depending if tribe names are alphanumber and between 1-30 characters
 	 */
 	private boolean checkValidTribeNames(){
-		String pattern = "[A-z\\s]{1,30}";//regex for alphanumeric and between 1-30 characters long
+		String pattern = "^[a-zA-Z\\s]{1,30}$";;//regex for alphanumeric and between 1-30 characters long
 		return Utils.checkString(txtTribe1.getText(),pattern)
 				&&Utils.checkString(txtTribe2.getText(),pattern);
 	}
-
+	
 }
