@@ -1,4 +1,4 @@
-package admin.data;
+package client.data;
 
 import data.me.json.*;
 import data.Contestant;
@@ -17,8 +17,7 @@ public class User extends data.User {
 		super();
 	}
 	
-	@Override
-	@SuppressWarnings("unchecked")
+
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
@@ -44,12 +43,12 @@ public class User extends data.User {
 		return obj;
 	}
 
-	@Override
+
 	public String toJSONString() throws JSONException {
 		return toJSONObject().toString();
 	}
 
-	@Override
+
 	public void fromJSONString(String json) throws JSONException {
 		JSONObject o = new JSONObject(json);
 		
@@ -58,10 +57,10 @@ public class User extends data.User {
 		setID((String)o.remove(KEY_ID));
 		setFirstName((String)o.remove(KEY_FIRST_NAME));
 		setLastName((String)o.remove(KEY_LAST_NAME));
-		setPoints((Integer)o.remove(KEY_POINTS));
+		setPoints(((Integer)o.remove(KEY_POINTS)).intValue());
 		setWeeklyPick(g.getContestant((String)o.remove(KEY_WEEKLY_PICK_ID)));
 		setWinPickNoSetPts(g.getContestant((String)o.remove(KEY_ULT_PICK_ID)));
-		setWinPoints((Integer)o.remove(KEY_WIN_PICK_POINTS));
+		setWinPoints(((Integer)o.remove(KEY_WIN_PICK_POINTS)).intValue());
 	}
 	
 	public static void main(String[] args) {
@@ -80,28 +79,27 @@ public class User extends data.User {
 		
 	}
 
-	@Override
+
 	public Contestant getWeeklyPick() {
 		return weeklyPick;
 	}
 
-	@Override
+
 	public Contestant getWinPick()  {
 		return winPick;
 	}
 
-	@Override
+
 	public void setWeeklyPick(Contestant pick)  {
 		weeklyPick = pick;
 	}
 
-	@Override
+
 	public void setWinPick(Contestant winner)  {
 		winPick = winner;
 		winPoints = 2 * GameData.getCurrentGame().weeksLeft();
 	}
 
-	@Override
 	public void setWinPickNoSetPts(Contestant winner)  {
 		winPick = winner;
 	}

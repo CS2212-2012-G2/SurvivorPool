@@ -54,7 +54,7 @@ public class GameData extends data.GameData {
 			return;
 		}
 		
-		allList.remove(i);
+		allList.removeAt(i);
 		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
 	}
 	
@@ -108,13 +108,14 @@ public class GameData extends data.GameData {
 	
 	
 	
-	@Override
+
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
 		JSONArray cons = new JSONArray();
-		for (Contestant c: allList) {
+		for (int i =0;i<allList.size();i++) {
+			Contestant c = (Contestant) allList.getAt(i);
 			if (c != null)
 				cons.put(c.toJSONObject());
 		}
@@ -133,23 +134,23 @@ public class GameData extends data.GameData {
 		return obj;
 	}
 	
-	@Override
+	
 	public void fromJSONString(String json) throws JSONException {
 		JSONObject o = new JSONObject(json);
 		
 		fromJSONObject(o);
 	}
 
-	@Override
+
 	public void fromJSONObject(JSONObject obj) throws JSONException {
-		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
+		numContestants = ((Integer)obj.get(KEY_NUM_CONTEST)).intValue();
 				
 		// tribes
 		JSONArray ts = (JSONArray)obj.get(KEY_TRIBES);
 		this.setTribeNames((String)ts.get(0),  (String)ts.get(1) );
 		// week info:
-		weeksRem = ((Number)obj.get(KEY_WEEKS_REMAIN)).intValue();
-		weeksPassed = ((Number)obj.get(KEY_WEEKS_PASSED)).intValue();
+		weeksRem = ((Integer)obj.get(KEY_WEEKS_REMAIN)).intValue();
+		weeksPassed = ((Integer)obj.get(KEY_WEEKS_PASSED)).intValue();
 		
 		//Contestants must be loaded last!
 		allList = new ArrayList<Contestant>(numContestants);
@@ -164,7 +165,7 @@ public class GameData extends data.GameData {
 	}
 	
 	// TODO: Implement:
-	@Override
+	
 	public String toString() {
 		return super.toString();
 	}
