@@ -172,8 +172,7 @@ public class User implements Person {
 	 */
 	public void setWinPick(Contestant winner)  {
 		winPick = winner;
-		//winPoints = 2 * GameData.getCurrentGame().weeksLeft();
-		winPoints=10;
+		winPoints = 2 * GameData.getCurrentGame().weeksLeft();
 	}
 	
 	// just sets the same as prior without setting pts.
