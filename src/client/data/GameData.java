@@ -128,63 +128,10 @@ public class GameData extends data.GameData {
 		return (GameData)currentGame;
 	}
 
-	
-	
-	
-
-	public JSONObject toJSONObject() throws JSONException {
-		JSONObject obj = new JSONObject();
-		
-		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
-		JSONArray cons = new JSONArray();
-		for (int i =0;i<allList.size();i++) {
-			Contestant c = (Contestant) allList.elementAt(i);
-			if (c != null)
-				cons.put(c.toJSONObject());
-		}
-		
-		JSONArray ts = new JSONArray();
-		// TODO: only two tribes?
-		ts.put(tribeNames[0]);
-		ts.put(tribeNames[1]);
-		
-		
-		obj.put(KEY_CONTESTANTS, cons);
-		obj.put(KEY_TRIBES, ts);
-		obj.put(KEY_WEEKS_REMAIN, new Integer(weeksRem));
-		obj.put(KEY_WEEKS_PASSED, new Integer(weeksPassed));
-		
-		return obj;
-	}
-	
-	
-	public void fromJSONString(String json) throws JSONException {
-		JSONObject o = new JSONObject(json);
-		
-		fromJSONObject(o);
-	}
-
-
 	public void fromJSONObject(JSONObject obj) throws JSONException {
-		numContestants = ((Integer)obj.get(KEY_NUM_CONTEST)).intValue();
-				
-		// tribes
-		JSONArray ts = (JSONArray)obj.get(KEY_TRIBES);
-		this.setTribeNames((String)ts.get(0),  (String)ts.get(1) );
-		// week info:
-		weeksRem = ((Integer)obj.get(KEY_WEEKS_REMAIN)).intValue();
-		weeksPassed = ((Integer)obj.get(KEY_WEEKS_PASSED)).intValue();
+		super.fromJSONObject(obj);
+		allList = arrayToList(allContestants);
 		
-		//Contestants must be loaded last!
-		allList = new Vector(numContestants);
-		// load the contestant array. 
-		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
-		for (int i =0;i<cons.length();i++) {
-			Contestant c = new Contestant();
-			c.fromJSONObject(cons.getJSONObject(i));
-			addContestant(c);
-		}
-
 	}
 	
 	// TODO: Implement:
