@@ -57,8 +57,7 @@ public class GeneralPanel extends JPanel {
 		splitPane.setDividerLocation(320);
 		
 		//TODO: actually set info here rather than just weeks.
-		lblGenInfo.setText("<html>"+Integer.toString(gd.weeksLeft())+" weeks left(DATA PERSISTENCE! Doesn't change unless season crea" +
-				"ted)To the TA: remove src/data/SeasonSettings to go back to createSeasonScreen</html>");
+		lblGenInfo.setText("<html>"+Integer.toString(gd.weeksLeft())+" weeks left. File -> Reset to start new season</html>");
 		pnlInfo.add(splitPane,BorderLayout.CENTER);
 		pnlInfo.setPreferredSize(new Dimension(450,400));
 		this.add(pnlInfo);

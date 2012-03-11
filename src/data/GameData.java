@@ -314,7 +314,6 @@ public abstract class GameData {
 	 */
 	public void endCurrentGame() {
 		GameData.currentGame = null;
-		//TODO:remove data persistence file
 	}
 	
 	/**
