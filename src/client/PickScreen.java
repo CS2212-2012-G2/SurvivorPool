@@ -45,9 +45,7 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 
 	public PickScreen(String voteType, String userData) {
 		super();
-
-		Contestant[] contList = GameData.getCurrentGame().getAllContestants();
-
+		
 		this.voteType = voteType;
 
 		VerticalFieldManager vertFieldManager = new VerticalFieldManager(
@@ -130,6 +128,9 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 		 * 
 		 * -----------------------------------------------------------
 		 */
+
+
+		Contestant[] contList = GameData.getCurrentGame().getAllContestants();
 
 		/* build choices drop down*/
 		String[] choices = new String[contList.length];
