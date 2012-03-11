@@ -260,7 +260,7 @@ public class Contestant implements Person {
 			setLastName((String)o.remove(KEY_LAST_NAME));
 			setTribe((String)o.remove(KEY_TRIBE));
 			setPicture((String)o.remove(KEY_PICTURE));
-			setCastDate(((Number)o.remove(KEY_DATE)).intValue());
+			setCastDate(((Integer)o.remove(KEY_DATE)).intValue());
 		} catch (InvalidFieldException e) {
 			System.out.println("Warning: InvalidFieldException in fromJSONObject");
 			System.out.println(e.getMessage());

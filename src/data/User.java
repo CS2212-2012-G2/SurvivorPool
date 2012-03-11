@@ -254,7 +254,7 @@ public class User implements Person {
 			setLastName((String)o.remove(KEY_LAST_NAME));
 		} catch (InvalidFieldException e) { };
 		
-		setPoints((Integer)o.remove(KEY_POINTS));
+		setPoints(((Integer)o.remove(KEY_POINTS)).intValue());
 		try {
 			String weeklyID = (String)o.remove(KEY_WEEKLY_PICK_ID);
 			setWeeklyPick(g.getContestant(weeklyID));
@@ -265,7 +265,7 @@ public class User implements Person {
 		try {
 			String ultID = (String)o.remove(KEY_ULT_PICK_ID);
 			setWinPickNoSetPts(g.getContestant(ultID));
-			setWinPoints((Integer)o.remove(KEY_WIN_PICK_POINTS));
+			setWinPoints(((Integer)o.remove(KEY_WIN_PICK_POINTS)).intValue());
 		} catch (ClassCastException e) {
 			// it was null so lets just ignore it.
 		}
