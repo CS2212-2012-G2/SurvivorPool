@@ -109,58 +109,11 @@ public class GameData extends data.GameData {
 		return (GameData)currentGame;
 	}
 
-	
-	
-	// should be OK on bb:
-	@Override
-	public JSONObject toJSONObject() throws JSONException {
-		JSONObject obj = new JSONObject();
-		
-		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
-		JSONArray cons = new JSONArray();
-		for (Contestant c: allContestants) {
-			if (c != null)
-				cons.put(c.toJSONObject());
-		}
-		
-		JSONArray ts = new JSONArray();
-		// TODO: only two tribes?
-		ts.put(tribeNames[0]);
-		ts.put(tribeNames[1]);
-		
-		
-		obj.put(KEY_CONTESTANTS, cons);
-		obj.put(KEY_TRIBES, ts);
-		obj.put(KEY_WEEKS_REMAIN, new Integer(weeksRem));
-		obj.put(KEY_WEEKS_PASSED, new Integer(weeksPassed));
-		
-		return obj;
-	}
-	
+
 	@Override
 	public void fromJSONObject(JSONObject obj) throws JSONException {
-		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
-				
-		// tribes
-		JSONArray ts = (JSONArray)obj.get(KEY_TRIBES);
-		this.setTribeNames((String)ts.get(0),  (String)ts.get(1) );
-		// week info:
-		weeksRem = ((Number)obj.get(KEY_WEEKS_REMAIN)).intValue();
-		weeksPassed = ((Number)obj.get(KEY_WEEKS_PASSED)).intValue();
-		
-		//Contestants must be loaded last!
-		allContestants = new Contestant[numContestants];
-		
-		// if we can move this back into the subclass, put this after a super.fromJSONObject() call.
+		super.fromJSONObject(obj);
 		allList = Arrays.asList(allContestants);
-		
-		// load the contestant array. 
-		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
-		for (int i =0;i<cons.length();i++) {
-			Contestant c = new Contestant();
-			c.fromJSONObject(cons.getJSONObject(i));
-			addContestant(c); // this would be valid in a subclass..
-		}
 	}
 	
 	/**

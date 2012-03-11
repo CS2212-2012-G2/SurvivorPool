@@ -1,5 +1,7 @@
 package data;
 
+import java.util.Arrays;
+
 import common.Utils;
 //import admin.data.JSONUtils;
 import data.me.json.*;
@@ -41,6 +43,8 @@ public abstract class GameData {
 	protected static final String KEY_WEEKS_PASSED = "weeks_pass";
 	
 	protected static final String KEY_TRIBES = "tribes_arr";
+	
+	protected static final String KEY_SEASON_STARTED = "season_started";
 	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -342,9 +346,56 @@ public abstract class GameData {
 		fromJSONObject(o);
 	}
 	
-	public abstract JSONObject toJSONObject() throws JSONException;
+	public JSONObject toJSONObject() throws JSONException {
+		JSONObject obj = new JSONObject();
+		
+		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
+		JSONArray cons = new JSONArray();
+		for (Contestant c: allContestants) {
+			if (c != null)
+				cons.put(c.toJSONObject());
+		}
+		
+		JSONArray ts = new JSONArray();
+		// TODO: only two tribes?
+		ts.put(tribeNames[0]);
+		ts.put(tribeNames[1]);
+		
+		
+		obj.put(KEY_CONTESTANTS, cons);
+		obj.put(KEY_TRIBES, ts);
+		obj.put(KEY_WEEKS_REMAIN, weeksRem);
+		obj.put(KEY_WEEKS_PASSED, weeksPassed);
+		obj.put(KEY_SEASON_STARTED,seasonStarted);
+
+		
+		return obj;
+	}
 	
-	public abstract void fromJSONObject(JSONObject o) throws JSONException;
-	
+	public void fromJSONObject(JSONObject obj) throws JSONException {
+		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
+				
+		// tribes
+		JSONArray ts = (JSONArray)obj.get(KEY_TRIBES);
+		this.setTribeNames((String)ts.get(0),  (String)ts.get(1) );
+		// week info:
+		weeksRem = obj.getInt(KEY_WEEKS_REMAIN);
+		weeksPassed = obj.getInt(KEY_WEEKS_PASSED);
+		
+		seasonStarted = obj.getBoolean(KEY_SEASON_STARTED);
+		//Contestants must be loaded last!
+		allContestants = new Contestant[numContestants];
+		
+		// if we can move this back into the subclass, put this after a super.fromJSONObject() call.
+		
+		// load the contestant array. 
+		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
+		for (int i =0;i<cons.length();i++) {
+			Contestant c = new Contestant();
+			c.fromJSONObject(cons.getJSONObject(i));
+			addContestant(c); // this would be valid in a subclass..
+		}
+	}
+
 	public abstract void writeData();
 }
