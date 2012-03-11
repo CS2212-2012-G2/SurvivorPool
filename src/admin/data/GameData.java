@@ -30,9 +30,16 @@ public class GameData extends data.GameData {
 	
 	private void updateSortAllContestants(int compFactID) {
 		allList = Arrays.asList(allContestants);
-		Collections.sort(Utils.noNullList(allList), 
-				ComparatorFactory.getComparator(compFactID));
-		allContestants = allList.toArray(new Contestant[0]);
+		List<Contestant> t = Utils.noNullList(allList);
+		Collections.sort(t, ComparatorFactory.getComparator(compFactID));
+		// t holds the sorted array, replace all the values with their
+		// new index. When the entry is null, it means we are done.
+		for (int i = 0; i < numContestants && allContestants[i] != null;
+			 i++) {
+			allContestants[i] = t.get(i);
+		}
+
+		allList = Arrays.asList(allContestants);
 	}
 
 	// extends the method in super class to sort it.
@@ -89,6 +96,7 @@ public class GameData extends data.GameData {
 		} catch (FileNotFoundException e) {
 			return (GameData) currentGame; 
 		}
+		
 		currentGame = new GameData(((Number)json.get(KEY_NUM_CONTEST)).intValue());
 		GameData.getCurrentGame().fromJSONObject(json);
 		
@@ -133,24 +141,24 @@ public class GameData extends data.GameData {
 	@Override
 	public void fromJSONObject(JSONObject obj) {
 		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
+				
+		// tribes
+		JSONArray ts = (JSONArray)obj.get(KEY_TRIBES);
+		this.setTribeNames((String)ts.get(0),  (String)ts.get(1) );
+		// week info:
+		weeksRem = ((Number)obj.get(KEY_WEEKS_REMAIN)).intValue();
+		weeksPassed = ((Number)obj.get(KEY_WEEKS_PASSED)).intValue();
 		
-		
+		//Contestants must be loaded last!
 		allList = new ArrayList<Contestant>(numContestants);
-		// load the contestant array.
+		// load the contestant array. 
 		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
 		for (Object o: cons) {
 			Contestant c = new Contestant();
 			c.fromJSONObject((JSONObject)o);
-			allList.add(c);
+			addContestant(c);
 		}
-		
-		// tribes
-		JSONArray ts = (JSONArray)obj.get(KEY_TRIBES);
-		tribeNames = new String[] { (String)ts.get(0), (String)ts.get(1) };
-		
-		// week info:
-		weeksRem = ((Number)obj.get(KEY_WEEKS_REMAIN)).intValue();
-		weeksPassed = ((Number)obj.get(KEY_WEEKS_PASSED)).intValue();
+
 	}
 	
 	// TODO: Implement:

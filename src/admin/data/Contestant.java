@@ -35,7 +35,7 @@ public class Contestant extends data.Contestant {
 		obj.put(KEY_PICTURE, getPicture());
 		obj.put(KEY_TRIBE, getTribe());
 		obj.put(KEY_DATE, new Integer(getCastDate()));
-		
+		System.out.println(obj.get(KEY_TRIBE)+"a");
 		return obj;
 	}
 	
