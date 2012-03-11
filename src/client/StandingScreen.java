@@ -9,6 +9,8 @@ package client;
  * */
 
 import client.data.GameData;
+import data.Contestant;
+import data.User;
 import net.rim.device.api.ui.Graphics;
 import net.rim.device.api.command.Command;
 import net.rim.device.api.command.CommandHandler;
@@ -31,19 +33,13 @@ import net.rim.device.api.util.StringProvider;
 public class StandingScreen extends MainScreen implements FieldChangeListener {
 	/* Variables */
 	private LabelField labelTemp; // various labels.
-	private int score, numberOfPlayers;
-	private String name, temp;
+	private String temp;
 	private FontFamily ff1; // fonts.
 	private Font font1, font2; // fonts.
-
+	private User tempUser;
+	
 	public StandingScreen(String userData) {
 		super();
-		
-		/* TESTING PURPOSES, REMOVE WHEN DATA PERSISTANCE IS ACTIVE */
-		name = "TimmyTimmyTimmyTimmy JonesJonesJonesJones";
-		score = 102;
-		numberOfPlayers = 120;
-		/*--------------------------------------------------------*/
 
 		VerticalFieldManager vertFieldManager = new VerticalFieldManager(
 				VerticalFieldManager.USE_ALL_WIDTH
@@ -135,24 +131,29 @@ public class StandingScreen extends MainScreen implements FieldChangeListener {
 		};
 		labelTemp.setFont(font1);
 
+		
+		User[] userList = GameData.getCurrentGame().getAllUsers();
 		list.add(new Object[] { labelTemp }); // add headers
 
 		/* fill list with players */
-		for (int i = 1; i <= numberOfPlayers; i++) {
+		for (int i = 0; i < userList.length; i++) {
+			tempUser = userList[i];
+			int tempPlacement = i + 1;
+			
 			// Formatting decisions
-			if (i > 99)
-				temp = " " + i + "\t   ";
-			else if (i > 9)
-				temp = "   " + i + "\t   ";
+			if (tempPlacement > 99)
+				temp = " " + tempPlacement + "\t   ";
+			else if (tempPlacement > 9)
+				temp = "   " + tempPlacement + "\t   ";
 			else
-				temp = "\t" + i + "\t   ";
+				temp = "\t" + tempPlacement + "\t   ";
 
-			if (score > 99)
-				temp = temp + score + "   " + name;
-			else if (score > 9)
-				temp = temp + " " + score + "    " + name;
+			if (tempUser.getPoints() > 99)
+				temp = temp + tempUser.getPoints() + "   " + tempUser.getFirstName() + " " + tempUser.getLastName();
+			else if (tempUser.getPoints() > 9)
+				temp = temp + " " + tempUser.getPoints() + "    " + tempUser.getFirstName() + " " + tempUser.getLastName();
 			else
-				temp = temp + " " + score + "\t\t" + name;
+				temp = temp + " " + tempUser.getPoints() + "\t\t" + tempUser.getFirstName() + " " + tempUser.getLastName();
 			/* list contains labels so that the text colour can change */
 			labelTemp = new LabelField(temp, LabelField.ELLIPSIS) {
 				public void paint(Graphics g) {
@@ -162,11 +163,7 @@ public class StandingScreen extends MainScreen implements FieldChangeListener {
 			};
 			labelTemp.setFont(font2);
 			list.add(new Object[] { labelTemp });
-			
-			/* ------------------------------------------------------- */
-			if (score > 0) // TESTING
-				score--; // TESTING PURPOSES
-			/* ------------------------------------------------------- */
+
 		}
 
 		/* Build the components to MainScreen */
