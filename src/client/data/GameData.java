@@ -1,61 +1,86 @@
 package client.data;
 
 
-import net.rim.device.api.collection.List;
+import java.util.Vector;
+
 import net.rim.device.api.io.FileNotFoundException;
 import net.rim.device.api.util.Arrays;
-import data.me.json.*;
 
-//import data.Contestant;
+import common.Utils;
+
+import data.Contestant;
 import data.InvalidFieldException;
+import data.me.json.JSONArray;
+import data.me.json.JSONException;
+import data.me.json.JSONObject;
 
 public class GameData extends data.GameData {
 
-	private List allList; // lits of
+	private Vector allList; // lits of
 	// all/remaining
 	// contestants
 	
 	public GameData(int numContestants) {
 		super(numContestants);
-		allList = Arrays.asList(allContestants);
+		
+		allList = arrayToList(allContestants);
 	}
 	
 	private void updateSortAllContestants(int compFactID) {
-		allList = Arrays.asList(allContestants);
-		List<Contestant> t = Utils.noNullList(allList);
-		Collections.sort(t, ComparatorFactory.getComparator(compFactID));
+		allList = arrayToList(allContestants);
+		Vector t = noNullList(allList);
+		Object[] ar = new Object[t.size()];
+		t.copyInto(ar);
+		Arrays.sort(ar,ComparatorFactory.getComparator(compFactID));
+		
 		// t holds the sorted array, replace all the values with their
 		// new index. When the entry is null, it means we are done.
 		for (int i = 0; i < numContestants && allContestants[i] != null;
 			 i++) {
-			allContestants[i] = t.get(i);
+			allContestants[i] = (Contestant) ar[i];
 		}
 
-		allList = Arrays.asList(allContestants);
+		allList = arrayToList(allContestants);
 	}
 
-	// extends the method in super class to sort it.
+	/**
+	 * Convert an array to a vector
+	 * @param ar an array
+	 * @return a Vector containing the elements of the array
+	 */
+	private Vector arrayToList(Object[] ar){
+		Vector retList = new Vector();
+		for(int i =0;i<ar.length;i++){
+			retList.addElement(ar[i]);
+		}
+		return retList;
+	}
 	
+	/**
+	 * Returns a vector with all nulls removed
+	 * @param c a vector which may contain nulls
+	 * @return a vector which contains all non-null elements from param
+	 */
+	private Vector noNullList(Vector c){
+		Vector retList=new Vector();
+		for(int i =0;i<c.size();i++){
+			if(c.elementAt(i)!=null)
+				retList.addElement(c.elementAt(i));
+		}
+		return retList;
+	}
+	
+	// extends the method in super class to sort it.
 	public void addContestant(Contestant c) {
 		super.addContestant(c);
-		
 		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
 	}
 
-	// overridden to use binary search for speeeeed.
-	
 	public void removeContestant(Contestant target) {
-		// is the contestant there?
-		int i = Utils.BinSearchSafe(allList, (Contestant)target,
-				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
-		
-		if (i < 0) {
-			// i < 0 implies not found.
-			return;
+		//if contestant was there, sort the array
+		if(allList.removeElement(target)){
+			updateSortAllContestants(ComparatorFactory.CONTNT_ID);
 		}
-		
-		allList.removeAt(i);
-		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
 	}
 	
 	
@@ -68,13 +93,11 @@ public class GameData extends data.GameData {
 			System.out.println("getContestantIndexID:\t" + e.getMessage());
 			return -1;
 		}
-	
-		return Utils.BinSearchSafe(allList, t,
-				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
+		return allList.indexOf(t);
 	}
 	
 	/**
-	 * intGameData reads in a data file and builds a GameData object out
+	 * initGameData reads in a data file and builds a GameData object out
 	 * of it, returning it to the user.
 	 * 
 	 * @param inputFile   file to be read in
@@ -115,7 +138,7 @@ public class GameData extends data.GameData {
 		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
 		JSONArray cons = new JSONArray();
 		for (int i =0;i<allList.size();i++) {
-			Contestant c = (Contestant) allList.getAt(i);
+			Contestant c = (Contestant) allList.elementAt(i);
 			if (c != null)
 				cons.put(c.toJSONObject());
 		}
@@ -153,7 +176,7 @@ public class GameData extends data.GameData {
 		weeksPassed = ((Integer)obj.get(KEY_WEEKS_PASSED)).intValue();
 		
 		//Contestants must be loaded last!
-		allList = new ArrayList<Contestant>(numContestants);
+		allList = new Vector(numContestants);
 		// load the contestant array. 
 		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
 		for (int i =0;i<cons.length();i++) {
@@ -176,6 +199,11 @@ public class GameData extends data.GameData {
 	 */
 	public static void initSeason(int num){
 		currentGame = new GameData(num);
+	}
+	
+	public void writeData() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public static void main(String[] args) {
@@ -214,5 +242,6 @@ public class GameData extends data.GameData {
 		
 		
 	}
+
 	
 }
