@@ -5,3 +5,6 @@
 .classpath
 .~lock*
 bin/*
+.settings/
+BlackBerry_App_Descriptor.xml
+res/img/icon.png
