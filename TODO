@@ -53,6 +53,7 @@ Admin (SWING)
 
 	ALL
 		- FORCE CHARACTER LIMIT FOR INPUT BOX (20 CHARS FOR NAMES, 30 FOR TRIBES)
+		- Spacing for all the tabbed panels so they aren't butted right up against it
 		
 	Main.java
 		
