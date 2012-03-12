@@ -40,7 +40,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	public static final int INDEX_ULT_PICK = 5;
 	
 	private int sortColumn = INDEX_ID;
-	private Vector globalData;
+	private List globalData;
 	
 	/**
 	 * Creates the table model which controls the table's actions and data.
@@ -48,7 +48,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	 */
 	public PlayerTableModel(List<User> users) {
 		
-		globalData = (Vector)AdminUtils.castListToUncast(users);
+		globalData = AdminUtils.castListToUncast(users);
 		data = users;
 		
 		columnNames = new String[] { "ID", "First", "Last", "Points", 
