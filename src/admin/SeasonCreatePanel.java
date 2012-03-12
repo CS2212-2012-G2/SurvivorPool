@@ -1,8 +1,8 @@
 package admin;
-//TODO: MAKE THIS PANEL LOOK BETTER!
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,8 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import net.miginfocom.swing.MigLayout;
 
 import common.Utils;
 
@@ -36,18 +39,30 @@ public class SeasonCreatePanel extends JPanel {
 	JTextField txtTribe1;
 	JTextField txtTribe2;
 	
+	private JPanel innerFieldPanel;
+	private JPanel infoFieldPanel;
+	
 	public SeasonCreatePanel(){
-		this.setPreferredSize(new Dimension(400,400));
-		this.setLayout(new GridLayout(6,2));
+		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		
-		JLabel lblInitSeason = new JLabel("Create Season");
-		JLabel lblFiller = new JLabel("");
-		JLabel lblWeeks = new JLabel("Weeks:");
-		JLabel lblContestants = new JLabel("Contestants:");
-		JLabel lblTribe1 = new JLabel("Tribe 1:");
-		JLabel lblTribe2 = new JLabel("Tribe 2:");
+		infoFieldPanel = new JPanel();
+		infoFieldPanel.setLayout(new MigLayout("center"));
+	
+		innerFieldPanel = new JPanel();
+		innerFieldPanel.setLayout(new BorderLayout());
 		
+		JLabel lblWelcomeBanner = new JLabel("Welcome to SurvivorPool!");
+		JLabel lblInfoBanner = new JLabel("Fill out the fields below to create a new season.");
+		JLabel lblWeeks = new JLabel("Weeks:", SwingConstants.TRAILING);
+		JLabel lblContestants = new JLabel("Contestants:", SwingConstants.TRAILING);
+		JLabel lblTribe1 = new JLabel("Tribe 1:", SwingConstants.TRAILING);
+		JLabel lblTribe2 = new JLabel("Tribe 2:", SwingConstants.TRAILING);		
+		
+		lblWelcomeBanner.setHorizontalAlignment(SwingConstants.CENTER);
+		lblWelcomeBanner.setFont(new Font("sanserif", Font.BOLD, 34));
+		lblInfoBanner.setHorizontalAlignment(SwingConstants.CENTER);
+		lblInfoBanner.setFont(new Font("sanserif", Font.ITALIC, 16));
 		
 		//is there a default number of weeks?
 		SpinnerNumberModel weekModel = new SpinnerNumberModel(3,3,12,1); //default,low,min,step
@@ -59,22 +74,24 @@ public class SeasonCreatePanel extends JPanel {
 		
 		txtTribe1 = new JTextField("");
 		txtTribe2 = new JTextField("");
+						
+		JButton btnCreate = new JButton("Create Season");		
 		
+		infoFieldPanel.add(lblWeeks);
+		infoFieldPanel.add(spnWeek);
+		infoFieldPanel.add(lblContestants, "gap unrelated");
+		infoFieldPanel.add(spnContestant, "wrap");
+		infoFieldPanel.add(lblTribe1);
+		infoFieldPanel.add(txtTribe1, "span, grow");
+		infoFieldPanel.add(lblTribe2);
+		infoFieldPanel.add(txtTribe2, "span, grow");
 		
+		innerFieldPanel.add(lblInfoBanner, BorderLayout.NORTH);
+		innerFieldPanel.add(infoFieldPanel, BorderLayout.CENTER);
+		innerFieldPanel.add(btnCreate, BorderLayout.SOUTH);
 		
-		JButton btnCreate = new JButton("Create Season");
-		
-		this.add(lblInitSeason);
-		this.add(lblFiller);
-		this.add(lblWeeks);
-		this.add(spnWeek);
-		this.add(lblContestants);
-		this.add(spnContestant);
-		this.add(lblTribe1);
-		this.add(txtTribe1);
-		this.add(lblTribe2);
-		this.add(txtTribe2);
-		this.add(btnCreate);
+		this.add(lblWelcomeBanner, BorderLayout.NORTH);
+		this.add(innerFieldPanel, BorderLayout.CENTER);
 		
 		spnWeek.addChangeListener(new ChangeListener(){
 
