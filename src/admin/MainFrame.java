@@ -83,11 +83,12 @@ public class MainFrame extends JFrame{
 		GameData g = GameData.initGameData();
 		if(g!=null)
 			initGUI();
-		else
+		else {
+			this.setSize(500, 250);
 			initSeasonCreateGUI();
+		}			
 		
 		applyTheme();
-		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
 		this.addWindowListener(new WindowAdapter(){
@@ -108,6 +109,7 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void initGUI(){		
+		this.setSize(640, 480);
 		Dimension d = new Dimension(150,20);
 		
 		lblGeneral.setPreferredSize(d);
