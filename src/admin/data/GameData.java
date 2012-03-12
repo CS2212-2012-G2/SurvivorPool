@@ -95,13 +95,11 @@ public class GameData extends data.GameData {
 		try {
 			currentGame = new GameData(((Number)json.get(KEY_NUM_CONTEST)).intValue());
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			GameData.getCurrentGame().fromJSONObject(json);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -134,7 +132,6 @@ public class GameData extends data.GameData {
 		try {
 			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -160,7 +157,6 @@ public class GameData extends data.GameData {
 		try {
 			System.out.println(g.toJSONObject().toString());
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -169,7 +165,6 @@ public class GameData extends data.GameData {
 			try {
 				g2.fromJSONObject(g.toJSONObject());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		

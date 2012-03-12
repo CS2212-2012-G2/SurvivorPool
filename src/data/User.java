@@ -43,17 +43,20 @@ public class User implements Person {
 	 *            last name
 	 * @param id
 	 *            unique ID
+	 * @throws InvalidFieldException Thrown if any of the parameters passed are
+	 * 		invalid
 	 */
-	public User(String first, String last, String id) {
-		firstName = first;
-		lastName = last;
-		unID = id;
-		points = 0; // begin with 0 points
+	public User(String first, String last, String id) throws InvalidFieldException {
+		setFirstName(first);
+		setLastName(last);
+		setID(id);
+		setPoints(0); // begin with 0 points
 
 	}
 
+	// FIXME: Do something intelligent?
 	public User() {
-		// TODO Auto-generated constructor stub
+		setPoints(0);
 	}
 
 	// -------------------- ACCESSOR METHODS ------------------ //
@@ -295,23 +298,26 @@ public class User implements Person {
 	}
 	
 	public static void main(String[] args) {
-		User u = new User("bob", "builder", "bbuilde");
+		User u = null;
+		try {
+			u = new User("bob", "builder", "bbuilde");
+		} catch (InvalidFieldException e) { }
+		
 		Contestant c = new Contestant();
 		Contestant ul = new Contestant();
 		try {
 			c.setID("aa");
 			ul.setID("ab");
 		} catch (InvalidFieldException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		u.setWeeklyPick(c);
 		u.setUltimatePick(ul);
+		
 		try {
 			System.out.println(u.toJSONObject().toString());
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

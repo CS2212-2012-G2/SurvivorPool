@@ -272,7 +272,6 @@ public class Contestant implements Person {
 			try {
 				System.out.println(c.toJSONObject().toString());
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			

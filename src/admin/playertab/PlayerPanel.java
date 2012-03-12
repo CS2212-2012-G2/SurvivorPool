@@ -39,101 +39,100 @@ import data.Contestant;
 
 // TODO: REWRITE AND REBUILD. 
 
-public class PlayerPanel extends JPanel implements ChangeListener, MouseListener {
-	
+public class PlayerPanel extends JPanel implements ChangeListener,
+		MouseListener {
+
 	// input fields:
 	private JLabel labelName;
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
-	
+
 	private JLabel labelID;
 	private JTextField tfID;
 	private JButton btnGenID;
-	
+
 	private JLabel labelWeekly;
 	private JComboBox<Contestant> cbWeeklyPick;
 	private JLabel labelUltimate;
 	private JComboBox<Contestant> cbUltPick;
-	
+
 	// etc
 	private JLabel labelPts;
 	private JButton btnSave;
-	
-	/// Table fields
+
+	// / Table fields
 	private PlayerTableModel tableModel;
 	private JTable table;
 	private JTableHeader header;
-	
+
 	// Bottom buttons
 	private JButton btnAddNew;
 	private JButton btnDelete;
 	private PlayerFieldsPanel playerFields;
 
-	
-	public PlayerPanel(){
+	public PlayerPanel() {
 		super();
-		
+
 		setLayout(new BorderLayout(5, 5));
-		
-		//////////////////////////////
+
+		// ////////////////////////////
 		// Top Panel:
-		//////////////////////////////
+		// ////////////////////////////
 		labelName = new JLabel("Name:");
 		tfFirstName = new JTextField();
 		tfLastName = new JTextField();
-		
+
 		labelID = new JLabel("User ID:");
 		tfID = new JTextField();
 		btnGenID = new JButton("Generate ID");
-		
+
 		labelWeekly = new JLabel("Weekly Pick:");
 		cbWeeklyPick = new JComboBox<Contestant>();
-		
+
 		labelUltimate = new JLabel("Ultimate Pick:");
 		cbUltPick = new JComboBox<Contestant>();
-		
-		playerFields = new PlayerFieldsPanel(labelName, 
-				tfFirstName, tfLastName, labelID, tfID, btnGenID, 
-				labelWeekly, cbWeeklyPick, labelUltimate, cbUltPick);
+
+		playerFields = new PlayerFieldsPanel(labelName, tfFirstName,
+				tfLastName, labelID, tfID, btnGenID, labelWeekly, cbWeeklyPick,
+				labelUltimate, cbUltPick);
 		// add the mouse listener to all components.
-		for (Component c: playerFields.getComponents()) {
+		for (Component c : playerFields.getComponents()) {
 			c.addMouseListener(this);
 		}
-		
+
 		// right side!
 		labelPts = new JLabel("Points: 0");
 		btnSave = new JButton("Save");
-		
-		
-		//////////////////////////////
+
+		// ////////////////////////////
 		// Mid
-		//////////////////////////////
-		Vector users  = GameData.getCurrentGame().getAllUsers();
+		// ////////////////////////////
+		Vector users = GameData.getCurrentGame().getAllUsers();
 		tableModel = new PlayerTableModel(users);
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
-		
-		//////////////////////////////
+
+		// ////////////////////////////
 		// Bottom
-		//////////////////////////////
+		// ////////////////////////////
 		btnAddNew = new JButton("Add");
 		btnDelete = new JButton("Delete");
-		
+
 		// build the two panes
-		//setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		// setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		setLayout(new BorderLayout(5, 5));
 		buildTopPanel();
 		buildTablePanel();
-		buildBottomPanel();	
+		buildBottomPanel();
 	}
-	
+
 	/**
 	 * Builds the top panel including all the editable information
 	 */
 	private void buildTopPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout(10, 10));
-		
+
 		// this does not need to be referenced else where, only for layout
 		JPanel rightPane = new JPanel();
 		BoxLayout b = new BoxLayout(rightPane, BoxLayout.Y_AXIS);
@@ -141,129 +140,131 @@ public class PlayerPanel extends JPanel implements ChangeListener, MouseListener
 		rightPane.add(labelPts);
 		rightPane.add(Box.createVerticalGlue());
 		rightPane.add(btnSave);
-		
+
 		// add all components on top:
 		panel.add(playerFields, BorderLayout.CENTER);
 		panel.add(rightPane, BorderLayout.LINE_END);
-		
+
 		add(panel, BorderLayout.PAGE_START);
-		
+
 		// add the mouse listener to all components.
-		for (Component c: panel.getComponents()) {
+		for (Component c : panel.getComponents()) {
 			c.addMouseListener(this);
 		}
-		
-		for (Component c: rightPane.getComponents())
+
+		for (Component c : rightPane.getComponents())
 			c.addMouseListener(this);
 	}
-	
+
 	/**
 	 * Builds the panel containing the JTable
 	 */
 	private void buildTablePanel() {
 		JPanel panel = new JPanel();
-		
+
 		// settings:
 		header.setReorderingAllowed(false); // no moving.
 		table.setColumnSelectionAllowed(true);
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
+
 		header.addMouseListener(tableModel.new SortColumnAdapter());
-			
+
 		TableCellRenderer renderer = new TableCellRenderer() {
 
 			JLabel label = new JLabel();
-			
+
 			@Override
-	        public JComponent getTableCellRendererComponent(JTable table,
-	                Object value, boolean isSelected, boolean hasFocus,
-	                int row, int column) {
-	            
+			public JComponent getTableCellRendererComponent(JTable table,
+					Object value, boolean isSelected, boolean hasFocus,
+					int row, int column) {
+
 				if (table.isRowSelected(row)) {
 					label.setBackground(Color.RED);
 				} else {
 					label.setBackground(UIManager.getColor("Table.background"));
 				}
-				
+
 				label.setOpaque(true);
 				label.setText("" + value);
-				
-	            return label;
-	        }
 
-	    };
-	    table.setDefaultRenderer(Object.class, renderer);
-	    
-	    JScrollPane scroll = new JScrollPane(table);
-		
+				return label;
+			}
+
+		};
+		table.setDefaultRenderer(Object.class, renderer);
+
+		JScrollPane scroll = new JScrollPane(table);
+
 		panel.setLayout(new BorderLayout(5, 5));
 		panel.add(scroll, BorderLayout.CENTER);
-	    
-	    add(panel, BorderLayout.CENTER);
-	    
-	    // add the mouse listener to all components.
- 		for (Component c: scroll.getComponents()) {
- 			c.addMouseListener(this);
- 		}
-	}
-	
-	private void buildBottomPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		
-		panel.add(btnAddNew);
-		panel.add(btnDelete);
-		
-		add(panel, BorderLayout.PAGE_END);
+
+		add(panel, BorderLayout.CENTER);
+
 		// add the mouse listener to all components.
-		for (Component c: panel.getComponents()) {
+		for (Component c : scroll.getComponents()) {
 			c.addMouseListener(this);
 		}
 	}
-	
+
+	private void buildBottomPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+		panel.add(btnAddNew);
+		panel.add(btnDelete);
+
+		add(panel, BorderLayout.PAGE_END);
+		// add the mouse listener to all components.
+		for (Component c : panel.getComponents()) {
+			c.addMouseListener(this);
+		}
+	}
+
 	/**
 	 * Currently used to check if a tab is changed, and if its changed to the
 	 * PlayerPanel, it will modify ComboBoxes.
 	 */
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		
+
 		Object obj = e.getSource();
-		if (!(obj instanceof JTabbedPane)) return;
-		
-		JTabbedPane tab = (JTabbedPane)obj;
-		
-		if (tab.getSelectedIndex() != 2) return;
-		
+		if (!(obj instanceof JTabbedPane))
+			return;
+
+		JTabbedPane tab = (JTabbedPane) obj;
+
+		if (tab.getSelectedIndex() != 2)
+			return;
+
 		GameData g = (GameData) GameData.getCurrentGame();
-		
+
 		if (g != null) {
 			List<Contestant> cons = Arrays.asList(g.getActiveContestants());
 			cons = AdminUtils.noNullList(cons);
-			
+
 			cbWeeklyPick.removeAllItems();
 			cbUltPick.removeAllItems();
-			
+
 			for (Contestant c : cons) {
 				cbWeeklyPick.addItem(c);
 				cbUltPick.addItem(c);
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		Component c = e.getComponent();
 		StatusPanel sb = MainFrame.getRunningFrame().getStatusBar();
-		
+
 		if (c == labelName || c == tfFirstName || c == tfLastName) {
 			sb.setMsgLabel("First and Last name must be alphabetic");
 		} else if (c == labelID || c == tfID) {
@@ -281,25 +282,25 @@ public class PlayerPanel extends JPanel implements ChangeListener, MouseListener
 		} else if (c == table || c == header) {
 			sb.setMsgLabel("Click Heading to sort by column");
 		}
-		//System.out.println("MouseEntered: " + c.toString());
-		
+		// System.out.println("MouseEntered: " + c.toString());
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// Currently unused stubs.
+		return;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// Currently unused stubs.
+		return;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// Currently unused stubs.
+		return;
 	}
 }
