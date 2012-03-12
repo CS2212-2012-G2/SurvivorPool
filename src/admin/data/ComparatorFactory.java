@@ -1,4 +1,4 @@
-package admin;
+package admin.data;
 
 import java.util.Comparator;
 

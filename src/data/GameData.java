@@ -85,7 +85,7 @@ public abstract class GameData {
 		int newSize = 0;
 		for (int i = 0; i < allContestants.length; i++) {
 			Contestant c = allContestants[i];
-			if (!c.isCastOff()) {
+			if ((c != null) && !c.isCastOff()) {
 				active[newSize++] = c;
 			}
 		}
