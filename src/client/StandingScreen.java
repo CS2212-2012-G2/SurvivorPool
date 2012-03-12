@@ -8,7 +8,7 @@ package client;
  * Description:
  * */
 
-import client.data.GameData;
+import data.GameData;
 import data.Contestant;
 import data.User;
 import net.rim.device.api.ui.Graphics;
