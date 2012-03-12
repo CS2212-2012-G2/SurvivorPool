@@ -46,15 +46,10 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * Creates the table model which controls the table's actions and data.
 	 * @param users The global reference to the actual GameData.
 	 */
-	public PlayerTableModel(Vector users) {
+	public PlayerTableModel(List<User> users) {
 		
-		globalData = users;
-		data = new ArrayList<User>(users.size());
-		for (Object u: users.toArray()) {
-			if (u != null) {
-				data.add((User) u);
-			}
-		}
+		globalData = (Vector)AdminUtils.castListToUncast(users);
+		data = users;
 		
 		columnNames = new String[] { "ID", "First", "Last", "Points", 
 				"Weekly Pick", "Ultimate Pick" };
