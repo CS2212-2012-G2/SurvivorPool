@@ -365,7 +365,7 @@ public abstract class GameData {
 	public String toString() {
 		return new String("GameData<WR:\"" + weeksRem + "\"" + ", WP:\"" + weeksPassed + "\"" + 
 				", #C:\"" + numContestants + "\"" + ", SS: " + "\"" + seasonStarted + "\"" + 
-				", TN: {" + "\"" + tribeNames[0] + "\", " + " + \"" + tribeNames[1] + "\"}>");
+				", TN: {" + "\"" + tribeNames[0] + "\", \"" + tribeNames[1] + "\"}>");
 	}
 
 	// TODO: DOC THESE THREE

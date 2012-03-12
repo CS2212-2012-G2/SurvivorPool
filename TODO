@@ -53,7 +53,14 @@ Admin (SWING)
 
 	ALL
 		- FORCE CHARACTER LIMIT FOR INPUT BOX (20 CHARS FOR NAMES, 30 FOR TRIBES)
+			~ Just use a ChangeListener on the textfield in question and then 
+				StatusPanel.setErrorMsg()
 		- Spacing for all the tabbed panels so they aren't butted right up against it
+		- On a user input error, pass the component in error (or the associated 
+		  	label) to a method in MainFrame that will some how show that its 
+		  	invalid.
+		  	~ Perhaps set the text to be Color.RED? This would be refreshed to 
+		  		normal next time they try to save input 
 		
 	Main.java
 		
