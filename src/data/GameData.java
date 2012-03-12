@@ -1,6 +1,7 @@
 package data;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Vector;
 
 import common.Utils;
@@ -18,11 +19,10 @@ import data.me.json.*;
 
 public abstract class GameData {
 
-	protected int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
+	protected int weeksRem, weeksPassed; // keep track of weeks remaining/weeks passed
 	protected int numContestants;
-										// passed
-	protected boolean seasonStarted= false; // true if game has started and admin can no
-									// longer add players
+										
+	protected boolean seasonStarted= false, elimExists = false; 
 	
 	protected String[] tribeNames = new String[2]; // string array storing both tribe names
 
@@ -33,6 +33,8 @@ public abstract class GameData {
 	
 	// store the current running version
 	protected static GameData currentGame = null;
+	// store contestant who was cast off
+	protected Contestant elimCont;
 	
 	
 	/**
@@ -187,8 +189,32 @@ public abstract class GameData {
 		allUsers.add(u);
 	}
 	
+	/**
+	 * Removes a user from the list.
+	 * @param u    User to remove.
+	 */
 	public void removeUser(User u) {
 		allUsers.remove(u);
+	}
+	
+	/**
+	 * Iterates through all users on the list. 
+	 * Allocates points based off of weekly elimination pick.
+	 * 
+	 * @param c  Contestant that was cast off
+	 */
+	
+	public void allocatePoints(Contestant c){
+		Iterator<User> itr = allUsers.iterator();
+		User u;
+		while(itr.hasNext()){
+			u = itr.next();
+			if(u.getWeeklyPick().equals(c)){
+			   u.addPoints(20);
+			   System.out.println("Added 20 points to " + u);
+			}
+		itr.next();
+		}
 	}
 	
 	/**
@@ -242,8 +268,13 @@ public abstract class GameData {
 	 * advanceWeek sets the number of weeksPassed to weeksPassed + 1.
 	 */
 	public void advanceWeek() {
+		if(elimExists == false)
+			return;
+		
 		weeksRem -= 1;    // reduce num of weeks remaining
 		weeksPassed += 1;  // increment number of weeks passed
+		allocatePoints(elimCont);
+		elimCont = null;
 	}
 
 	/**
@@ -440,4 +471,5 @@ public abstract class GameData {
 	}
 
 	public abstract void writeData();
+	
 }
