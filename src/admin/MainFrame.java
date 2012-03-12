@@ -27,7 +27,6 @@ public class MainFrame extends JFrame{
 
 	static MainFrame m;
 	
-
 	private JTabbedPane tabPane = new JTabbedPane();
 	
 	private JLabel lblGeneral = new JLabel(GENERAL_PANEL);
@@ -81,6 +80,9 @@ public class MainFrame extends JFrame{
 	public MainFrame(){
 		
 		GameData g = GameData.initGameData();
+		
+		initMenuBar();
+		
 		if(g!=null)
 			initGUI();
 		else
@@ -116,6 +118,7 @@ public class MainFrame extends JFrame{
 		
 		conPanel = new ContestantPanel();
 		playerPanel = new PlayerPanel();
+		
 		tabPane.addTab(lblGeneral.getText(),new GeneralPanel());
 		tabPane.addTab(lblContestants.getText(),conPanel);
 		tabPane.addTab(lblPlayers.getText(), playerPanel);
@@ -127,12 +130,26 @@ public class MainFrame extends JFrame{
 		tabPane.setTabComponentAt(2, lblPlayers);
 		//tabPane.setBackground(Color.cyan);//tab background color,not the panel
 		
+		tabPane.addChangeListener(cl);
+		statusBar.setTabLabel(GENERAL_PANEL);
+		
+		this.setLayout(new BorderLayout());
+		
+		this.add(tabPane);
+		this.add(statusBar, BorderLayout.SOUTH);
+		if(GameData.getCurrentGame().getSeasonStarted())
+			seasonStarted();
+	}
+	
+	private void initMenuBar() {
 		mnuItemReset = new JMenuItem("Reset");
 		mnuItemExit = new JMenuItem("Exit");
 		String[] themeName = AdminUtils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
 		mnuItemTheme3 = new JRadioButtonMenuItem(themeName[1]);
 		mnuItemTheme2 = new JRadioButtonMenuItem(themeName[2]);
+		
+		statusBar = new StatusPanel();
 		
 		ButtonGroup g = new ButtonGroup();
 		mnuTheme.add(mnuItemTheme1);
@@ -148,23 +165,13 @@ public class MainFrame extends JFrame{
 		menuBar.add(mnuFile);
 		menuBar.add(mnuTheme);
 		
-		statusBar = new StatusPanel();
-		
 		mnuItemReset.addActionListener(al);
 		mnuItemExit.addActionListener(al);
 		mnuItemTheme1.addActionListener(al);
 		mnuItemTheme3.addActionListener(al);
 		mnuItemTheme2.addActionListener(al);
-		tabPane.addChangeListener(cl);
-		statusBar.setTabLabel(GENERAL_PANEL);
-		
-		this.setLayout(new BorderLayout());
-		
+	
 		this.setJMenuBar(menuBar);
-		this.add(tabPane);
-		this.add(statusBar, BorderLayout.SOUTH);
-		if(GameData.getCurrentGame().getSeasonStarted())
-			seasonStarted();
 	}
 	
 	/**

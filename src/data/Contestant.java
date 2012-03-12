@@ -235,11 +235,24 @@ public class Contestant implements Person {
 	/**
 	 * toString returns a string of the contestant's information in JSON format.
 	 */
-	public String toString() {
+	public String toDebugString() {
 		return new String("Contestant<FN: " + "\"" + firstName + "\"" + ", LN: " + "\"" + lastName + "\"" + 
 				", Tribe: " + "\"" + tribe + "\"" + ", ID: " + "\"" + cID + "\">");
 	}
 	
+	/**
+	 * Returns a string of the contestant's Last name, first name, and ID tag.
+	 */
+	public String toString() {
+		return String.format("[%s] %s, %s", 
+				getID(), getLastName(), getFirstName());
+	}
+	
+	/**
+	 * TODO:
+	 * @return
+	 * @throws JSONException
+	 */
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
