@@ -76,8 +76,11 @@ public class GeneralPanel extends JPanel {
 							GameData.getCurrentGame().startSeason();
 							MainFrame.getRunningFrame().seasonStarted();
 							btnAdvWeek.setText("Advance Week");
+							return;
 						}
+						return;
 					}
+					JOptionPane.showMessageDialog(null, "Invalid amount entered.");
 						
 				}else{
 					GameData.getCurrentGame().advanceWeek();

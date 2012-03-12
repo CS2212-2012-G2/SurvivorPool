@@ -113,7 +113,7 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void initGUI(){				
-		Dimension d = new Dimension(150,20);
+		Dimension d = new Dimension(100,20);
 		
 		lblGeneral.setPreferredSize(d);
 		lblContestants.setPreferredSize(d);
