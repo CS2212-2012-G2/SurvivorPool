@@ -179,11 +179,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					Object value, boolean isSelected, boolean hasFocus,
 					int row, int column) {
 
+				Color c = null;
 				if (table.isRowSelected(row)) {
-					label.setBackground(Color.RED);
+					c = AdminUtils.getThemeTableHighlight();
 				} else {
-					label.setBackground(UIManager.getColor("Table.background"));
+					c = UIManager.getColor("Table.background");
 				}
+				label.setBackground(c);
 
 				label.setOpaque(true);
 				label.setText("" + value);

@@ -16,14 +16,15 @@ public class AdminUtils extends Utils {
 	// A clean way to handle themes with minimal code.
 	enum THEMES {
 		// ThemeName(Foreground Color,Background Color);
-		Western(new Color(255, 255, 255), new Color(79, 38, 100)), 
-		Snow(new Color(0, 0, 255), new Color(255, 255, 255)), 
-		BandW(new Color(255, 255, 255), new Color(0, 0, 0));
-		Color fore, back;
+		Western(new Color(255, 255, 255), new Color(79, 38, 100), Color.WHITE), 
+		Snow(new Color(0, 0, 255), new Color(255, 255, 255), Color.BLUE), 
+		BandW(new Color(255, 255, 255), new Color(0, 0, 0), Color.GRAY);
+		Color fore, back, table;
 
-		THEMES(Color f, Color b) {
+		THEMES(Color f, Color b, Color t) {
 			fore = f;
 			back = b;
+			table = t;
 		}
 
 		public Color getBackground() {
@@ -32,6 +33,10 @@ public class AdminUtils extends Utils {
 
 		public Color getForeground() {
 			return fore;
+		}
+		
+		public Color getTableHighlight() {
+			return table;
 		}
 	};
 
@@ -53,6 +58,14 @@ public class AdminUtils extends Utils {
 	 */
 	public static Color getThemeFG() {
 		return theme.getForeground();
+	}
+	
+	/**
+	 * The table highlight colour.
+	 * @return Color of the table to highlight.
+	 */
+	public static Color getThemeTableHighlight() {
+		return theme.getTableHighlight();
 	}
 
 	/**
