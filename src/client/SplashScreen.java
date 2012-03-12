@@ -124,7 +124,7 @@ public class SplashScreen extends MainScreen implements FieldChangeListener {
 		if (arg0 == button1) { // if the log in button is clicked
 			if (checkLogIn(edit.getText().toLowerCase())) {
 				UiApplication.getUiApplication().pushScreen(
-						new MainMenuScreen("TESTING")); /*
+						new MainMenuScreen(edit.getText().toLowerCase())); /*
 														 * CHANGE THIS WHEN
 														 * NEEDED
 														 */
