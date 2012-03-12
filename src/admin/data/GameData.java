@@ -21,20 +21,15 @@ public class GameData extends data.GameData {
 	public GameData(int numContestants) {
 		super(numContestants);
 		
-		allList = Arrays.asList(allContestants);
+		allList = AdminUtils.uncastListToCast(allContestants, 
+				new Contestant());
 	}
 	
 	private void updateSortAllContestants(int compFactID) {
-		allList = Arrays.asList(allContestants);
-		List<Contestant> t = AdminUtils.noNullList(allList);
-		Collections.sort(t, ComparatorFactory.getContComparator(compFactID));
-		// t holds the sorted array, replace all the values with their
-		// new index. When the entry is null, it means we are done.
-		for (int i = 0; i < numContestants && allContestants[i] != null; i++) {
-			allContestants[i] = t.get(i);
-		}
-
-		allList = Arrays.asList(allContestants);
+		allList = AdminUtils.uncastListToCast(allContestants, 
+				new Contestant());
+		
+		Collections.sort(allList, ComparatorFactory.getContComparator(compFactID));
 	}
 
 	// extends the method in super class to sort it.
@@ -110,7 +105,8 @@ public class GameData extends data.GameData {
 	@Override
 	public void fromJSONObject(JSONObject obj) throws JSONException {
 		super.fromJSONObject(obj);
-		allList = Arrays.asList(allContestants);
+		allList = AdminUtils.uncastListToCast(allContestants, 
+				new Contestant());
 	}
 	
 	/**

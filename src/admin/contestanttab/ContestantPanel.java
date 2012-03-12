@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -100,8 +102,8 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		
 		// Edit fields:
 		labelName = new JLabel("Name:");
-		tfFirstName = new JTextField();
-		tfLastName = new JTextField();
+		tfFirstName = new JTextField(20);
+		tfLastName = new JTextField(20);
 		
 		labelCastOff = new JLabel("Cast off:");
 		// TODO: FIx the init of this.. :>
@@ -111,7 +113,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		cbTribe = new JComboBox<String>(GameData.getCurrentGame().getTribeNames());
 		
 		labelID = new JLabel("ID:");
-		tfContID = new JTextField();
+		tfContID = new JTextField(2);
 		
 		// holds all the fields
 		paneEditFields = new ContestantFieldsPanel(labelName, tfFirstName, 
@@ -130,8 +132,12 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		//////////////////////////////
 		// Mid
 		//////////////////////////////
-		Contestant[] contestants = (Contestant[]) GameData.getCurrentGame().getAllContestants();
-		tableModel = new ContestantTableModel(Arrays.asList(contestants));
+		List<Contestant> cons = 
+				AdminUtils.uncastListToCast(
+						GameData.getCurrentGame().getAllContestants(), 
+						new Contestant()
+					);
+		tableModel = new ContestantTableModel(cons);
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
 		
@@ -311,8 +317,8 @@ public class ContestantPanel extends JPanel implements MouseListener {
 				throw new InvalidFieldException("Invalid ID by double occurance.");
 			}
 			
-			activeCon.setFirstName(tfFirstName.getText());
-			activeCon.setLastName(tfLastName.getText());
+			activeCon.setFirstName(tfFirstName.getText().trim());
+			activeCon.setLastName(tfLastName.getText().trim());
 			activeCon.setTribe((String)cbTribe.getSelectedItem());
 			activeCon.setPicture(imgPath);
 		} catch (InvalidFieldException ife) {
@@ -350,9 +356,10 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	
 	private void buildActions() {
 		bSavePlayer.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME) ||
 						!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
 					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid name!");
@@ -362,8 +369,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 				if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
 					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid ID!");
 					return;
-				}
-				
+				}	
 				// check if the contestant is active
 				Contestant con = getCurrentContestant();
 				
@@ -477,5 +483,5 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		return;
 	}
-	
+
 }

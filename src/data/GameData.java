@@ -1,6 +1,7 @@
 package data;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Vector;
 
 import common.Utils;
@@ -18,21 +19,21 @@ import data.me.json.*;
 
 public abstract class GameData {
 
-	protected int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
+	protected int weeksRem, weeksPassed; // keep track of weeks remaining/weeks passed
 	protected int numContestants;
-										// passed
-	protected boolean seasonStarted= false; // true if game has started and admin can no
-									// longer add players
+										
+	protected boolean seasonStarted= false, elimExists = false; 
 	
 	protected String[] tribeNames = new String[2]; // string array storing both tribe names
 
-	protected Contestant[] allContestants;
-	private int newContestIndex = 0;
+	protected Vector allContestants;
 	
 	protected Vector allUsers;
 	
 	// store the current running version
 	protected static GameData currentGame = null;
+	// store contestant who was cast off
+	protected Contestant elimCont;
 	
 	
 	/**
@@ -68,7 +69,7 @@ public abstract class GameData {
 		weeksPassed = 0;
 		this.numContestants = numContestants;
 		
-		allContestants = new Contestant[numContestants];
+		allContestants = new Vector(numContestants);
 		
 		allUsers = new Vector();
 		
@@ -86,24 +87,20 @@ public abstract class GameData {
 	 * 
 	 * @return The contestants active
 	 */
-	public Contestant[] getActiveContestants() {
+	public Vector getActiveContestants() {
 		//ArrayList<ContestantAdmin> active = new ArrayList<ContestantAdmin>(allContestants.size());
 		
-		Contestant[] active = new Contestant[allContestants.length];
+		Vector active = new Vector(allContestants.size());
 		
 		int newSize = 0;
-		for (int i = 0; i < allContestants.length; i++) {
-			Contestant c = allContestants[i];
+		for (int i = 0; i < allContestants.size(); i++) {
+			Contestant c = (Contestant)allContestants.get(i);
 			if ((c != null) && !c.isCastOff()) {
-				active[newSize++] = c;
+				active.add((Object)c);
 			}
 		}
 		
-		Contestant[] cArr = new Contestant[newSize];
-		// TODO: Swap for a J2ME complient version with a for loop?
-		System.arraycopy(active, 0, cArr, 0, newSize);
-		
-		return cArr;
+		return active;
 	}
 	
 	
@@ -114,7 +111,7 @@ public abstract class GameData {
 	 * 
 	 * @return this.allContestants
 	 */
-	public Contestant[] getAllContestants() {
+	public Vector getAllContestants() {
 		return allContestants;
 	}
 
@@ -133,7 +130,7 @@ public abstract class GameData {
 		Contestant j; 
 		// loop through array
 		for(int i = 0; i <= numContestants; i++){
-			j = allContestants[i]; // get Contestant object for comparison 
+			j = (Contestant)allContestants.get(i); // get Contestant object for comparison 
 			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
 				return j; // return info on player
 			}
@@ -146,7 +143,7 @@ public abstract class GameData {
 	public Contestant getContestant(String id) {
 		int index = getContestantIndexID(id);
 		
-		return (index > -1 ? allContestants[index] : null);
+		return (index > -1 ? (Contestant)allContestants.get(index) : null);
 	}
 	
 	/**
@@ -161,12 +158,12 @@ public abstract class GameData {
 			return;
 		}
 		
-		if (newContestIndex == numContestants) {
+		if (allContestants.size() == numContestants) {
 			System.out.println("Too many contestants.");
 			return;
 		}
 		
-		allContestants[newContestIndex++] = c;
+		allContestants.add((Object)c);
 	}
 	
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -187,8 +184,32 @@ public abstract class GameData {
 		allUsers.add(u);
 	}
 	
+	/**
+	 * Removes a user from the list.
+	 * @param u    User to remove.
+	 */
 	public void removeUser(User u) {
 		allUsers.remove(u);
+	}
+	
+	/**
+	 * Iterates through all users on the list. 
+	 * Allocates points based off of weekly elimination pick.
+	 * 
+	 * @param c  Contestant that was cast off
+	 */
+	
+	public void allocatePoints(Contestant c){
+		Iterator<User> itr = allUsers.iterator();
+		User u;
+		while(itr.hasNext()){
+			u = itr.next();
+			if(u.getWeeklyPick().equals(c)){
+			   u.addPoints(20);
+			   System.out.println("Added 20 points to " + u);
+			}
+		itr.next();
+		}
 	}
 	
 	/**
@@ -242,8 +263,13 @@ public abstract class GameData {
 	 * advanceWeek sets the number of weeksPassed to weeksPassed + 1.
 	 */
 	public void advanceWeek() {
+		if(elimExists == false)
+			return;
+		
 		weeksRem -= 1;    // reduce num of weeks remaining
 		weeksPassed += 1;  // increment number of weeks passed
+		allocatePoints(elimCont);
+		elimCont = null;
 	}
 
 	/**
@@ -253,29 +279,17 @@ public abstract class GameData {
 	 * @param target
 	 *            Contestant to remove
 	 */
+	@SuppressWarnings("unchecked")
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
-		int index = -1;
-		for (int i = 0; i < numContestants && allContestants[i]	!= null; i++) {
-			if (target.getID().equalsIgnoreCase(allContestants[i].getID())) {
-				index = i;
-				break;
+		// done this way incase its just a Contestant with ID passed
+		for (int i = 0; i < numContestants && allContestants.get(i)	!= null; i++) {
+			Contestant c = (Contestant)allContestants.get(i);
+			if (target.getID().equalsIgnoreCase(c.getID())) {
+				allContestants.remove(i);
+				return;
 			}
 		}
-		
-		if (index == -1) {
-			// no found index.			
-			return;
-		}
-		
-		for (int i = index; i < numContestants && allContestants[i] != null; i++) {
-			Contestant c = allContestants[i];
-			allContestants[i] = allContestants[i+1];
-			allContestants[i+1] = c;
-		}
-		
-		allContestants[newContestIndex-1] = null;
-		newContestIndex--;
 	}
 
 	/**
@@ -322,11 +336,10 @@ public abstract class GameData {
 	 * @return Index in activeContestants where ID is stored, else < 0.
 	 */
 	protected int getContestantIndexID(String id) {
-		Contestant j; 
 		// loop through array
-		for(int i = 0; i <= numContestants; i++){
-			j = allContestants[i]; // get Contestant object for comparison 
-			if(j.getID().equals(id)) { // ensure names match
+		for(int i = 0; i < numContestants; i++){
+			Contestant j = (Contestant)allContestants.get(i); // get Contestant object for comparison 
+			if (j.getID().equals(id)) { // ensure names match
 				return i; // return info on player
 			}
 		}
@@ -376,16 +389,15 @@ public abstract class GameData {
 		
 		obj.put(KEY_NUM_CONTEST, new Integer(numContestants));
 		JSONArray cons = new JSONArray();
-		for (Contestant c: allContestants) {
-			if (c != null)
-				cons.put(c.toJSONObject());
+		for (Object o: allContestants) {
+			if (o != null)
+				cons.put(((Contestant) o).toJSONObject());
 		}
 		
 		JSONArray users = new JSONArray();
-		for (int i = 0; i < allUsers.size(); i++) {
-			User u = (User)allUsers.get(i);
-			if (u != null)
-				users.put(u.toJSONObject());
+		for (Object o: allUsers) {
+			if (o != null)
+				users.put(((User) o).toJSONObject());
 		}
 		
 		JSONArray ts = new JSONArray();
@@ -417,16 +429,8 @@ public abstract class GameData {
 		
 		seasonStarted = obj.getBoolean(KEY_SEASON_STARTED);
 		
-		// users:
-		JSONArray users = (JSONArray)obj.get(KEY_USERS);
-		for (int i = 0; i < users.length(); i++) {
-			User u = new User();
-			u.fromJSONObject(users.getJSONObject(i));
-			addUser(u);
-		}
-		
-		//Contestants must be loaded last!
-		allContestants = new Contestant[numContestants];
+		//Contestants must be loaded before users, but after others!
+		allContestants = new Vector(numContestants);
 		
 		// if we can move this back into the subclass, put this after a super.fromJSONObject() call.
 		
@@ -437,7 +441,16 @@ public abstract class GameData {
 			c.fromJSONObject(cons.getJSONObject(i));
 			addContestant(c);
 		}
+		
+		// users:
+		JSONArray users = (JSONArray)obj.get(KEY_USERS);
+		for (int i = 0; i < users.length(); i++) {
+			User u = new User();
+			u.fromJSONObject(users.getJSONObject(i));
+			addUser(u);
+		}
 	}
 
 	public abstract void writeData();
+	
 }

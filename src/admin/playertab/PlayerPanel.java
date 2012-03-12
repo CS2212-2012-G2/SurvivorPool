@@ -36,6 +36,7 @@ import admin.StatusPanel;
 import admin.data.GameData;
 
 import data.Contestant;
+import data.User;
 
 // TODO: REWRITE AND REBUILD. 
 
@@ -107,7 +108,11 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		// ////////////////////////////
 		// Mid
 		// ////////////////////////////
-		Vector users = GameData.getCurrentGame().getAllUsers();
+		List<User> users = 
+				AdminUtils.uncastListToCast(
+						GameData.getCurrentGame().getAllUsers(), 
+						new User()
+					);
 		tableModel = new PlayerTableModel(users);
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
@@ -242,8 +247,11 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		GameData g = (GameData) GameData.getCurrentGame();
 
 		if (g != null) {
-			List<Contestant> cons = Arrays.asList(g.getActiveContestants());
-			cons = AdminUtils.noNullList(cons);
+			List<Contestant> cons = AdminUtils.uncastListToCast(
+					g.getActiveContestants(), 
+					new Contestant()
+				);
+			//cons = AdminUtils.noNullList(cons);
 
 			cbWeeklyPick.removeAllItems();
 			cbUltPick.removeAllItems();
