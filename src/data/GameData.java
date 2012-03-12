@@ -1,6 +1,7 @@
 package data;
 
 import java.util.Arrays;
+import java.util.Vector;
 
 import common.Utils;
 //import admin.data.JSONUtils;
@@ -28,8 +29,9 @@ public abstract class GameData {
 	protected Contestant[] allContestants;
 	private int newContestIndex = 0;
 	
-	// store the current running version.
-
+	protected Vector allUsers;
+	
+	// store the current running version
 	protected static GameData currentGame = null;
 	
 	
@@ -66,11 +68,16 @@ public abstract class GameData {
 		
 		allContestants = new Contestant[numContestants];
 		
+		allUsers = new Vector();
+		
 		currentGame = this;
 	}
 
 	// ----------------- ACCESSOR METHODS -----------------//
 
+	
+	// ~~~~~~~~~~~~~~~~ CONTESTANT METHODS ~~~~~~~~~~~~~~~ //
+	
 	/**
 	 * getActiveContestants returns an array (list) of the contestants that are
 	 * still competing in the game.
@@ -158,6 +165,28 @@ public abstract class GameData {
 		}
 		
 		allContestants[newContestIndex++] = c;
+	}
+	
+	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
+	
+	/**
+	 * Gets the vector of all users.
+	 * @return Vector containing all users.
+	 */
+	public Vector getAllUsers() {
+		return allUsers;
+	}
+	
+	/**
+	 * Adds a user to the list of users.
+	 * @param u New user to add.
+	 */
+	public void addUser(User u) {
+		allUsers.add(u);
+	}
+	
+	public void removeUser(User u) {
+		allUsers.remove(u);
 	}
 	
 	/**

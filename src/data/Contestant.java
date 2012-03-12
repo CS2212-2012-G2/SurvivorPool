@@ -68,6 +68,15 @@ public class Contestant implements Person {
 	public String getLastName() {
 		return lastName;
 	}
+	
+	// TODO: fix?
+	/**
+	 * Returns last, first
+	 * @return
+	 */
+	public String getFullName() {
+		return lastName + ", " + firstName;
+	}
 
 	/**
 	 * getPicture returns the contestant's picture information
@@ -193,6 +202,7 @@ public class Contestant implements Person {
 		setCastDate(date.intValue());
 	}
 	
+	//TODO: Doc
 	public void update(Contestant c) throws InvalidFieldException {
 		if (c.getFirstName() != null) {
 			setFirstName(c.getFirstName());
@@ -218,7 +228,7 @@ public class Contestant implements Person {
 			castDate = c.getCastDate();
 		}
 	}
-	
+
 	/**
 	 * toString returns a string of the contestant's information in JSON format.
 	 */

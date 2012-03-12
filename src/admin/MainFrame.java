@@ -120,6 +120,8 @@ public class MainFrame extends JFrame{
 		tabPane.addTab(lblContestants.getText(),conPanel);
 		tabPane.addTab(lblPlayers.getText(), playerPanel);
 		
+		tabPane.addChangeListener(playerPanel);
+		
 		tabPane.setTabComponentAt(0, lblGeneral);
 		tabPane.setTabComponentAt(1, lblContestants);
 		tabPane.setTabComponentAt(2, lblPlayers);

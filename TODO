@@ -62,11 +62,15 @@ Admin (SWING)
 				activeTheme.setSelected() or could use doClick() which would programatically call the action listener associated
 			- Create action listeners for each item to set the theme
 			- Set how to iterate updating items, easiest is probably setting most objects to have transparent backgrounds
-		- Implement a "status bar" at the bottom of the screen to show messages
+		- Make the season create panel have the main menu bar
 		
 	GeneralPanel.java
 	
 		- MAKE IT LOOK BETTER!
+		
+	data
+	~~~~
+		- Document ComparatorFactory (its piss easy.)
 
 	ContestantPanel
 	~~~~~~~~~~~~~~~
@@ -74,14 +78,21 @@ Admin (SWING)
 		- EVERYTHING!
 		- Get the table to reselect the row after you reorder the columns
 		- Add a way to change the cast off date
+		- Display "Active" by default when making a new contestant
+		- Implement loading a "blank" contestant when clicking add
+		- Implement all things disabled when no contestant is "active" in the panel.
 	
-	UserPanel.java
-	
+	PlayerPanel
+	~~~~~~~~~~~
+		- Make the names of the Contestants be displayed intelligently in the 
+		  ComboBoxs while NOT making our debugging miserable.
+		- Implement adding and removing of Users
 		- EVERYTHING!
 		
 	SeasonCreatePanel.java
 		
-		-MAKE IT LOOK BETTER!
+		- MAKE IT LOOK BETTER!
+		- 
 
 	-MAKE THEME ACTUALLY LOOK GOOD(LOW PRIORITY)	
 	

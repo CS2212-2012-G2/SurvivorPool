@@ -3,6 +3,7 @@ package admin.data;
 import java.util.Comparator;
 
 import data.Contestant;
+import data.User;
 
 public class ComparatorFactory {
 
@@ -11,8 +12,13 @@ public class ComparatorFactory {
 	public static final int CONTNT_ID = 2;
 	public static final int CONTNT_TRIBE = 3;
 	public static final int CONTNT_DATE = 4;
+	
+	public static final int USER_FIRST_NAME = 10;
+	public static final int USER_LAST_NAME = 11;
+	public static final int USER_ID = 12;
+	public static final int USER_POINTS = 13;
 
-	public static Comparator<Contestant> getComparator(int type) {
+	public static Comparator<Contestant> getContComparator(int type) {
 		switch (type) {
 		case CONTNT_FIRST_NAME:
 			return new Comparator<Contestant>() {
@@ -55,6 +61,49 @@ public class ComparatorFactory {
 				@Override
 				public int compare(Contestant c1, Contestant c2) {
 					return (c1.getTribe().compareTo(c2.getTribe()));
+				}
+			};
+		
+		default:
+			return null;
+		}
+	}
+	
+	public static Comparator<User> getUserComparator(int type) {
+		switch (type) {
+		case USER_FIRST_NAME:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					String f1 = u1.getFirstName().toLowerCase();
+					String f2 = u2.getFirstName().toLowerCase();
+					return (f1.compareTo(f2));
+				}
+			};
+			
+		case USER_LAST_NAME:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					String l1 = u1.getLastName().toLowerCase();
+					String l2 = u2.getLastName().toLowerCase();
+					return (l1.compareTo(l2));
+				}
+			};
+			
+		case USER_ID:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					return (u1.getID().compareTo(u2.getID()));
+				}
+			};
+			
+		case USER_POINTS:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					return (u1.getPoints() - u2.getPoints());
 				}
 			};
 		

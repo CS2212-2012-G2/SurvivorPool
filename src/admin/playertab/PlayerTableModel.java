@@ -1,4 +1,4 @@
-package admin.contestanttab;
+package admin.playertab;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -8,51 +8,56 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import common.Utils;
-
+import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.User;
 
 import admin.AdminUtils;
-import admin.data.ComparatorFactory;
+import admin.data.*;
 
-import data.Contestant;
 
-public class ContestantTableModel extends AbstractTableModel {
+public class PlayerTableModel extends AbstractTableModel {
+
 	private static final long serialVersionUID = 1L;
 	private String[] columnNames;
-	private List<Contestant> data;
+	private List<User> data;
 	private boolean frozen = false;
 	
 	//public static final int INDEX_SELECT = 0;
 	public static final int INDEX_ID = 0;
 	public static final int INDEX_LASTNAME = 1;
 	public static final int INDEX_FIRSTNAME = 2;
-	public static final int INDEX_TRIBE = 3;
-	public static final int INDEX_DATECAST = 4;
+	public static final int INDEX_POINTS	= 3;
+	public static final int INDEX_WEEKLY_PICK = 4;
+	public static final int INDEX_ULT_PICK = 5;
 	
 	private int sortColumn = INDEX_ID;
-	private List<Contestant> globalData;
+	private Vector globalData;
 	
 	/**
 	 * Creates the table model which controls the table's actions and data.
-	 * @param _globaldata The global data stored in GameData, this is done to
-	 * 			maintain data persistance with the two, while allowing order 
-	 * 			manipulation.
+	 * @param users The global reference to the actual GameData.
 	 */
-	public ContestantTableModel(List<Contestant> _globaldata) {
-		columnNames = new String[] {
-				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
-		};
-		globalData = _globaldata;
-		data = new ArrayList<Contestant>(AdminUtils.noNullList(globalData));
+	public PlayerTableModel(Vector users) {
 		
+		globalData = users;
+		data = new ArrayList<User>(users.size());
+		for (Object u: users.toArray()) {
+			if (u != null) {
+				data.add((User) u);
+			}
+		}
+		
+		columnNames = new String[] { "ID", "First", "Last", "Points", 
+				"Weekly Pick", "Ultimate Pick" };
 	}
 	
 	@Override
@@ -72,26 +77,25 @@ public class ContestantTableModel extends AbstractTableModel {
     
 	@Override
 	public Object getValueAt(int row, int col) {
-        Contestant player = (Contestant)data.get(row);
-
+        User user = (User)data.get(row);
         switch (col) {
         case INDEX_ID:
-        	return player.getID();
+        	return user.getID();
         
         case INDEX_FIRSTNAME:
-        	return player.getFirstName();
+        	return user.getFirstName();
         
         case INDEX_LASTNAME:
-        	return player.getLastName();
+        	return user.getLastName();
         
-        case INDEX_TRIBE:
-        	return player.getTribe();
+        case INDEX_POINTS:
+        	return user.getPoints();
         	
-        case INDEX_DATECAST:
-        	if (player.isCastOff()) 
-        		return new Integer(player.getCastDate());
-        	else
-        		return "Active";
+        case INDEX_WEEKLY_PICK:
+        	return user.getWeeklyPick().getFullName();
+        
+        case INDEX_ULT_PICK:
+        	return user.getUltimatePick().getFullName();
         
         default:
         	return null;
@@ -100,7 +104,8 @@ public class ContestantTableModel extends AbstractTableModel {
 	
 	@Override
     public boolean isCellEditable(int row, int col) { 
-		switch (col) {   
+		return false; // never?
+		/*switch (col) {   
         // conditionally editable:
         case INDEX_FIRSTNAME:
         case INDEX_LASTNAME:	
@@ -115,12 +120,12 @@ public class ContestantTableModel extends AbstractTableModel {
         default:
         	// this can't be changed..
         	return false;
-        }
+        } */
 	}
     
 	@Override
 	public void setValueAt(Object value, int row, int col) {
-		Contestant player = (Contestant)data.get(row);
+		User user = (User)data.get(row);
         
         switch (col) {
         case INDEX_ID:
@@ -128,105 +133,63 @@ public class ContestantTableModel extends AbstractTableModel {
         	break;
         
         case INDEX_FIRSTNAME:
-        	if (!frozen)
-        		try { 
-        			player.setFirstName((String)value); 
-        		} catch (InvalidFieldException e) { }
+        	try {
+				user.setFirstName((String)value);
+			} catch (InvalidFieldException e1) {}
         	break;
         
         case INDEX_LASTNAME:
-        	if (!frozen)
-        		try {
-        			player.setLastName((String)value);
-        		} catch (InvalidFieldException e) { }
+        	try {
+				user.setLastName((String)value);
+			} catch (InvalidFieldException e) { }
         	break;
         
-        case INDEX_TRIBE:
-        	try {
-        		player.setTribe((String)value);
-        	} catch (InvalidFieldException e) { }
-        	break;
-        	
-        case INDEX_DATECAST:
+        default:
         	// can't change here!
         	break;
         }
         
         fireTableCellUpdated(row, col);
     }
-	
-	public boolean hasEmptyRow() {
-        if (data.size() == 0) 
-        	return false;
-        
-        Contestant player = (Contestant)data.get(data.size() - 1);
-        
-        if (player.getFirstName().trim().equals("") &&
-        		player.getLastName().trim().equals("") &&
-        		player.getTribe().trim().equals("") &&
-        		player.getCastDate() == -1)
-        	return true;
-        else
-        	return false;
-    }
 
 	/**
-	 * Gets a Contestant based on the row passed, this is used to read clicks.
+	 * Gets a User based on the row passed, this is used to read clicks.
 	 * @param row The row to gather from
-	 * @return Data contained in the Row in a Contestant form
+	 * @return Data contained in the Row in a User form
 	 */
-    public Contestant getByRow(int row) {
-    	return (row > -1 ? data.get(row) : null);
+    public User getByRow(int row) {
+    	return data.get(row);
     }
-
-	/**
-	 * Called when a season is started, some data can be changed after, others
-	 * can't.
-	 */
-	public void freezeData() {
-		frozen  = true;
-	}
 	
-	/**
-	 * Used to check if data is Frozen, only some fields are editable if frozen
-	 * @return wether the model's data is frozen or not. 
-	 */
-	public boolean isFrozen() {
-		return frozen;
-	}
-	
-	/**
+    /**
 	 * Sorts the table by the column specified, will update the table.
 	 * @param col -1 for stored value, else the column passed. Default
 	 * to no sorting otherwise.
 	 */
 	protected void sortTableBy(int col) {
-		Comparator<Contestant> comp;
+		Comparator<User> comp;
 		
 		// use the stored column if -1 is passed.
 		col = (col == -1 ? sortColumn : col);
 		
 		switch (col) {
         case INDEX_ID:
-        	comp = ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_ID);
+        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_ID);
         	break;
         
         case INDEX_FIRSTNAME:
-        	comp = ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_FIRST_NAME);
+        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_FIRST_NAME);
         	break;
         
         case INDEX_LASTNAME:
-        	comp = ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_LAST_NAME);
+        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_LAST_NAME);
         	break;
         
-        case INDEX_TRIBE:
-        	comp = ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_TRIBE);
+        case INDEX_POINTS:
+        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_POINTS);
         	break;
-        	
-        case INDEX_DATECAST:
-        	comp = ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_DATE);
-        	break;
-        	
+
+        // others aren't valid to sort by (too ambiguous)
         default:
         	return;
         }
@@ -248,18 +211,18 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * Adds a contestant, resorts the table. Updates the stored game data.
 	 * @param c 
 	 */
-	private void addContestant(Contestant c) {
-		data.add(c);
+	private void addUser(User u) {
+		data.add(u);
 		sortTable();
 		
-		GameData.getCurrentGame().addContestant(c);
+		GameData.getCurrentGame().addUser(u);
 	}
 	
-	private void removeContestant(Contestant c) {
-		data.remove(c);
+	private void removeUser(User u) {
+		data.remove(u);
 		sortTable();
 		
-		GameData.getCurrentGame().removeContestant(c);
+		GameData.getCurrentGame().removeUser(u);
 	}
 	
 	/**
@@ -270,16 +233,23 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * If the ID is not present, it WILL create a new entry (no sort).
 	 * @param c New contestant data.
 	 */
-	public void updateContestant(Contestant c) {
-		int index = AdminUtils.BinSearchSafe(globalData, c,
-				ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_ID));
+	public void updateUser(User u) {
+		User updateUser = null;
 		
-		if (index >= 0) {
+		for (int i = 0; i < globalData.size(); i++) {
+			updateUser = (User)globalData.get(i);
+			if (updateUser.getID().equalsIgnoreCase(u.getID())) {
+				break;
+			}
+			updateUser = null;
+		}
+		
+		if (updateUser != null) {
 			try { 
-				globalData.get(index).update(c); 
+				updateUser.update(u); 
 			} catch (InvalidFieldException e) { }
 		} else {
-			addContestant(c);
+			addUser(u);
 		}
 		
 		sortTable();

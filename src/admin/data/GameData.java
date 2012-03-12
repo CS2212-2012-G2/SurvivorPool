@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import admin.AdminUtils;
-import admin.ComparatorFactory;
 import data.Contestant;
 import data.InvalidFieldException;
 import data.me.json.JSONArray;
@@ -28,7 +27,7 @@ public class GameData extends data.GameData {
 	private void updateSortAllContestants(int compFactID) {
 		allList = Arrays.asList(allContestants);
 		List<Contestant> t = AdminUtils.noNullList(allList);
-		Collections.sort(t, ComparatorFactory.getComparator(compFactID));
+		Collections.sort(t, ComparatorFactory.getContComparator(compFactID));
 		// t holds the sorted array, replace all the values with their
 		// new index. When the entry is null, it means we are done.
 		for (int i = 0; i < numContestants && allContestants[i] != null; i++) {
@@ -51,7 +50,7 @@ public class GameData extends data.GameData {
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
 		int i = AdminUtils.BinSearchSafe(allList, (Contestant)target,
-				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
+				ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_ID));
 		
 		if (i < 0) {
 			// i < 0 implies not found.
@@ -74,7 +73,7 @@ public class GameData extends data.GameData {
 		}
 	
 		return AdminUtils.BinSearchSafe(allList, t,
-				ComparatorFactory.getComparator(ComparatorFactory.CONTNT_ID));
+				ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_ID));
 	}
 	
 	/**
