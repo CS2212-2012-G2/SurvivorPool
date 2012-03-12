@@ -10,10 +10,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+
+import common.Utils;
 
 import data.GameData;
 
@@ -109,12 +112,18 @@ public class GeneralPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(!GameData.getCurrentGame().getSeasonStarted()){
-					GameData.getCurrentGame().startSeason();
 					//TODO: implement weekly bet amount
-					MainFrame.getRunningFrame().seasonStarted();
 					System.out.println("Need to implement weekly bet amount.");
-					btnAdvWeek.setText("Advance Week");
 					
+					String s=JOptionPane.showInputDialog("Enter weekly bet amount!This does not do anything at the moment");
+					if(Utils.checkString(s, "^[0-9]+$")){
+						if(Integer.parseInt(s)!=0){
+							GameData.getCurrentGame().startSeason();
+							MainFrame.getRunningFrame().seasonStarted();
+							btnAdvWeek.setText("Advance Week");
+						}
+					}
+						
 				}else{
 					GameData.getCurrentGame().advanceWeek();
 					lblGenInfo.setText("<html>"+Integer.toString(gd.weeksLeft())+" weeks left. File -> Reset to start new season</html>");
