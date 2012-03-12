@@ -41,6 +41,8 @@ public abstract class GameData {
 	protected static final String KEY_CONTESTANTS = "cons"; 
 	protected static final String KEY_NUM_CONTEST	= "cons_num";
 	
+	protected static final String KEY_USERS = "users";
+	
 	protected static final String KEY_WEEKS_REMAIN = "weeks_rem";
 	protected static final String KEY_WEEKS_PASSED = "weeks_pass";
 	
@@ -379,6 +381,12 @@ public abstract class GameData {
 				cons.put(c.toJSONObject());
 		}
 		
+		JSONArray users = new JSONArray();
+		for (int i = 0; i < allUsers.size(); i++) {
+			User u = (User)allUsers.get(i);
+			if (u != null)
+				users.put(u.toJSONObject());
+		}
 		
 		JSONArray ts = new JSONArray();
 		// TODO: only two tribes?
@@ -387,6 +395,7 @@ public abstract class GameData {
 		
 		
 		obj.put(KEY_CONTESTANTS, cons);
+		obj.put(KEY_USERS, users);
 		obj.put(KEY_TRIBES, ts);
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
@@ -407,6 +416,15 @@ public abstract class GameData {
 		weeksPassed = obj.getInt(KEY_WEEKS_PASSED);
 		
 		seasonStarted = obj.getBoolean(KEY_SEASON_STARTED);
+		
+		// users:
+		JSONArray users = (JSONArray)obj.get(KEY_USERS);
+		for (int i = 0; i < users.length(); i++) {
+			User u = new User();
+			u.fromJSONObject(users.getJSONObject(i));
+			addUser(u);
+		}
+		
 		//Contestants must be loaded last!
 		allContestants = new Contestant[numContestants];
 		
@@ -417,7 +435,7 @@ public abstract class GameData {
 		for (int i =0;i<cons.length();i++) {
 			Contestant c = new Contestant();
 			c.fromJSONObject(cons.getJSONObject(i));
-			addContestant(c); // this would be valid in a subclass..
+			addContestant(c);
 		}
 	}
 
