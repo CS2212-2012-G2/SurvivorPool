@@ -186,6 +186,30 @@ public class AdminUtils extends Utils {
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> uncastListToCast(List list, T t) {
+		List<T> newList = new ArrayList<T>(list.size());
+		for (Object o: list) {
+			if (o != null) {
+				newList.add((T) o);
+			}
+		}
+		
+		return newList;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T> List castListToUncast(List<T> list) {
+		List newList = new ArrayList(list.size());
+		for (T t: list) {
+			if (t != null) {
+				newList.add((Object) t);
+			}
+		}
+		
+		return newList;
+	}
+	
 	/**
 	 * removes null entries before performing binary search on a list.
 	 * 
@@ -194,9 +218,10 @@ public class AdminUtils extends Utils {
 	 * @param comp
 	 * @return
 	 */
-	public static <T> int BinSearchSafe(List<T> list, T target,
+	public static <T> int BinSearchSafe(List list, T target,
 			Comparator<T> comp) {
-		List<T> newList = noNullList(list);
+		List<T> newList = uncastListToCast(list, target);
+		
 		return Collections.binarySearch(newList, target, comp);
 	}
 }

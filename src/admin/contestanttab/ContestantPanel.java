@@ -130,8 +130,12 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		//////////////////////////////
 		// Mid
 		//////////////////////////////
-		Contestant[] contestants = (Contestant[]) GameData.getCurrentGame().getAllContestants();
-		tableModel = new ContestantTableModel(Arrays.asList(contestants));
+		List<Contestant> cons = 
+				AdminUtils.uncastListToCast(
+						GameData.getCurrentGame().getAllContestants(), 
+						new Contestant()
+					);
+		tableModel = new ContestantTableModel(cons);
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
 		
