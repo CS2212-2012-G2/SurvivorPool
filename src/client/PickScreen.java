@@ -166,7 +166,7 @@ public class PickScreen extends MainScreen implements FieldChangeListener {
 			};
 			labelTempName.setFont(font2);
 
-			list.add(new Object[] { tempCont.getPicture(), labelTempName, labelTempTribe,
+			list.add(new Object[] { Bitmap.getBitmapResource(tempCont.getPicture()), labelTempName, labelTempTribe,
 					labelTempStatus });
 		}
 
