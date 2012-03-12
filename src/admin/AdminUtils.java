@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Vector;
 
 import common.Utils;
 import data.Person;
@@ -199,8 +200,8 @@ public class AdminUtils extends Utils {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> List castListToUncast(List<T> list) {
-		List newList = new ArrayList(list.size());
+	public static <T> Vector castListToUncast(List<T> list) {
+		Vector newList = new Vector(list.size());
 		for (T t: list) {
 			if (t != null) {
 				newList.add((Object) t);
