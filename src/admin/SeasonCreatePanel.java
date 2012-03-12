@@ -40,18 +40,17 @@ public class SeasonCreatePanel extends JPanel {
 	JTextField txtTribe2;
 	
 	private JPanel innerFieldPanel;
-	private JPanel innerFieldPanel2;
+	private JPanel infoFieldPanel;
 	
 	public SeasonCreatePanel(){
-		this.setPreferredSize(new Dimension(300,200));
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		
-		innerFieldPanel = new JPanel();
-		innerFieldPanel.setLayout(new MigLayout());
+		infoFieldPanel = new JPanel();
+		infoFieldPanel.setLayout(new MigLayout("center"));
 	
-		innerFieldPanel2 = new JPanel();
-		innerFieldPanel2.setLayout(new BorderLayout());
+		innerFieldPanel = new JPanel();
+		innerFieldPanel.setLayout(new BorderLayout());
 		
 		JLabel lblWelcomeBanner = new JLabel("Welcome to SurvivorPool!");
 		JLabel lblInfoBanner = new JLabel("Fill out the fields below to create a new season.");
@@ -78,21 +77,21 @@ public class SeasonCreatePanel extends JPanel {
 						
 		JButton btnCreate = new JButton("Create Season");		
 		
-		innerFieldPanel.add(lblWeeks);
-		innerFieldPanel.add(spnWeek);
-		innerFieldPanel.add(lblContestants, "gap unrelated");
-		innerFieldPanel.add(spnContestant, "wrap");
-		innerFieldPanel.add(lblTribe1);
-		innerFieldPanel.add(txtTribe1, "span, grow");
-		innerFieldPanel.add(lblTribe2);
-		innerFieldPanel.add(txtTribe2, "span, grow");
-
-		innerFieldPanel2.add(lblInfoBanner, BorderLayout.NORTH);
-		innerFieldPanel2.add(innerFieldPanel, BorderLayout.CENTER);
-		innerFieldPanel2.add(btnCreate, BorderLayout.SOUTH);
+		infoFieldPanel.add(lblWeeks);
+		infoFieldPanel.add(spnWeek);
+		infoFieldPanel.add(lblContestants, "gap unrelated");
+		infoFieldPanel.add(spnContestant, "wrap");
+		infoFieldPanel.add(lblTribe1);
+		infoFieldPanel.add(txtTribe1, "span, grow");
+		infoFieldPanel.add(lblTribe2);
+		infoFieldPanel.add(txtTribe2, "span, grow");
+		
+		innerFieldPanel.add(lblInfoBanner, BorderLayout.NORTH);
+		innerFieldPanel.add(infoFieldPanel, BorderLayout.CENTER);
+		innerFieldPanel.add(btnCreate, BorderLayout.SOUTH);
 		
 		this.add(lblWelcomeBanner, BorderLayout.NORTH);
-		this.add(innerFieldPanel2, BorderLayout.CENTER);
+		this.add(innerFieldPanel, BorderLayout.CENTER);
 		
 		spnWeek.addChangeListener(new ChangeListener(){
 

@@ -33,6 +33,7 @@ public class MainFrame extends JFrame{
 	private JLabel lblGeneral = new JLabel(GENERAL_PANEL);
 	private JLabel lblContestants = new JLabel(CONTESTANT_PANEL);
 	private JLabel lblPlayers = new JLabel(PLAYER_PANEL);
+	private JLabel lblBonus = new JLabel(BONUS_PANEL);
 	
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu mnuFile = new JMenu("File");
@@ -46,12 +47,14 @@ public class MainFrame extends JFrame{
 	
 	public static final String GENERAL_PANEL 		= "General",
 							   CONTESTANT_PANEL 	= "Contestants",
-							   PLAYER_PANEL 		= "Players";
+							   PLAYER_PANEL 		= "Players",
+							   BONUS_PANEL			= "Bonus";
 	
 	private StatusPanel statusBar;
 
 	private ContestantPanel conPanel;
 	private PlayerPanel playerPanel;
+	private BonusPanel bonusPanel;
 	
 	ActionListener al = new ActionListener() {
 		@Override
@@ -83,12 +86,11 @@ public class MainFrame extends JFrame{
 		GameData g = GameData.initGameData();
 		if(g!=null)
 			initGUI();
-		else {
-			this.setSize(500, 250);
+		else 
 			initSeasonCreateGUI();
-		}			
 		
 		applyTheme();
+		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
 		this.addWindowListener(new WindowAdapter(){
@@ -108,25 +110,28 @@ public class MainFrame extends JFrame{
 		statusBar.setTabLabel("SEASON CREATE");
 	}
 	
-	private void initGUI(){		
-		this.setSize(640, 480);
+	private void initGUI(){				
 		Dimension d = new Dimension(150,20);
 		
 		lblGeneral.setPreferredSize(d);
 		lblContestants.setPreferredSize(d);
 		lblPlayers.setPreferredSize(d);
+		lblBonus.setPreferredSize(d);
 		
 		conPanel = new ContestantPanel();
 		playerPanel = new PlayerPanel();
+		bonusPanel = new BonusPanel();
 		tabPane.addTab(lblGeneral.getText(),new GeneralPanel());
 		tabPane.addTab(lblContestants.getText(),conPanel);
 		tabPane.addTab(lblPlayers.getText(), playerPanel);
+		tabPane.addTab(lblBonus.getText(), bonusPanel);
 		
 		tabPane.addChangeListener(playerPanel);
 		
 		tabPane.setTabComponentAt(0, lblGeneral);
 		tabPane.setTabComponentAt(1, lblContestants);
 		tabPane.setTabComponentAt(2, lblPlayers);
+		tabPane.setTabComponentAt(3, lblBonus);
 		//tabPane.setBackground(Color.cyan);//tab background color,not the panel
 		
 		mnuItemReset = new JMenuItem("Reset");
