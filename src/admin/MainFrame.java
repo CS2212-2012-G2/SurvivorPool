@@ -20,6 +20,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import admin.AdminUtils;
+import admin.BonusPanel;
+import admin.GeneralPanel;
+import admin.StatusPanel;
 import admin.contestanttab.ContestantPanel;
 import admin.data.GameData;
 import admin.playertab.PlayerPanel;
