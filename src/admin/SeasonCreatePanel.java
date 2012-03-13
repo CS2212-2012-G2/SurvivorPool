@@ -1,7 +1,9 @@
 package admin;
 //TODO: MAKE THIS PANEL LOOK BETTER!
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -28,53 +31,77 @@ import common.Utils;
  */
 public class SeasonCreatePanel extends JPanel {
 
-	JSpinner spnWeek;
-	JSpinner spnContestant;
-	boolean programChange = false; //true when spinner value changed by program
+	private boolean programChange = false; //true when spinner value changed by program
 	
-	JTextField txtTribe1;
-	JTextField txtTribe2;
+	private JSpinner spnWeek;
+	private JSpinner spnContestant;
+	
+	private SpinnerNumberModel weekModel;
+	private SpinnerNumberModel contestantModel;
+	
+	private JTextField txtTribe1;
+	private JTextField txtTribe2;
+	
+	private JLabel lblWelcomeText;
+	private JLabel lblInfoText;
+	private JLabel lblWeeks;
+	private JLabel lblContestants;
+	private JLabel lblTribe1;
+	private JLabel lblTribe2;
+	
+	private JButton btnCreate;
+	
+	private JPanel innerPanel;
+	private SeasonCreateFieldsPanel fieldsPanel;
 	
 	public SeasonCreatePanel(){
-		this.setPreferredSize(new Dimension(400,400));
-		this.setLayout(new GridLayout(6,2));
-		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		
-		JLabel lblInitSeason = new JLabel("Create Season");
-		JLabel lblFiller = new JLabel("");
-		JLabel lblWeeks = new JLabel("Weeks:");
-		JLabel lblContestants = new JLabel("Contestants:");
-		JLabel lblTribe1 = new JLabel("Tribe 1:");
-		JLabel lblTribe2 = new JLabel("Tribe 2:");
+		//------instantiations-------
+		lblWelcomeText = new JLabel("Welcome to SurvivorPool!");
+		lblInfoText = new JLabel("Fill out the fields below to create a new season.");
+		lblWeeks = new JLabel("Weeks:");
+		lblContestants = new JLabel("Contestants:");
+		lblTribe1 = new JLabel("Tribe 1:");
+		lblTribe2 = new JLabel("Tribe 2:");
 		
-		
-		//is there a default number of weeks?
-		SpinnerNumberModel weekModel = new SpinnerNumberModel(3,3,12,1); //default,low,min,step
+		weekModel = new SpinnerNumberModel(3,3,12,1); //default,low,min,step
 		spnWeek = new JSpinner(weekModel);
 		
-		SpinnerNumberModel contestantModel = new SpinnerNumberModel(6,6,15,1);//default,low,min,step
+		contestantModel = new SpinnerNumberModel(6,6,15,1);//default,low,min,step
 		spnContestant = new JSpinner(contestantModel);
-		
 		
 		txtTribe1 = new JTextField("");
 		txtTribe2 = new JTextField("");
 		
+		btnCreate = new JButton("Create Season");
 		
+		fieldsPanel = new SeasonCreateFieldsPanel(lblWeeks, spnWeek, 
+				lblContestants, spnContestant, 
+				lblTribe1, txtTribe1,
+				lblTribe2, txtTribe2,
+				btnCreate);
 		
-		JButton btnCreate = new JButton("Create Season");
+		innerPanel = new JPanel();
 		
-		this.add(lblInitSeason);
-		this.add(lblFiller);
-		this.add(lblWeeks);
-		this.add(spnWeek);
-		this.add(lblContestants);
-		this.add(spnContestant);
-		this.add(lblTribe1);
-		this.add(txtTribe1);
-		this.add(lblTribe2);
-		this.add(txtTribe2);
-		this.add(btnCreate);
+		//------component settings-------
+		this.setLayout(new BorderLayout());
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
+
+		innerPanel.setLayout(new BorderLayout());
 		
+		lblWelcomeText.setFont(new Font("sanserif", Font.BOLD, 30));
+		lblWelcomeText.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		lblInfoText.setFont(new Font("sanserif", Font.ITALIC, 18));
+		lblInfoText.setHorizontalAlignment(SwingConstants.CENTER);		
+		
+		//------component assembly------
+		this.add(lblWelcomeText, BorderLayout.NORTH);
+		this.add(innerPanel, BorderLayout.CENTER);
+		innerPanel.add(lblInfoText, BorderLayout.NORTH);
+		innerPanel.add(fieldsPanel, BorderLayout.CENTER);
+		
+		//------component listeners------
 		spnWeek.addChangeListener(new ChangeListener(){
 
 			@Override
@@ -85,6 +112,7 @@ public class SeasonCreatePanel extends JPanel {
 			}
 			
 		});
+		
 		spnContestant.addChangeListener(new ChangeListener(){
 
 			@Override
