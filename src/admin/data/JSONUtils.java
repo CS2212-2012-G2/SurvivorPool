@@ -67,7 +67,7 @@ public class JSONUtils{
 			// if the directory above the file doesn't exist, make it. :)
 			File dir = f.getParentFile();
 			if (!dir.exists()) {
-				dir.createNewFile();
+				dir.mkdirs();
 			}
 			
 			// delete the file if it exists already to completely overwrite
