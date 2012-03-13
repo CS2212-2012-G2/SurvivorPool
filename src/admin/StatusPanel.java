@@ -20,10 +20,12 @@ import javax.swing.Timer;
  */
 public class StatusPanel extends JPanel{
 	
-	JLabel tabLabel;
-	JLabel msgLabel;
-	Timer t=null;
-	Component errorComp;
+	private JLabel tabLabel;
+	private JLabel msgLabel;
+	private Timer t=null;
+	private Component[] errorComps = new Component[0];
+	
+	private static int TIMER_TIME = 3500;
 	
 	public StatusPanel() {
 		setLayout(new BorderLayout(5, 5));
@@ -59,28 +61,32 @@ public class StatusPanel extends JPanel{
 	 * @param txt Error text to display
 	 * @param c A component to make the background red(can pass null if none needed)
 	 */
-	public void setErrorMsgLabel(String txt,Component c){
+	public void setErrorMsgLabel(String txt, Component... comps){
 		if(t!=null&&t.isRunning()){
 			t.stop();
 			System.out.println("yeah");
 		}else{
-			t= new Timer(2000,displayError);
+			t= new Timer(TIMER_TIME,displayError);
 			t.setRepeats(false);
 		}
 		
 		setMsgLabel(txt);
 		msgLabel.setForeground(Color.white);
 		this.setBackground(Color.red);
-		errorComp=c;
-		if(c!=null)
-			c.setBackground(Color.red);
 		
+		errorComps=comps;
+		for (Component c: comps)
+			if (c != null)
+				c.setBackground(Color.RED);
+	
 		t.start();
 	}
 	
 	private void resetColor(){
-		if(errorComp!=null)
-			errorComp.setBackground(AdminUtils.getThemeBG());
+		for (Component c: errorComps)
+			if (c != null)
+				c.setBackground(AdminUtils.getThemeBG());
+		
 		msgLabel.setForeground(AdminUtils.getThemeFG());
 		this.setBackground(AdminUtils.getThemeBG());
 	}

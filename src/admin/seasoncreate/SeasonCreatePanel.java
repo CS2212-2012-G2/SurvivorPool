@@ -1,4 +1,4 @@
-package admin;
+package admin.seasoncreate;
 //TODO: MAKE THIS PANEL LOOK BETTER!
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import admin.MainFrame;
 import admin.data.GameData;
 
 import common.Utils;
@@ -131,15 +132,15 @@ public class SeasonCreatePanel extends JPanel {
 			public void actionPerformed(ActionEvent ae) {
 				try {
 					if(!checkValidTribeNames()){
-						MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid tribe names");
+						MainFrame.getRunningFrame().setStatusErrorMsg("Invalid tribe names", txtTribe1, txtTribe2);
 						//lblAlert.setText("Invalid tribe names!");
 						return;
 					}
-					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Valid tribe names");
+					MainFrame.getRunningFrame().setStatusMsg("Valid tribe names");
 					GameData.initSeason(Integer.parseInt(spnContestant.getValue().toString()));
 					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(),txtTribe2.getText());
 					
-					MainFrame.seasonCreated();
+					MainFrame.createSeason();
 				} catch (Exception i) {
 					i.printStackTrace();
 				}
