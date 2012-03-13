@@ -215,11 +215,21 @@ public class MainFrame extends JFrame{
 		playerPanel.seasonStarted();
 	}
 	
+	/**
+	 * Set the statusbar message
+	 * @param msg
+	 */
 	public void setStatusMsg(String msg){
 		statusBar.setMsgLabel(msg);
 	}
 	
-	public void setErrorMsg(String msg, Component comp){
+	/**
+	 * Set an error message in the statusbar. If comp is not null,
+	 * it will set the background of that component to red.
+	 * @param msg
+	 * @param comp A component or null if none applicable
+	 */
+	public void setStatusErrorMsg(String msg, Component comp){
 		statusBar.setErrorMsgLabel(msg,comp);
 	}
 	
