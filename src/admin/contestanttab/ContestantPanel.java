@@ -305,14 +305,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	 * @return Current contestant loaded
 	 */
 	private Contestant getCurrentContestant() {
-		//boolean newCont = false;
-		Contestant x = null;
-		/*if (activeCon == INACTIVE_CONT) {
-			activeCon = new Contestant();
-			newCont = true;
-		} */
-		
-		Contestant t = activeCon;
+		Contestant tempCon = activeCon;
 		
 		activeCon = new Contestant();
 		
@@ -329,17 +322,18 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			activeCon.setTribe((String)cbTribe.getSelectedItem());
 			activeCon.setPicture(imgPath);
 		} catch (InvalidFieldException ife) {
-			System.out.println("Invalid field:");
+			System.out.println("Invalid field in " +
+					"ContestantPanel.getCurrentContestant:");
 			System.out.println("\t" + ife.getMessage());
 			
-			activeCon = t;
+			activeCon = tempCon;
 			return null;
 		}
 			
-		t = activeCon;
+		tempCon = activeCon;
 		activeCon = INACTIVE_CONT;
 		
-		return t;
+		return tempCon;
 	}
 	
 	private void setActiveContestant(Contestant c) {
@@ -366,12 +360,16 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				MainFrame frame = MainFrame.getRunningFrame();
 				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME)){
-					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid first name. 1-20 alphabetic characters",tfFirstName);
+					frame.setStatusErrorMsg("Invalid first name. 1-20 " +
+							"alphabetic characters", tfFirstName);
 				}else if(!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
-					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);
+					frame.setStatusErrorMsg("Invalid last name. 1-20 " +
+							"alphabetic characters", tfLastName);
 				}else if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
-					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid contestant id. 2 alphanumeric characters",tfContID);
+					frame.setStatusErrorMsg("Invalid contestant ID. 2 " +
+							"alpha-numeric characters", tfContID);
 				}else{	
 					// check if the contestant is active
 					Contestant con = getCurrentContestant();
@@ -415,7 +413,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			}
 		});
 		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
