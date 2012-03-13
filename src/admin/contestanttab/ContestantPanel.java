@@ -214,11 +214,13 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	            
 				Color c = null;
 				if (table.isRowSelected(row)) {
-					c = AdminUtils.getThemeTableHighlight();
+					label.setBackground(AdminUtils.getThemeTableHighlight());
+					label.setForeground(AdminUtils.getThemeBG());
 				} else {
-					c = UIManager.getColor("Table.background");
+					label.setBackground(UIManager.getColor("Table.background"));
+					label.setForeground(UIManager.getColor("Table.foreground"));
 				}
-				label.setBackground(c);
+				
 				
 				label.setOpaque(true);
 				label.setText("" + value);
