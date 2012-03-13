@@ -273,7 +273,7 @@ public abstract class GameData {
 		weeksRem -= 1;    // reduce num of weeks remaining
 		weeksPassed += 1;  // increment number of weeks passed
 		allocatePoints(elimCont);
-		elimCont = null;
+		elimCont.castOff();
 	}
 
 	/**

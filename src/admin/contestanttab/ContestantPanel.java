@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -87,7 +88,6 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	private JButton bDelete;
 	
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
-	private static int IMAGE_MAX_DIM = 75;
 	
 	
 	public ContestantPanel(){
@@ -276,14 +276,10 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			Image img = ImageIO.read(new File(path));
 			if(img==null)
 				throw new IOException();
-			
-			// TODO: Make this scale more approriately using Image's resolution/aspect ratio
 			// scale the image!
-			if (img.getWidth(null) > IMAGE_MAX_DIM ||
-					img.getHeight(null) > IMAGE_MAX_DIM) {
-				img = img.getScaledInstance(Math.min(IMAGE_MAX_DIM, img.getWidth(null)),
-						Math.min(IMAGE_MAX_DIM, img.getHeight(null)), 
-						Image.SCALE_SMOOTH);
+			if (img.getWidth(null) > 200 ||
+					img.getHeight(null) > 200) {
+				img = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 			}
 			
 			// NO IO errors occured if getting here:
@@ -305,15 +301,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	 * @return Current contestant loaded
 	 */
 	private Contestant getCurrentContestant() {
-		//boolean newCont = false;
-		Contestant x = null;
-		/*if (activeCon == INACTIVE_CONT) {
-			activeCon = new Contestant();
-			newCont = true;
-		} */
-		
-		Contestant t = activeCon;
-		
+		Contestant tempCon = activeCon;
 		activeCon = new Contestant();
 		
 		try {
@@ -329,17 +317,18 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			activeCon.setTribe((String)cbTribe.getSelectedItem());
 			activeCon.setPicture(imgPath);
 		} catch (InvalidFieldException ife) {
-			System.out.println("Invalid field:");
+			System.out.println("Invalid field in " + 
+					"ContestantPanel.getCurrentContestant:");	
 			System.out.println("\t" + ife.getMessage());
 			
-			activeCon = t;
+			activeCon = tempCon;
 			return null;
 		}
 			
-		t = activeCon;
+		tempCon = activeCon;
 		activeCon = INACTIVE_CONT;
 		
-		return t;
+		return tempCon;
 	}
 	
 	private void setActiveContestant(Contestant c) {
@@ -366,12 +355,13 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				MainFrame frame = MainFrame.getRunningFrame();
 				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME)){
-					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid first name. 1-20 alphabetic characters",tfFirstName);
+					frame.setStatusErrorMsg("Invalid first name. 1-20 alphabetic characters",tfFirstName);
 				}else if(!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
-					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);
+					frame.setStatusErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);
 				}else if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
-					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid contestant id. 2 alphanumeric characters",tfContID);
+					frame.setStatusErrorMsg("Invalid contestant id. 2 alphanumeric characters",tfContID);
 				}else{	
 					// check if the contestant is active
 					Contestant con = getCurrentContestant();
@@ -401,30 +391,37 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		});
 		
 		bCastOff.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
-				// can't cast off someone already off.
+				String s = ((JButton) e.getSource()).getText();
+				if(s.equals("Cast Off")){
+					// can't cast off someone already off.
 				if (activeCon.isCastOff())
 					return;
-				
-				activeCon.castOff();
-				
+			
+				activeCon.toCastOff();
 				labelCastStatus.setText("Week " + activeCon.getCastDate());
-				
-				System.out.println("Casting off: " + activeCon.getID());
+				}
+				else{
+				activeCon.undoCast();
+				labelCastStatus.setText("Active");
+				bCastOff.setText("Cast Off");
+				}	
 			}
 		});
 		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
-			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
 				 int row = table.getSelectedRow();
 				 Contestant c = tableModel.getByRow(row);
 			     
-				 if (c != null)
+				 if (c != null){
 					 setActiveContestant(c);
-				
+					 if(activeCon.toBeCast == true)
+						 bCastOff.setText("Undo Cast");
+					 else bCastOff.setText("Cast Off");
+					 
+				 }
 			}
 		});
 		
