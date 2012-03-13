@@ -359,11 +359,20 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME) ||
-						!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
-					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid name!");
-					return;
+				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME)){
+					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid first name. 1-20 alphabetic characters",tfFirstName);
+				}else if(!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
+					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);
+				}else if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
+					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid contestant id. 2 alphanumeric characters",tfContID);
+				}else{	
+					// check if the contestant is active
+					Contestant con = getCurrentContestant();
+					if (con != null) {
+						// null if something went wrong.
+						tableModel.updateContestant(con);
+					}
+					System.out.println("We here");
 				}
 				
 				if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){

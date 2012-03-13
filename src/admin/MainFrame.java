@@ -22,6 +22,7 @@ import javax.swing.event.ChangeListener;
 import admin.contestanttab.ContestantPanel;
 import admin.data.GameData;
 import admin.playertab.PlayerPanel;
+import admin.seasoncreate.SeasonCreatePanel;
 
 public class MainFrame extends JFrame{
 
@@ -211,6 +212,35 @@ public class MainFrame extends JFrame{
 		//TODO: add season started method for users
 	}
 	
+	/**
+	 * Set the statusbar message
+	 * @param msg
+	 */
+	public void setStatusMsg(String msg){
+		statusBar.setMsgLabel(msg);
+	}
+	
+	/**
+	 * Set an error message in the status bar.
+	 * @param msg The message to set
+	 */
+	public void setStatusErrorMsg(String msg) {
+		setStatusErrorMsg(msg);
+	}
+	
+	/**
+	 * Set an error message in the statusbar. If comp is not null,
+	 * it will set the background of that component to red.
+	 * @param msg
+	 * @param comps Multiple components
+	 */
+	public void setStatusErrorMsg(String msg, Component... comps){
+		statusBar.setErrorMsgLabel(msg,comps);
+	}
+	
+	/**
+	 * Delete season file and show season create panel
+	 */
 	private void resetSeason() {
 		int response = JOptionPane.showConfirmDialog(null,
 							"Would you like to delete current season?","Reset Season",

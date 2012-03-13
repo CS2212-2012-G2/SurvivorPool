@@ -132,5 +132,22 @@ public class GeneralPanel extends JPanel {
 			}
 			
 		});
+		
+		btnChangeTribeName.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(!Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)){
+					MainFrame.getRunningFrame().setStatusErrorMsg("Tribe 1 name invalid.",txtTribe1);
+				}else if(!Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN)){
+					MainFrame.getRunningFrame().setStatusErrorMsg("Tribe 2 name invalid.",txtTribe2);
+				}else{
+					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(), txtTribe2.getSelectedText());
+					MainFrame.getRunningFrame().setStatusMsg("Tribes changed.");
+					//TODO: make tribe name change other panels as well(Contestant jcombobox is not updated)
+				}		
+			}
+			
+		});
 	}
 }
