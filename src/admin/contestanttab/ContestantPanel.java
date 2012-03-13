@@ -88,6 +88,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	private JButton bDelete;
 	
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
+	private static int IMAGE_MAX_DIM = 75;
 	
 	
 	public ContestantPanel(){
@@ -276,10 +277,14 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			Image img = ImageIO.read(new File(path));
 			if(img==null)
 				throw new IOException();
+			
+			// TODO: Make this scale more approriately using Image's resolution/aspect ratio
 			// scale the image!
-			if (img.getWidth(null) > 200 ||
-					img.getHeight(null) > 200) {
-				img = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			if (img.getWidth(null) > IMAGE_MAX_DIM ||
+					img.getHeight(null) > IMAGE_MAX_DIM) {
+				img = img.getScaledInstance(Math.min(IMAGE_MAX_DIM, img.getWidth(null)),
+						Math.min(IMAGE_MAX_DIM, img.getHeight(null)), 
+						Image.SCALE_SMOOTH);
 			}
 			
 			// NO IO errors occured if getting here:
