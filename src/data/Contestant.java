@@ -69,15 +69,6 @@ public class Contestant implements Person {
 	public String getLastName() {
 		return lastName;
 	}
-	
-	// TODO: fix?
-	/**
-	 * Returns last, first
-	 * @return
-	 */
-	public String getFullName() {
-		return lastName + ", " + firstName;
-	}
 
 	/**
 	 * getPicture returns the contestant's picture information

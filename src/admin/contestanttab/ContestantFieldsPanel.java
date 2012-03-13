@@ -137,7 +137,7 @@ public class ContestantFieldsPanel extends JPanel {
 		add(cbTribe, gbc);
 	}
 	
-	// TODO: Implement
+	// TODO: Implement (Move from ContestantPanel?)
 	/**
 	 * Sets the editing information to the information stored in the contestant
 	 * @param c 	The contestant to edit

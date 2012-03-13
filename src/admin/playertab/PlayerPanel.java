@@ -38,8 +38,12 @@ import admin.data.GameData;
 import data.Contestant;
 import data.User;
 
-// TODO: REWRITE AND REBUILD. 
 
+/**
+ * TODO: Doc
+ * @author kevin
+ *
+ */
 public class PlayerPanel extends JPanel implements ChangeListener,
 		MouseListener {
 

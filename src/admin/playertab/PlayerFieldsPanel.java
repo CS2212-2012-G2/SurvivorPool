@@ -20,6 +20,7 @@ import javax.swing.event.ChangeListener;
 import admin.data.GameData;
 
 import data.Contestant;
+import data.User;
 
 public class PlayerFieldsPanel extends JPanel {
 	
@@ -149,12 +150,12 @@ public class PlayerFieldsPanel extends JPanel {
 	
 	
 	
-	// TODO: Implement
+	// TODO: Move from PlayerPanel into here?
 	/**
 	 * Sets the editing information to the information stored in the contestant
 	 * @param c 	The contestant to edit
 	 */
-	public void setEditPane(Contestant c) {
+	public void setEditPane(User u) {
 		return;
 	}
 

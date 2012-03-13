@@ -197,11 +197,10 @@ public class MainFrame extends JFrame{
 		applyTheme();
 	}
 	
-	// TODO: Less ambiguous name?
 	/**
 	 * Called by SeasonCreatePanel when a new season has been created/
 	 */
-	public static void seasonCreated(){
+	public static void createSeason(){
 		GameData.initGameData();
 		m.getContentPane().removeAll();
 		m.initGUI();

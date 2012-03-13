@@ -2,6 +2,7 @@ package admin.data;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -72,9 +73,14 @@ public class JSONUtils{
 	}
 	
 	
-	public static void resetSeason(){
+	/**
+	 * Deletes the season file, returns true if successful.
+	 * @return True if sucessfully reset season.
+	 */
+	public static boolean resetSeason(){
 		File f = new File(seasonFile);
-		f.delete(); //TODO: return true if actually deleted.
+		f.delete(); 
+		return f.exists();
 	}
 
 }
