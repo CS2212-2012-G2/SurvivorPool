@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -276,9 +277,9 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			if(img==null)
 				throw new IOException();
 			// scale the image!
-			
-					
-		
+			if (img.getWidth(null) > 200 ||
+					img.getHeight(null) > 200) {
+				img = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 			}
 			
 			// NO IO errors occured if getting here:
@@ -300,7 +301,8 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	 * @return Current contestant loaded
 	 */
 	private Contestant getCurrentContestant() {
-		Contestant tempCon = activeCon;		activeCon = new Contestant();
+		Contestant tempCon = activeCon;
+		activeCon = new Contestant();
 		
 		try {
 			String id = tfContID.getText();
@@ -315,7 +317,9 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			activeCon.setTribe((String)cbTribe.getSelectedItem());
 			activeCon.setPicture(imgPath);
 		} catch (InvalidFieldException ife) {
-			System.out.println("Invalid field in " + 			System.out.println("\t" + ife.getMessage());
+			System.out.println("Invalid field in " + 
+					"ContestantPanel.getCurrentContestant:");	
+			System.out.println("\t" + ife.getMessage());
 			
 			activeCon = tempCon;
 			return null;
@@ -353,8 +357,12 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			public void actionPerformed(ActionEvent e) {
 				MainFrame frame = MainFrame.getRunningFrame();
 				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME)){
+					frame.setStatusErrorMsg("Invalid first name. 1-20 alphabetic characters",tfFirstName);
 				}else if(!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
-				}else if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){frame.setStatusErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);				}else{	
+					frame.setStatusErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);
+				}else if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
+					frame.setStatusErrorMsg("Invalid contestant id. 2 alphanumeric characters",tfContID);
+				}else{	
 					// check if the contestant is active
 					Contestant con = getCurrentContestant();
 					if (con != null) {
@@ -401,7 +409,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			}
 		});
 		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
 			public void valueChanged(ListSelectionEvent arg0) {
 				 int row = table.getSelectedRow();
