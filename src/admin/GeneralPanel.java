@@ -1,20 +1,15 @@
 package admin;
 //TODO: MAKE THIS PANEL LOOK BETTER!
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 
 import common.Utils;
 
@@ -28,10 +23,9 @@ public class GeneralPanel extends JPanel {
 	JLabel lblGenInfo = new JLabel("General infos.");
 	JButton btnAdvWeek = new JButton("Start season");
 	
-	GameData gd;
+	
 	
 	public GeneralPanel(){
-		gd = GameData.getCurrentGame();
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		initPnlInfo();
 		initListeners();
@@ -48,12 +42,9 @@ public class GeneralPanel extends JPanel {
 		
 		if(GameData.getCurrentGame().getSeasonStarted())
 			btnAdvWeek.setText("Advance Week");
-//		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,pnlGenInfo,lblBonusInfo);
-//		splitPane.setDividerSize(1);
-//		splitPane.setDividerLocation(320);
-		
+
 		//TODO: actually set info here rather than just weeks.
-		lblGenInfo.setText("<html>"+Integer.toString(gd.weeksLeft())+" weeks left. File -> Reset to start new season</html>");
+		lblGenInfo.setText("<html>"+Integer.toString(GameData.getCurrentGame().weeksLeft())+" weeks left. File -> Reset to start new season</html>");
 		pnlInfo.add(pnlGenInfo,BorderLayout.CENTER);
 		pnlInfo.setPreferredSize(new Dimension(450,400));
 		this.add(pnlInfo);
@@ -84,7 +75,7 @@ public class GeneralPanel extends JPanel {
 						
 				}else{
 					GameData.getCurrentGame().advanceWeek();
-					lblGenInfo.setText("<html>"+Integer.toString(gd.weeksLeft())+" weeks left. File -> Reset to start new season</html>");
+					lblGenInfo.setText("<html>"+Integer.toString(GameData.getCurrentGame().weeksLeft())+" weeks left. File -> Reset to start new season</html>");
 					btnAdvWeek.setVisible(!GameData.getCurrentGame().getSeasonEnded());
 				}
 			}
