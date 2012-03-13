@@ -5,18 +5,25 @@ package admin;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * @author kevin
  *
  */
-public class StatusPanel extends JPanel {
+public class StatusPanel extends JPanel{
 	
 	JLabel tabLabel;
 	JLabel msgLabel;
+	Timer t=null;
+	Component errorComp;
 	
 	public StatusPanel() {
 		setLayout(new BorderLayout(5, 5));
@@ -41,17 +48,50 @@ public class StatusPanel extends JPanel {
 	 * @param txt text to display
 	 */
 	public void setMsgLabel(String txt) {
-		this.setBackground(AdminUtils.getThemeBG());
-		msgLabel.setText(txt);
+		if(t==null||!t.isRunning()){
+			resetColor();
+			msgLabel.setText(txt);
+		}
 	}
 	
 	/**
-	 * Display message to user and change color to RED
+	 * Display an error message. Makes panel red
 	 * @param txt Error text to display
+	 * @param c A component to make the background red(can pass null if none needed)
 	 */
-	public void setErrorMsgLabel(String txt){
+	public void setErrorMsgLabel(String txt,Component c){
+		if(t!=null&&t.isRunning()){
+			t.stop();
+			System.out.println("yeah");
+		}else{
+			t= new Timer(2000,displayError);
+			t.setRepeats(false);
+		}
+		
 		setMsgLabel(txt);
 		msgLabel.setForeground(Color.white);
 		this.setBackground(Color.red);
+		errorComp=c;
+		if(c!=null)
+			c.setBackground(Color.red);
+		
+		t.start();
 	}
+	
+	private void resetColor(){
+		if(errorComp!=null)
+			errorComp.setBackground(AdminUtils.getThemeBG());
+		msgLabel.setForeground(AdminUtils.getThemeFG());
+		this.setBackground(AdminUtils.getThemeBG());
+	}
+	
+	Action displayError = new AbstractAction(){
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			resetColor();
+			
+		}
+		
+	};
 }

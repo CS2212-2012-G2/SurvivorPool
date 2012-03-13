@@ -97,15 +97,15 @@ public class GeneralPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)
-						&& Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN)){
-					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(), txtTribe2.getSelectedText());
-					MainFrame.getRunningFrame().getStatusBar().setMsgLabel("Tribes changed.");
-					//TODO: make tribe name change other panels as well(Contestant jcombobox is not updated)
+				if(!Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)){
+					MainFrame.getRunningFrame().setErrorMsg("Tribe 1 name invalid.",txtTribe1);
+				}else if(!Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN)){
+					MainFrame.getRunningFrame().setErrorMsg("Tribe 2 name invalid.",txtTribe2);
 				}else{
-					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Tribes invalid.");
-					
-				}			
+					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(), txtTribe2.getSelectedText());
+					MainFrame.getRunningFrame().setStatusMsg("Tribes changed.");
+					//TODO: make tribe name change other panels as well(Contestant jcombobox is not updated)
+				}		
 			}
 			
 		});

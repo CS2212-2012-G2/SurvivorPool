@@ -1,6 +1,7 @@
 package admin;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,7 +60,7 @@ public class MainFrame extends JFrame{
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == mnuItemExit) {
-				System.exit(0);
+				windowClose();
 			}else if (ae.getSource() == mnuItemReset){
 				resetSeason();
 			}else if (ae.getSource() == mnuItemTheme1) {
@@ -97,9 +98,7 @@ public class MainFrame extends JFrame{
 		this.setTitle("Survivor Pool Admin");
 		this.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent we) {
-				if(GameData.getCurrentGame()!=null)
-					GameData.getCurrentGame().writeData();
-			    System.exit(0);
+				windowClose();
 			}
 		});
 	}
@@ -212,11 +211,21 @@ public class MainFrame extends JFrame{
 	 * 
 	 */
 	public void seasonStarted(){
-		//TODO: change enabled status of components
 		conPanel.seasonStarted();
-		//TODO: add season started method for users
+		playerPanel.seasonStarted();
 	}
 	
+	public void setStatusMsg(String msg){
+		statusBar.setMsgLabel(msg);
+	}
+	
+	public void setErrorMsg(String msg, Component comp){
+		statusBar.setErrorMsgLabel(msg,comp);
+	}
+	
+	/**
+	 * Delete season file and show season create panel
+	 */
 	private void resetSeason() {
 		int response = JOptionPane.showConfirmDialog(null,
 							"Would you like to delete current season?","Reset Season",
@@ -228,10 +237,11 @@ public class MainFrame extends JFrame{
 		}
 	}
 	
-	public StatusPanel getStatusBar() {
-		return statusBar;
+	private void windowClose(){
+		if(GameData.getCurrentGame()!=null)
+			GameData.getCurrentGame().writeData();
+	    System.exit(0);
 	}
-	
 	/**
 	 * Used to get reference to the running GUI.
 	 * @return Gets the running MainFrame.
