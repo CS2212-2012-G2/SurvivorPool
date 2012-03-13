@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -398,15 +399,26 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		bCastOff.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// can't cast off someone already off.
+				
+				String s = ((JButton) e.getSource()).getText();
+				
+				if(s.equals("Cast Off")){
+					// can't cast off someone already off.
 				if (activeCon.isCastOff())
 					return;
 				
-				activeCon.castOff();
 				
+				activeCon.toCastOff();
 				labelCastStatus.setText("Week " + activeCon.getCastDate());
+				}
+				else{
+				activeCon.undoCast();
+				labelCastStatus.setText("Active");
+				}
 				
-				System.out.println("Casting off: " + activeCon.getID());
+				
+				
+				
 			}
 		});
 		

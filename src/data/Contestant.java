@@ -18,7 +18,7 @@ public class Contestant implements Person {
 	protected String firstName, lastName, tribe, picture;
 	protected int castDate = -1; // week that player was cast off
 	protected String cID;
-	protected GameData game;
+	protected boolean toBeCast;
 	
 	protected final static String KEY_FIRST_NAME = "first";
 	protected final static String KEY_LAST_NAME	= "last";
@@ -95,8 +95,8 @@ public class Contestant implements Person {
 	 */
 	public void castOff() {
 		castDate = GameData.getCurrentGame().getCurrentWeek();
-		game.elimCont = this;
-		game.elimExists = true;
+		GameData.getCurrentGame().elimCont = null;
+		GameData.getCurrentGame().elimExists = false;
 	}
 
 	/**
@@ -226,6 +226,16 @@ public class Contestant implements Person {
 			castDate = c.getCastDate();
 		}
 	}
+	
+	/**
+	 * toCastOff sets the player is to be officially cast off when the week advances.
+	 */
+	public void toCastOff(){
+		this.toBeCast = true;
+		this.castDate = GameData.getCurrentGame().getCurrentWeek();
+		GameData.getCurrentGame().elimCont = this;
+		GameData.getCurrentGame().elimExists = true;
+	}
 
 	/**
 	 * toString returns a string of the contestant's information in JSON format.
@@ -258,6 +268,16 @@ public class Contestant implements Person {
 		obj.put(KEY_TRIBE, getTribe());
 		obj.put(KEY_DATE, new Integer(getCastDate()));
 		return obj;
+	}
+	
+	/**
+	 * undoCast performs the opposite of every action that toBeCast() takes.
+	 */
+	public void undoCast(){
+		this.toBeCast = false;
+		this.castDate = -1;
+		GameData.getCurrentGame().elimExists = false;
+		GameData.getCurrentGame().elimCont = null;
 	}
 	
 	
