@@ -139,9 +139,9 @@ public class SeasonCreatePanel extends JPanel {
 	 * @return boolean depending if tribe names are alphanumber and between 1-30 characters
 	 */
 	private boolean checkValidTribeNames(){
-		String pattern = "^[a-zA-Z\\s]{1,30}$";;//regex for alphanumeric and between 1-30 characters long
-		return Utils.checkString(txtTribe1.getText(),pattern)
-				&&Utils.checkString(txtTribe2.getText(),pattern);
+		//regex for alphanumeric and between 1-30 characters long
+		return Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)
+				&&Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN);
 	}
 	
 }

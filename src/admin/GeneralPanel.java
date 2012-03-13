@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import common.Utils;
 
@@ -22,8 +23,9 @@ public class GeneralPanel extends JPanel {
 
 	JLabel lblGenInfo = new JLabel("General infos.");
 	JButton btnAdvWeek = new JButton("Start season");
-	
-	
+	JTextField txtTribe1 = new JTextField();
+	JTextField txtTribe2 = new JTextField();
+	JButton btnChangeTribeName = new JButton("Change Tribe Name");
 	
 	public GeneralPanel(){
 		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
@@ -35,8 +37,12 @@ public class GeneralPanel extends JPanel {
 	private void initPnlInfo(){
 		JPanel pnlInfo = new JPanel(new BorderLayout());
 		JPanel pnlGenInfo = new JPanel();
-				
+		JPanel pnlTribes = new JPanel();
+		
 		pnlGenInfo.setLayout(new BorderLayout());
+		txtTribe1.setText(GameData.getCurrentGame().getTribeNames()[0]);
+		txtTribe2.setText(GameData.getCurrentGame().getTribeNames()[1]);
+		
 		pnlGenInfo.add(lblGenInfo,BorderLayout.CENTER);
 		pnlGenInfo.add(btnAdvWeek,BorderLayout.SOUTH);
 		
@@ -47,8 +53,13 @@ public class GeneralPanel extends JPanel {
 		lblGenInfo.setText("<html>"+Integer.toString(GameData.getCurrentGame().weeksLeft())+" weeks left. File -> Reset to start new season</html>");
 		pnlInfo.add(pnlGenInfo,BorderLayout.CENTER);
 		pnlInfo.setPreferredSize(new Dimension(450,400));
-		this.add(pnlInfo);
 		
+		pnlTribes.add(txtTribe1);
+		pnlTribes.add(txtTribe2);
+		pnlTribes.add(btnChangeTribeName);
+		
+		this.add(pnlInfo);
+		this.add(pnlTribes);
 
 	}	
 
@@ -78,6 +89,22 @@ public class GeneralPanel extends JPanel {
 					lblGenInfo.setText("<html>"+Integer.toString(GameData.getCurrentGame().weeksLeft())+" weeks left. File -> Reset to start new season</html>");
 					btnAdvWeek.setVisible(!GameData.getCurrentGame().getSeasonEnded());
 				}
+			}
+			
+		});
+		
+		btnChangeTribeName.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)
+						&&Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN)){
+					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(), txtTribe2.getSelectedText());
+					MainFrame.getRunningFrame().getStatusBar().setMsgLabel("Tribes changed.");
+				}else{
+					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Tribes invalid.");
+					
+				}			
 			}
 			
 		});
