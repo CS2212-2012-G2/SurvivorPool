@@ -34,12 +34,8 @@ public class GeneralPanel extends JPanel {
 	private void initPnlInfo(){
 		JPanel pnlInfo = new JPanel(new BorderLayout());
 		JPanel pnlGenInfo = new JPanel();
-<<<<<<< HEAD
 		JPanel pnlTribes = new JPanel();
-		
-=======
-				
->>>>>>> Changed formatting of general info tab in Admin GUI.
+
 		pnlGenInfo.setLayout(new BorderLayout());
 		txtTribe1.setText(GameData.getCurrentGame().getTribeNames()[0]);
 		txtTribe2.setText(GameData.getCurrentGame().getTribeNames()[1]);
@@ -47,7 +43,6 @@ public class GeneralPanel extends JPanel {
 		pnlGenInfo.add(lblGenInfo,BorderLayout.CENTER);
 		pnlGenInfo.add(btnAdvWeek,BorderLayout.SOUTH);
 		
-<<<<<<< HEAD
 		if(GameData.getCurrentGame().getSeasonStarted())
 			btnAdvWeek.setText("Advance Week");
 
@@ -55,36 +50,6 @@ public class GeneralPanel extends JPanel {
 		lblGenInfo.setText("<html>"+Integer.toString(GameData.getCurrentGame().weeksLeft())+" weeks left. File -> Reset to start new season</html>");
 		pnlInfo.add(pnlGenInfo,BorderLayout.CENTER);
 		pnlInfo.setPreferredSize(new Dimension(450,400));
-=======
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,pnlGenInfo,lblBonusInfo);
-		splitPane.setDividerSize(0);
-		splitPane.setDividerLocation(320);
-		
-		pnlInfo.add(splitPane,BorderLayout.CENTER);
-		pnlInfo.setPreferredSize(new Dimension(450,400));
-		this.add(pnlInfo);
-	}
-	
-	private void initPnlBonus(){
-		JPanel pnlBonus = new JPanel();
-		JPanel pnlMC = new JPanel();
-		
-		pnlBonus.setLayout(new BorderLayout());
-		pnlMC.setLayout(new BoxLayout(pnlMC, BoxLayout.Y_AXIS));
-	
-		ButtonGroup group = new ButtonGroup();
-		group.add(rbMultChoice);
-		group.add(rbShortAnswer);
-		
-		rbMultChoice.setAlignmentY(Component.CENTER_ALIGNMENT);
-		rbShortAnswer.setAlignmentY(Component.CENTER_ALIGNMENT);
-		pnlMC.add(rbMultChoice);
-		pnlMC.add(rbShortAnswer);
-	
-		
-		JLabel lblQuestion = new JLabel("Question: ");
-		txtQuestion.setSize(150, 150);
->>>>>>> Changed formatting of general info tab in Admin GUI.
 		
 		pnlTribes.add(txtTribe1);
 		pnlTribes.add(txtTribe2);
@@ -142,17 +107,4 @@ public class GeneralPanel extends JPanel {
 			
 		});
 	}
-<<<<<<< HEAD
-=======
-	
-	private void initPnlAnswer(){
-		JPanel pnlAnswer = new JPanel(); //added panel just incase we need to add anything else
-		JLabel lblAnswer = new JLabel("Answer something(Couldn't read writing).");
-		
-		
-		pnlAnswer.add(lblAnswer);
-		pnlAnswer.setPreferredSize(new Dimension(480,200));
-		this.add(pnlAnswer);
-	}	
->>>>>>> Changed formatting of general info tab in Admin GUI.
 }
