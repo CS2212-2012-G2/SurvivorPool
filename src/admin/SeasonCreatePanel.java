@@ -102,16 +102,17 @@ public class SeasonCreatePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					if(!checkValidTribeNames()){
-						MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid tribe names");
-						//lblAlert.setText("Invalid tribe names!");
-						return;
+					int response = checkValidTribeNames();
+					if(response==1){
+						MainFrame.getRunningFrame().setErrorMsg("Invalid tribe names",txtTribe1);
+					}else if(response == 2){
+						MainFrame.getRunningFrame().setErrorMsg("Invalid tribe names",txtTribe2);
+					}else{
+						MainFrame.getRunningFrame().setErrorMsg("Valid tribe names",null);
+						GameData.initSeason(Integer.parseInt(spnContestant.getValue().toString()));
+						GameData.getCurrentGame().setTribeNames(txtTribe1.getText(),txtTribe2.getText());
+						MainFrame.seasonCreated();
 					}
-					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Valid tribe names");
-					GameData.initSeason(Integer.parseInt(spnContestant.getValue().toString()));
-					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(),txtTribe2.getText());
-					
-					MainFrame.seasonCreated();
 				} catch (Exception i) {
 					i.printStackTrace();
 				}
@@ -133,15 +134,19 @@ public class SeasonCreatePanel extends JPanel {
 			spnContestant.setValue(Integer.parseInt(spnWeek.getValue().toString())+3);
 		programChange=false;
 	}
-	
+
 	/**
 	 * Checks if the tribe names are valid according to specifications.
-	 * @return boolean depending if tribe names are alphanumber and between 1-30 characters
+	 * @return 0 if both names are valid, 1 if tribe 1 is wrong, and 2 if tribe 2 name is wrong
 	 */
-	private boolean checkValidTribeNames(){
+	private int checkValidTribeNames(){
 		//regex for alphanumeric and between 1-30 characters long
-		return Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)
-				&&Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN);
+		if(!Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN))
+			return 1;
+		else if(!Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN))
+			return 2;
+		else
+			return 0;
 	}
 	
 }

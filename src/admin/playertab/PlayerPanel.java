@@ -281,24 +281,23 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		Component c = e.getComponent();
-		StatusPanel sb = MainFrame.getRunningFrame().getStatusBar();
-
+		MainFrame mf = MainFrame.getRunningFrame();
 		if (c == labelName || c == tfFirstName || c == tfLastName) {
-			sb.setMsgLabel("First and Last name must be alphabetic");
+			mf.setStatusMsg("First and Last name must be alphabetic");
 		} else if (c == labelID || c == tfID) {
-			sb.setMsgLabel("ID must be 2-7 chars long and may end with numbers");
+			mf.setStatusMsg("ID must be 2-7 chars long and may end with numbers");
 		} else if (c == btnGenID) {
-			sb.setMsgLabel("Click to auto-generate ID from first and last name");
+			mf.setStatusMsg("Click to auto-generate ID from first and last name");
 		} else if (c == labelWeekly || c == cbWeeklyPick) {
-			sb.setMsgLabel("Select Weekly pick");
+			mf.setStatusMsg("Select Weekly pick");
 		} else if (c == labelUltimate || c == cbUltPick) {
-			sb.setMsgLabel("Select Ultimate Winner");
+			mf.setStatusMsg("Select Ultimate Winner");
 		} else if (c == btnAddNew) {
-			sb.setMsgLabel("Add a new User to system");
+			mf.setStatusMsg("Add a new User to system");
 		} else if (c == btnDelete) {
-			sb.setMsgLabel("Remove selected User from system");
+			mf.setStatusMsg("Remove selected User from system");
 		} else if (c == table || c == header) {
-			sb.setMsgLabel("Click Heading to sort by column");
+			mf.setStatusMsg("Click Heading to sort by column");
 		}
 		// System.out.println("MouseEntered: " + c.toString());
 
