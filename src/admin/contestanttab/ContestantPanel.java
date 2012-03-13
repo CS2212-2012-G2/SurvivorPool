@@ -360,25 +360,21 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME) ||
-						!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
-					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid name!");
-					return;
+				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME)){
+					MainFrame.getRunningFrame().setErrorMsg("Invalid first name. 1-20 alphabetic characters",tfFirstName);
+				}else if(!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
+					MainFrame.getRunningFrame().setErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);
+				}else if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
+					MainFrame.getRunningFrame().setErrorMsg("Invalid contestant id. 2 alphanumeric characters",tfContID);
+				}else{	
+					// check if the contestant is active
+					Contestant con = getCurrentContestant();
+					if (con != null) {
+						// null if something went wrong.
+						tableModel.updateContestant(con);
+					}
+					System.out.println("We here");
 				}
-				
-				if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
-					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Invalid ID!");
-					return;
-				}	
-				// check if the contestant is active
-				Contestant con = getCurrentContestant();
-				
-				if (con != null) {
-					// null if something went wrong.
-					tableModel.updateContestant(con);
-				}
-				
-				System.out.println("We here");
 				
 			}
 			
@@ -449,22 +445,22 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		Component c = e.getComponent();
-		StatusPanel sb = MainFrame.getRunningFrame().getStatusBar();
+		MainFrame mf = MainFrame.getRunningFrame();
 		
 		if (c == labelName || c == tfFirstName || c == tfLastName) {
-			sb.setMsgLabel("First and Last name must be alphabetic");
+			mf.setStatusMsg("First and Last name must be alphabetic");
 		} else if (c == labelID || c == tfContID) {
-			sb.setMsgLabel("ID must be two characters long and alpha-numeric");
+			mf.setStatusMsg("ID must be two characters long and alpha-numeric");
 		} else if (c == labelTribe || c == cbTribe) {
-			sb.setMsgLabel("Select a tribe");
+			mf.setStatusMsg("Select a tribe");
 		} else if (c == imgDisplay) {
-			sb.setMsgLabel("Click to select image");
+			mf.setStatusMsg("Click to select image");
 		} else if (c == table) {
-			sb.setMsgLabel("Click row to edit contestant");
+			mf.setStatusMsg("Click row to edit contestant");
 		} else if (c == bAddNew) {
-			sb.setMsgLabel("Click to add new contestant");
+			mf.setStatusMsg("Click to add new contestant");
 		} else if (c == bSavePlayer) {
-			sb.setMsgLabel("Click to save contestant data");
+			mf.setStatusMsg("Click to save contestant data");
 		}
 		//System.out.println("MouseEntered: " + c.toString());
 	}

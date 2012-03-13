@@ -87,10 +87,10 @@ public class PlayerTableModel extends AbstractTableModel {
         	return user.getPoints();
         	
         case INDEX_WEEKLY_PICK:
-        	return user.getWeeklyPick().getFullName();
+        	return user.getWeeklyPick().toString();
         
         case INDEX_ULT_PICK:
-        	return user.getUltimatePick().getFullName();
+        	return user.getUltimatePick().toString();
         
         default:
         	return null;
