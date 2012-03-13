@@ -205,7 +205,11 @@ public class Contestant implements Person {
 		setCastDate(date.intValue());
 	}
 	
-	//TODO: Doc
+	/**
+	 * Update current contestant with contestant in param
+	 * @param c A contestant with values that you want to replace
+	 * @throws InvalidFieldException
+	 */
 	public void update(Contestant c) throws InvalidFieldException {
 		if (c.getFirstName() != null) {
 			setFirstName(c.getFirstName());
@@ -249,8 +253,8 @@ public class Contestant implements Person {
 	}
 	
 	/**
-	 * TODO:
-	 * @return
+	 * Converts Contestant object to a json object
+	 * @return a JSON object containing all the data needed
 	 * @throws JSONException
 	 */
 	public JSONObject toJSONObject() throws JSONException {

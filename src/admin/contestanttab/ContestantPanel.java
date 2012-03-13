@@ -434,9 +434,11 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	}
 
 	public void seasonStarted(){
-		bAddNew.setVisible(false);
-		bDelete.setVisible(false);
-		//bSavePlayer.setVisible(false); // TODO: Shouldn't this still be visible..?
+		bAddNew.setEnabled(false);
+		bDelete.setEnabled(false);
+		tfLastName.setEnabled(false);
+		tfFirstName.setEnabled(false);
+		tfContID.setEnabled(false);
 	}
 	
 	@Override

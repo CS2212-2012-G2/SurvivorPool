@@ -139,7 +139,11 @@ public abstract class GameData {
 		return null;
 	}
 	
-	// TODO: Doc
+	/**
+	 * Get contestant based on unique id
+	 * @param id an unique id
+	 * @return the Contestant that matches id or null
+	 */
 	public Contestant getContestant(String id) {
 		int index = getContestantIndexID(id);
 		
@@ -381,9 +385,11 @@ public abstract class GameData {
 				", TN: {" + "\"" + tribeNames[0] + "\", \"" + tribeNames[1] + "\"}>");
 	}
 
-	// TODO: DOC THESE THREE
-	 
-
+	/**
+	 * Convert GameData to a JSON object
+	 * @return a JSONObject with all the relevant data
+	 * @throws JSONException
+	 */
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
 		
@@ -401,7 +407,6 @@ public abstract class GameData {
 		}
 		
 		JSONArray ts = new JSONArray();
-		// TODO: only two tribes?
 		ts.put(tribeNames[0]);
 		ts.put(tribeNames[1]);
 		
@@ -417,6 +422,11 @@ public abstract class GameData {
 		return obj;
 	}
 	
+	/**
+	 * Update GameData with values from JSONObject
+	 * @param obj a JSONObject that contains all the values
+	 * @throws JSONException
+	 */
 	public void fromJSONObject(JSONObject obj) throws JSONException {
 		numContestants = ((Number)obj.get(KEY_NUM_CONTEST)).intValue();
 				

@@ -18,7 +18,6 @@ import data.me.json.JSONObject;
  */
 public class JSONUtils{
 	
-	//TODO:only one file?
 	public static String seasonFile = "res/data/Settings.dat";
 	
 	public static JSONObject readFile(String path) throws FileNotFoundException{
@@ -75,7 +74,7 @@ public class JSONUtils{
 	
 	public static void resetSeason(){
 		File f = new File(seasonFile);
-		f.delete(); //TODO: return if actually deleted.
+		f.delete(); //TODO: return true if actually deleted.
 	}
 
 }

@@ -183,7 +183,10 @@ public class User implements Person {
 		ultPick = winner;
 	}
 	
-	// TODO: Doc
+	/**
+	 * Get the ultimate points based on ultimate pick
+	 * @return the ultimate points
+	 */
 	public int getUltimatePoints() {
 		return ultPoints;
 	}

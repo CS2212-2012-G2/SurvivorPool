@@ -19,7 +19,6 @@ import data.me.json.JSONObject;
  */
 public class JSONUtils{
 	
-	//TODO:only one file?
 	public static String seasonFile = "res/data/Settings.dat";
 	
 	public static JSONObject readFile(String path) throws FileNotFoundException{

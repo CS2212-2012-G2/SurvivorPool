@@ -266,7 +266,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

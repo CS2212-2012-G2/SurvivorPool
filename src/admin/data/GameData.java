@@ -121,7 +121,9 @@ public class GameData extends data.GameData {
 		super.endCurrentGame();
 		JSONUtils.resetSeason();
 	}
-	// TODO: DOC
+	/**
+	 * Write all DATA into file
+	 */
 	@Override
 	public void writeData(){
 		

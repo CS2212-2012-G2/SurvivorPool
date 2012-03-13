@@ -101,6 +101,7 @@ public class GeneralPanel extends JPanel {
 						&&Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN)){
 					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(), txtTribe2.getSelectedText());
 					MainFrame.getRunningFrame().getStatusBar().setMsgLabel("Tribes changed.");
+					//TODO: make tribe name change other panels as well(Contestant jcombobox is not updated)
 				}else{
 					MainFrame.getRunningFrame().getStatusBar().setErrorMsgLabel("Tribes invalid.");
 					

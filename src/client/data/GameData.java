@@ -115,13 +115,11 @@ public class GameData extends data.GameData {
 		try {
 			currentGame = new GameData(json.getInt(KEY_NUM_CONTEST));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			GameData.getCurrentGame().fromJSONObject(json);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -149,7 +147,7 @@ public class GameData extends data.GameData {
 	}
 	
 	public void writeData() {
-		// TODO Auto-generated method stub
+		// TODO figure out a way to ouput data on BB
 		
 	}
 	
@@ -174,7 +172,6 @@ public class GameData extends data.GameData {
 		try {
 			System.out.println(g.toJSONObject().toString());
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -183,7 +180,6 @@ public class GameData extends data.GameData {
 			try {
 				g2.fromJSONObject(g.toJSONObject());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
