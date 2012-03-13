@@ -228,6 +228,15 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		}
 	}
 
+	public void seasonStarted(){
+		tfID.setEnabled(false);
+		tfFirstName.setEnabled(false);
+		tfLastName.setEnabled(false);
+		btnGenID.setEnabled(false);
+		btnAddNew.setEnabled(false);
+		btnDelete.setEnabled(false);
+	}
+	
 	/**
 	 * Currently used to check if a tab is changed, and if its changed to the
 	 * PlayerPanel, it will modify ComboBoxes.

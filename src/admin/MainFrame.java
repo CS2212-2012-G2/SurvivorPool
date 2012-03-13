@@ -213,9 +213,8 @@ public class MainFrame extends JFrame{
 	 * 
 	 */
 	public void seasonStarted(){
-		//TODO: change enabled status of components
 		conPanel.seasonStarted();
-		//TODO: add season started method for users
+		playerPanel.seasonStarted();
 	}
 	
 	private void resetSeason() {
