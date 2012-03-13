@@ -18,7 +18,6 @@ public class Contestant implements Person {
 	protected String firstName, lastName, tribe, picture;
 	protected int castDate = -1; // week that player was cast off
 	protected String cID;
-	protected GameData game;
 	
 	protected final static String KEY_FIRST_NAME = "first";
 	protected final static String KEY_LAST_NAME	= "last";
@@ -94,7 +93,8 @@ public class Contestant implements Person {
 	 * castOff indicates that a contestant has been removed from the show
 	 */
 	public void castOff() {
-		castDate = GameData.getCurrentGame().getCurrentWeek();
+		GameData game = GameData.getCurrentGame();
+		castDate = game.getCurrentWeek();
 		game.elimCont = this;
 		game.elimExists = true;
 	}

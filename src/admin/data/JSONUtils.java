@@ -62,7 +62,23 @@ public class JSONUtils{
 	 */
 	public static void writeJSON(String filePath, JSONObject json){
 		try {
-			FileWriter fileWrite = new FileWriter(filePath, false);
+			File f = new File(filePath);
+			
+			// if the directory above the file doesn't exist, make it. :)
+			File dir = f.getParentFile();
+			if (!dir.exists()) {
+				dir.createNewFile();
+			}
+			
+			// delete the file if it exists already to completely overwrite
+			if (f.exists()) {
+				f.delete();
+				f.createNewFile();
+			}
+			
+			f.setWritable(true);
+			
+			FileWriter fileWrite = new FileWriter(f);
 			fileWrite.write(json.toString());
 			fileWrite.close();
 			
