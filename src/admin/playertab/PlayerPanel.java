@@ -550,6 +550,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 			int oldRow = -1; // breaks an infinite loop since setPanelUser fires this event
 			
+			
 			public void valueChanged(ListSelectionEvent le) {
 				 int row = table.getSelectedRow();
 				 if (row < 0 || oldRow == row) return;
@@ -563,9 +564,9 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					 }
 					 
 					 setPanelUser(u, false); 
-					 
-					 oldRow = row;
 				 }
+				 
+				 oldRow = row;
 			}
 		});
 	}

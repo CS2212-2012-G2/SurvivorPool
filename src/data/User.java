@@ -288,7 +288,7 @@ public class User implements Person {
 	 * @throws InvalidFieldException Thrown if anything is of the wrong format.
 	 * 
 	 */
-	public void update(User u) throws InvalidFieldException {
+	public void update(User u) throws InvalidFieldException {	
 		if (u.getFirstName() != null) {
 			setFirstName(u.getFirstName());
 		}
@@ -305,11 +305,11 @@ public class User implements Person {
 			setPoints(u.getPoints());
 		}
 		
-		if (u.getWeeklyPick() != null) {
+		if (u.getWeeklyPick() != null && !u.getWeeklyPick().isNull()) {
 			setWeeklyPick(u.getWeeklyPick());
 		}
 		
-		if (u.getUltimatePick() != null) {
+		if (u.getUltimatePick() != null && !u.getUltimatePick().isNull()) {
 			setUltimatePickNoSetPts(u.getUltimatePick());
 		}
 		
