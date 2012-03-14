@@ -43,7 +43,7 @@ public class MainFrame extends JFrame{
 	private JLabel lblPlayers = new JLabel(PLAYER_PANEL);
 	private JLabel lblBonus = new JLabel(BONUS_PANEL);
 	
-	private JMenuBar menuBar = new JMenuBar();
+	private static JMenuBar menuBar = new JMenuBar();
 	private JMenu mnuFile = new JMenu("File");
 	private JMenu mnuTheme = new JMenu("Theme");
 	
@@ -156,7 +156,8 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void initMenuBar() {
-		mnuItemReset = new JMenuItem("Reset");
+		mnuItemReset = new JMenuItem("Reset Season");
+		
 		mnuItemExit = new JMenuItem("Exit");
 		String[] themeName = Utils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
@@ -187,6 +188,7 @@ public class MainFrame extends JFrame{
 	
 		this.setJMenuBar(menuBar);
 	}
+
 	
 	/**
 	 * Apply the theme to current components.
