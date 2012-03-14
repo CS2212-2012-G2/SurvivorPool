@@ -414,6 +414,18 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			}
 		});
 		
+		bDelete.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+    			int num = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " +
+    					   activeCon.getFirstName() + " " + activeCon.getLastName() + "?",
+    					  "Delete Contestant", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
+    			if(num == JOptionPane.YES_OPTION)
+				tableModel.removeContestant(activeCon);
+    			else return;
+			}
+		});
+		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
 			public void valueChanged(ListSelectionEvent arg0) {
