@@ -330,7 +330,7 @@ public class GameData {
 	 * @return true if a season has started(different from created)
 	 */
 
-	public boolean getSeasonStarted() {
+	public boolean isSeasonStarted() {
 		return seasonStarted;
 	}
 
@@ -339,7 +339,7 @@ public class GameData {
 	 * 
 	 * @return true if weeks remaining = 0
 	 */
-	public boolean getSeasonEnded() {
+	public boolean isSeasonEnded() {
 		return weeksRem == 0;
 	}
 
