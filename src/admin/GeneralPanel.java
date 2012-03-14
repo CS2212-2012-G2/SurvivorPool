@@ -69,13 +69,12 @@ public class GeneralPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if(!GameData.getCurrentGame().getSeasonStarted()){
-					//TODO: implement weekly bet amount
 					System.out.println("Need to implement weekly bet amount.");
 					
-					String s=JOptionPane.showInputDialog("Enter weekly bet amount!This does not do anything at the moment");
+					String s=JOptionPane.showInputDialog("Enter weekly bet amount!");
 					if(Utils.checkString(s, "^[0-9]+$")){
-						if(Integer.parseInt(s)!=0){
-							GameData.getCurrentGame().startSeason();
+						if(Integer.parseInt(s)>=0){
+							GameData.getCurrentGame().startSeason(Integer.parseInt(s));
 							MainFrame.getRunningFrame().seasonStarted();
 							btnAdvWeek.setText("Advance Week");
 							return;

@@ -23,7 +23,8 @@ public class GameData {
 
 	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks passed
 	private int numContestants;
-										
+	private int betAmount;
+	
 	private boolean seasonStarted = false;
 	private boolean elimExists = false; 
 	
@@ -71,7 +72,6 @@ public class GameData {
 		weeksRem = numContestants - 3;
 		weeksPassed = 0;
 		this.numContestants = numContestants;
-		
 		allContestants = new ArrayList<Contestant>(numContestants);
 		
 		allUsers = new ArrayList<User>(5);
@@ -353,7 +353,8 @@ public class GameData {
 	 * more players/Contestants to the pool/game.
 	 */
 
-	public void startSeason() {
+	public void startSeason(int bet) {
+		this.betAmount = bet;
 		seasonStarted = true;
 	}
 	
