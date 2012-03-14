@@ -207,23 +207,23 @@ public class ContestantTableModel extends AbstractTableModel {
 		
 		switch (col) {
         case INDEX_ID:
-        	comp = AdminUtils.getContComparator(AdminUtils.Type.CONTNT_ID);
+        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_ID);
         	break;
         
         case INDEX_FIRSTNAME:
-        	comp = AdminUtils.getContComparator(AdminUtils.Type.CONTNT_FIRST_NAME);
+        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_FIRST_NAME);
         	break;
         
         case INDEX_LASTNAME:
-        	comp = AdminUtils.getContComparator(AdminUtils.Type.CONTNT_LAST_NAME);
+        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_LAST_NAME);
         	break;
         
         case INDEX_TRIBE:
-        	comp = AdminUtils.getContComparator(AdminUtils.Type.CONTNT_TRIBE);
+        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_TRIBE);
         	break;
         	
         case INDEX_DATECAST:
-        	comp = AdminUtils.getContComparator(AdminUtils.Type.CONTNT_DATE);
+        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_DATE);
         	break;
         	
         default:
@@ -270,7 +270,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * @param c New contestant data.
 	 */
 	public void updateContestant(Contestant c) {
-		int index = AdminUtils.BinSearchSafe(globalData, c, AdminUtils.Type.CONTNT_ID);
+		int index = AdminUtils.BinSearchSafe(globalData, c, AdminUtils.CompType.CONTNT_ID);
 		
 		if (index >= 0) {
 			try { 

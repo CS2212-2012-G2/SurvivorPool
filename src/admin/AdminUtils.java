@@ -42,6 +42,14 @@ public class AdminUtils extends Utils {
 			return table;
 		}
 	};
+	
+	public enum CompType {
+		// Contestants:
+		CONTNT_FIRST_NAME, CONTNT_LAST_NAME, CONTNT_ID, CONTNT_TRIBE, CONTNT_DATE, 
+		// Users:
+		USER_FIRST_NAME, USER_LAST_NAME, USER_ID, USER_POINTS, USER_ULT_PICK, 
+		USER_WEEKLY_PICK
+	}
 
 	private static THEMES theme = THEMES.Snow;
 
@@ -234,27 +242,19 @@ public class AdminUtils extends Utils {
 	 * @return
 	 */
 	public static <T> int BinSearchSafe(List list, T target,
-			Type compType) {
+			CompType compType) {
 		List<T> newList = uncastListToCast(list, target);
 		
 		Comparator<T> comp = null;
 		if (target instanceof Contestant)
-			getContComparator(compType);
+			comp = (Comparator<T>)getContComparator(compType);
 		else if (target instanceof User)
-			getUserComparator(compType);
+			comp = (Comparator<T>)getUserComparator(compType);
 		
 		return Collections.binarySearch(newList, target, comp);
 	}
-	
-	public enum Type {
-		// Contestants:
-		CONTNT_FIRST_NAME, CONTNT_LAST_NAME, CONTNT_ID, CONTNT_TRIBE, CONTNT_DATE, 
-		// Users:
-		USER_FIRST_NAME, USER_LAST_NAME, USER_ID, USER_POINTS, USER_ULT_PICK, 
-		USER_WEEKLY_PICK
-	}
 
-	public static Comparator<Contestant> getContComparator(Type t) {
+	public static Comparator<Contestant> getContComparator(CompType t) {
 		switch (t) {
 		case CONTNT_FIRST_NAME:
 			return new Comparator<Contestant>() {
@@ -305,7 +305,7 @@ public class AdminUtils extends Utils {
 		}
 	}
 	
-	public static Comparator<User> getUserComparator(Type t) {
+	public static Comparator<User> getUserComparator(CompType t) {
 		switch (t) {
 		case USER_FIRST_NAME:
 			return new Comparator<User>() {
@@ -345,7 +345,7 @@ public class AdminUtils extends Utils {
 			
 		case USER_ULT_PICK:
 			return new Comparator<User>() {
-				Comparator<Contestant> comp = getContComparator(Type.CONTNT_ID);
+				Comparator<Contestant> comp = getContComparator(CompType.CONTNT_ID);
 				
 				@Override
 				public int compare(User u1, User u2) {
@@ -355,7 +355,7 @@ public class AdminUtils extends Utils {
 			
 		case USER_WEEKLY_PICK:
 			return new Comparator<User>() {
-				Comparator<Contestant> comp = getContComparator(Type.CONTNT_ID);
+				Comparator<Contestant> comp = getContComparator(CompType.CONTNT_ID);
 				
 				@Override
 				public int compare(User u1, User u2) {
