@@ -46,7 +46,7 @@ public class ContestantTableModel extends AbstractTableModel {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
 		globalData = _globaldata;
-		data = new ArrayList<Contestant>(Utils.noNullList(globalData));
+		data = new ArrayList<Contestant>(globalData);
 		
 	}
 	

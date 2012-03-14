@@ -19,7 +19,10 @@ public class Contestant implements Person {
 	protected String firstName, lastName, tribe, picture;
 	protected int castDate = -1; // week that player was cast off
 	protected String cID;
-	public boolean toBeCast;
+	private boolean toBeCast;
+	private boolean isNull = false;
+	
+	public final static String NULL_ID = "??";
 	
 	protected final static String KEY_FIRST_NAME = "first";
 	protected final static String KEY_LAST_NAME	= "last";
@@ -203,6 +206,20 @@ public class Contestant implements Person {
 	}
 	
 	/**
+	 * @return the toBeCast
+	 */
+	public boolean isToBeCast() {
+		return toBeCast;
+	}
+
+	/**
+	 * @param toBeCast the toBeCast to set
+	 */
+	public void setToBeCast(boolean toBeCast) {
+		this.toBeCast = toBeCast;
+	}
+
+	/**
 	 * Update current contestant with contestant in param
 	 * @param c A contestant with values that you want to replace
 	 * @throws InvalidFieldException
@@ -237,7 +254,7 @@ public class Contestant implements Person {
 	 * toCastOff sets the player is to be officially cast off when the week advances.
 	 */
 	public void toCastOff(){
-		this.toBeCast = true;
+		this.setToBeCast(true);
 		GameData g = GameData.getCurrentGame();
 		this.castDate = g.getCurrentWeek();
 		g.setElimCont(this);
@@ -256,8 +273,11 @@ public class Contestant implements Person {
 	 * Returns a string of the contestant's Last name, first name, and ID tag.
 	 */
 	public String toString() {
-		return String.format("[%s] %s, %s", 
-				getID(), getLastName(), getFirstName());
+		if (!isNull)
+			return String.format("[%s] %s, %s", 
+					getID(), getLastName(), getFirstName());
+		else
+			return String.format("[%s] None", getID());
 	}
 	
 	/**
@@ -281,7 +301,7 @@ public class Contestant implements Person {
 	 * undoCast performs the opposite of every action that toBeCast() takes.
 	 */
 	public void undoCast(){
-		this.toBeCast = false;
+		this.setToBeCast(false);
 		this.castDate = -1;
 		GameData g = GameData.getCurrentGame();
 		g.setElimCont(null);
@@ -304,21 +324,34 @@ public class Contestant implements Person {
 	}
 	
 	/// Driver for Contestant JSON 
-		public static void main(String[] args) throws InvalidFieldException {
-			Contestant c = new data.Contestant("ad", "Jon", "silver", "booby");
-			
-			try {
-				System.out.println(c.toJSONObject().toString());
-			} catch (JSONException e1) {
-				e1.printStackTrace();
-			}
-			
-			try {
-				Contestant p = new data.Contestant();
-				p.fromJSONObject(c.toJSONObject());
-				System.out.println(p);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	public static void main(String[] args) throws InvalidFieldException {
+		Contestant c = new data.Contestant("ad", "Jon", "silver", "booby");
+		
+		try {
+			System.out.println(c.toJSONObject().toString());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
 		}
+		
+		try {
+			Contestant p = new data.Contestant();
+			p.fromJSONObject(c.toJSONObject());
+			System.out.println(p);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Checks if a Contestant is null.
+	 * @return True if isNull is set, and ID is NULL_ID.
+	 */
+	public boolean isNull() {
+		return isNull && getID().equals(NULL_ID);
+	}
+	
+	public void setNull() {
+		cID = NULL_ID;
+		isNull = true;
+	}
 }

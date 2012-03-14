@@ -3,51 +3,6 @@ TODO
 
 If there is nothing written here, just grep the entire project for TODO
 
-Client (BB)
-------
-
-
-BlackBerryApp.java
-
-	- DONE
-
-SplashScreen.java
-
-	- FULL COMMENTING
-
-MainMenuScreen.java
-
-	- DATA PERSISTANCE PASSING
-	- FULL COMMENTING
-
-StandingsScreen.java
-
-	- DATA PERSISTANCE USAGE
-	- CANNOT USE STATUS BAR WITHIN STANDINGS
-	- FULL COMMENTING
-
-PickMenuScreen.java
-
-	- DATA PERSISTANCE PASSING
-	- DISABLE WHEN NOT FINALS
-	- FULL COMMENTING
-
-PickScreen.java
-
-	- DATA PERSISTANCE USAGE
-	- FULL COMMENTING
-
-BonusScreen.java
-
-	- DATA PERSISTANCE
-	- FULL COMMENTING
-	
-BonusQuestion
-	
-	- FULL COMMENTING
-	- DATA PERSISTANCE TRACKING FEATURE?
-
-
 Admin (SWING)
 ------
 
@@ -92,9 +47,8 @@ Admin (SWING)
 	
 	PlayerPanel
 	~~~~~~~~~~~
-		- Make the names of the Contestants be displayed intelligently in the 
-		  ComboBoxs while NOT making our debugging miserable.
-		- Implement adding and removing of Users
+		- Add focus events to highlight the text in the box. Its annoying
+		  having to manually highlight the text. Obviously low priority
 		- EVERYTHING!
 		
 	SeasonCreatePanel.java
@@ -102,13 +56,8 @@ Admin (SWING)
 		- MAKE IT LOOK BETTER!
 		- 
 
-	-MAKE THEME ACTUALLY LOOK GOOD(LOW PRIORITY)	
-	
-	data
-	~~~~
-		ALL: 
-			Add documentation, the overridden methods do not need it (they 
-			inheret there parents), but if their parents are not done, do them.
+	-MAKE THEME ACTUALLY LOOK GOOD(LOW PRIORITY)
+		~ I think they already look good.. (Kevin)
 
 Data
 ----

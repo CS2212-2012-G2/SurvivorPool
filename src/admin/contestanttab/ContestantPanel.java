@@ -417,7 +417,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 			     
 				 if (c != null){
 					 setActiveContestant(c);
-					 if(activeCon.toBeCast == true)
+					 if(activeCon.isToBeCast() == true)
 						 bCastOff.setText("Undo Cast");
 					 else bCastOff.setText("Cast Off");
 					 

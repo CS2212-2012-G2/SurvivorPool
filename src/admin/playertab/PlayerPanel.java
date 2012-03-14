@@ -274,6 +274,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		cbWeeklyPick.removeAllItems();
 		cbUltPick.removeAllItems();
+		
+		Contestant nullC = new Contestant();
+		nullC.setNull();
+		
+		cbWeeklyPick.addItem(nullC);
+		cbUltPick.addItem(nullC);
 
 		for (Contestant c : cons) {
 			cbWeeklyPick.addItem(c);
@@ -318,16 +324,37 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		u.setLastName(tfLastName.getText().trim());
 		
 		int item = cbUltPick.getSelectedIndex();
-		u.setUltimatePick(cbUltPick.getItemAt(item));
+		Contestant c = cbUltPick.getItemAt(item);
+		//if (c.isNull() && c.getID().equals(Contestant.NULL_ID)) {
+			//TODO: Random pick
+		//} else {
+			u.setUltimatePick(c);
+		///}
+		
 		
 		item = cbWeeklyPick.getSelectedIndex();
-		u.setWeeklyPick(cbWeeklyPick.getItemAt(item));
+		c = cbWeeklyPick.getItemAt(item);
+		// TODO: Random pick
+		u.setWeeklyPick(c);
 		
 		return u;
 	}
 	
+	/**
+	 * Sets the user on the screen to the specified container. If newUser is
+	 * true, it will specify that when save is hit, then the GUI should add it
+	 * to the table rather than modify a pre-existing data.
+	 * @param u
+	 * @param newUser
+	 */
 	private void setPanelUser(User u, boolean newUser) {
 		isNewUser = newUser;
+		
+		if (fieldsChanged) {
+			System.out.println("Player panel changing, fields modified.");
+			saveUser();
+			fieldsChanged = false;
+		}
 		
 		tfID.setEnabled(newUser);
 		btnGenID.setEnabled(newUser);
@@ -338,11 +365,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			tfFirstName.setText("First Name");
 			tfLastName.setText("Last Name");
 			
-			GameData g = GameData.getCurrentGame();
-			if (g.getAllContestants().size() > 0) {
-				cbUltPick.setSelectedIndex(0);
-				cbWeeklyPick.setSelectedIndex(0);
-			}
+			cbUltPick.setSelectedIndex(0);
+			cbWeeklyPick.setSelectedIndex(0);
 			
 			labelPts.setText(Integer.toString(0));
 			
@@ -422,10 +446,11 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		tableModel.updateUser(user);
 		
 		int row = tableModel.getRowByUser(user);
-		if (row >= 0) // select a row
+		if (row >= 0 && table.getSelectedRow() != row) // select a row
 			table.setRowSelectionInterval(row, row);
 
 		isNewUser = false;
+		fieldsChanged = false;
 	}
 	
 	private void buildActions() {
@@ -523,15 +548,25 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
+			int oldRow = -1; // breaks an infinite loop since setPanelUser fires this event
+			
+			
 			public void valueChanged(ListSelectionEvent le) {
 				 int row = table.getSelectedRow();
-				 if (row < 0) return;
+				 if (row < 0 || oldRow == row) return;
 				 
 				 User u = tableModel.getByRow(row);
 			     
 				 if (u != null){
+					 if (fieldsChanged) {
+						 saveUser();
+						 fieldsChanged = false;
+					 }
+					 
 					 setPanelUser(u, false); 
 				 }
+				 
+				 oldRow = row;
 			}
 		});
 	}
