@@ -71,8 +71,11 @@ public class GeneralPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-			// && GameData.getCurrentGame().getNumCurrentContestants() == GameData
-			//	.getCurrentGame().getInitialContestants()
+				/* FOR BUG FIX, WHICH CANNOT BE ADDED YET
+				 GOES WITHIN THE IF STATEMENT
+			&& GameData.getCurrentGame().getNumCurrentContestants() == GameData
+				.getCurrentGame().getInitialContestants()
+				*/
 				if (!GameData.getCurrentGame().getSeasonStarted()) {
 					String s = JOptionPane
 							.showInputDialog("Enter weekly bet amount!");
