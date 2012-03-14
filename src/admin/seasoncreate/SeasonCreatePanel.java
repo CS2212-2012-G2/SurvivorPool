@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -68,10 +69,16 @@ public class SeasonCreatePanel extends JPanel {
 		
 		weekModel = new SpinnerNumberModel(3,3,12,1); //default,low,min,step
 		spnWeek = new JSpinner(weekModel);
+		JFormattedTextField nonEditableWeek = ((JSpinner.DefaultEditor)spnWeek.getEditor())
+		.getTextField();
+		nonEditableWeek.setEditable(false);
 		
 		contestantModel = new SpinnerNumberModel(6,6,15,1);//default,low,min,step
 		spnContestant = new JSpinner(contestantModel);
-		
+		JFormattedTextField nonEditableCont = ((JSpinner.DefaultEditor)spnContestant.getEditor())
+		.getTextField();
+		nonEditableCont.setEditable(false);
+		  
 		txtTribe1 = new JTextField("");
 		txtTribe2 = new JTextField("");
 		
