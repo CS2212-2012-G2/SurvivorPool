@@ -120,7 +120,8 @@ public class Contestant implements Person {
 		String[] s = GameData.getCurrentGame().getTribeNames();
 		
 		if (!name.equals(s[0]) && !name.equals(s[1])) {
-			throw new InvalidFieldException("Invalid Tribe.");
+			throw new InvalidFieldException(InvalidFieldException.Field.CONT_TRIBE,
+					"Invalid Tribe.");
 		}
 		
 		tribe = name;
@@ -135,7 +136,8 @@ public class Contestant implements Person {
 	public void setFirstName(String name) throws InvalidFieldException {
 		
 		if (!Utils.checkString(name,REGEX_FIRST_NAME))
-			throw new InvalidFieldException("Invalid First Name");
+			throw new InvalidFieldException(InvalidFieldException.Field.CONT_FIRST,
+					"Invalid First Name");
 		
 		firstName = name;
 		
@@ -147,7 +149,8 @@ public class Contestant implements Person {
 	 */
 	public void setLastName(String name) throws InvalidFieldException {
 		if (!Utils.checkString(name,REGEX_LAST_NAME))
-			throw new InvalidFieldException("Invalid Last Name");
+			throw new InvalidFieldException(InvalidFieldException.Field.CONT_LAST,
+					"Invalid Last Name");
 		
 		lastName = name;
 	}
@@ -185,7 +188,8 @@ public class Contestant implements Person {
 	public void setID(String newID) throws InvalidFieldException {
 		newID = newID.toLowerCase();
 		if (!Utils.checkString(newID,REGEX_CONTEST_ID))
-			throw new InvalidFieldException("Invalid contestant ID");
+			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID,
+					"Invalid contestant ID");
 		cID = newID;
 	}
 	

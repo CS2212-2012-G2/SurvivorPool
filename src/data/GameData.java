@@ -35,7 +35,6 @@ public abstract class GameData {
 	// store contestant who was cast off
 	protected Contestant elimCont;
 	
-	
 	/**
 	 * JSON Keys
 	 */
@@ -185,7 +184,7 @@ public abstract class GameData {
 	 * @param u New user to add.
 	 */
 	public void addUser(User u) {
-		allUsers.add(u);
+		allUsers.add((Object)u);
 	}
 	
 	/**
@@ -193,7 +192,29 @@ public abstract class GameData {
 	 * @param u    User to remove.
 	 */
 	public void removeUser(User u) {
-		allUsers.remove(u);
+		for (Object o: allUsers) {
+			User arrU = (User)o;
+			if (u.getID().equals(arrU.getID())) {
+				allUsers.remove(arrU);
+				return;
+			}
+		}
+	}
+	
+	/**
+	 * Gets a user from the stored users by ID.
+	 * @param ID User ID of the User to get from the stored data.
+	 * @return User if ID found, null otherwise.
+	 */
+	public User getUser(String ID) {
+		for (Object o: allUsers) {
+			User u = (User)o;
+			if (u.getID().equalsIgnoreCase(ID)) {
+				return u;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**

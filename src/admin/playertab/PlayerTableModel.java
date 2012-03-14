@@ -16,7 +16,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 import data.Contestant;
-import data.GameData;
 import data.InvalidFieldException;
 import data.User;
 
@@ -100,22 +99,6 @@ public class PlayerTableModel extends AbstractTableModel {
 	@Override
     public boolean isCellEditable(int row, int col) { 
 		return false; // never?
-		/*switch (col) {   
-        // conditionally editable:
-        case INDEX_FIRSTNAME:
-        case INDEX_LASTNAME:	
-        	return (!frozen);
-
-        // always editable:
-        case INDEX_TRIBE:
-        	return true;
-        	
-        case INDEX_ID:
-        case INDEX_DATECAST:	
-        default:
-        	// this can't be changed..
-        	return false;
-        } */
 	}
     
 	@Override
@@ -152,8 +135,28 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * @param row The row to gather from
 	 * @return Data contained in the Row in a User form
 	 */
-    public User getByRow(int row) {
+    protected User getByRow(int row) {
     	return data.get(row);
+    }
+    
+    /**
+     * Gets the row number of a User's ID
+     * @param u The user to find
+     * @return Row number, -1 if not found
+     */
+    protected int getRowByUser(User u) {
+    	if (u == null) 
+    		return -1;
+    	
+    	String id = u.getID();
+    	
+    	for (int i = 0; i < data.size(); i++) {
+    		if (data.get(i).getID().equals(id)) {
+    			return i;
+    		}
+    	}
+    	
+    	return -1;
     }
 	
     /**
@@ -183,6 +186,14 @@ public class PlayerTableModel extends AbstractTableModel {
         case INDEX_POINTS:
         	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_POINTS);
         	break;
+        	
+        case INDEX_ULT_PICK:
+        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_ULT_PICK);
+        	break;
+        	
+        case INDEX_WEEKLY_PICK:
+        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_WEEKLY_PICK);
+        	break;
 
         // others aren't valid to sort by (too ambiguous)
         default:
@@ -206,18 +217,20 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * Adds a contestant, resorts the table. Updates the stored game data.
 	 * @param c 
 	 */
-	private void addUser(User u) {
+	protected void addUser(User u) {
 		data.add(u);
 		sortTable();
 		
-		GameData.getCurrentGame().addUser(u);
+		GameData g = GameData.getCurrentGame();
+		g.addUser(u);
 	}
 	
-	private void removeUser(User u) {
+	protected void removeUser(User u) {
 		data.remove(u);
 		sortTable();
 		
-		GameData.getCurrentGame().removeUser(u);
+		GameData g = GameData.getCurrentGame();
+		g.removeUser(u);
 	}
 	
 	/**
@@ -228,7 +241,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * If the ID is not present, it WILL create a new entry (no sort).
 	 * @param c New contestant data.
 	 */
-	public void updateUser(User u) {
+	protected void updateUser(User u) {
 		User updateUser = null;
 		
 		for (int i = 0; i < globalData.size(); i++) {

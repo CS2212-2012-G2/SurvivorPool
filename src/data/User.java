@@ -138,7 +138,8 @@ public class User implements Person {
 	 */
 	public void setFirstName(String first) throws InvalidFieldException {
 		if (!Utils.checkString(first, REGEX_FIRST_NAME))
-			throw new InvalidFieldException("Invalid First Name (User)");
+			throw new InvalidFieldException(InvalidFieldException.Field.USER_FIRST,
+					"Invalid First Name (User)");
 		firstName = first;
 	}
 
@@ -151,7 +152,8 @@ public class User implements Person {
 	 */
 	public void setLastName(String last) throws InvalidFieldException {
 		if (!Utils.checkString(last, REGEX_LAST_NAME))
-			throw new InvalidFieldException("Invalid Last Name (User)");
+			throw new InvalidFieldException(InvalidFieldException.Field.USER_LAST,
+					"Invalid Last Name (User)");
 		lastName = last;
 	}
 
@@ -172,14 +174,23 @@ public class User implements Person {
 	 * 
 	 * @param winner
 	 *            contestant choice
+	 * @throws InvalidFieldException If null, throws exception.
 	 */
-	public void setUltimatePick(Contestant winner)  {
-		ultPick = winner;
+	public void setUltimatePick(Contestant winner) throws InvalidFieldException  {
+		setUltimatePickNoSetPts(winner);
 		ultPoints = 2 * GameData.getCurrentGame().weeksLeft();
 	}
-	
-	// just sets the same as prior without setting pts.
-	public void setUltimatePickNoSetPts(Contestant winner)  {
+	/**
+	 * just sets the same as prior without setting pts.
+	 * @param winner
+	 * @throws InvalidFieldException
+	 */
+	public void setUltimatePickNoSetPts(Contestant winner) throws InvalidFieldException  {
+		if (winner == null) {
+			throw new InvalidFieldException(InvalidFieldException.Field.USER_WEEKLY_PICK,
+					"Weekly pick was null");
+		}
+		
 		ultPick = winner;
 	}
 	
@@ -195,12 +206,16 @@ public class User implements Person {
 		ultPoints = pts;
 	}
 
+	/**
+	 * Sets the user ID.
+	 */
 	public void setID(String id) throws InvalidFieldException {
 		id = id.toLowerCase();
 		if (Utils.checkString(id,REGEX_PLAYER_ID))
 			unID = id;
 		else 
-			throw new InvalidFieldException("Invalid Player ID");
+			throw new InvalidFieldException(InvalidFieldException.Field.USER_ID,
+					"Invalid Player ID");
 	}
 	
 	/**
@@ -311,12 +326,11 @@ public class User implements Person {
 		try {
 			c.setID("aa");
 			ul.setID("ab");
+			u.setWeeklyPick(c);
+			u.setUltimatePick(ul);
 		} catch (InvalidFieldException e1) {
 			e1.printStackTrace();
 		}
-		
-		u.setWeeklyPick(c);
-		u.setUltimatePick(ul);
 		
 		try {
 			System.out.println(u.toJSONObject().toString());

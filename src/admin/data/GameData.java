@@ -169,5 +169,14 @@ public class GameData extends data.GameData {
 		
 	}
 	
+	/**
+	 * Returns an instance of the current Game.
+	 * @return instance of current game.
+	 */
+	public static GameData getCurrentGame() {
+		GameData g = (GameData)data.GameData.getCurrentGame();
+		return g;
+	}
+	
 	
 }

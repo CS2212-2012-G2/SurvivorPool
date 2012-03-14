@@ -7,6 +7,7 @@ import data.User;
 
 public class ComparatorFactory {
 
+	// TODO: enum
 	public static final int CONTNT_FIRST_NAME = 0;
 	public static final int CONTNT_LAST_NAME = 1;
 	public static final int CONTNT_ID = 2;
@@ -17,6 +18,8 @@ public class ComparatorFactory {
 	public static final int USER_LAST_NAME = 11;
 	public static final int USER_ID = 12;
 	public static final int USER_POINTS = 13;
+	public static final int USER_ULT_PICK = 14;
+	public static final int USER_WEEKLY_PICK = 15;
 
 	public static Comparator<Contestant> getContComparator(int type) {
 		switch (type) {
@@ -104,6 +107,28 @@ public class ComparatorFactory {
 				@Override
 				public int compare(User u1, User u2) {
 					return (u1.getPoints() - u2.getPoints());
+				}
+			};
+			
+		case USER_ULT_PICK:
+			return new Comparator<User>() {
+				Comparator<Contestant> comp = 
+						ComparatorFactory.getContComparator(CONTNT_ID);
+				
+				@Override
+				public int compare(User u1, User u2) {
+					return comp.compare(u1.getUltimatePick(), u2.getUltimatePick());
+				}
+			};
+			
+		case USER_WEEKLY_PICK:
+			return new Comparator<User>() {
+				Comparator<Contestant> comp = 
+						ComparatorFactory.getContComparator(CONTNT_ID);
+				
+				@Override
+				public int compare(User u1, User u2) {
+					return comp.compare(u1.getWeeklyPick(), u2.getWeeklyPick());
 				}
 			};
 		

@@ -1,8 +1,12 @@
 package admin.playertab;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -155,9 +159,7 @@ public class PlayerFieldsPanel extends JPanel {
 	 * Sets the editing information to the information stored in the contestant
 	 * @param c 	The contestant to edit
 	 */
-	public void setEditPane(User u) {
+	/*public void setEditPane(User u) {
 		return;
-	}
-
-	
+	}*/
 }

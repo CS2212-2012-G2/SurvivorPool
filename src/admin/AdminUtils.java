@@ -199,6 +199,18 @@ public class AdminUtils extends Utils {
 		return newList;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> vectorToCastList(Vector v, T t) {
+		List<T> newList = new ArrayList<T>(v.size());
+		for (Object o: v) {
+			if (o != null) {
+				newList.add((T) o);
+			}
+		}
+		
+		return newList;
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> Vector castListToUncast(List<T> list) {
 		Vector newList = new Vector(list.size());
