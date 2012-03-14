@@ -306,6 +306,18 @@ public class GameData {
 	}
 	// ----------------- MUTATOR METHODS ------------------//
 
+	private Contestant randomContestant(boolean isActive) {
+		List<Contestant> list = null;
+		if (isActive) {
+			list = getActiveContestants();
+		} else {
+			list = getAllContestants();
+		}
+		
+		int index = (int)Math.round(Math.random() * list.size());
+		return list.get(index);
+	}
+	
 	/**
 	 * advanceWeek sets the number of weeksPassed to weeksPassed + 1.
 	 */
@@ -315,6 +327,21 @@ public class GameData {
 		
 		weeksRem -= 1;    // reduce num of weeks remaining
 		weeksPassed += 1;  // increment number of weeks passed
+		
+		for (User u: allUsers) {
+			if (u.getWeeklyPick().isNull()) {
+				try {
+					u.setWeeklyPick(randomContestant(true));
+				} catch (InvalidFieldException e) { } // wont happen
+			}
+			
+			if (u.getUltimatePick().isNull()) {
+				try {
+					u.setUltimatePick(randomContestant(true));
+				} catch (InvalidFieldException e) { } // wont happen
+			}
+		}
+		
 		allocatePoints(elimCont);
 		elimCont.castOff();
 	}

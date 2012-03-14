@@ -160,8 +160,13 @@ public class User implements Person {
 	 * 
 	 * @param pick
 	 *            contestant choice
+	 * @throws InvalidFieldException if Pick is null.
 	 */
-	public void setWeeklyPick(Contestant pick)  {
+	public void setWeeklyPick(Contestant pick) throws InvalidFieldException  {
+		if (pick == null) {
+			throw new InvalidFieldException(InvalidFieldException.Field.USER_WEEKLY_PICK,
+					"Weekly Pick was null");
+		}
 		weeklyPick = pick;
 	}
 

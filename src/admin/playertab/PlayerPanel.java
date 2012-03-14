@@ -274,6 +274,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		cbWeeklyPick.removeAllItems();
 		cbUltPick.removeAllItems();
+		
+		Contestant nullC = new Contestant();
+		nullC.setNull();
+		
+		cbWeeklyPick.addItem(nullC);
+		cbUltPick.addItem(nullC);
 
 		for (Contestant c : cons) {
 			cbWeeklyPick.addItem(c);
@@ -318,10 +324,18 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		u.setLastName(tfLastName.getText().trim());
 		
 		int item = cbUltPick.getSelectedIndex();
-		u.setUltimatePick(cbUltPick.getItemAt(item));
+		Contestant c = cbUltPick.getItemAt(item);
+		//if (c.isNull() && c.getID().equals(Contestant.NULL_ID)) {
+			//TODO: Random pick
+		//} else {
+			u.setUltimatePick(c);
+		///}
+		
 		
 		item = cbWeeklyPick.getSelectedIndex();
-		u.setWeeklyPick(cbWeeklyPick.getItemAt(item));
+		c = cbWeeklyPick.getItemAt(item);
+		// TODO: Random pick
+		u.setWeeklyPick(c);
 		
 		return u;
 	}
@@ -351,11 +365,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			tfFirstName.setText("First Name");
 			tfLastName.setText("Last Name");
 			
-			GameData g = GameData.getCurrentGame();
-			if (g.getAllContestants().size() > 0) {
-				cbUltPick.setSelectedIndex(0);
-				cbWeeklyPick.setSelectedIndex(0);
-			}
+			cbUltPick.setSelectedIndex(0);
+			cbWeeklyPick.setSelectedIndex(0);
 			
 			labelPts.setText(Integer.toString(0));
 			
