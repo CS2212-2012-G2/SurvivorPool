@@ -156,7 +156,7 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void initMenuBar() {
-		mnuItemReset = new JMenuItem("Reset");
+		mnuItemReset = new JMenuItem("Reset Season");
 		mnuItemExit = new JMenuItem("Exit");
 		String[] themeName = Utils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
