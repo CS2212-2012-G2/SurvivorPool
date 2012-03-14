@@ -71,9 +71,9 @@ public class GeneralPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!GameData.getCurrentGame().getSeasonStarted()
-						&& GameData.getCurrentGame().getNumCurrentContestants() == GameData
-								.getCurrentGame().getInitialContestants()) {
+			// && GameData.getCurrentGame().getNumCurrentContestants() == GameData
+			//	.getCurrentGame().getInitialContestants()
+				if (!GameData.getCurrentGame().getSeasonStarted()) {
 					String s = JOptionPane
 							.showInputDialog("Enter weekly bet amount!");
 					if (Utils.checkString(s, "^[0-9]+$")) {
