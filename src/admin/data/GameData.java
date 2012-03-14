@@ -25,11 +25,11 @@ public class GameData extends data.GameData {
 				new Contestant());
 	}
 	
-	private void updateSortAllContestants(int compFactID) {
+	private void updateSortAllContestants(AdminUtils.Type compFactID) {
 		allList = AdminUtils.uncastListToCast(allContestants, 
 				new Contestant());
 		
-		Collections.sort(allList, ComparatorFactory.getContComparator(compFactID));
+		Collections.sort(allList, AdminUtils.getContComparator(compFactID));
 	}
 
 	// extends the method in super class to sort it.
@@ -37,15 +37,14 @@ public class GameData extends data.GameData {
 	public void addContestant(Contestant c) {
 		super.addContestant(c);
 		
-		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
+		updateSortAllContestants(AdminUtils.Type.CONTNT_ID);
 	}
 
 	// overridden to use binary search for speeeeed.
 	@Override
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
-		int i = AdminUtils.BinSearchSafe(allList, (Contestant)target,
-				ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_ID));
+		int i = AdminUtils.BinSearchSafe(allList, (Contestant)target, AdminUtils.Type.CONTNT_ID);
 		
 		if (i < 0) {
 			// i < 0 implies not found.
@@ -53,7 +52,7 @@ public class GameData extends data.GameData {
 		}
 		
 		allList.remove(i);
-		updateSortAllContestants(ComparatorFactory.CONTNT_ID);
+		updateSortAllContestants(AdminUtils.Type.CONTNT_ID);
 	}
 	
 	@Override
@@ -67,8 +66,7 @@ public class GameData extends data.GameData {
 			return -1;
 		}
 	
-		return AdminUtils.BinSearchSafe(allList, t,
-				ComparatorFactory.getContComparator(ComparatorFactory.CONTNT_ID));
+		return AdminUtils.BinSearchSafe(allList, t, AdminUtils.Type.CONTNT_ID);
 	}
 	
 	/**

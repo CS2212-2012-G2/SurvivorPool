@@ -172,27 +172,27 @@ public class PlayerTableModel extends AbstractTableModel {
 		
 		switch (col) {
         case INDEX_ID:
-        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_ID);
+        	comp = AdminUtils.getUserComparator(AdminUtils.Type.USER_ID);
         	break;
         
         case INDEX_FIRSTNAME:
-        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_FIRST_NAME);
+        	comp = AdminUtils.getUserComparator(AdminUtils.Type.USER_FIRST_NAME);
         	break;
         
         case INDEX_LASTNAME:
-        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_LAST_NAME);
+        	comp = AdminUtils.getUserComparator(AdminUtils.Type.USER_LAST_NAME);
         	break;
         
         case INDEX_POINTS:
-        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_POINTS);
+        	comp = AdminUtils.getUserComparator(AdminUtils.Type.USER_POINTS);
         	break;
         	
         case INDEX_ULT_PICK:
-        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_ULT_PICK);
+        	comp = AdminUtils.getUserComparator(AdminUtils.Type.USER_ULT_PICK);
         	break;
         	
         case INDEX_WEEKLY_PICK:
-        	comp = ComparatorFactory.getUserComparator(ComparatorFactory.USER_WEEKLY_PICK);
+        	comp = AdminUtils.getUserComparator(AdminUtils.Type.USER_WEEKLY_PICK);
         	break;
 
         // others aren't valid to sort by (too ambiguous)

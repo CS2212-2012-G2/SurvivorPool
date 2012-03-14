@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Vector;
 
 import common.Utils;
+import data.Contestant;
 import data.Person;
+import data.User;
 
 public class AdminUtils extends Utils {
 
@@ -232,9 +234,137 @@ public class AdminUtils extends Utils {
 	 * @return
 	 */
 	public static <T> int BinSearchSafe(List list, T target,
-			Comparator<T> comp) {
+			Type compType) {
 		List<T> newList = uncastListToCast(list, target);
 		
+		Comparator<T> comp = null;
+		if (target instanceof Contestant)
+			getContComparator(compType);
+		else if (target instanceof User)
+			getUserComparator(compType);
+		
 		return Collections.binarySearch(newList, target, comp);
+	}
+	
+	public enum Type {
+		// Contestants:
+		CONTNT_FIRST_NAME, CONTNT_LAST_NAME, CONTNT_ID, CONTNT_TRIBE, CONTNT_DATE, 
+		// Users:
+		USER_FIRST_NAME, USER_LAST_NAME, USER_ID, USER_POINTS, USER_ULT_PICK, 
+		USER_WEEKLY_PICK
+	}
+
+	public static Comparator<Contestant> getContComparator(Type t) {
+		switch (t) {
+		case CONTNT_FIRST_NAME:
+			return new Comparator<Contestant>() {
+				@Override
+				public int compare(Contestant c1, Contestant c2) {
+					String f1 = c1.getFirstName().toLowerCase();
+					String f2 = c2.getFirstName().toLowerCase();
+					return (f1.compareTo(f2));
+				}
+			};
+			
+		case CONTNT_LAST_NAME:
+			return new Comparator<Contestant>() {
+				@Override
+				public int compare(Contestant c1, Contestant c2) {
+					String l1 = c1.getLastName().toLowerCase();
+					String l2 = c2.getLastName().toLowerCase();
+					return (l1.compareTo(l2));
+				}
+			};
+			
+		case CONTNT_ID:
+			return new Comparator<Contestant>() {
+				@Override
+				public int compare(Contestant c1, Contestant c2) {
+					return (c1.getID().compareTo(c2.getID()));
+				}
+			};
+			
+		case CONTNT_DATE:
+			return new Comparator<Contestant>() {
+				@Override
+				public int compare(Contestant c1, Contestant c2) {
+					return (c1.getCastDate() - c2.getCastDate());
+				}
+			};
+			
+		case CONTNT_TRIBE:
+			return new Comparator<Contestant>() {
+				@Override
+				public int compare(Contestant c1, Contestant c2) {
+					return (c1.getTribe().compareTo(c2.getTribe()));
+				}
+			};
+		
+		default:
+			return null;
+		}
+	}
+	
+	public static Comparator<User> getUserComparator(Type t) {
+		switch (t) {
+		case USER_FIRST_NAME:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					String f1 = u1.getFirstName().toLowerCase();
+					String f2 = u2.getFirstName().toLowerCase();
+					return (f1.compareTo(f2));
+				}
+			};
+			
+		case USER_LAST_NAME:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					String l1 = u1.getLastName().toLowerCase();
+					String l2 = u2.getLastName().toLowerCase();
+					return (l1.compareTo(l2));
+				}
+			};
+			
+		case USER_ID:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					return (u1.getID().compareTo(u2.getID()));
+				}
+			};
+			
+		case USER_POINTS:
+			return new Comparator<User>() {
+				@Override
+				public int compare(User u1, User u2) {
+					return (u1.getPoints() - u2.getPoints());
+				}
+			};
+			
+		case USER_ULT_PICK:
+			return new Comparator<User>() {
+				Comparator<Contestant> comp = getContComparator(Type.CONTNT_ID);
+				
+				@Override
+				public int compare(User u1, User u2) {
+					return comp.compare(u1.getUltimatePick(), u2.getUltimatePick());
+				}
+			};
+			
+		case USER_WEEKLY_PICK:
+			return new Comparator<User>() {
+				Comparator<Contestant> comp = getContComparator(Type.CONTNT_ID);
+				
+				@Override
+				public int compare(User u1, User u2) {
+					return comp.compare(u1.getWeeklyPick(), u2.getWeeklyPick());
+				}
+			};
+		
+		default:
+			return null;
+		}
 	}
 }
