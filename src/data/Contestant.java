@@ -95,7 +95,6 @@ public class Contestant implements Person {
 	 */
 	public void castOff() {
 		castDate = GameData.getCurrentGame().getCurrentWeek();
-		toBeCast = false;
 		GameData.getCurrentGame().elimCont = null;
 		GameData.getCurrentGame().elimExists = false;
 	}

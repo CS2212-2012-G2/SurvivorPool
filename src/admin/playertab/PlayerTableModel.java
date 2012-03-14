@@ -50,7 +50,7 @@ public class PlayerTableModel extends AbstractTableModel {
 		globalData = AdminUtils.castListToUncast(users);
 		data = users;
 		
-		columnNames = new String[] { "ID", "First", "Last", "Points", 
+		columnNames = new String[] { "ID", "Last", "First", "Points", 
 				"Weekly Pick", "Ultimate Pick" };
 	}
 	
