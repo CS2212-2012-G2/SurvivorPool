@@ -329,11 +329,8 @@ public class GameData {
 	 * @see startGame to set to true.
 	 * @return true if a season has started(different from created)
 	 */
-<<<<<<< HEAD
-	public boolean isSeasonStarted(){
-=======
+
 	public boolean getSeasonStarted() {
->>>>>>> 7c056f3bca79e5e5053f9299310eb3e3d8e6a9a5
 		return seasonStarted;
 	}
 
@@ -342,13 +339,8 @@ public class GameData {
 	 * 
 	 * @return true if weeks remaining = 0
 	 */
-<<<<<<< HEAD
-	public boolean isSeasonEnded(){
-		return weeksRem==0;
-=======
 	public boolean getSeasonEnded() {
 		return weeksRem == 0;
->>>>>>> 7c056f3bca79e5e5053f9299310eb3e3d8e6a9a5
 	}
 
 	// ----------------- MUTATOR METHODS ------------------//
