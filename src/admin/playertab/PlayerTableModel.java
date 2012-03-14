@@ -2,6 +2,7 @@ package admin.playertab;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -41,7 +42,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	public PlayerTableModel(List<User> users) {
 		
 		globalData = users;
-		data = users;
+		data = new ArrayList<User>(users);
 		
 		columnNames = new String[] { "ID", "Last", "First", "Points", 
 				"Weekly Pick", "Ultimate Pick" };

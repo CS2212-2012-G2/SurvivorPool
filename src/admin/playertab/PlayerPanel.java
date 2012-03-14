@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Savepoint;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -326,8 +327,21 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		return u;
 	}
 	
+	/**
+	 * Sets the user on the screen to the specified container. If newUser is
+	 * true, it will specify that when save is hit, then the GUI should add it
+	 * to the table rather than modify a pre-existing data.
+	 * @param u
+	 * @param newUser
+	 */
 	private void setPanelUser(User u, boolean newUser) {
 		isNewUser = newUser;
+		
+		if (fieldsChanged) {
+			System.out.println("Player panel changing, fields modified.");
+			saveUser();
+			fieldsChanged = false;
+		}
 		
 		tfID.setEnabled(newUser);
 		btnGenID.setEnabled(newUser);
@@ -422,10 +436,11 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		tableModel.updateUser(user);
 		
 		int row = tableModel.getRowByUser(user);
-		if (row >= 0) // select a row
+		if (row >= 0 && table.getSelectedRow() != row) // select a row
 			table.setRowSelectionInterval(row, row);
 
 		isNewUser = false;
+		fieldsChanged = false;
 	}
 	
 	private void buildActions() {
@@ -523,14 +538,23 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
+			int oldRow = -1; // breaks an infinite loop since setPanelUser fires this event
+			
 			public void valueChanged(ListSelectionEvent le) {
 				 int row = table.getSelectedRow();
-				 if (row < 0) return;
+				 if (row < 0 || oldRow == row) return;
 				 
 				 User u = tableModel.getByRow(row);
 			     
 				 if (u != null){
+					 if (fieldsChanged) {
+						 saveUser();
+						 fieldsChanged = false;
+					 }
+					 
 					 setPanelUser(u, false); 
+					 
+					 oldRow = row;
 				 }
 			}
 		});
