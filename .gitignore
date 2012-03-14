@@ -5,6 +5,7 @@
 .classpath
 .~lock*
 bin/*
+doc/*
 .settings/
 BlackBerry_App_Descriptor.xml
 res/img/icon.png
