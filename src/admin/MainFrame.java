@@ -259,11 +259,7 @@ public class MainFrame extends JFrame{
 							"Would you like to delete current season?","Reset Season",
 									JOptionPane.YES_NO_OPTION);
 		if(response == JOptionPane.YES_OPTION){
-			try {
 			GameData.getCurrentGame().endCurrentGame();
-			} catch(Exception e) {	
-				// no season to delete
-			}
 			m.dispose();
 			m = new MainFrame();
 		}
