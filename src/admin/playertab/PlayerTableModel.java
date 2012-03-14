@@ -1,26 +1,20 @@
 package admin.playertab;
 
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
-
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import data.Contestant;
 import data.InvalidFieldException;
 import data.User;
 
-import admin.AdminUtils;
-import admin.data.*;
+import admin.Utils;
+import data.GameData;
 
 
 public class PlayerTableModel extends AbstractTableModel {
@@ -28,7 +22,6 @@ public class PlayerTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private String[] columnNames;
 	private List<User> data;
-	private boolean frozen = false;
 	
 	//public static final int INDEX_SELECT = 0;
 	public static final int INDEX_ID = 0;
@@ -39,7 +32,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	public static final int INDEX_ULT_PICK = 5;
 	
 	private int sortColumn = INDEX_ID;
-	private List globalData;
+	private List<User> globalData;
 	
 	/**
 	 * Creates the table model which controls the table's actions and data.
@@ -47,7 +40,7 @@ public class PlayerTableModel extends AbstractTableModel {
 	 */
 	public PlayerTableModel(List<User> users) {
 		
-		globalData = AdminUtils.castListToUncast(users);
+		globalData = users;
 		data = users;
 		
 		columnNames = new String[] { "ID", "Last", "First", "Points", 
@@ -172,27 +165,27 @@ public class PlayerTableModel extends AbstractTableModel {
 		
 		switch (col) {
         case INDEX_ID:
-        	comp = AdminUtils.getUserComparator(AdminUtils.CompType.USER_ID);
+        	comp = Utils.getUserComparator(Utils.CompType.USER_ID);
         	break;
         
         case INDEX_FIRSTNAME:
-        	comp = AdminUtils.getUserComparator(AdminUtils.CompType.USER_FIRST_NAME);
+        	comp = Utils.getUserComparator(Utils.CompType.USER_FIRST_NAME);
         	break;
         
         case INDEX_LASTNAME:
-        	comp = AdminUtils.getUserComparator(AdminUtils.CompType.USER_LAST_NAME);
+        	comp = Utils.getUserComparator(Utils.CompType.USER_LAST_NAME);
         	break;
         
         case INDEX_POINTS:
-        	comp = AdminUtils.getUserComparator(AdminUtils.CompType.USER_POINTS);
+        	comp = Utils.getUserComparator(Utils.CompType.USER_POINTS);
         	break;
         	
         case INDEX_ULT_PICK:
-        	comp = AdminUtils.getUserComparator(AdminUtils.CompType.USER_ULT_PICK);
+        	comp = Utils.getUserComparator(Utils.CompType.USER_ULT_PICK);
         	break;
         	
         case INDEX_WEEKLY_PICK:
-        	comp = AdminUtils.getUserComparator(AdminUtils.CompType.USER_WEEKLY_PICK);
+        	comp = Utils.getUserComparator(Utils.CompType.USER_WEEKLY_PICK);
         	break;
 
         // others aren't valid to sort by (too ambiguous)
@@ -245,7 +238,7 @@ public class PlayerTableModel extends AbstractTableModel {
 		User updateUser = null;
 		
 		for (int i = 0; i < globalData.size(); i++) {
-			updateUser = (User)globalData.get(i);
+			updateUser = globalData.get(i);
 			if (updateUser.getID().equalsIgnoreCase(u.getID())) {
 				break;
 			}

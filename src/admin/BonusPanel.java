@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 
 public class BonusPanel extends JPanel{
 
+	private static final long serialVersionUID = 1L;
+
 	JLabel lblBonusInfo = new JLabel("Bonus info.");
 	
 	JRadioButton rbMultChoice = new JRadioButton("Multiple Choice");

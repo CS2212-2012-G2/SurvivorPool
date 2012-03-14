@@ -8,10 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -33,16 +30,13 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import sun.awt.VerticalBagLayout;
-
-import admin.AdminUtils;
+import admin.Utils;
 import admin.MainFrame;
-import admin.StatusPanel;
-import admin.data.GameData;
-
 import data.Contestant;
 import data.InvalidFieldException;
+import data.Person;
 import data.User;
+import data.GameData;
 
 
 /**
@@ -53,6 +47,8 @@ import data.User;
 public class PlayerPanel extends JPanel implements ChangeListener,
 		MouseListener {
 
+	private static final long serialVersionUID = 1L;
+	
 	// input fields:
 	private JLabel labelName;
 	private JTextField tfFirstName;
@@ -124,11 +120,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		// ////////////////////////////
 		// Mid
 		// ////////////////////////////
-		List<User> users = 
-				AdminUtils.uncastListToCast(
-						GameData.getCurrentGame().getAllUsers(), 
-						new User()
-					);
+		List<User> users = GameData.getCurrentGame().getAllUsers();
 		tableModel = new PlayerTableModel(users);
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
@@ -217,7 +209,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 				Color c = null;
 				if (table.isRowSelected(row)) {
-					c = AdminUtils.getThemeTableHighlight();
+					c = Utils.getThemeTableHighlight();
 				} else {
 					c = UIManager.getColor("Table.background");
 				}
@@ -278,11 +270,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			return;
 		}
 		
-		List<Contestant> cons = AdminUtils.vectorToCastList(
-				g.getActiveContestants(), 
-				new Contestant()
-			);
-		//cons = AdminUtils.noNullList(cons);
+		List<Contestant> cons = g.getActiveContestants();
 
 		cbWeeklyPick.removeAllItems();
 		cbUltPick.removeAllItems();
@@ -524,11 +512,10 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					return;
 				}
 				GameData g = GameData.getCurrentGame();
-				List<data.Person> userList = 
-						AdminUtils.vectorToCastList(g.getAllUsers(), 
-								(data.Person)(new User())); // cast the user to a person.. lol
+				List<Person> userList = Utils.castListElem(g.getAllUsers(),
+						(Person)(new User())); // lol so ugly.
 				
-				String id = AdminUtils.generateID(u, userList);
+				String id = Utils.generateID(u, userList);
 				
 				tfID.setText(id);
 			}

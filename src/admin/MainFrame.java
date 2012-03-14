@@ -20,16 +20,19 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import admin.AdminUtils;
+import admin.Utils;
 import admin.BonusPanel;
 import admin.GeneralPanel;
 import admin.StatusPanel;
 import admin.contestanttab.ContestantPanel;
-import admin.data.GameData;
 import admin.playertab.PlayerPanel;
 import admin.seasoncreate.SeasonCreatePanel;
 
+import data.GameData;
+
 public class MainFrame extends JFrame{
+
+	private static final long serialVersionUID = 1L;
 
 	static MainFrame m;
 	
@@ -155,7 +158,7 @@ public class MainFrame extends JFrame{
 	private void initMenuBar() {
 		mnuItemReset = new JMenuItem("Reset");
 		mnuItemExit = new JMenuItem("Exit");
-		String[] themeName = AdminUtils.getThemes();
+		String[] themeName = Utils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
 		mnuItemTheme3 = new JRadioButtonMenuItem(themeName[1]);
 		mnuItemTheme2 = new JRadioButtonMenuItem(themeName[2]);
@@ -189,7 +192,7 @@ public class MainFrame extends JFrame{
 	 * Apply the theme to current components.
 	 */
 	private void applyTheme(){
-		AdminUtils.style(this);
+		Utils.style(this);
 	}
 	
 	/**
@@ -197,7 +200,7 @@ public class MainFrame extends JFrame{
 	 * @param name The theme name
 	 */
 	private void changeTheme(String name){
-		AdminUtils.changeTheme(name);
+		Utils.changeTheme(name);
 		applyTheme();
 	}
 	

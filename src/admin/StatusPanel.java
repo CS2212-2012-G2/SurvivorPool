@@ -20,6 +20,8 @@ import javax.swing.Timer;
  */
 public class StatusPanel extends JPanel{
 	
+	private static final long serialVersionUID = 1L;
+	
 	private JLabel tabLabel;
 	private JLabel msgLabel;
 	private Timer t=null;
@@ -85,13 +87,18 @@ public class StatusPanel extends JPanel{
 	private void resetColor(){
 		for (Component c: errorComps)
 			if (c != null)
-				c.setBackground(AdminUtils.getThemeBG());
+				c.setBackground(Utils.getThemeBG());
 		
-		msgLabel.setForeground(AdminUtils.getThemeFG());
-		this.setBackground(AdminUtils.getThemeBG());
+		msgLabel.setForeground(Utils.getThemeFG());
+		this.setBackground(Utils.getThemeBG());
 	}
 	
 	Action displayError = new AbstractAction(){
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {

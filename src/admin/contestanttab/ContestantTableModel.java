@@ -1,12 +1,10 @@
 package admin.contestanttab;
 
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -14,12 +12,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import common.Utils;
-
 import data.GameData;
 import data.InvalidFieldException;
 
-import admin.AdminUtils;
+import admin.Utils;
 
 import data.Contestant;
 
@@ -50,7 +46,7 @@ public class ContestantTableModel extends AbstractTableModel {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
 		globalData = _globaldata;
-		data = new ArrayList<Contestant>(AdminUtils.noNullList(globalData));
+		data = new ArrayList<Contestant>(Utils.noNullList(globalData));
 		
 	}
 	
@@ -207,23 +203,23 @@ public class ContestantTableModel extends AbstractTableModel {
 		
 		switch (col) {
         case INDEX_ID:
-        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_ID);
+        	comp = Utils.getContComparator(Utils.CompType.CONTNT_ID);
         	break;
         
         case INDEX_FIRSTNAME:
-        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_FIRST_NAME);
+        	comp = Utils.getContComparator(Utils.CompType.CONTNT_FIRST_NAME);
         	break;
         
         case INDEX_LASTNAME:
-        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_LAST_NAME);
+        	comp = Utils.getContComparator(Utils.CompType.CONTNT_LAST_NAME);
         	break;
         
         case INDEX_TRIBE:
-        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_TRIBE);
+        	comp = Utils.getContComparator(Utils.CompType.CONTNT_TRIBE);
         	break;
         	
         case INDEX_DATECAST:
-        	comp = AdminUtils.getContComparator(AdminUtils.CompType.CONTNT_DATE);
+        	comp = Utils.getContComparator(Utils.CompType.CONTNT_DATE);
         	break;
         	
         default:
@@ -247,14 +243,14 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * Adds a contestant, resorts the table. Updates the stored game data.
 	 * @param c 
 	 */
-	private void addContestant(Contestant c) {
+	protected void addContestant(Contestant c) {
 		data.add(c);
 		sortTable();
 		
 		GameData.getCurrentGame().addContestant(c);
 	}
 	
-	private void removeContestant(Contestant c) {
+	protected void removeContestant(Contestant c) {
 		data.remove(c);
 		sortTable();
 		
@@ -270,7 +266,7 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * @param c New contestant data.
 	 */
 	public void updateContestant(Contestant c) {
-		int index = AdminUtils.BinSearchSafe(globalData, c, AdminUtils.CompType.CONTNT_ID);
+		int index = Utils.BinSearchSafe(globalData, c, Utils.CompType.CONTNT_ID);
 		
 		if (index >= 0) {
 			try { 

@@ -12,12 +12,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import common.Utils;
+import admin.Utils;
 
 import data.GameData;
+import data.Person;
 
 public class GeneralPanel extends JPanel {
 
+	private static final long serialVersionUID = 1L;
+	
 	JLabel lblGenInfo = new JLabel("General infos.");
 	JButton btnAdvWeek = new JButton("Start season");
 	JTextField txtTribe1 = new JTextField();
@@ -94,9 +97,9 @@ public class GeneralPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(!Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)){
+				if(!Utils.checkString(txtTribe1.getText(), Person.TRIBE_PATTERN)){
 					MainFrame.getRunningFrame().setStatusErrorMsg("Tribe 1 name invalid.",txtTribe1);
-				}else if(!Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN)){
+				}else if(!Utils.checkString(txtTribe2.getText(), Person.TRIBE_PATTERN)){
 					MainFrame.getRunningFrame().setStatusErrorMsg("Tribe 2 name invalid.",txtTribe2);
 				}else{
 					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(), txtTribe2.getSelectedText());

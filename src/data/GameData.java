@@ -1,11 +1,13 @@
 package data;
 
-import java.util.Arrays;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
-import common.Utils;
-//import admin.data.JSONUtils;
+import admin.Utils;
+import data.JSONUtils;
 import data.me.json.*;
 
 /**
@@ -17,38 +19,40 @@ import data.me.json.*;
  *         Brightwell
  */
 
-public abstract class GameData {
+public class GameData {
 
-	protected int weeksRem, weeksPassed; // keep track of weeks remaining/weeks passed
-	protected int numContestants;
+	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks passed
+	private int numContestants;
 										
-	protected boolean seasonStarted= false, elimExists = false; 
+	private boolean seasonStarted = false;
+	private boolean elimExists = false; 
 	
-	protected String[] tribeNames = new String[2]; // string array storing both tribe names
+	private String[] tribeNames = new String[2]; // string array storing both tribe names
 
-	protected Vector allContestants;
+	private List<Contestant> allContestants;
 	
-	protected Vector allUsers;
+	private List<User> allUsers;
 	
 	// store the current running version
-	protected static GameData currentGame = null;
+	private static GameData currentGame = null;
 	// store contestant who was cast off
-	protected Contestant elimCont;
+	private Contestant elimCont;
 	
 	/**
 	 * JSON Keys
 	 */
-	protected static final String KEY_CONTESTANTS = "cons"; 
-	protected static final String KEY_NUM_CONTEST	= "cons_num";
+	//TODO: enum
+	private static final String KEY_CONTESTANTS = "cons"; 
+	private static final String KEY_NUM_CONTEST	= "cons_num";
 	
-	protected static final String KEY_USERS = "users";
+	private static final String KEY_USERS = "users";
 	
-	protected static final String KEY_WEEKS_REMAIN = "weeks_rem";
-	protected static final String KEY_WEEKS_PASSED = "weeks_pass";
+	private static final String KEY_WEEKS_REMAIN = "weeks_rem";
+	private static final String KEY_WEEKS_PASSED = "weeks_pass";
 	
-	protected static final String KEY_TRIBES = "tribes_arr";
+	private static final String KEY_TRIBES = "tribes_arr";
 	
-	protected static final String KEY_SEASON_STARTED = "season_started";
+	private static final String KEY_SEASON_STARTED = "season_started";
 	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -68,9 +72,9 @@ public abstract class GameData {
 		weeksPassed = 0;
 		this.numContestants = numContestants;
 		
-		allContestants = new Vector(numContestants);
+		allContestants = new ArrayList<Contestant>(numContestants);
 		
-		allUsers = new Vector();
+		allUsers = new ArrayList<User>(5);
 		
 		currentGame = this;
 	}
@@ -86,16 +90,14 @@ public abstract class GameData {
 	 * 
 	 * @return The contestants active
 	 */
-	public Vector getActiveContestants() {
-		//ArrayList<ContestantAdmin> active = new ArrayList<ContestantAdmin>(allContestants.size());
+	public List<Contestant> getActiveContestants() {
 		
-		Vector active = new Vector(allContestants.size());
+		List<Contestant> active = 
+				new ArrayList<Contestant>(allContestants.size());
 		
-		int newSize = 0;
-		for (int i = 0; i < allContestants.size(); i++) {
-			Contestant c = (Contestant)allContestants.get(i);
+		for (Contestant c: allContestants) {
 			if ((c != null) && !c.isCastOff()) {
-				active.add((Object)c);
+				active.add(c);
 			}
 		}
 		
@@ -110,7 +112,7 @@ public abstract class GameData {
 	 * 
 	 * @return this.allContestants
 	 */
-	public Vector getAllContestants() {
+	public List<Contestant> getAllContestants() {
 		return allContestants;
 	}
 
@@ -126,14 +128,14 @@ public abstract class GameData {
 	 * @return contestant or string object
 	 */
 	public Contestant getContestant(String first, String last) {
-		Contestant j; 
 		// loop through array
-		for(int i = 0; i <= numContestants; i++){
-			j = (Contestant)allContestants.get(i); // get Contestant object for comparison 
-			if(first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure names match
+		for(Contestant j: allContestants){
+			if(first.equals(j.getFirstName()) && 
+					last.equals(j.getLastName())) { // ensure names match
 				return j; // return info on player
 			}
 		}
+		
 		// otherwise return message saying contestant is no longer/is not in the game
 		return null;
 	}
@@ -166,7 +168,28 @@ public abstract class GameData {
 			return;
 		}
 		
-		allContestants.add((Object)c);
+		allContestants.add(c);
+	}
+	
+	/**
+	 * removeContestant takes a Contestant object as input and attempts to
+	 * remove it from the array of active contestants. Maintains order of data
+	 * 
+	 * @param target
+	 *            Contestant to remove
+	 */
+	public void removeContestant(Contestant target) {
+		// is the contestant there?
+		int i = Utils.BinSearchSafe(allContestants, (Contestant)target,
+				Utils.CompType.CONTNT_ID);
+		
+		if (i < 0) {
+			// i < 0 implies not found.
+			return;
+		}
+		
+		allContestants.remove(i);
+		updateSortAllContestants(Utils.CompType.CONTNT_ID);
 	}
 	
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -175,7 +198,7 @@ public abstract class GameData {
 	 * Gets the vector of all users.
 	 * @return Vector containing all users.
 	 */
-	public Vector getAllUsers() {
+	public List<User> getAllUsers() {
 		return allUsers;
 	}
 	
@@ -184,7 +207,7 @@ public abstract class GameData {
 	 * @param u New user to add.
 	 */
 	public void addUser(User u) {
-		allUsers.add((Object)u);
+		allUsers.add(u);
 	}
 	
 	/**
@@ -192,8 +215,7 @@ public abstract class GameData {
 	 * @param u    User to remove.
 	 */
 	public void removeUser(User u) {
-		for (Object o: allUsers) {
-			User arrU = (User)o;
+		for (User arrU: allUsers) {
 			if (u.getID().equals(arrU.getID())) {
 				allUsers.remove(arrU);
 				return;
@@ -297,25 +319,7 @@ public abstract class GameData {
 		elimCont.castOff();
 	}
 
-	/**
-	 * removeContestant takes a Contestant object as input and attempts to
-	 * remove it from the array of active contestants. Maintains order of data
-	 * 
-	 * @param target
-	 *            Contestant to remove
-	 */
-	@SuppressWarnings("unchecked")
-	public void removeContestant(Contestant target) {
-		// is the contestant there?
-		// done this way incase its just a Contestant with ID passed
-		for (int i = 0; i < numContestants && allContestants.get(i)	!= null; i++) {
-			Contestant c = (Contestant)allContestants.get(i);
-			if (target.getID().equalsIgnoreCase(c.getID())) {
-				allContestants.remove(i);
-				return;
-			}
-		}
-	}
+	
 
 	/**
 	 * startGame sets gameStarted to true, not allowing the admin to add any
@@ -338,8 +342,48 @@ public abstract class GameData {
 		tribeNames[1] = tribeTwo;
 	}
 	
-	// ----------------- HELPER METHODS ----------------- //
+	/**
+	 * TODO:
+	 * @return
+	 */
+	protected boolean isElimExists() {
+		return elimExists;
+	}
+
+	/**
+	 * TODO:
+	 * @param elimExists
+	 */
+	protected void setElimExists(boolean elimExists) {
+		this.elimExists = elimExists;
+	}
+
+	/**
+	 * TODO:
+	 * @return
+	 */
+	protected Contestant getElimCont() {
+		return elimCont;
+	}
+
+	/**
+	 * TODO:
+	 * @param elimCont
+	 */
+	protected void setElimCont(Contestant elimCont) {
+		this.elimCont = elimCont;
+	}
 	
+	// ----------------- HELPER METHODS ----------------- //
+
+	/**
+	 * Sorts all the data as appropriate.
+	 * @param compFactID
+	 */
+	private void updateSortAllContestants(Utils.CompType compFactID) {
+		Collections.sort(allContestants, 
+				Utils.getContComparator(compFactID));
+	}
 	
 	/**
 	 * Checks if an ID string passed in is valid amongst the currently loaded
@@ -361,15 +405,16 @@ public abstract class GameData {
 	 * @return Index in activeContestants where ID is stored, else < 0.
 	 */
 	protected int getContestantIndexID(String id) {
-		// loop through array
-		for(int i = 0; i < numContestants; i++){
-			Contestant j = (Contestant)allContestants.get(i); // get Contestant object for comparison 
-			if (j.getID().equals(id)) { // ensure names match
-				return i; // return info on player
-			}
+		Contestant t = new Contestant();
+		try { 
+			t.setID(id);
+		} catch (InvalidFieldException e) 
+		{ 
+			System.out.println("getContestantIndexID:\t" + e.getMessage());
+			return -1;
 		}
-		// otherwise return message saying contestant is no longer/is not in the game
-		return -1;
+	
+		return Utils.BinSearchSafe(allContestants, t, Utils.CompType.CONTNT_ID);
 	}
 	
 	/**
@@ -395,6 +440,8 @@ public abstract class GameData {
 	 */
 	public void endCurrentGame() {
 		GameData.currentGame = null;
+		
+		JSONUtils.resetSeason();
 	}
 	
 	/**
@@ -461,10 +508,8 @@ public abstract class GameData {
 		seasonStarted = obj.getBoolean(KEY_SEASON_STARTED);
 		
 		//Contestants must be loaded before users, but after others!
-		allContestants = new Vector(numContestants);
-		
-		// if we can move this back into the subclass, put this after a super.fromJSONObject() call.
-		
+		allContestants = new ArrayList<Contestant>(numContestants);
+
 		// load the contestant array. 
 		JSONArray cons = (JSONArray)obj.get(KEY_CONTESTANTS);
 		for (int i =0;i<cons.length();i++) {
@@ -475,13 +520,97 @@ public abstract class GameData {
 		
 		// users:
 		JSONArray users = (JSONArray)obj.get(KEY_USERS);
+		allUsers = new ArrayList<User>(users.length());
 		for (int i = 0; i < users.length(); i++) {
 			User u = new User();
 			u.fromJSONObject(users.getJSONObject(i));
 			addUser(u);
 		}
 	}
-
-	public abstract void writeData();
 	
+	/**
+	 * Used by SeasonCreate to create a new season.
+	 * @param num
+	 */
+	public static void initSeason(int num){
+		currentGame = new GameData(num);
+	}
+	
+	/**
+	 * intGameData reads in a data file and builds a GameData object out
+	 * of it, returning it to the user.
+	 * 
+	 * @param inputFile   file to be read in
+	 * @return GameData object made out of file or null if season not created
+	 * 
+	 */
+	public static GameData initGameData() {
+		JSONObject json;
+		try {
+			json = JSONUtils.readFile(JSONUtils.seasonFile);
+		} catch (FileNotFoundException e) {
+			return (GameData) currentGame; 
+		}
+		
+		try {
+			currentGame = new GameData(((Number)json.get(KEY_NUM_CONTEST)).intValue());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		try {
+			GameData.getCurrentGame().fromJSONObject(json);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return (GameData)currentGame;
+	}
+
+	/**
+	 * Write all DATA into file
+	 */
+	public void writeData(){
+		
+		try {
+			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	public static void main(String[] args) {
+		GameData g = new GameData(6);
+		
+		String[] tribes = new String[] {"banana", "apple"};
+		
+		g.setTribeNames(tribes[0], tribes[1]);
+		
+		Contestant c1 = null, c2 = null;
+		try {
+			c1 = new Contestant("a2", "Al", "Sd", tribes[1]);
+			c2 = new Contestant("as", "John", "Silver", tribes[0]);
+		} catch (InvalidFieldException e) {
+			// wont happen.
+		}
+		
+		g.addContestant(c1);
+		g.addContestant(c2);
+		
+		try {
+			System.out.println(g.toJSONObject().toString());
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		GameData g2 = new GameData(6);
+		
+			try {
+				g2.fromJSONObject(g.toJSONObject());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		
+		
+	}
 }

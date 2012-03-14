@@ -1,7 +1,8 @@
 package data;
 
 import data.me.json.*;
-import common.Utils;
+import admin.Utils;
+import data.GameData;
 
 
 /**
@@ -94,9 +95,10 @@ public class Contestant implements Person {
 	 * castOff indicates that a contestant has been removed from the show
 	 */
 	public void castOff() {
-		castDate = GameData.getCurrentGame().getCurrentWeek();
-		GameData.getCurrentGame().elimCont = null;
-		GameData.getCurrentGame().elimExists = false;
+		GameData g = GameData.getCurrentGame();
+		castDate = g.getCurrentWeek();
+		g.setElimCont(null);
+		g.setElimExists(false);
 	}
 
 	/**
@@ -236,9 +238,10 @@ public class Contestant implements Person {
 	 */
 	public void toCastOff(){
 		this.toBeCast = true;
-		this.castDate = GameData.getCurrentGame().getCurrentWeek();
-		GameData.getCurrentGame().elimCont = this;
-		GameData.getCurrentGame().elimExists = true;
+		GameData g = GameData.getCurrentGame();
+		this.castDate = g.getCurrentWeek();
+		g.setElimCont(this);
+		g.setElimExists(true);
 	}
 
 	/**
@@ -280,8 +283,9 @@ public class Contestant implements Person {
 	public void undoCast(){
 		this.toBeCast = false;
 		this.castDate = -1;
-		GameData.getCurrentGame().elimExists = false;
-		GameData.getCurrentGame().elimCont = null;
+		GameData g = GameData.getCurrentGame();
+		g.setElimCont(null);
+		g.setElimExists(false);
 	}
 	
 	

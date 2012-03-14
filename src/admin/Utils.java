@@ -7,14 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Vector;
 
-import common.Utils;
 import data.Contestant;
 import data.Person;
 import data.User;
+import data.me.regexp.RE;
 
-public class AdminUtils extends Utils {
+public class Utils {
 
 	// A clean way to handle themes with minimal code.
 	enum THEMES {
@@ -196,41 +195,20 @@ public class AdminUtils extends Utils {
 
 		return list;
 	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> List<T> uncastListToCast(List list, T t) {
-		List<T> newList = new ArrayList<T>(list.size());
-		for (Object o: list) {
-			if (o != null) {
-				newList.add((T) o);
-			}
-		}
-		
-		return newList;
-	}
 	
+	/**
+	 * Creates a new list of the objects cast as the type passed as target.
+	 * WARNING: BESURE YOU KNOW THIS WILL WORK. 
+	 * @param list 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> vectorToCastList(Vector v, T t) {
-		List<T> newList = new ArrayList<T>(v.size());
-		for (Object o: v) {
-			if (o != null) {
-				newList.add((T) o);
-			}
+	public static <T, V> List<V> castListElem(List<T> list, V target) {
+		List<V> result = new ArrayList<V>(list.size());
+		for (T elem: list) {
+			result.add((V)elem);
 		}
-		
-		return newList;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <T> Vector castListToUncast(List<T> list) {
-		Vector newList = new Vector(list.size());
-		for (T t: list) {
-			if (t != null) {
-				newList.add((Object) t);
-			}
-		}
-		
-		return newList;
+		return result;
 	}
 	
 	/**
@@ -241,9 +219,9 @@ public class AdminUtils extends Utils {
 	 * @param comp
 	 * @return
 	 */
-	public static <T> int BinSearchSafe(List list, T target,
+	@SuppressWarnings("unchecked")
+	public static <T> int BinSearchSafe(List<T> list, T target,
 			CompType compType) {
-		List<T> newList = uncastListToCast(list, target);
 		
 		Comparator<T> comp = null;
 		if (target instanceof Contestant)
@@ -251,7 +229,7 @@ public class AdminUtils extends Utils {
 		else if (target instanceof User)
 			comp = (Comparator<T>)getUserComparator(compType);
 		
-		return Collections.binarySearch(newList, target, comp);
+		return Collections.binarySearch(list, target, comp);
 	}
 
 	public static Comparator<Contestant> getContComparator(CompType t) {
@@ -366,5 +344,20 @@ public class AdminUtils extends Utils {
 		default:
 			return null;
 		}
+	}
+	
+	/**
+	 * Checks if string matches pattern.
+	 * @param val The string to check for validity
+	 * @param pattern A regex pattern that has all possible valid values
+	 * @return true if string matches pattern
+	 */
+	public static boolean checkString(String val, String pattern){
+		if(val==null)
+			return false;
+		if(val.length()==0)
+			return false;
+		RE r = new RE(pattern);
+		return r.match(val);                
 	}
 }

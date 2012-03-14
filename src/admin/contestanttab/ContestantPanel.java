@@ -1,25 +1,19 @@
 package admin.contestanttab;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,16 +32,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import common.Utils;
-
 import data.InvalidFieldException;
 
-import admin.AdminUtils;
+import admin.Utils;
 import admin.FileDrop;
 import admin.MainFrame;
-import admin.StatusPanel;
-import admin.data.GameData;
-
+import data.GameData;
 import data.Contestant;
 import data.Person;
 
@@ -59,8 +49,6 @@ public class ContestantPanel extends JPanel implements MouseListener {
 
 	private ContestantFieldsPanel paneEditFields;
 	// container for top stuff
-	private JPanel paneTop;
-	
 	private JButton bCastOff;
 	private JButton bSavePlayer;
 	
@@ -134,11 +122,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		//////////////////////////////
 		// Mid
 		//////////////////////////////
-		List<Contestant> cons = 
-				AdminUtils.uncastListToCast(
-						GameData.getCurrentGame().getAllContestants(), 
-						new Contestant()
-					);
+		List<Contestant> cons = GameData.getCurrentGame().getAllContestants();
 		tableModel = new ContestantTableModel(cons);
 		table = new JTable(tableModel);
 		header = table.getTableHeader();
@@ -214,10 +198,9 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	                Object value, boolean isSelected, boolean hasFocus,
 	                int row, int column) {
 	            
-				Color c = null;
 				if (table.isRowSelected(row)) {
-					label.setBackground(AdminUtils.getThemeTableHighlight());
-					label.setForeground(AdminUtils.getThemeBG());
+					label.setBackground(Utils.getThemeTableHighlight());
+					label.setForeground(Utils.getThemeBG());
 				} else {
 					label.setBackground(UIManager.getColor("Table.background"));
 					label.setForeground(UIManager.getColor("Table.foreground"));

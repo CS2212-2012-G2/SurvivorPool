@@ -1,10 +1,8 @@
 package admin.seasoncreate;
-//TODO: MAKE THIS PANEL LOOK BETTER!
+
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,10 +17,11 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import admin.Utils;
 import admin.MainFrame;
-import admin.data.GameData;
 
-import common.Utils;
+import data.GameData;
+import data.Person;
 
 /**
  * Screen for creating a season. Controls the number of contestants and weeks
@@ -31,6 +30,8 @@ import common.Utils;
  *
  */
 public class SeasonCreatePanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 
 	private boolean programChange = false; //true when spinner value changed by program
 	
@@ -169,8 +170,8 @@ public class SeasonCreatePanel extends JPanel {
 	 */
 	private boolean checkValidTribeNames(){
 		//regex for alphanumeric and between 1-30 characters long
-		return Utils.checkString(txtTribe1.getText(),Utils.TRIBE_PATTERN)
-				&&Utils.checkString(txtTribe2.getText(),Utils.TRIBE_PATTERN);
+		return Utils.checkString(txtTribe1.getText(), Person.TRIBE_PATTERN)
+				&&Utils.checkString(txtTribe2.getText(), Person.TRIBE_PATTERN);
 	}
 	
 }
