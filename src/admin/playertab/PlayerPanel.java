@@ -349,8 +349,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			tfID.setText("");
 			tfFirstName.setText("First Name");
 			tfLastName.setText("Last Name");
-			cbUltPick.setSelectedIndex(0);
-			cbWeeklyPick.setSelectedIndex(0);
+			
+			GameData g = GameData.getCurrentGame();
+			if (g.getAllContestants().size() > 0) {
+				cbUltPick.setSelectedIndex(0);
+				cbWeeklyPick.setSelectedIndex(0);
+			}
+			
 			labelPts.setText(Integer.toString(0));
 			
 			return;
