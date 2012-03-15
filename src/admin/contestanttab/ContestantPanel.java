@@ -43,6 +43,7 @@ import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.InvalidFieldException.Field;
 
 public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
@@ -315,7 +316,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	 * @throws InvalidFieldException Thrown on any bad fields passed
 	 */
 	private Contestant getContestant() throws InvalidFieldException {
-		// FIXME: keep reference to the contestant object handled.
 		Contestant c = loadedContestant;
 		
 		c.setID(tfContID.getText());
@@ -360,7 +360,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		
 		GameData g = GameData.getCurrentGame();
 		tfContID.setEnabled(!g.isSeasonStarted());
-		//tfContID.setEnabled(isNewContestant);
 		
 		btnCastOff.setEnabled(!isNewContestant);
 		
@@ -415,7 +414,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		setFieldsChanged(false);
 		
 		int row = tableModel.getRowByContestant(con);
-		if (row >= 0 && table.getSelectedRow() != row) // select a row
+		if (row > -1 && table.getSelectedRow() != row)
 			table.setRowSelectionInterval(row, row);
 	}
 	
@@ -532,20 +531,35 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		btnCastOff.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String s = ((JButton) e.getSource()).getText();
+				
+				Contestant c = null;
+				try {
+					c = getContestant();
+				} catch (InvalidFieldException ie) {
+					// FIXME: Intelligently respond on the exception.
+					// In theory, it shouldn't happen, but we can't cast
+					// someone with an invalid ID.. :/
+					return;
+					//if (ie.getField() != Field.CONT_ID) {
+					//	setExceptionError(ie);
+					//}
+				}
+				
 				if(s.equals("Cast Off")){
 					// can't cast off someone already off.
-					/*if (activeCon.isCastOff())
+					if (c.isCastOff()) {
 						return;
-					
-						activeCon.toCastOff();
-						labelCastStatus.setText("Week " + activeCon.getCastDate());
 					}
-					else{
-						activeCon.undoCast();
-						labelCastStatus.setText("Active");
-						bCastOff.setText("Cast Off");
-					}	*/
-				}
+					
+					c.toCastOff();
+					labelCastStatus.setText("Week " + c.getCastDate());
+				} else {
+					c.undoCast();
+					labelCastStatus.setText("Active");
+					btnCastOff.setText("Cast Off");
+				}	
+				
+				refreshGameFields();
 			}
 		});
 		
@@ -575,11 +589,17 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 						}
 					}
 	
+					// actually delete the contestant
 					GameData g = GameData.getCurrentGame();
+					// get the contestant by the ID passed 
 					Contestant t = g.getContestant(c.getID());
+					
 					int row = tableModel.getRowByContestant(t);
 					boolean selRow = (table.getRowCount() > 1);
+					
+					// remove the contestant from the game
 					tableModel.removeContestant(t);
+					
 					if (selRow) {
 						row %= table.getRowCount();
 						table.setRowSelectionInterval(row, row);
@@ -644,6 +664,22 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		tfContID.setEnabled(false);
 	}
 	
+	/**
+	 * Helper method that will get the selected row, call the runnable method
+	 * then reset the table to where it was by the contestant.
+	 * @param run Method to run
+	 */
+	private void callResetSelectedRow(Runnable run) {
+		Contestant c = tableModel.getByRow(table.getSelectedRow());
+		
+		run.run();
+		
+		int row = tableModel.getRowByContestant(c);
+		if (row > -1 &&  				// only select if the row is valid
+				table.getSelectedRow() != row) // don't select if it we can't
+			table.setRowSelectionInterval(row, row);	
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		return;
@@ -692,7 +728,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	public void mouseReleased(MouseEvent e) {
 		return;
 	}
-
+	
 	/**
 	 * Refreshes all values associated with GameData reference.
 	 * <br> Currently:
@@ -710,8 +746,16 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		for (String s: newTribes) {
 			cbTribe.addItem(s);
 		}
+	
+		// updates the data in the table
+		callResetSelectedRow(new Runnable() {
+			
+			@Override
+			public void run() {
+				tableModel.fireTableDataChanged();
+			}
+		});
 		
-		tableModel.fireTableDataChanged();
 	}
 
 }
