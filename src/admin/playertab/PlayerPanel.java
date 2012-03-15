@@ -143,7 +143,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		// init the GUI components
 		
-		refreshContestantCBs();
+		refreshGameFields();
 		
 		if (users.size() > 0) {
 			setPanelUser(users.get(0), false);
@@ -208,13 +208,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					Object value, boolean isSelected, boolean hasFocus,
 					int row, int column) {
 
-				Color c = null;
 				if (table.isRowSelected(row)) {
-					c = Utils.getThemeTableHighlight();
+					label.setBackground(Utils.getThemeTableHighlight());
+					label.setForeground(Utils.getThemeBG());
 				} else {
-					c = UIManager.getColor("Table.background");
+					label.setBackground(UIManager.getColor("Table.background"));
+					label.setForeground(UIManager.getColor("Table.foreground"));
 				}
-				label.setBackground(c);
 
 				label.setOpaque(true);
 				label.setText("" + value);
@@ -262,33 +262,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	}
 	
 	/**
-	 * Loads the contestants in the ComboBoxes from the GameData.
-	 */
-	private void refreshContestantCBs() {
-		GameData g = (GameData) GameData.getCurrentGame();
-		
-		if (g == null) {
-			return;
-		}
-		
-		List<Contestant> cons = g.getActiveContestants();
-
-		cbWeeklyPick.removeAllItems();
-		cbUltPick.removeAllItems();
-		
-		Contestant nullC = new Contestant();
-		nullC.setNull();
-		
-		cbWeeklyPick.addItem(nullC);
-		cbUltPick.addItem(nullC);
-
-		for (Contestant c : cons) {
-			cbWeeklyPick.addItem(c);
-			cbUltPick.addItem(c);
-		}
-	}
-	
-	/**
 	 * Currently used to check if a tab is changed, and if its changed to the
 	 * PlayerPanel, it will modify ComboBoxes.
 	 */
@@ -326,16 +299,11 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		int item = cbUltPick.getSelectedIndex();
 		Contestant c = cbUltPick.getItemAt(item);
-		//if (c.isNull() && c.getID().equals(Contestant.NULL_ID)) {
-			//TODO: Random pick
-		//} else {
-			u.setUltimatePick(c);
-		///}
+		u.setUltimatePick(c);
 		
 		
 		item = cbWeeklyPick.getSelectedIndex();
 		c = cbWeeklyPick.getItemAt(item);
-		// TODO: Random pick
 		u.setWeeklyPick(c);
 		
 		return u;
@@ -359,6 +327,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		tfID.setEnabled(newUser);
 		btnGenID.setEnabled(newUser);
+		btnSave.setEnabled(false);
 		
 		if (newUser || u == null) {
 			// set default values
@@ -407,6 +376,10 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		}
 	}
 	
+	/**
+	 * Sets the error infromation based on an exception!
+	 * @param e Exception with the information necessary
+	 */
 	private void setExceptionError(InvalidFieldException e) {
 		MainFrame mf = MainFrame.getRunningFrame();
 		
@@ -478,7 +451,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					int response = JOptionPane.showConfirmDialog(null,
 						"Would you like to save a new selected user? You can " +
 						"not change ID after first save.",
-						"Delete User",
+						"Delete User?",
 						JOptionPane.YES_NO_OPTION);
 					if(response == JOptionPane.NO_OPTION){
 						return;
@@ -551,10 +524,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 			int oldRow = -1; // breaks an infinite loop since setPanelUser fires this event
 			
-			
 			public void valueChanged(ListSelectionEvent le) {
 				 int row = table.getSelectedRow();
+				 
 				 if (row < 0 || oldRow == row) return;
+				 
+				 oldRow = row;
 				 
 				 User u = tableModel.getByRow(row);
 			     
@@ -567,9 +542,37 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					 setPanelUser(u, false); 
 				 }
 				 
-				 oldRow = row;
+				 
 			}
 		});
+	}
+	
+	/**
+	 * Loads the contestant data in the ComboBoxes 
+	 * from the GameData.
+	 */
+	private void refreshContestantCBs() {
+		GameData g = (GameData) GameData.getCurrentGame();
+		
+		if (g == null) {
+			return;
+		}
+		
+		List<Contestant> cons = g.getActiveContestants();
+
+		cbWeeklyPick.removeAllItems();
+		cbUltPick.removeAllItems();
+		
+		Contestant nullC = new Contestant();
+		nullC.setNull();
+		
+		cbWeeklyPick.addItem(nullC);
+		cbUltPick.addItem(nullC);
+
+		for (Contestant c : cons) {
+			cbWeeklyPick.addItem(c);
+			cbUltPick.addItem(c);
+		}
 	}
 	
 	/**
@@ -579,6 +582,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	 */
 	@Override
 	public void refreshGameFields() {
+		refreshContestantCBs();
 		tableModel.fireTableDataChanged();
 	}
 
@@ -624,6 +628,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		if (c == tfFirstName || c == tfLastName || c == tfID || 
 				c == cbUltPick || c == cbWeeklyPick) {
 			fieldsChanged = true;
+			btnSave.setEnabled(true);
 		}
 	}
 

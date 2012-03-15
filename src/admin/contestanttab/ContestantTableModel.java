@@ -14,6 +14,7 @@ import javax.swing.table.TableColumnModel;
 
 import data.GameData;
 import data.InvalidFieldException;
+import data.User;
 
 import admin.Utils;
 
@@ -95,22 +96,8 @@ public class ContestantTableModel extends AbstractTableModel {
 	
 	@Override
     public boolean isCellEditable(int row, int col) { 
-		switch (col) {   
-        // conditionally editable:
-        case INDEX_FIRSTNAME:
-        case INDEX_LASTNAME:	
-        	return (!frozen);
-
-        // always editable:
-        case INDEX_TRIBE:
-        	return true;
-        	
-        case INDEX_ID:
-        case INDEX_DATECAST:	
-        default:
-        	// this can't be changed..
-        	return false;
-        }
+		// Always uneditable
+		return false;
 	}
     
 	@Override
@@ -172,6 +159,26 @@ public class ContestantTableModel extends AbstractTableModel {
 	 */
     public Contestant getByRow(int row) {
     	return (row > -1 ? data.get(row) : null);
+    }
+    
+    /**
+     * Gets the row number of a User's ID
+     * @param u The user to find
+     * @return Row number, -1 if not found
+     */
+    protected int getRowByContestant(Contestant c) {
+    	if (c == null) 
+    		return -1;
+    	
+    	String id = c.getID();
+    	
+    	for (int i = 0; i < data.size(); i++) {
+    		if (data.get(i).getID().equals(id)) {
+    			return i;
+    		}
+    	}
+    	
+    	return -1;
     }
 
 	/**
@@ -247,14 +254,16 @@ public class ContestantTableModel extends AbstractTableModel {
 		data.add(c);
 		sortTable();
 		
-		GameData.getCurrentGame().addContestant(c);
+		GameData g = GameData.getCurrentGame();
+		g.addContestant(c);
 	}
 	
 	protected void removeContestant(Contestant c) {
 		data.remove(c);
 		sortTable();
 		
-		GameData.getCurrentGame().removeContestant(c);
+		GameData g = GameData.getCurrentGame();
+		g.removeContestant(c);
 	}
 	
 	/**

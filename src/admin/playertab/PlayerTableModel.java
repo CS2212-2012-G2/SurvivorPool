@@ -236,19 +236,11 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * @param c New contestant data.
 	 */
 	protected void updateUser(User u) {
-		User updateUser = null;
+		int index = Utils.BinSearchSafe(globalData, u, Utils.CompType.USER_ID);
 		
-		for (int i = 0; i < globalData.size(); i++) {
-			updateUser = globalData.get(i);
-			if (updateUser.getID().equalsIgnoreCase(u.getID())) {
-				break;
-			}
-			updateUser = null;
-		}
-		
-		if (updateUser != null) {
+		if (index >= 0) {
 			try { 
-				updateUser.update(u); 
+				globalData.get(index).update(u); 
 			} catch (InvalidFieldException e) { }
 		} else {
 			addUser(u);

@@ -41,6 +41,7 @@ import admin.MainFrame;
 import data.GameData;
 import data.Contestant;
 import data.Person;
+import data.User;
 
 public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
@@ -65,9 +66,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	
 	private JTextField tfContID;
 	private JLabel labelID;
-	
-	private static Contestant INACTIVE_CONT = new Contestant();
-	private Contestant activeCon = INACTIVE_CONT;
 
 	private JTable table;
 	private ContestantTableModel tableModel; 
@@ -75,6 +73,13 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	
 	private JButton bAddNew;
 	private JButton bDelete;
+	
+	// vars:
+	private boolean isNewContestant;
+	private boolean fieldsChanged = false;
+	
+	private static final String CAST_OFF_TEXT = "Cast Off";
+	private static final String UNDO_CAST_TEXT = null;
 	
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
 	private static int IMAGE_MAX_DIM = 75;
@@ -142,6 +147,15 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		buildBottomPanel();
 		
 		buildActions();
+		
+		refreshGameFields();
+		
+		if (cons.size() > 0) {
+			setPanelContestant(cons.get(0), false);
+			table.setRowSelectionInterval(0, 0);
+		} else {
+			setPanelContestant(null, true);
+		}
 		
 	}
 	
@@ -294,49 +308,60 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	 * gets the current information with the current contestant, will update 
 	 * from the fields associated.
 	 * @return Current contestant loaded
+	 * @throws InvalidFieldException Thrown on any bad fields passed
 	 */
-	private Contestant getCurrentContestant() {
-		Contestant tempCon = activeCon;
-		activeCon = new Contestant();
+	private Contestant getContestant() throws InvalidFieldException {
+		Contestant c = new Contestant();
+	
+		c.setID(tfContID.getText());
+		c.setFirstName(tfFirstName.getText().trim());
+		c.setLastName(tfLastName.getText().trim());
+		c.setTribe((String)cbTribe.getSelectedItem());
+		c.setPicture(imgPath);
 		
-		try {
-			String id = tfContID.getText();
-			if (GameData.getCurrentGame().isIDValid(id)) {
-				activeCon.setID(id);
-			} else {
-				throw new InvalidFieldException("Invalid ID by double occurance.");
-			}
-			
-			activeCon.setFirstName(tfFirstName.getText().trim());
-			activeCon.setLastName(tfLastName.getText().trim());
-			activeCon.setTribe((String)cbTribe.getSelectedItem());
-			activeCon.setPicture(imgPath);
-		} catch (InvalidFieldException ife) {
-			System.out.println("Invalid field in " + 
-					"ContestantPanel.getCurrentContestant:");	
-			System.out.println("\t" + ife.getMessage());
-			
-			activeCon = tempCon;
-			return null;
-		}
-			
-		tempCon = activeCon;
-		activeCon = INACTIVE_CONT;
-		
-		return tempCon;
+		return c;
 	}
 	
-	private void setActiveContestant(Contestant c) {
-		activeCon = c;
+	private void setPanelIsActive(boolean active, int week) {
+		if (active) {
+			labelCastOff.setText("Active");
+			bCastOff.setText(CAST_OFF_TEXT);
+		} else {
+			labelCastOff.setText("Week " + week);
+			bCastOff.setText(UNDO_CAST_TEXT);
+		}
+	}
+	
+	private void setPanelContestant(Contestant c, boolean newContestant) {
+		isNewContestant = newContestant;
+		
+		if (fieldsChanged) {
+			System.out.println("Player panel changing, fields modified.");
+			saveContestant();
+			fieldsChanged = false;
+		}
+		
+		tfContID.setEnabled(isNewContestant);
+		
+		if (newContestant || c == null) {
+			// set default values
+			tfContID.setText("");
+			tfFirstName.setText("First Name");
+			tfLastName.setText("Last Name");
+			
+			cbTribe.setSelectedIndex(0);
+			
+			setPanelIsActive(true, -1);
+			
+			updateContPicture(DEFAULT_PICTURE);
+			
+			return;
+		}
 		
 		tfFirstName.setText(c.getFirstName());
 		tfLastName.setText(c.getLastName());
 		
-		if (c.isCastOff()) {
-			labelCastStatus.setText("Week: " + c.getCastDate());
-		} else {
-			labelCastStatus.setText("Active");
-		}
+		setPanelIsActive(c.isCastOff(), c.getCastDate());
 		
 		cbTribe.setSelectedItem(c.getTribe());
 		
@@ -345,28 +370,77 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		updateContPicture(c.getPicture());
 	}
 	
+	private void saveContestant() {
+		Contestant con = null;
+		try {
+			con = getContestant();
+		} catch (InvalidFieldException e) {
+			setExceptionError(e);
+			return;
+		} // end catch block
+		
+		tableModel.updateContestant(con);
+		
+		int row = tableModel.getRowByContestant(con);
+		if (row >= 0 && table.getSelectedRow() != row) // select a row
+			table.setRowSelectionInterval(row, row);
+
+		isNewContestant = false;
+		fieldsChanged = false;
+	}
+	
+	/**
+	 * Sets the error infromation based on an exception!
+	 * @param e Exception with the information necessary
+	 */
+	private void setExceptionError(InvalidFieldException e) {
+		MainFrame mf = MainFrame.getRunningFrame();
+		
+		switch (e.getField()) {
+		case CONT_ID:
+			mf.setStatusErrorMsg("Invalid ID (must be 2 alphanumeric " +
+					"characters long)", 
+					tfContID);
+			break;
+		case CONT_FIRST:
+			mf.setStatusErrorMsg("Invalid First Name (must be alphabetic" +
+					", 1-20 characters)",
+					tfFirstName);
+			break;
+		case CONT_LAST:
+			mf.setStatusErrorMsg("Invalid Last Name (must be alphabetic" +
+					", 1-20 characters)",
+					tfLastName);
+			break;
+		case CONT_TRIBE: // how you did this is beyond me..
+			mf.setStatusErrorMsg("Invalid Tribe selection", cbTribe);
+			break;
+		default:
+			mf.setStatusErrorMsg("Unknown problem with fields");	
+		}
+	}
+
 	private void buildActions() {
 		bSavePlayer.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				MainFrame frame = MainFrame.getRunningFrame();
-				if(!Utils.checkString(tfFirstName.getText().trim(), Person.REGEX_FIRST_NAME)){
-					frame.setStatusErrorMsg("Invalid first name. 1-20 alphabetic characters",tfFirstName);
-				}else if(!Utils.checkString(tfLastName.getText().trim(), Person.REGEX_LAST_NAME)){
-					frame.setStatusErrorMsg("Invalid last name. 1-20 alphabetic characters",tfLastName);
-				}else if(!Utils.checkString(tfContID.getText(), Person.REGEX_CONTEST_ID)){
-					frame.setStatusErrorMsg("Invalid contestant id. 2 alphanumeric characters",tfContID);
-				}else{	
-					// check if the contestant is active
-					Contestant con = getCurrentContestant();
-					if (con != null) {
-						// null if something went wrong.
-						tableModel.updateContestant(con);
+				if (isNewContestant) {
+					int response = JOptionPane.showConfirmDialog(null,
+							"Would you like to save a new selected " +
+							"contestant? You can not change ID after saveing.",
+							"Delete Contestant?",
+							JOptionPane.YES_NO_OPTION);
+					if(response == JOptionPane.NO_OPTION){
+						return;
 					}
-					System.out.println("We here");
 				}
 				
+				if (fieldsChanged) {
+					saveContestant();
+				}
+				
+				fieldsChanged = false;
 			}
 			
 		});
@@ -390,44 +464,80 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 				String s = ((JButton) e.getSource()).getText();
 				if(s.equals("Cast Off")){
 					// can't cast off someone already off.
-				if (activeCon.isCastOff())
-					return;
-			
-				activeCon.toCastOff();
-				labelCastStatus.setText("Week " + activeCon.getCastDate());
+					/*if (activeCon.isCastOff())
+						return;
+					
+						activeCon.toCastOff();
+						labelCastStatus.setText("Week " + activeCon.getCastDate());
+					}
+					else{
+						activeCon.undoCast();
+						labelCastStatus.setText("Active");
+						bCastOff.setText("Cast Off");
+					}	*/
 				}
-				else{
-				activeCon.undoCast();
-				labelCastStatus.setText("Active");
-				bCastOff.setText("Cast Off");
-				}	
 			}
 		});
 		
 		bDelete.addActionListener(new ActionListener(){
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
-    			int num = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " +
-    					   activeCon.getFirstName() + " " + activeCon.getLastName() + "?",
-    					  "Delete Contestant", JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
-    			if(num == JOptionPane.YES_OPTION)
-				tableModel.removeContestant(activeCon);
-    			else return;
+				// ask the admin for input on whether to delete or not
+				int response = JOptionPane.showConfirmDialog(null,
+						"Would you like to delete currently selected " +
+						"Contestant?",
+						"Delete Contestant?",
+						JOptionPane.YES_NO_OPTION);
+				
+				if(response == JOptionPane.YES_OPTION){
+					// user said they want to delete contestant
+					Contestant c = null;
+					try {
+						c = getContestant();
+					} catch (InvalidFieldException ex) {
+						if (ex.getField() == InvalidFieldException.Field.CONT_ID) {
+							MainFrame.getRunningFrame()
+								.setStatusErrorMsg("Can not delete Contestant"+
+										" (invalid ID)", 
+										tfContID);
+							return;
+						}
+					}
+	
+					GameData g = GameData.getCurrentGame();
+					Contestant t = g.getContestant(c.getID());
+					int row = tableModel.getRowByContestant(t);
+					boolean selRow = (table.getRowCount() > 1);
+					tableModel.removeContestant(t);
+					if (selRow) {
+						row %= table.getRowCount();
+						table.setRowSelectionInterval(row, row);
+					} else {
+						bAddNew.doClick();
+					}
+				}
 			}
 		});
 		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
-			public void valueChanged(ListSelectionEvent arg0) {
+			int oldRow = -1; // breaks an infinite loop since setPanelUser fires this event
+			
+			public void valueChanged(ListSelectionEvent le) {
 				 int row = table.getSelectedRow();
+				 if (row < 0 || oldRow == row) return;
+				 oldRow = row;
+				 
 				 Contestant c = tableModel.getByRow(row);
 			     
 				 if (c != null){
-					 setActiveContestant(c);
-					 if(activeCon.isToBeCast() == true)
-						 bCastOff.setText("Undo Cast");
-					 else bCastOff.setText("Cast Off");
+					 if (fieldsChanged) {
+						 saveContestant();
+						 fieldsChanged = false;
+					 }
 					 
+					 setPanelContestant(c, false); 
 				 }
 			}
 		});
@@ -483,7 +593,12 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	// unused
 	@Override
 	public void mousePressed(MouseEvent e) {
-		return;
+		Component c = e.getComponent();
+		if (c == tfContID || c == tfFirstName || c == tfLastName ||
+				c == cbTribe || c == table || c == bCastOff) {
+			fieldsChanged = true;
+			bSavePlayer.setEnabled(true);
+		}
 	}
 
 	// unused

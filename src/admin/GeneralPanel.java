@@ -123,8 +123,6 @@ public class GeneralPanel extends JPanel {
 					MainFrame mf = MainFrame.getRunningFrame();
 					mf.setStatusMsg("Tribes changed.");
 					mf.forceGameDataRefresh();
-					// TODO: make tribe name change other panels as
-					// well(Contestant jcombobox is not updated)
 				}
 			}
 
