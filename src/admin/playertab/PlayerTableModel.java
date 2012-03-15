@@ -240,7 +240,7 @@ public class PlayerTableModel extends AbstractTableModel {
 		// is the ID in use in the game data?
 		GameData g = GameData.getCurrentGame();
 		try {
-			if (g.isContestantIDInUse(u.getID())) { 
+			if (g.isUserIDInUse(u.getID())) { 
 				g.getUser(u.getID()).update(u);
 			} else {
 				addUser(u);

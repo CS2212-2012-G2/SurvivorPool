@@ -365,28 +365,28 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		labelPts.setText(Integer.toString(u.getPoints()));
 		
-		boolean[] bools = new boolean[] {false, false};
 		
-		@SuppressWarnings("unchecked")
-		JComboBox<Contestant>[] cbs = new JComboBox[2];
-		cbs[0] = cbUltPick; cbs[1] = cbWeeklyPick;
 		
 		// iterate through combo boxes setting indexes as necessary
+		boolean ultSet = false, weekSet = false;
 		for (int i = 0; i < cbUltPick.getItemCount(); i++) {
 			
-			for (int j = 0; j < cbs.length; j++) {
-				if (bools[j]) {
-					Contestant c = cbs[j].getItemAt(i);
-					
-					if (u.getID().equals(c.getID())) { 
-						// contestant is correct
-						cbs[j].setSelectedIndex(i);
-						bools[j] = true;
-					}	
-				}
+			// get the contestant to compare with, both store same values
+			Contestant c = u.getUltimatePick();
+			
+			Contestant cbCon = cbUltPick.getItemAt(i);
+			if (!ultSet && c.getID().equals(cbCon.getID())) {
+				cbUltPick.setSelectedIndex(i);
+				ultSet = true;
 			}
 			
-			if (bools[0] && bools[1]) 
+			c = u.getWeeklyPick();
+			if (!weekSet && c.getID().equals(cbCon.getID())) {
+				cbWeeklyPick.setSelectedIndex(i);
+				weekSet = true;
+			}
+			
+			if (ultSet && weekSet) 
 				break; // break if both are set
 		}
 	}
