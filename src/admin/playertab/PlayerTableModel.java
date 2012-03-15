@@ -11,11 +11,13 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import data.Contestant;
 import data.InvalidFieldException;
 import data.InvalidFieldException.Field;
 import data.User;
 
 import admin.Utils;
+import admin.contestanttab.ContestantTableModel;
 import data.GameData;
 
 
@@ -261,6 +263,10 @@ public class PlayerTableModel extends AbstractTableModel {
 	        JTable table = ((JTableHeader)e.getSource()).getTable();
 	        TableColumnModel colModel = table.getColumnModel();
 
+	        // get the contestant referenced
+	        PlayerTableModel model = (PlayerTableModel)table.getModel();
+	        User u = model.getByRow(table.getSelectedRow());
+	        
 	        // The index of the column whose header was clicked
 	        int vIndex = colModel.getColumnIndexAtX(e.getX());
 
@@ -273,6 +279,10 @@ public class PlayerTableModel extends AbstractTableModel {
 	        
 	        // we have the column index, sort the data
 	        sortTableBy(mIndex);
+	        
+	        // reset the selection to that row
+	        int r = model.getRowByUser(u);
+	        table.setRowSelectionInterval(r, r);
 	    }
 	}
 }

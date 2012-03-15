@@ -11,11 +11,13 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.InvalidFieldException.Field;
 
 public class ContestantTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
@@ -259,11 +261,24 @@ public class ContestantTableModel extends AbstractTableModel {
 		// is the ID in use in the game data?
 		GameData g = GameData.getCurrentGame();
 		try {
-			if (g.isContestantIDInUse(c.getID())) { 
-				g.getContestant(c.getID()).update(c);
-			} else {
-				
+			List<Contestant> list = g.getAllContestants();
+			boolean conInGame = list.contains(c);
+			boolean idUsed = g.isContestantIDInUse(c.getID());
+			
+			if (!conInGame && !idUsed )
 				addContestant(c);
+			else if (conInGame && idUsed) {
+				// we know the contestant is in the game, AND the ID is in use
+				// try to find if its in the game otherwise, if it is, then we 
+				// have a problem, otherwise, no problem. 
+				// JESUS CHRIST THIS LOGIC SUCKED.
+				for (Contestant t: list) {
+					if (t.getID().equals(c.getID()) && t != c) {
+						throw new InvalidFieldException(Field.CONT_ID_DUP, 
+						"Invalid ID (in use)");
+					}
+				}
+				
 			}
 		} catch (InvalidFieldException e) { 
 			if (e.getField() == InvalidFieldException.Field.CONT_ID_DUP)
@@ -278,6 +293,10 @@ public class ContestantTableModel extends AbstractTableModel {
 		public void mouseClicked(MouseEvent e) {
 	        JTable table = ((JTableHeader)e.getSource()).getTable();
 	        TableColumnModel colModel = table.getColumnModel();
+	        
+	        // get the contestant referenced
+	        ContestantTableModel model = (ContestantTableModel)table.getModel();
+	        Contestant c = model.getByRow(table.getSelectedRow());
 
 	        // The index of the column whose header was clicked
 	        int vIndex = colModel.getColumnIndexAtX(e.getX());
@@ -291,6 +310,10 @@ public class ContestantTableModel extends AbstractTableModel {
 	        
 	        // we have the column index, sort the data
 	        sortTableBy(mIndex);
+	        
+	        // reset the selection to that row
+	        int r = model.getRowByContestant(c);
+	        table.setRowSelectionInterval(r, r);
 	    }
 	}
 }

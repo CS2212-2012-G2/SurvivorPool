@@ -161,6 +161,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		} else {
 			setPanelContestant(null, true);
 		}	
+		setFieldsChanged(false);
 	}
 	
 	/**
@@ -303,14 +304,20 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	}
 	
 	/**
+	 * DO NOT TOUCH THIS VARIABLE.
+	 */
+	private Contestant loadedContestant;
+	
+	/**
 	 * gets the current information with the current contestant, will update 
 	 * from the fields associated.
 	 * @return Current contestant loaded
 	 * @throws InvalidFieldException Thrown on any bad fields passed
 	 */
 	private Contestant getContestant() throws InvalidFieldException {
-		Contestant c = new Contestant();
-	
+		// FIXME: keep reference to the contestant object handled.
+		Contestant c = loadedContestant;
+		
 		c.setID(tfContID.getText());
 		c.setFirstName(tfFirstName.getText().trim());
 		c.setLastName(tfLastName.getText().trim());
@@ -330,15 +337,31 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		}
 	}
 	
+	/**
+	 * Sets the panel to the passed Contestant value. If newContestant is
+	 * true, then it loads a NEW contestant object, otherwise it uses the 
+	 * reference passed in. 
+	 * @param c
+	 * @param newContestant
+	 */
 	private void setPanelContestant(Contestant c, boolean newContestant) {
-		if (fieldsChanged) {
+		if (getFieldsChanged()) {
 			System.out.println("Player panel changing, fields modified.");
 			saveContestant();
 		}
 		
 		isNewContestant = newContestant;
 		
-		tfContID.setEnabled(isNewContestant);
+		if (isNewContestant) {
+			loadedContestant = new Contestant();
+		} else {
+			loadedContestant = c;
+		}
+		
+		GameData g = GameData.getCurrentGame();
+		tfContID.setEnabled(!g.isSeasonStarted());
+		//tfContID.setEnabled(isNewContestant);
+		
 		btnCastOff.setEnabled(!isNewContestant);
 		
 		if (newContestant || c == null) {
@@ -374,11 +397,9 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		try {
 			con = getContestant();
 			
-			GameData g = GameData.getCurrentGame();
-			if (isNewContestant && g.isContestantIDInUse(con.getID())) {
-				throw new InvalidFieldException(Field.CONT_ID_DUP, 
-						"Invalid ID (in use)");
-			}
+			//GameData g = GameData.getCurrentGame();
+			//List<Contestant> allCons = g.getAllContestants();
+			
 			
 			tableModel.updateContestant(con);
 		} catch (InvalidFieldException e) {
@@ -386,12 +407,30 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			return;	
 		} // end catch block
 		
+		// set that its now NOT a new contestant, and no fields have changed.
 		isNewContestant = false;
-		fieldsChanged = false;
+		setFieldsChanged(false);
 		
 		int row = tableModel.getRowByContestant(con);
 		if (row >= 0 && table.getSelectedRow() != row) // select a row
 			table.setRowSelectionInterval(row, row);
+	}
+	
+	/**
+	 * Should ALWAYS used when modifying fieldsChanged.
+	 * @param value new value for fieldsChanged field.
+	 */
+	private void setFieldsChanged(boolean value) {
+		fieldsChanged = value;
+		btnSaveCont.setEnabled(value);
+	}
+	
+	/**
+	 * Returns whether fields have changed or not.
+	 * @return True if changed, false otherwise.
+	 */
+	private boolean getFieldsChanged() {
+		return fieldsChanged;
 	}
 	
 	/**
@@ -433,7 +472,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (fieldsChanged) {
+				if (getFieldsChanged()) {
 					saveContestant();
 				}
 				
@@ -457,7 +496,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 					}
 				}
 				
-				if (fieldsChanged) {
+				if (getFieldsChanged()) {
 					saveContestant();
 				}
 			}
@@ -632,8 +671,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		Component c = e.getComponent();
 		if (c == tfContID || c == tfFirstName || c == tfLastName ||
 				c == cbTribe || c == table || c == btnCastOff) {
-			fieldsChanged = true;
-			btnSaveCont.setEnabled(true);
+			setFieldsChanged(true);
 		}
 	}
 
