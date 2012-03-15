@@ -77,7 +77,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	private JButton btnDeleteCont;
 	
 	// vars:
-	private boolean isNewContestant;
+	private boolean isNewContestant = false;
 	private boolean fieldsChanged = false;
 	
 	private static final String CAST_OFF_TEXT = "Cast Off";
@@ -551,10 +551,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 				 Contestant c = tableModel.getByRow(row);
 			     
 				 if (c != null){
-					 if (fieldsChanged) {
-						 saveContestant();
-					 }
-					 
 					 setPanelContestant(c, false); 
 				 }
 			}

@@ -352,7 +352,7 @@ public class GameData {
 
 	// ----------------- MUTATOR METHODS ------------------//
 
-	private Contestant randomContestant(boolean isActive) {
+	public Contestant randomContestant(boolean isActive) {
 		List<Contestant> list = null;
 		if (isActive) {
 			list = getActiveContestants();

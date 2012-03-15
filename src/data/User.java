@@ -244,17 +244,18 @@ public class User implements Person {
 		obj.put(KEY_ID, getID());
 		obj.put(KEY_POINTS, getPoints());
 		
+		GameData g = GameData.getCurrentGame();
 		Contestant c = getWeeklyPick();
-		if (c != null)
-			obj.put(KEY_WEEKLY_PICK_ID, c.getID());
-		else 
-			obj.put(KEY_WEEKLY_PICK_ID, null);
+		if (c == null || c.isNull()) {
+			c = g.randomContestant(true);
+		}
+		obj.put(KEY_WEEKLY_PICK_ID, c.getID());
 		
 		c = getUltimatePick();
-		if (c != null) 
-			obj.put(KEY_ULT_PICK_ID, c.getID());
-		else
-			obj.put(KEY_ULT_PICK_ID, null);
+		if (c == null || c.isNull()) {
+			c = g.randomContestant(true);
+		}
+		obj.put(KEY_ULT_PICK_ID, c.getID());
 		
 		obj.put(KEY_WIN_PICK_POINTS, new Integer(getUltimatePoints()));
 		

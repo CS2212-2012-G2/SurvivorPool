@@ -433,12 +433,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			return;
 		} // end catch block
 		
+		isNewUser = false;
+		fieldsChanged = false;
+		
 		int row = tableModel.getRowByUser(user);
 		if (row >= 0 && table.getSelectedRow() != row) // select a row
 			table.setRowSelectionInterval(row, row);
-
-		isNewUser = false;
-		fieldsChanged = false;
 	}
 	
 	private void buildActions() {
@@ -450,7 +450,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					saveUser();
 				}
 				
-				fieldsChanged = false;
 				setPanelUser(null, true);
 			}
 			
