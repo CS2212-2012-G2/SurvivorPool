@@ -279,7 +279,7 @@ public class Contestant implements Person {
 			return String.format("[%s] %s, %s", 
 					getID(), getLastName(), getFirstName());
 		else
-			return String.format("[%s] None", getID());
+			return "None";
 	}
 	
 	/**

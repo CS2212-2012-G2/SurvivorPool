@@ -6,19 +6,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import data.Contestant;
+import admin.Utils;
+import data.GameData;
 import data.InvalidFieldException;
 import data.InvalidFieldException.Field;
 import data.User;
-
-import admin.Utils;
-import admin.contestanttab.ContestantTableModel;
-import data.GameData;
 
 
 public class PlayerTableModel extends AbstractTableModel {
@@ -36,7 +34,6 @@ public class PlayerTableModel extends AbstractTableModel {
 	public static final int INDEX_ULT_PICK = 5;
 	
 	private int sortColumn = INDEX_ID;
-	private List<User> globalData;
 	
 	/**
 	 * Creates the table model which controls the table's actions and data.
@@ -44,7 +41,6 @@ public class PlayerTableModel extends AbstractTableModel {
 	 */
 	public PlayerTableModel(List<User> users) {
 		
-		globalData = users;
 		data = new ArrayList<User>(users);
 		
 		columnNames = new String[] { "ID", "Last", "First", "Points", 
