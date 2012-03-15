@@ -47,8 +47,10 @@ public class GeneralPanel extends JPanel {
 		pnlGenInfo.add(lblGenInfo, BorderLayout.CENTER);
 		pnlGenInfo.add(btnAdvWeek, BorderLayout.SOUTH);
 
-		if (GameData.getCurrentGame().isSeasonStarted())
+		if (GameData.getCurrentGame().isSeasonStarted()) {
 			btnAdvWeek.setText("Advance Week");
+		} 
+		
 
 		// TODO: actually set info here rather than just weeks.
 		lblGenInfo.setText("<html>"
@@ -71,12 +73,8 @@ public class GeneralPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				/* FOR BUG FIX, WHICH CANNOT BE ADDED YET
-				 GOES WITHIN THE IF STATEMENT
-			&& GameData.getCurrentGame().getNumCurrentContestants() == GameData
-				.getCurrentGame().getInitialContestants()
-				*/
-				if (!GameData.getCurrentGame().isSeasonStarted()) {
+				if (!GameData.getCurrentGame().isSeasonStarted() && GameData.getCurrentGame().getNumCurrentContestants() == GameData
+						.getCurrentGame().getInitialContestants()) {
 					String s = JOptionPane
 							.showInputDialog("Enter weekly bet amount!");
 					if (Utils.checkString(s, "^[0-9]+$")) {
