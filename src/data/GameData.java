@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import admin.Utils;
-import data.JSONUtils;
-import data.me.json.*;
+import data.me.json.JSONArray;
+import data.me.json.JSONException;
+import data.me.json.JSONObject;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -359,8 +361,8 @@ public class GameData {
 		} else {
 			list = getAllContestants();
 		}
-
-		int index = (int) Math.round(Math.random() * list.size());
+		Random r = new Random();
+		int index = r.nextInt(list.size());
 		return list.get(index);
 	}
 
@@ -713,19 +715,48 @@ public class GameData {
 			g.addContestant(c2);
 		} catch (InvalidFieldException ie) {};
 
+		User u1;
+		try {
+			u1 = new User("First","last","flast");
+			User u2 = new User("Firsto","lasto","flasto");
+			g.addUser(u1);
+			g.addUser(u2);
+			u1.setPoints(10);
+			u2.setPoints(1);
+		} catch (InvalidFieldException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+/* uncomment to show why the previous random generator was failing
+		int size = g.getActiveContestants().size();
+		int prevCount = 0;
+		int newCount=0;
+		Random r = new Random();
+
+		for(int i =0;i<500;i++){
+			int index = (int) Math.round(Math.random() * size);
+			if(index<0||index>=size)
+				prevCount++;
+			index = r.nextInt(size);
+			if(index<0||index>=size)
+				newCount++;
+		}
+		System.out.println(prevCount+" "+newCount);
+*/		
 		try {
 			System.out.println(g.toJSONObject().toString());
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
 
-		GameData g2 = new GameData(6);
+		
+		/*GameData g2 = new GameData(6);
 
 		try {
 			g2.fromJSONObject(g.toJSONObject());
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 	}
 
