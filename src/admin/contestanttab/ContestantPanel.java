@@ -34,6 +34,7 @@ import javax.swing.table.TableCellRenderer;
 
 import data.InvalidFieldException;
 
+import admin.GameDataDependant;
 import admin.Utils;
 import admin.FileDrop;
 import admin.MainFrame;
@@ -41,7 +42,7 @@ import data.GameData;
 import data.Contestant;
 import data.Person;
 
-public class ContestantPanel extends JPanel implements MouseListener {
+public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
 	private static final long serialVersionUID = 1L;
 	private JButton imgDisplay;
@@ -489,6 +490,27 @@ public class ContestantPanel extends JPanel implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		return;
+	}
+
+	/**
+	 * Refreshes all values associated with GameData reference.
+	 * <br> Currently:
+	 * - Tribe combobox
+	 * - Table
+	 * @see GameDataDependant.refreshGameFields
+	 */
+	@Override
+	public void refreshGameFields() {
+		GameData g = GameData.getCurrentGame();
+		
+		// tribe combobox
+		String[] newTribes = g.getTribeNames();
+		cbTribe.removeAllItems();
+		for (String s: newTribes) {
+			cbTribe.addItem(s);
+		}
+		
+		tableModel.fireTableDataChanged();
 	}
 
 }

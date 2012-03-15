@@ -30,6 +30,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
+import admin.GameDataDependant;
 import admin.Utils;
 import admin.MainFrame;
 import data.Contestant;
@@ -45,7 +46,7 @@ import data.GameData;
  *
  */
 public class PlayerPanel extends JPanel implements ChangeListener,
-		MouseListener {
+		MouseListener, GameDataDependant {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -569,6 +570,16 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				 oldRow = row;
 			}
 		});
+	}
+	
+	/**
+	 * Changes all fields that have data changed. <br>
+	 * Currently calls:
+	 * - Table update
+	 */
+	@Override
+	public void refreshGameFields() {
+		tableModel.fireTableDataChanged();
 	}
 
 	@Override
