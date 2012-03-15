@@ -334,6 +334,8 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			labelCastStatus.setText("Week " + week);
 			btnCastOff.setText(UNDO_CAST_TEXT);
 		}
+		
+		btnCastOff.setEnabled(GameData.getCurrentGame().isSeasonStarted());
 	}
 	
 	/**
