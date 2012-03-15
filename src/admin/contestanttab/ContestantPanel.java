@@ -43,7 +43,6 @@ import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
-import data.InvalidFieldException.Field;
 
 public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
@@ -376,6 +375,13 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			setPanelIsActive(false, -1);
 			
 			updateContPicture(DEFAULT_PICTURE);
+			
+			//we don't want any rows selected
+			ListSelectionModel m = table.getSelectionModel();
+			int row = table.getSelectedRow();
+			if (row >= 0) {
+				m.removeIndexInterval(row, row);
+			}
 
 			return;
 		}
@@ -397,10 +403,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		
 		try {
 			con = getContestant();
-			
-			//GameData g = GameData.getCurrentGame();
-			//List<Contestant> allCons = g.getAllContestants();
-			
 			
 			tableModel.updateContestant(con);
 		} catch (InvalidFieldException e) {
