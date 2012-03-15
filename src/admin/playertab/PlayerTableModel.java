@@ -12,6 +12,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 import data.InvalidFieldException;
+import data.InvalidFieldException.Field;
 import data.User;
 
 import admin.Utils;
@@ -210,13 +211,14 @@ public class PlayerTableModel extends AbstractTableModel {
 	/**
 	 * Adds a contestant, resorts the table. Updates the stored game data.
 	 * @param c 
+	 * @throws InvalidFieldException Thrown if ID is already in use
 	 */
-	protected void addUser(User u) {
-		data.add(u);
-		sortTable();
-		
+	protected void addUser(User u) throws InvalidFieldException {
 		GameData g = GameData.getCurrentGame();
 		g.addUser(u);
+		
+		data.add(u);
+		sortTable();
 	}
 	
 	protected void removeUser(User u) {
@@ -232,18 +234,22 @@ public class PlayerTableModel extends AbstractTableModel {
 	 * stored information. Overwrites everything in the current position, also
 	 * will resort the data table.
 	 * <br>
-	 * If the ID is not present, it WILL create a new entry (no sort).
+	 * If the ID is not present, it WILL create a new entry.
 	 * @param c New contestant data.
+	 * @throws InvalidFieldException Thrown if ID in use on a new contestant
 	 */
-	protected void updateUser(User u) {
-		int index = Utils.BinSearchSafe(globalData, u, Utils.CompType.USER_ID);
-		
-		if (index >= 0) {
-			try { 
-				globalData.get(index).update(u); 
-			} catch (InvalidFieldException e) { }
-		} else {
-			addUser(u);
+	protected void updateUser(User u) throws InvalidFieldException {
+		// is the ID in use in the game data?
+		GameData g = GameData.getCurrentGame();
+		try {
+			if (g.isContestantIDInUse(u.getID())) { 
+				g.getUser(u.getID()).update(u);
+			} else {
+				addUser(u);
+			}
+		} catch (InvalidFieldException e) { 
+			if (e.getField() == Field.USER_ID_DUP)
+				throw e;
 		}
 		
 		sortTable();

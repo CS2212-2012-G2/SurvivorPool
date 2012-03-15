@@ -228,13 +228,14 @@ public class ContestantTableModel extends AbstractTableModel {
 	/**
 	 * Adds a contestant, resorts the table. Updates the stored game data.
 	 * @param c 
+	 * @throws InvalidFieldException Thrown if ID already in use.
 	 */
-	protected void addContestant(Contestant c) {
-		data.add(c);
-		sortTable();
-		
+	protected void addContestant(Contestant c) throws InvalidFieldException {
 		GameData g = GameData.getCurrentGame();
 		g.addContestant(c);
+		
+		data.add(c);
+		sortTable();
 	}
 	
 	protected void removeContestant(Contestant c) {
@@ -250,18 +251,23 @@ public class ContestantTableModel extends AbstractTableModel {
 	 * stored information. Overwrites everything in the current position, also
 	 * will resort the data table.
 	 * <br>
-	 * If the ID is not present, it WILL create a new entry (no sort).
+	 * If the ID is not present, it WILL create a new entry.
 	 * @param c New contestant data.
+	 * @throws InvalidFieldException Thrown if attempting to add a contestant which has an ID already present
 	 */
-	public void updateContestant(Contestant c) {
-		int index = Utils.BinSearchSafe(globalData, c, Utils.CompType.CONTNT_ID);
-		
-		if (index >= 0) {
-			try { 
-				globalData.get(index).update(c); 
-			} catch (InvalidFieldException e) { }
-		} else {
-			addContestant(c);
+	public void updateContestant(Contestant c) throws InvalidFieldException {
+		// is the ID in use in the game data?
+		GameData g = GameData.getCurrentGame();
+		try {
+			if (g.isContestantIDInUse(c.getID())) { 
+				g.getContestant(c.getID()).update(c);
+			} else {
+				
+				addContestant(c);
+			}
+		} catch (InvalidFieldException e) { 
+			if (e.getField() == InvalidFieldException.Field.CONT_ID_DUP)
+				throw e;
 		}
 		
 		sortTable();

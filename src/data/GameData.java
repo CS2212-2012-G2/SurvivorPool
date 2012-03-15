@@ -186,15 +186,15 @@ public class GameData {
 	 * @param c
 	 *            New contestant, will not add if ID of contestant is null.
 	 */
-	public void addContestant(Contestant c) {
-		if (c.getID() == null) {
-			System.out.println("Contestant must have valid ID");
-			return;
-		}
-
+	public void addContestant(Contestant c) throws InvalidFieldException {
 		if (allContestants.size() == numInitialContestants) {
 			System.out.println("Too many contestants.");
 			return;
+		}
+		
+		if (isContestantIDInUse(c.getID())) {
+			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID_DUP,
+					"Contestant ID invald (in use)");
 		}
 
 		allContestants.add(c);
@@ -237,8 +237,14 @@ public class GameData {
 	 * 
 	 * @param u
 	 *            New user to add.
+	 * @throws InvalidFieldException Thrown if ID already in use.
 	 */
-	public void addUser(User u) {
+	public void addUser(User u) throws InvalidFieldException {
+		if (isUserIDInUse(u.getID())) {
+			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID_DUP,
+					"Contestant ID invald (in use)");
+		}
+		
 		allUsers.add(u);
 	}
 
@@ -621,7 +627,7 @@ public class GameData {
 		for (int i = 0; i < cons.length(); i++) {
 			Contestant c = new Contestant();
 			c.fromJSONObject(cons.getJSONObject(i));
-			addContestant(c);
+			try { addContestant(c); } catch (InvalidFieldException ie) { }
 		}
 
 		// users:
@@ -630,7 +636,7 @@ public class GameData {
 		for (int i = 0; i < users.length(); i++) {
 			User u = new User();
 			u.fromJSONObject(users.getJSONObject(i));
-			addUser(u);
+			try { addUser(u); } catch (InvalidFieldException ie) { }
 		}
 	}
 
@@ -701,9 +707,11 @@ public class GameData {
 		} catch (InvalidFieldException e) {
 			// wont happen.
 		}
-
-		g.addContestant(c1);
-		g.addContestant(c2);
+ 
+		try {
+			g.addContestant(c1);
+			g.addContestant(c2);
+		} catch (InvalidFieldException ie) {};
 
 		try {
 			System.out.println(g.toJSONObject().toString());

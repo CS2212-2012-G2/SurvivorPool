@@ -43,6 +43,7 @@ import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.InvalidFieldException.Field;
 
 public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
@@ -320,24 +321,23 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		return c;
 	}
 	
-	private void setPanelIsActive(boolean active, int week) {
-		if (active) {
-			labelCastOff.setText("Active");
+	private void setPanelIsActive(boolean castOff, int week) {
+		if (castOff) {
+			labelCastStatus.setText("Active");
 			btnCastOff.setText(CAST_OFF_TEXT);
 		} else {
-			labelCastOff.setText("Week " + week);
+			labelCastStatus.setText("Week " + week);
 			btnCastOff.setText(UNDO_CAST_TEXT);
 		}
 	}
 	
 	private void setPanelContestant(Contestant c, boolean newContestant) {
-		isNewContestant = newContestant;
-		
 		if (fieldsChanged) {
 			System.out.println("Player panel changing, fields modified.");
 			saveContestant();
-			fieldsChanged = false;
 		}
+		
+		isNewContestant = newContestant;
 		
 		tfContID.setEnabled(isNewContestant);
 		
@@ -349,7 +349,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			
 			cbTribe.setSelectedIndex(0);
 			
-			setPanelIsActive(true, -1);
+			setPanelIsActive(false, -1);
 			
 			updateContPicture(DEFAULT_PICTURE);
 			
@@ -370,14 +370,21 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	
 	private void saveContestant() {
 		Contestant con = null;
+		
 		try {
 			con = getContestant();
+			
+			GameData g = GameData.getCurrentGame();
+			if (isNewContestant && g.isContestantIDInUse(con.getID())) {
+				throw new InvalidFieldException(Field.CONT_ID_DUP, 
+						"Invalid ID (in use)");
+			}
+			
+			tableModel.updateContestant(con);
 		} catch (InvalidFieldException e) {
 			setExceptionError(e);
-			return;
+			return;	
 		} // end catch block
-		
-		tableModel.updateContestant(con);
 		
 		isNewContestant = false;
 		fieldsChanged = false;
@@ -430,7 +437,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 					saveContestant();
 				}
 				
-				fieldsChanged = false;
+				isNewContestant = true;
 				setPanelContestant(null, true);
 			}
 		});
@@ -453,8 +460,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 				if (fieldsChanged) {
 					saveContestant();
 				}
-				
-				fieldsChanged = false;
 			}
 			
 		});
@@ -548,7 +553,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 				 if (c != null){
 					 if (fieldsChanged) {
 						 saveContestant();
-						 fieldsChanged = false;
 					 }
 					 
 					 setPanelContestant(c, false); 

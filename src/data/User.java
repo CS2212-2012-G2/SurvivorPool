@@ -1,6 +1,7 @@
 package data;
 
 import admin.Utils;
+import data.InvalidFieldException.Field;
 import data.me.json.*;
 
 /**
@@ -137,7 +138,7 @@ public class User implements Person {
 	 */
 	public void setFirstName(String first) throws InvalidFieldException {
 		if (!Utils.checkString(first, REGEX_FIRST_NAME))
-			throw new InvalidFieldException(InvalidFieldException.Field.USER_FIRST,
+			throw new InvalidFieldException(Field.USER_FIRST,
 					"Invalid First Name (User)");
 		firstName = first;
 	}
@@ -151,7 +152,7 @@ public class User implements Person {
 	 */
 	public void setLastName(String last) throws InvalidFieldException {
 		if (!Utils.checkString(last, REGEX_LAST_NAME))
-			throw new InvalidFieldException(InvalidFieldException.Field.USER_LAST,
+			throw new InvalidFieldException(Field.USER_LAST,
 					"Invalid Last Name (User)");
 		lastName = last;
 	}
@@ -165,7 +166,7 @@ public class User implements Person {
 	 */
 	public void setWeeklyPick(Contestant pick) throws InvalidFieldException  {
 		if (pick == null) {
-			throw new InvalidFieldException(InvalidFieldException.Field.USER_WEEKLY_PICK,
+			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
 					"Weekly Pick was null");
 		}
 		weeklyPick = pick;
@@ -191,7 +192,7 @@ public class User implements Person {
 	 */
 	public void setUltimatePickNoSetPts(Contestant winner) throws InvalidFieldException  {
 		if (winner == null) {
-			throw new InvalidFieldException(InvalidFieldException.Field.USER_WEEKLY_PICK,
+			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
 					"Weekly pick was null");
 		}
 		
@@ -216,13 +217,8 @@ public class User implements Person {
 	public void setID(String id) throws InvalidFieldException {
 		id = id.toLowerCase();
 		if (!Utils.checkString(id,REGEX_PLAYER_ID)) 
-			throw new InvalidFieldException(InvalidFieldException.Field.USER_ID,
+			throw new InvalidFieldException(Field.USER_ID,
 					"Invalid Player ID");
-		// is the ID in use in the game data?
-		GameData g = GameData.getCurrentGame();
-		if (g.isUserIDInUse(id)) 
-			throw new InvalidFieldException(InvalidFieldException.Field.USER_ID_DUP,
-					"Invalid Player ID (in use)");
 		
 		unID = id;
 	}

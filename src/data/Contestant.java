@@ -196,12 +196,6 @@ public class Contestant implements Person {
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID,
 					"Invalid contestant ID");
 		
-		// is the ID in use in the game data?
-		GameData g = GameData.getCurrentGame();
-		if (g.isContestantIDInUse(newID)) 
-			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID_DUP,
-					"Invalid contestant ID (in use)");
-		
 		cID = newID;
 	}
 	

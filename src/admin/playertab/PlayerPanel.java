@@ -42,6 +42,7 @@ import data.GameData;
 import data.InvalidFieldException;
 import data.Person;
 import data.User;
+import data.InvalidFieldException.Field;
 
 
 /**
@@ -419,12 +420,18 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		User user = null;
 		try {
 			user = getUser();
+			
+			GameData g = GameData.getCurrentGame();
+			if (isNewUser && g.isUserIDInUse(user.getID())) {
+				throw new InvalidFieldException(Field.USER_ID_DUP, 
+						"Invalid ID (in use)");
+			}
+			
+			tableModel.updateUser(user);
 		} catch (InvalidFieldException e) {
 			setExceptionError(e);
 			return;
 		} // end catch block
-		
-		tableModel.updateUser(user);
 		
 		int row = tableModel.getRowByUser(user);
 		if (row >= 0 && table.getSelectedRow() != row) // select a row
@@ -468,8 +475,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				if (fieldsChanged) {
 					saveUser();
 				}
-				
-				fieldsChanged = false;
 			}
 		});
 		
@@ -543,7 +548,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				 if (u != null){
 					 if (fieldsChanged) {
 						 saveUser();
-						 fieldsChanged = false;
 					 }
 					 
 					 setPanelUser(u, false); 
