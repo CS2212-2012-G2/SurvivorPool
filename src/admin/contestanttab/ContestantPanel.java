@@ -123,6 +123,10 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		
 		// buttons:
 		bCastOff = new JButton("Cast Off");
+		/* check to stop casting off before start */
+		if (!GameData.getCurrentGame().isSeasonStarted())
+			bCastOff.setEnabled(false);
+		
 		bSavePlayer = new JButton("Save");
 		
 		//////////////////////////////
@@ -170,12 +174,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		JPanel paneButtons = new JPanel();
 		GridLayout bl = new GridLayout(2, 1);
 		paneButtons.setLayout(bl);
-		
-		/* check to stop casting off before start */
-		// TODO: Doesn't change back when started
-		if (!GameData.getCurrentGame().isSeasonStarted())
-			bCastOff.setEnabled(false);
-		
+			
 		paneButtons.add(bCastOff);
 		
 		paneButtons.add(bSavePlayer);
@@ -551,6 +550,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 
 	public void seasonStarted(){
 		bAddNew.setEnabled(false);
+		bCastOff.setEnabled(true);
 		bDelete.setEnabled(false);
 		tfLastName.setEnabled(false);
 		tfFirstName.setEnabled(false);
