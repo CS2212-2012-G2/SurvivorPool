@@ -2,6 +2,90 @@ GROUP2README
 
 SECTIONS TO BE MARKED
 
+Assignment 3
+
+5. Up until the point that the game starts the administrative user should 
+be able to change/add/delete contestants, change names, tribes, unique 
+ids and pictures. The admin user should always be allowed to change the 
+tribe name, even after the game has started.
+
+- After starting a new season (File > Reset Season), click the Contestant
+tab to open the Contestant section of the admin application. To add a
+contestant, fill out the correct required information (first, last, id, 
+picture: click the picture box and find the file),and then hit "add new". 
+Since the season hasn't yet started, you are able to edit an already made 
+contestant by selecting the contestant's row in the table, editing the data 
+in the label boxes, and hitting "save". To start the season, go to the 
+"general" tab, and hit the "start season button". Now, all the admin can 
+edit is the tribe names, which was always avaliable to change at the bottom 
+of the general tab, by just editing the field of your choosing and hitting 
+"change tribe name".
+
+6. The administrative user should be able to add office workers (players) 
+until the game starts. Once the game starts the administrative user can 
+not add or delete any more players but he/she can modify players (except 
+for the userid)
+
+- see #5, except instead of the contestant tab, its the player
+tab.
+
+10. The adminstrative user must be able to list all the contestants by 
+unique id or first name, or last name or team or by elimination round/order.
+
+- Follow the same sets as #5 to create contestants. You can sort contestants
+within the table within the contestants tab by clicking the required column
+header
+
+11. The administrative user must be able to list all the players by first 
+name or last name or userid or by total score so far.
+
+- Follow the same sets as #5 to create players. You can sort players
+within the table within the players tab by clicking the required column
+header
+
+12. The administrative user must be able to start the game (at this point 
+no new players or contestants can be added). At this point the administrative 
+user should also enter the amount of money that each player is going to pitch 
+in (for example each player might be pitching in 5 dollars or 1 dollar).
+
+- As discussed in #5, once the required amount of contestants are added, the
+admin is able to start the season at the bottom of the general tab. After
+pressing the "start season" button, a pop-up asks for your required weekly 
+bet amount. 
+
+13. The administrative user must be able display the standings for all 
+the players (which player has which score). This could be displayed as 
+an HTML web page or within the program.
+
+- This is included in the requirements for #11.
+
+14. The administrative user must be able to indicate for each round/week, 
+who was eliminated. For testing purposes, the administrative user can do 
+this at any time (they don't have to wait till the end of the week)
+
+- when the administrator wants to cast off a contestant, they should start
+the season, and select the contestant from the contestant tab table list, and
+hit "cast off". To cancel a cast off, just hit cast off again while selecting
+the contestant.
+
+28. This system must allow the player to: see the current standings (you 
+could display this within the blackberry using tables, or you could use 
+the browser to view an html page)
+
+- after logging in, navigate to the standings screen, which will display
+the standings
+
+31. This system must allow the player to: pick which contestant he/she thinks 
+will be eliminated this week/round.
+
+- after logging in, navigate to the pick menu>weekly pick. At the top, the user can
+select from the drop down menu what their selection is from the active contestants
+to vote.
+
+_______________________________________
+
+Assignment 2
+
 4a1 DONE
 
 4a2 DONE
