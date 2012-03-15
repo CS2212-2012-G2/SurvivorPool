@@ -80,7 +80,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	private boolean fieldsChanged = false;
 	
 	private static final String CAST_OFF_TEXT = "Cast Off";
-	private static final String UNDO_CAST_TEXT = null;
+	private static final String UNDO_CAST_TEXT = "Undo Cast Off";
 	
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
 	private static int IMAGE_MAX_DIM = 75;
@@ -328,6 +328,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			labelCastOff.setText("Week " + week);
 			btnCastOff.setText(UNDO_CAST_TEXT);
 		}
+		btnCastOff.setEnabled(!active);
 	}
 	
 	private void setPanelContestant(Contestant c, boolean newContestant) {
