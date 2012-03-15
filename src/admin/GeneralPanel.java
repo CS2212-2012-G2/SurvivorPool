@@ -73,34 +73,34 @@ public class GeneralPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!GameData.getCurrentGame().isSeasonStarted() && GameData.getCurrentGame().getNumCurrentContestants() == GameData
-						.getCurrentGame().getInitialContestants()) {
-					String s = JOptionPane
-							.showInputDialog("Enter weekly bet amount!");
+				GameData g = GameData.getCurrentGame();
+					if(g.getAllContestants().size() == 0){
+						JOptionPane.showMessageDialog(null,"This will be a boring game with no contestants.  Add some!");
+						return;
+					}
+					if(g.getAllContestants().size() != g.getInitialContestants()){
+						JOptionPane.showMessageDialog(null,"You need to have " + g.getInitialContestants() + " contestants to start.");
+						return;
+					}
+					else if (!g.isSeasonStarted()) {
+					String s = JOptionPane.showInputDialog("Enter weekly bet amount!");
 					if (Utils.checkString(s, "^[0-9]+$")) {
 						if (Integer.parseInt(s) >= 0) {
-							GameData.getCurrentGame().startSeason(
-									Integer.parseInt(s));
+							GameData.getCurrentGame().startSeason(Integer.parseInt(s));
 							MainFrame.getRunningFrame().seasonStarted();
 							btnAdvWeek.setText("Advance Week");
 							return;
 						}
 						return;
 					}
-					JOptionPane.showMessageDialog(null,
-							"Invalid amount entered.");
-
+					JOptionPane.showMessageDialog(null, "Invalid amount entered.");
 				} else {
 					GameData.getCurrentGame().advanceWeek();
-					lblGenInfo.setText("<html>"
-							+ Integer.toString(GameData.getCurrentGame()
-									.weeksLeft())
+					lblGenInfo.setText("<html>" + Integer.toString(GameData.getCurrentGame().weeksLeft())
 							+ " weeks left. File -> Reset to start new season</html>");
-					btnAdvWeek.setVisible(!GameData.getCurrentGame()
-							.isSeasonEnded());
+					btnAdvWeek.setVisible(!GameData.getCurrentGame().isSeasonEnded());
 				}
 			}
-
 		});
 
 		btnChangeTribeName.addActionListener(new ActionListener() {
