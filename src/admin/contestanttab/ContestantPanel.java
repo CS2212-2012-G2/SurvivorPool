@@ -157,7 +157,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		refreshGameFields();
 		
 		if (cons.size() > 0) {
-			setPanelContestant(cons.get(0), false);
 			table.setRowSelectionInterval(0, 0);
 		} else {
 			setPanelContestant(null, true);
@@ -322,14 +321,13 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	}
 	
 	private void setPanelIsActive(boolean castOff, int week) {
-		if (castOff) {
+		if (!castOff) {
 			labelCastStatus.setText("Active");
 			btnCastOff.setText(CAST_OFF_TEXT);
 		} else {
 			labelCastStatus.setText("Week " + week);
 			btnCastOff.setText(UNDO_CAST_TEXT);
 		}
-		btnCastOff.setEnabled(!active);
 	}
 	
 	private void setPanelContestant(Contestant c, boolean newContestant) {
@@ -341,6 +339,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		isNewContestant = newContestant;
 		
 		tfContID.setEnabled(isNewContestant);
+		btnCastOff.setEnabled(!isNewContestant);
 		
 		if (newContestant || c == null) {
 			// set default values
@@ -353,7 +352,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			setPanelIsActive(false, -1);
 			
 			updateContPicture(DEFAULT_PICTURE);
-			
+
 			return;
 		}
 		
