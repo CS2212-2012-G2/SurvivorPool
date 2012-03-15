@@ -1,14 +1,17 @@
 package admin.playertab;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 import java.util.List;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,6 +25,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -31,13 +35,13 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import admin.GameDataDependant;
-import admin.Utils;
 import admin.MainFrame;
+import admin.Utils;
 import data.Contestant;
+import data.GameData;
 import data.InvalidFieldException;
 import data.Person;
 import data.User;
-import data.GameData;
 
 
 /**
@@ -548,6 +552,27 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				 
 			}
 		});
+		
+		FocusAdapter fa = new FocusAdapter() {
+			JTextField src;
+			
+			public void focusGained(FocusEvent evt) {
+				src = (JTextField)evt.getComponent();
+				
+				SwingUtilities.invokeLater( new Runnable() {
+    				@Override
+    				public void run() {
+    					src.selectAll();		
+    				}
+    			});
+    	    }
+		};
+		
+		List<JTextField> tfArr = Arrays.asList(tfID, tfFirstName, 
+				tfLastName);
+		for (JTextField tf: tfArr) {
+			tf.addFocusListener(fa);
+		}
 	}
 	
 	/**

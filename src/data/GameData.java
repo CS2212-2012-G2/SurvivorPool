@@ -187,7 +187,7 @@ public class GameData {
 	 *            New contestant, will not add if ID of contestant is null.
 	 */
 	public void addContestant(Contestant c) {
-		if (c.getID() == null || !isContestantIDInUse(c.getID())) {
+		if (c.getID() == null) {
 			System.out.println("Contestant must have valid ID");
 			return;
 		}

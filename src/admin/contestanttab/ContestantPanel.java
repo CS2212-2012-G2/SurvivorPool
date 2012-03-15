@@ -7,10 +7,13 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -26,22 +29,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import data.InvalidFieldException;
-
-import admin.GameDataDependant;
-import admin.Utils;
 import admin.FileDrop;
+import admin.GameDataDependant;
 import admin.MainFrame;
-import data.GameData;
+import admin.Utils;
 import data.Contestant;
-import data.Person;
-import data.User;
+import data.GameData;
+import data.InvalidFieldException;
 
 public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
@@ -159,8 +160,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			table.setRowSelectionInterval(0, 0);
 		} else {
 			setPanelContestant(null, true);
-		}
-		
+		}	
 	}
 	
 	/**
@@ -225,7 +225,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 					label.setBackground(UIManager.getColor("Table.background"));
 					label.setForeground(UIManager.getColor("Table.foreground"));
 				}
-				
 				
 				label.setOpaque(true);
 				label.setText("" + value);
@@ -380,12 +379,12 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		
 		tableModel.updateContestant(con);
 		
+		isNewContestant = false;
+		fieldsChanged = false;
+		
 		int row = tableModel.getRowByContestant(con);
 		if (row >= 0 && table.getSelectedRow() != row) // select a row
 			table.setRowSelectionInterval(row, row);
-
-		isNewContestant = false;
-		fieldsChanged = false;
 	}
 	
 	/**
@@ -562,6 +561,27 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 				updateContPicture(files[0].getAbsolutePath());
 			}  
 		});
+		
+		FocusAdapter fa = new FocusAdapter() {
+			JTextField src;
+			
+			public void focusGained(FocusEvent evt) {
+				src = (JTextField)evt.getComponent();
+				
+				SwingUtilities.invokeLater( new Runnable() {
+    				@Override
+    				public void run() {
+    					src.selectAll();		
+    				}
+    			});
+    	    }
+		};
+		
+		List<JTextField> tfArr = Arrays.asList(tfContID, tfFirstName, 
+				tfLastName);
+		for (JTextField tf: tfArr) {
+			tf.addFocusListener(fa);
+		}
 	}
 
 	public void seasonStarted(){

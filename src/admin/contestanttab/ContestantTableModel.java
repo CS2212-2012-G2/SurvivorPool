@@ -12,19 +12,15 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import admin.Utils;
+import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
-import data.User;
-
-import admin.Utils;
-
-import data.Contestant;
 
 public class ContestantTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private String[] columnNames;
 	private List<Contestant> data;
-	private boolean frozen = false;
 	
 	//public static final int INDEX_SELECT = 0;
 	public static final int INDEX_ID = 0;
@@ -111,17 +107,15 @@ public class ContestantTableModel extends AbstractTableModel {
         	break;
         
         case INDEX_FIRSTNAME:
-        	if (!frozen)
-        		try { 
-        			player.setFirstName((String)value); 
-        		} catch (InvalidFieldException e) { }
+    		try { 
+    			player.setFirstName((String)value); 
+    		} catch (InvalidFieldException e) { }
         	break;
         
         case INDEX_LASTNAME:
-        	if (!frozen)
-        		try {
-        			player.setLastName((String)value);
-        		} catch (InvalidFieldException e) { }
+    		try {
+    			player.setLastName((String)value);
+    		} catch (InvalidFieldException e) { }
         	break;
         
         case INDEX_TRIBE:
@@ -181,22 +175,6 @@ public class ContestantTableModel extends AbstractTableModel {
     	
     	return -1;
     }
-
-	/**
-	 * Called when a season is started, some data can be changed after, others
-	 * can't.
-	 */
-	public void freezeData() {
-		frozen  = true;
-	}
-	
-	/**
-	 * Used to check if data is Frozen, only some fields are editable if frozen
-	 * @return wether the model's data is frozen or not. 
-	 */
-	public boolean isFrozen() {
-		return frozen;
-	}
 	
 	/**
 	 * Sorts the table by the column specified, will update the table.
