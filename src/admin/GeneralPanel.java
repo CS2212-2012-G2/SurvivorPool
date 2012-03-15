@@ -32,7 +32,7 @@ public class GeneralPanel extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		initPnlInfo();
 		initListeners();
-		btnAdvWeek.setVisible(!GameData.getCurrentGame().getSeasonEnded());
+		btnAdvWeek.setVisible(!GameData.getCurrentGame().isSeasonEnded());
 	}
 
 	private void initPnlInfo() {
@@ -47,7 +47,7 @@ public class GeneralPanel extends JPanel {
 		pnlGenInfo.add(lblGenInfo, BorderLayout.CENTER);
 		pnlGenInfo.add(btnAdvWeek, BorderLayout.SOUTH);
 
-		if (GameData.getCurrentGame().getSeasonStarted())
+		if (GameData.getCurrentGame().isSeasonStarted())
 			btnAdvWeek.setText("Advance Week");
 
 		// TODO: actually set info here rather than just weeks.
@@ -76,7 +76,7 @@ public class GeneralPanel extends JPanel {
 			&& GameData.getCurrentGame().getNumCurrentContestants() == GameData
 				.getCurrentGame().getInitialContestants()
 				*/
-				if (!GameData.getCurrentGame().getSeasonStarted()) {
+				if (!GameData.getCurrentGame().isSeasonStarted()) {
 					String s = JOptionPane
 							.showInputDialog("Enter weekly bet amount!");
 					if (Utils.checkString(s, "^[0-9]+$")) {
@@ -99,7 +99,7 @@ public class GeneralPanel extends JPanel {
 									.weeksLeft())
 							+ " weeks left. File -> Reset to start new season</html>");
 					btnAdvWeek.setVisible(!GameData.getCurrentGame()
-							.getSeasonEnded());
+							.isSeasonEnded());
 				}
 			}
 

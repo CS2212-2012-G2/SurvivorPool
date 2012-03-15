@@ -151,7 +151,7 @@ public class MainFrame extends JFrame{
 		
 		this.add(tabPane);
 		this.add(statusBar, BorderLayout.SOUTH);
-		if(GameData.getCurrentGame().getSeasonStarted())
+		if(GameData.getCurrentGame().isSeasonStarted())
 			seasonStarted();
 	}
 	
