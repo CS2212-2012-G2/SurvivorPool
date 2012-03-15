@@ -260,29 +260,28 @@ public class ContestantTableModel extends AbstractTableModel {
 	public void updateContestant(Contestant c) throws InvalidFieldException {
 		// is the ID in use in the game data?
 		GameData g = GameData.getCurrentGame();
-		try {
-			List<Contestant> list = g.getAllContestants();
-			boolean conInGame = list.contains(c);
-			boolean idUsed = g.isContestantIDInUse(c.getID());
-			
-			if (!conInGame && !idUsed )
-				addContestant(c);
-			else if (conInGame && idUsed) {
-				// we know the contestant is in the game, AND the ID is in use
-				// try to find if its in the game otherwise, if it is, then we 
-				// have a problem, otherwise, no problem. 
-				// JESUS CHRIST THIS LOGIC SUCKED.
-				for (Contestant t: list) {
-					if (t.getID().equals(c.getID()) && t != c) {
-						throw new InvalidFieldException(Field.CONT_ID_DUP, 
-						"Invalid ID (in use)");
-					}
+		List<Contestant> list = g.getAllContestants();
+		boolean conInGame = list.contains(c);
+		boolean idUsed = g.isContestantIDInUse(c.getID());
+		
+		InvalidFieldException ie = new InvalidFieldException(Field.CONT_ID_DUP, 
+				"Invalid ID (in use)");
+		
+		if (!conInGame && !idUsed )
+			addContestant(c);
+		else if (conInGame && idUsed) {
+			// we know the contestant is in the game, AND the ID is in use
+			// try to find if its in the game otherwise, if it is, then we 
+			// have a problem, otherwise, no problem. 
+			// JESUS CHRIST THIS LOGIC SUCKED.
+			for (Contestant t: list) {
+				if (t.getID().equals(c.getID()) && t != c) {
+					throw ie;
 				}
-				
 			}
-		} catch (InvalidFieldException e) { 
-			if (e.getField() == InvalidFieldException.Field.CONT_ID_DUP)
-				throw e;
+			
+		} else if (!conInGame && idUsed) {
+			throw ie;
 		}
 		
 		sortTable();
