@@ -158,7 +158,7 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		
 		/* check to stop casting off before start */
 		// TODO: Doesn't change back when started
-		if (!GameData.getCurrentGame().getSeasonStarted())
+		if (!GameData.getCurrentGame().isSeasonStarted())
 			bCastOff.setEnabled(false);
 		
 		paneButtons.add(bCastOff);
