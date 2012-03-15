@@ -399,7 +399,7 @@ public class GameData {
 
 	/**
 	 * setTribeNames sets both tribe names accordingly and stores them in the
-	 * tribeNames string array.
+	 * tribeNames string array. Updates all contestants accordingly
 	 * 
 	 * @param tribeOne
 	 *            name of tribe one
@@ -407,8 +407,26 @@ public class GameData {
 	 *            name of tribe two
 	 */
 	public void setTribeNames(String tribeOne, String tribeTwo) {
+		// temp tribe vars.
+		String oldT1 = tribeNames[0];
+		String oldT2 = tribeNames[1];
+		
+		// set the new tribes (Contestant requires this)
 		tribeNames[0] = tribeOne;
 		tribeNames[1] = tribeTwo;
+		
+		// update all tribes first..
+		for (Contestant c: allContestants) {
+			if (c.getTribe().equalsIgnoreCase(oldT1)) {
+				try {
+					c.setTribe(tribeOne);
+				} catch (InvalidFieldException e) { }
+			} else if (c.getTribe().equalsIgnoreCase(oldT2)) {
+				try {
+					c.setTribe(tribeTwo);
+				} catch (InvalidFieldException e) { }
+			}
+		}
 	}
 
 	/**

@@ -119,8 +119,10 @@ public class GeneralPanel extends JPanel {
 							"Tribe 2 name invalid.", txtTribe2);
 				} else {
 					GameData.getCurrentGame().setTribeNames(
-							txtTribe1.getText(), txtTribe2.getSelectedText());
-					MainFrame.getRunningFrame().setStatusMsg("Tribes changed.");
+							txtTribe1.getText(), txtTribe2.getText());
+					MainFrame mf = MainFrame.getRunningFrame();
+					mf.setStatusMsg("Tribes changed.");
+					mf.forceGameDataRefresh();
 					// TODO: make tribe name change other panels as
 					// well(Contestant jcombobox is not updated)
 				}

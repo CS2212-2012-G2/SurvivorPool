@@ -266,6 +266,18 @@ public class MainFrame extends JFrame{
 		}
 	}
 	
+	/**
+	 * Checks all components and force calls refreshGameFields if they 
+	 * implement GameDataDependant
+	 */
+	public void forceGameDataRefresh() {
+		for (Component c: tabPane.getComponents()) {
+			if (c instanceof GameDataDependant) {
+				((GameDataDependant)c).refreshGameFields();
+			}
+		}
+	}
+	
 	private void windowClose(){
 		if(GameData.getCurrentGame()!=null)
 			GameData.getCurrentGame().writeData();
