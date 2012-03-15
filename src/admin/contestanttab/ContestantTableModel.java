@@ -267,8 +267,11 @@ public class ContestantTableModel extends AbstractTableModel {
 		InvalidFieldException ie = new InvalidFieldException(Field.CONT_ID_DUP, 
 				"Invalid ID (in use)");
 		
-		if (!conInGame && !idUsed )
+		if (!conInGame && !idUsed ) {
 			addContestant(c);
+		} else if (!conInGame && idUsed) {
+			throw ie;
+		}
 		else if (conInGame && idUsed) {
 			// we know the contestant is in the game, AND the ID is in use
 			// try to find if its in the game otherwise, if it is, then we 
@@ -279,9 +282,6 @@ public class ContestantTableModel extends AbstractTableModel {
 					throw ie;
 				}
 			}
-			
-		} else if (!conInGame && idUsed) {
-			throw ie;
 		}
 		
 		sortTable();
