@@ -137,7 +137,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		// ////////////////////////////
 		// Bottom
 		// ////////////////////////////
-		btnAddNew = new JButton("Add");
+		btnAddNew = new JButton("Add New");
 		btnDelete = new JButton("Delete");
 
 		// build the two panes
