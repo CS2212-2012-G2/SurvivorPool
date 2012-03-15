@@ -70,6 +70,9 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	private JComboBox<Contestant> cbUltPick;
 
 	// etc
+	/* FIXME: Break into two labels one with "Points:" other with actual value 
+	 * of pts
+	 */
 	private JLabel labelPts;
 	private JButton btnSave;
 
@@ -344,6 +347,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			cbWeeklyPick.setSelectedIndex(0);
 			
 			labelPts.setText(Integer.toString(0));
+			
+			//we don't want any rows selected
+			ListSelectionModel m = table.getSelectionModel();
+			int row = table.getSelectedRow();
+			if (row >= 0) {
+				m.removeIndexInterval(row, row);
+			}
 			
 			return;
 		}

@@ -43,7 +43,6 @@ import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
-import data.InvalidFieldException.Field;
 
 public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
