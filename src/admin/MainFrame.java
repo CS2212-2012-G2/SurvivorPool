@@ -260,6 +260,7 @@ public class MainFrame extends JFrame{
 									JOptionPane.YES_NO_OPTION);
 		if(response == JOptionPane.YES_OPTION){
 			GameData.getCurrentGame().endCurrentGame();
+			m.getJMenuBar().removeAll();
 			m.dispose();
 			m = new MainFrame();
 		}
