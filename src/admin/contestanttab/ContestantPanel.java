@@ -156,7 +156,13 @@ public class ContestantPanel extends JPanel implements MouseListener {
 		GridLayout bl = new GridLayout(2, 1);
 		paneButtons.setLayout(bl);
 		
+		/* check to stop casting off before start */
+		// TODO: Doesn't change back when started
+		if (!GameData.getCurrentGame().getSeasonStarted())
+			bCastOff.setEnabled(false);
+		
 		paneButtons.add(bCastOff);
+		
 		paneButtons.add(bSavePlayer);
 		
 		// add all components on top:
