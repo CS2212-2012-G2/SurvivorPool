@@ -86,6 +86,12 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
 	private static int IMAGE_MAX_DIM = 75;
 	
+	/**
+	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
+	 * YOU KNOW WHAT YOU ARE DOING.
+	 */
+	private Contestant loadedContestant;
+	
 	
 	public ContestantPanel(){
 		super();
@@ -302,11 +308,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		}
 		
 	}
-	
-	/**
-	 * DO NOT TOUCH THIS VARIABLE.
-	 */
-	private Contestant loadedContestant;
 	
 	/**
 	 * gets the current information with the current contestant, will update 
