@@ -486,16 +486,16 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GameData g = GameData.getCurrentGame();
-				if(g.getAllContestants().size() == g.getInitialContestants()){
-					JOptionPane.showMessageDialog(null,"There are already the maximum " +
-							                      "number of contestants in the game.  To add another " +
-							                      "you must delete an existing contestant.");
-					return;
-					
-				}
 				
 				if (isNewContestant) {
+					GameData g = GameData.getCurrentGame();
+					if(g.getAllContestants().size() == g.getInitialContestants()){
+						JOptionPane.showMessageDialog(null,"There are already the maximum " +
+								                      "number of contestants in the game.  To add another " +
+								                      "you must delete an existing contestant.");
+						return;
+						
+					}
 					int response = JOptionPane.showConfirmDialog(null,
 							"Would you like to save a new selected " +
 							"contestant? You can not change ID after saveing.",
