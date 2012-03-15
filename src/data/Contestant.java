@@ -24,6 +24,7 @@ public class Contestant implements Person {
 	
 	public final static String NULL_ID = "??";
 	
+	// TODO: enum
 	protected final static String KEY_FIRST_NAME = "first";
 	protected final static String KEY_LAST_NAME	= "last";
 	protected final static String KEY_ID	= "id";
@@ -194,6 +195,13 @@ public class Contestant implements Person {
 		if (!Utils.checkString(newID,REGEX_CONTEST_ID))
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID,
 					"Invalid contestant ID");
+		
+		// is the ID in use in the game data?
+		GameData g = GameData.getCurrentGame();
+		if (g.isContestantIDInUse(newID)) 
+			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID_DUP,
+					"Invalid contestant ID (in use)");
+		
 		cID = newID;
 	}
 	

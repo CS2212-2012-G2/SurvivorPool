@@ -152,10 +152,9 @@ public class GameData {
 	public Contestant getContestant(String first, String last) {
 		// loop through array
 		for (Contestant j : allContestants) {
-			if (first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure
-																					// names
-																					// match
-				return j; // return info on player
+			if (first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure																	// match
+				// return info on player
+				return j; 
 			}
 		}
 
@@ -172,9 +171,12 @@ public class GameData {
 	 * @return the Contestant that matches id or null
 	 */
 	public Contestant getContestant(String id) {
-		int index = getContestantIndexID(id);
-
-		return (index > -1 ? (Contestant) allContestants.get(index) : null);
+		int i = getContestantIndexID(id);
+		
+		if (i >= 0) 
+			return allContestants.get(i);
+		else
+			return null;
 	}
 
 	/**
@@ -185,7 +187,7 @@ public class GameData {
 	 *            New contestant, will not add if ID of contestant is null.
 	 */
 	public void addContestant(Contestant c) {
-		if (c.getID() == null || !isIDValid(c.getID())) {
+		if (c.getID() == null || !isContestantIDInUse(c.getID())) {
 			System.out.println("Contestant must have valid ID");
 			return;
 		}
@@ -263,8 +265,7 @@ public class GameData {
 	 * @return User if ID found, null otherwise.
 	 */
 	public User getUser(String ID) {
-		for (Object o : allUsers) {
-			User u = (User) o;
+		for (User u : allUsers) {
 			if (u.getID().equalsIgnoreCase(ID)) {
 				return u;
 			}
@@ -477,49 +478,48 @@ public class GameData {
 	}
 
 	/**
-	 * Checks if an ID string passed in is valid amongst the currently loaded ID
-	 * tags. Also checks if the syntax is valid.
-	 * 
-	 * @param id
-	 *            The ID tag to check
-	 * @return True if valid to use
-	 */
-	public boolean isIDValid(String id) {
-		// build all the currently used IDs
-		return Utils.checkString(id, Person.REGEX_CONTEST_ID) && !isIDInUse(id);
-	}
-
-	/**
 	 * Helper method to get the index of a contestant ID in the
 	 * activeContestants array
 	 * 
-	 * @param id
+	 * @param searchID
 	 *            Search Contestant ID
 	 * @return Index in activeContestants where ID is stored, else < 0.
 	 */
-	protected int getContestantIndexID(String id) {
-		Contestant t = new Contestant();
-		try {
-			t.setID(id);
-		} catch (InvalidFieldException e) {
-			System.out.println("getContestantIndexID:\t" + e.getMessage());
-			return -1;
-		}
-
-		return Utils.BinSearchSafe(allContestants, t, Utils.CompType.CONTNT_ID);
+	protected int getContestantIndexID(String searchID) {
+		return Utils.BinIDSearchSafe(allContestants, searchID);
 	}
 
 	/**
-	 * Tells whether an ID is in use.
+	 * Tells whether a Contestant ID is in use.
 	 * 
 	 * @param id
 	 *            The Contestant ID is in use.
 	 * @return True if in use.
 	 */
-	public boolean isIDInUse(String id) {
+	public boolean isContestantIDInUse(String id) {
 		return (getContestantIndexID(id) >= 0);
 	}
+	
+	/**
+	 * Tells whether a User ID is in use.
+	 * 
+	 * @param id
+	 *            The Contestant ID is in use.
+	 * @return True if in use.
+	 */
+	public boolean isUserIDInUse(String id) {
+		return (getUserIndexID(id) >= 0);
+	}
 
+	/**
+	 * Gets a Users index in the stored list by ID. Uses a binary search
+	 * for speed.
+	 * @param searchID
+	 * @return Index in the list, index <0 if not found.
+	 */
+	protected int getUserIndexID(String searchID) {
+		return Utils.BinIDSearchSafe(allUsers, searchID);
+	}
 
 	public void setBetAmount(int betAmount) {
 		this.betAmount = betAmount;

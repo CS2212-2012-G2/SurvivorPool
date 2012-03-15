@@ -13,10 +13,10 @@ public class InvalidFieldException extends Exception {
 
 	public enum Field { UNKNOWN_FIELD,
 		// User:
-		USER_ID, USER_FIRST, USER_LAST, USER_WEEKLY_PICK, USER_ULT_PICK, 
+		USER_ID, USER_ID_DUP, USER_FIRST, USER_LAST, USER_WEEKLY_PICK, USER_ULT_PICK, 
 			USER_ULT_PTS,
 		// Contestants:
-		CONT_ID, CONT_FIRST, CONT_LAST, CONT_TRIBE, CONT_DATE
+		CONT_ID, CONT_ID_DUP, CONT_FIRST, CONT_LAST, CONT_TRIBE, CONT_DATE
 	}
 	
 	private Field problemField;

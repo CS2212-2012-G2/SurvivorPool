@@ -46,6 +46,7 @@ public class ContestantTableModel extends AbstractTableModel {
 		columnNames = new String[] {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
+		
 		globalData = _globaldata;
 		data = new ArrayList<Contestant>(globalData);
 		

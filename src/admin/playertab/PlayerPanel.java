@@ -387,6 +387,9 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		case USER_ID:
 			mf.setStatusErrorMsg("Invalid ID (must be between 2 and 7 chars" +
 					" long, followed by numbers)", tfID);
+			break;	
+		case USER_ID_DUP:
+			mf.setStatusErrorMsg("Invalid ID (in use)", tfID);
 			break;
 		case USER_FIRST:
 			mf.setStatusErrorMsg("Invalid First Name (must be alphabetic" +

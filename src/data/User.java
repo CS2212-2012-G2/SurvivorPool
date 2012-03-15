@@ -24,6 +24,7 @@ public class User implements Person {
 	
 	// JSON Keys:
 	
+	// TODO: enum
 	protected static final String KEY_ID = "id";
 	protected static final String KEY_FIRST_NAME = "first";
 	protected static final String KEY_LAST_NAME = "last";
@@ -214,11 +215,16 @@ public class User implements Person {
 	 */
 	public void setID(String id) throws InvalidFieldException {
 		id = id.toLowerCase();
-		if (Utils.checkString(id,REGEX_PLAYER_ID))
-			unID = id;
-		else 
+		if (!Utils.checkString(id,REGEX_PLAYER_ID)) 
 			throw new InvalidFieldException(InvalidFieldException.Field.USER_ID,
 					"Invalid Player ID");
+		// is the ID in use in the game data?
+		GameData g = GameData.getCurrentGame();
+		if (g.isUserIDInUse(id)) 
+			throw new InvalidFieldException(InvalidFieldException.Field.USER_ID_DUP,
+					"Invalid Player ID (in use)");
+		
+		unID = id;
 	}
 	
 	/**

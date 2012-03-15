@@ -231,6 +231,23 @@ public class Utils {
 		
 		return Collections.binarySearch(list, target, comp);
 	}
+	
+	/**
+	 * Traverses a list of Persons for an ID.
+	 * @param list
+	 * @param searchID
+	 * @return Index if found, index <0 if not found.
+	 */
+	public static <T> int BinIDSearchSafe(List<T> list, String searchID) {
+		List<String> idList = new ArrayList<String>(list.size());
+		for (T elem: list) {
+			if (elem instanceof Person) {
+				idList.add(((Person)elem).getID());
+			}
+		}
+		
+		return Collections.binarySearch(idList, searchID);
+	}
 
 	public static Comparator<Contestant> getContComparator(CompType t) {
 		switch (t) {
