@@ -443,7 +443,7 @@ public class GameData {
 	 * 
 	 * @return
 	 */
-	protected boolean isElimExists() {
+	public boolean doesElimExist() {
 		return elimExists;
 	}
 

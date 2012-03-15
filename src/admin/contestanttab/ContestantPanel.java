@@ -43,6 +43,7 @@ import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.InvalidFieldException.Field;
 
 public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
 
@@ -334,7 +335,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			labelCastStatus.setText("Week " + week);
 			btnCastOff.setText(UNDO_CAST_TEXT);
 		}
-		
 		btnCastOff.setEnabled(GameData.getCurrentGame().isSeasonStarted());
 	}
 	
@@ -547,8 +547,16 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 				}
 				
 				if(s.equals("Cast Off")){
+					// check if someone is already cast off
+					if(GameData.getCurrentGame().doesElimExist() == true){
+						JOptionPane.showMessageDialog(null,"You can't cast off more than one person per week. " +
+								                       "If you accidently casted the wrong person, you can undo the incorrect " + 
+								                       "cast first, and then cast off the correct one.");
+						return;
+					}
 					// can't cast off someone already off.
 					if (c.isCastOff()) {
+						JOptionPane.showMessageDialog(null,"This person is already out of the game.");
 						return;
 					}
 					
