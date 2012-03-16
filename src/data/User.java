@@ -137,10 +137,11 @@ public class User implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setFirstName(String first) throws InvalidFieldException {
+		first = first.trim().toLowerCase();
 		if (!Utils.checkString(first, REGEX_FIRST_NAME))
 			throw new InvalidFieldException(Field.USER_FIRST,
 					"Invalid First Name (User)");
-		firstName = first;
+		firstName = Utils.strCapitalize(first);
 	}
 
 	/**
@@ -151,10 +152,11 @@ public class User implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setLastName(String last) throws InvalidFieldException {
+		last = last.trim().toLowerCase();
 		if (!Utils.checkString(last, REGEX_LAST_NAME))
 			throw new InvalidFieldException(Field.USER_LAST,
 					"Invalid Last Name (User)");
-		lastName = last;
+		lastName = Utils.strCapitalize(last);
 	}
 
 	/**
@@ -215,7 +217,7 @@ public class User implements Person {
 	 * Sets the user ID.
 	 */
 	public void setID(String id) throws InvalidFieldException {
-		id = id.toLowerCase();
+		id = id.toLowerCase().trim();
 		if (!Utils.checkString(id,REGEX_PLAYER_ID)) 
 			throw new InvalidFieldException(Field.USER_ID,
 					"Invalid Player ID");

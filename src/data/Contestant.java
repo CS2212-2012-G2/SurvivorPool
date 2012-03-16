@@ -123,13 +123,14 @@ public class Contestant implements Person {
 	 */
 	public void setTribe(String name) throws InvalidFieldException {
 		String[] s = GameData.getCurrentGame().getTribeNames();
+		name = name.trim();
 		
-		if (!name.equals(s[0]) && !name.equals(s[1])) {
+		if (!name.equalsIgnoreCase(s[0]) && !name.equalsIgnoreCase(s[1])) {
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_TRIBE,
 					"Invalid Tribe.");
 		}
 		
-		tribe = name;
+		tribe = Utils.strCapitalize(name);
 	}
 
 	/**
@@ -139,12 +140,12 @@ public class Contestant implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setFirstName(String name) throws InvalidFieldException {
-		
+		name = name.trim().toLowerCase();
 		if (!Utils.checkString(name,REGEX_FIRST_NAME))
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_FIRST,
 					"Invalid First Name");
 		
-		firstName = name;
+		firstName = Utils.strCapitalize(name);
 		
 	}
 
@@ -153,11 +154,12 @@ public class Contestant implements Person {
 	 * @param name New last name of the contestant
 	 */
 	public void setLastName(String name) throws InvalidFieldException {
+		name = name.trim().toLowerCase();
 		if (!Utils.checkString(name,REGEX_LAST_NAME))
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_LAST,
 					"Invalid Last Name");
 		
-		lastName = name;
+		lastName = Utils.strCapitalize(name);
 	}
 
 	/**
@@ -191,7 +193,7 @@ public class Contestant implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setID(String newID) throws InvalidFieldException {
-		newID = newID.toLowerCase();
+		newID = newID.toLowerCase().trim();
 		if (!Utils.checkString(newID,REGEX_CONTEST_ID))
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID,
 					"Invalid contestant ID");

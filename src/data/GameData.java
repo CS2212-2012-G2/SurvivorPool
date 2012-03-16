@@ -422,8 +422,8 @@ public class GameData {
 		String oldT2 = tribeNames[1];
 		
 		// set the new tribes (Contestant requires this)
-		tribeNames[0] = tribeOne;
-		tribeNames[1] = tribeTwo;
+		tribeNames[0] = Utils.strCapitalize(tribeOne.toLowerCase().trim());
+		tribeNames[1] = Utils.strCapitalize(tribeTwo.toLowerCase().trim());
 		
 		// update all tribes first..
 		for (Contestant c: allContestants) {
@@ -615,7 +615,8 @@ public class GameData {
 
 		// tribes
 		JSONArray ts = (JSONArray) obj.get(KEY_TRIBES);
-		this.setTribeNames((String) ts.get(0), (String) ts.get(1));
+		setTribeNames((String) ts.get(0), (String) ts.get(1));
+		
 		// week info:
 		weeksRem = obj.getInt(KEY_WEEKS_REMAIN);
 		weeksPassed = obj.getInt(KEY_WEEKS_PASSED);

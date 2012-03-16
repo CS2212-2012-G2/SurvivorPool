@@ -377,4 +377,27 @@ public class Utils {
 		RE r = new RE(pattern);
 		return r.match(val);                
 	}
+	
+	/**
+	 * Capitalizes a string. Does not remove existing capitals.
+	 * @param s
+	 * @return
+	 */
+	public static String strCapitalize(String s){
+		String result = "";
+		
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if ((i+1 < s.length()) && (c == ' ' || c == '-' || c == '_')) {
+				result += c;
+				result += Character.toUpperCase(s.charAt(++i));
+			} else if (i == 0) {
+				result += Character.toUpperCase(c);
+			} else{
+				result += c;
+			}
+		}
+		
+		return result;
+	}
 }
