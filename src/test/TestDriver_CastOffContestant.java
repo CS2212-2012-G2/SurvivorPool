@@ -6,7 +6,7 @@ import data.InvalidFieldException;
 
 
 /*
- * Test Case: Admin User casting off after season started
+ * Test Case: Admin casting off a contestant after season started
  */
 public class TestDriver_CastOffContestant{
 	
@@ -44,7 +44,7 @@ public class TestDriver_CastOffContestant{
 		g.getAllContestants().get(2).toCastOff();	//set the next contestant to be cast off
 		g.advanceWeek();							//advance the week, committing the cast off
 		
-		// CONFIRMATION:
+		// CONFIRMATION/OUTPUT:
 		if (g.getAllContestants().get(2).getCastDate() == -1)
 			System.out.println("Test 1: FAILED\n\tJessica Simpson was not cast off.\n");
 		else System.out.println("Test 1: PASSED\n\tJessica Simpson was cast off during Week " + g.getAllContestants().get(2).getCastDate() + "\n");
@@ -54,7 +54,7 @@ public class TestDriver_CastOffContestant{
 		g.getAllContestants().get(0).toCastOff();	//set the next contestant to be cast off
 		g.advanceWeek();							//advance the week, committing the cast off
 		
-		// CONFIRMATION:
+		// CONFIRMATION/OUTPUT:
 		if (g.getAllContestants().get(0).getCastDate() == -1)
 			System.out.println("Test 2: FAILED\n\tMichael Jackson was not cast off.\n");
 		else System.out.println("Test 2: PASSED\n\tMichael Jackson was cast off during Week " + g.getAllContestants().get(0).getCastDate() + "\n");
