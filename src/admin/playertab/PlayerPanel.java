@@ -646,6 +646,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	 * Changes all fields that have data changed. <br>
 	 * Currently calls:
 	 * - Table update
+	 * - Updates ComboBoxes
 	 */
 	@Override
 	public void refreshGameFields() {
