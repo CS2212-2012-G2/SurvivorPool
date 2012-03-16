@@ -502,7 +502,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 					/*int response = JOptionPane.showConfirmDialog(null,
 							"Would you like to save a new selected " +
 							"contestant? You can not change ID after saveing.",
-							"Delete Contestant?",
+							"Save Contestant?",
 							JOptionPane.YES_NO_OPTION);
 					if(response == JOptionPane.NO_OPTION){
 						return;

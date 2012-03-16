@@ -345,9 +345,14 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			loadedPerson = u;
 		}
 		
-		tfID.setEnabled(newUser);
-		btnGenID.setEnabled(newUser);
+		tfID.setEnabled(isNewUser);
+		btnGenID.setEnabled(isNewUser);
 		btnSave.setEnabled(false);
+		
+		GameData g = GameData.getCurrentGame();
+		boolean seasonStarted = g.isSeasonStarted();
+		cbUltPick.setEnabled(seasonStarted);
+		cbWeeklyPick.setEnabled(seasonStarted);
 		
 		if (newUser || u == null) {
 			// set default values
@@ -622,16 +627,24 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		cbWeeklyPick.removeAllItems();
 		cbUltPick.removeAllItems();
 		
+		boolean seasonStarted = g.isSeasonStarted();
+		cbUltPick.setEnabled(seasonStarted);
+		cbWeeklyPick.setEnabled(seasonStarted);
+		
 		Contestant nullC = new Contestant();
 		nullC.setNull();
 		
 		cbWeeklyPick.addItem(nullC);
 		cbUltPick.addItem(nullC);
 
-		for (Contestant c : cons) {
-			cbWeeklyPick.addItem(c);
-			cbUltPick.addItem(c);
+		if (seasonStarted) {
+			for (Contestant c : cons) {
+				cbWeeklyPick.addItem(c);
+				cbUltPick.addItem(c);
+			}
 		}
+		
+		
 	}
 	
 	/**
