@@ -349,11 +349,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		btnGenID.setEnabled(isNewUser);
 		btnSave.setEnabled(false);
 		
-		GameData g = GameData.getCurrentGame();
-		boolean seasonStarted = g.isSeasonStarted();
-		cbUltPick.setEnabled(seasonStarted);
-		cbWeeklyPick.setEnabled(seasonStarted);
-		
 		if (newUser || u == null) {
 			// set default values
 			tfID.setText("");
