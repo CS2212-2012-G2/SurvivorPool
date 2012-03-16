@@ -139,7 +139,7 @@ public class GeneralPanel extends JPanel {
 			if (GameData.getCurrentGame().getAllContestants().get(i).getCastDate() < (Integer)spnWeek.getValue()
 					&& GameData.getCurrentGame().getAllContestants().get(i).getCastDate() != -1)
 				s += GameData.getCurrentGame().getAllContestants().get(i).toString() 
-					+ " Cast-Off Week "
+					+ ": Cast-Off Week "
 					+ GameData.getCurrentGame().getAllContestants().get(i).getCastDate()
 					+ "<BR>";
 		}		
@@ -170,6 +170,8 @@ public class GeneralPanel extends JPanel {
 							btnStartSeason.setEnabled(false);	
 							btnAdvanceWeek.setEnabled(true);
 							setRemainingContestantsLabel();
+							weekModel.setMaximum(GameData.getCurrentGame().getCurrentWeek());
+							weekModel.setValue(GameData.getCurrentGame().getCurrentWeek());
 							return;
 						}
 						return;
