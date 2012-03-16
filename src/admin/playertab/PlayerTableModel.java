@@ -261,7 +261,10 @@ public class PlayerTableModel extends AbstractTableModel {
 
 	        // get the contestant referenced
 	        PlayerTableModel model = (PlayerTableModel)table.getModel();
-	        User u = model.getByRow(table.getSelectedRow());
+	        int row = table.getSelectedRow();
+	        User u = null;
+	        if (row > -1) // cant do anything without a selected row.
+	        	u = model.getByRow(row);
 	        
 	        // The index of the column whose header was clicked
 	        int vIndex = colModel.getColumnIndexAtX(e.getX());
@@ -277,8 +280,10 @@ public class PlayerTableModel extends AbstractTableModel {
 	        sortTableBy(mIndex);
 	        
 	        // reset the selection to that row
-	        int r = model.getRowByUser(u);
-	        table.setRowSelectionInterval(r, r);
+	        if (u != null) {
+		        int r = model.getRowByUser(u);
+		        table.setRowSelectionInterval(r, r);
+	        }
 	    }
 	}
 }

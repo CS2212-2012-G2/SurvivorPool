@@ -365,8 +365,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		labelPts.setText(Integer.toString(u.getPoints()));
 		
-		
-		
 		// iterate through combo boxes setting indexes as necessary
 		boolean ultSet = false, weekSet = false;
 		for (int i = 0; i < cbUltPick.getItemCount(); i++) {
