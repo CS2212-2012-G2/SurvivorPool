@@ -204,6 +204,9 @@ public class GeneralPanel extends JPanel {
 						Person.TRIBE_PATTERN)) {
 					MainFrame.getRunningFrame().setStatusErrorMsg(
 							"Tribe 2 name invalid.", txtTribe2);
+				} else if (txtTribe1.getText().equals(txtTribe2.getText())){
+					MainFrame.getRunningFrame().setStatusErrorMsg("Invalid tribe names, cannot be the same", txtTribe1, txtTribe2);
+					return;
 				} else {
 					GameData.getCurrentGame().setTribeNames(
 							txtTribe1.getText(), txtTribe2.getText());

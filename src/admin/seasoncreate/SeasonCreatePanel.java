@@ -144,6 +144,10 @@ public class SeasonCreatePanel extends JPanel {
 						//lblAlert.setText("Invalid tribe names!");
 						return;
 					}
+					else if (txtTribe1.getText().equals(txtTribe2.getText())){
+						MainFrame.getRunningFrame().setStatusErrorMsg("Invalid tribe names, cannot be the same", txtTribe1, txtTribe2);
+						return;
+					}
 					MainFrame.getRunningFrame().setStatusMsg("Valid tribe names");
 					GameData.initSeason(Integer.parseInt(spnContestant.getValue().toString()));
 					GameData.getCurrentGame().setTribeNames(txtTribe1.getText(),txtTribe2.getText());
