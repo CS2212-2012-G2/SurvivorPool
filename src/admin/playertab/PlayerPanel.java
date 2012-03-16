@@ -91,6 +91,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	
 	// has the PlayerFields changed?
 	private boolean fieldsChanged;
+	
+	/**
+	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
+	 * YOU KNOW WHAT YOU ARE DOING.
+	 */
+	private Person loadedPerson;
 
 	public PlayerPanel() {
 		super();
@@ -297,7 +303,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	 */
 	private User getUser() throws InvalidFieldException {
 		
-		User u = new User();
+		User u = (User) loadedPerson;
 		String uID = tfID.getText();
 		
 		u.setID(uID);
@@ -331,6 +337,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			System.out.println("Player panel changing, fields modified.");
 			saveUser();
 			fieldsChanged = false;
+		}
+		
+		if (isNewUser) {
+			loadedPerson = new User();
+		} else {
+			loadedPerson = u;
 		}
 		
 		tfID.setEnabled(newUser);
@@ -472,7 +484,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					int response = JOptionPane.showConfirmDialog(null,
 						"Would you like to save a new selected user? You can " +
 						"not change ID after first save.",
-						"Delete User?",
+						"Save User?",
 						JOptionPane.YES_NO_OPTION);
 					if(response == JOptionPane.NO_OPTION){
 						return;
@@ -488,6 +500,15 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		btnDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				
+				if (row < 0) {
+					// no one to delete
+					System.out.println("Can't delete no one..");
+					JOptionPane.showMessageDialog(null, "Must select user to delete");
+					return;
+				}
+				
 				int response = JOptionPane.showConfirmDialog(null,
 						"Would you like to delete currently selected user?","Delete User",
 								JOptionPane.YES_NO_OPTION);
@@ -499,14 +520,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 						if (ex.getField() == InvalidFieldException.Field.USER_ID) {
 							MainFrame.getRunningFrame().setStatusErrorMsg("Can not delete User (invalid ID)", tfID);
 							return;
-						}
+						} 
+						setExceptionError(ex);
+						return;
 					}
 
-					GameData g = GameData.getCurrentGame();
-					User t = g.getUser(u.getID());
-					int row = tableModel.getRowByUser(t);
 					boolean selRow = (table.getRowCount() > 1);
-					tableModel.removeUser(t);
+					tableModel.removeUser(u);
 					if (selRow) {
 						row %= table.getRowCount();
 						table.setRowSelectionInterval(row, row);
