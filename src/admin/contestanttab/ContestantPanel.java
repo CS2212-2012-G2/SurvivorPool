@@ -171,6 +171,23 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	}
 	
 	/**
+	 * The action listener used by the Image Button. 
+	 */
+	private ActionListener imgActionListener = new ActionListener(){
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser fc = new JFileChooser();
+			int ret = fc.showOpenDialog(null);
+			if(ret==JFileChooser.APPROVE_OPTION){
+				//File f = fc.getSelectedFile();
+				updateContPicture(fc.getSelectedFile().getAbsolutePath());
+			}	
+		}
+		
+	};
+	
+	/**
 	 * Builds the top panel including all the editable information
 	 */
 	private void buildTopPanel() {
@@ -516,20 +533,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			
 		});
 		
-		imgDisplay.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-				int ret = fc.showOpenDialog(null);
-				if(ret==JFileChooser.APPROVE_OPTION){
-					//File f = fc.getSelectedFile();
-					updateContPicture(fc.getSelectedFile().getAbsolutePath());
-				}	
-			}
-			
-		});
-		
 		btnCastOff.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String s = ((JButton) e.getSource()).getText();
@@ -666,12 +669,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	}
 
 	public void seasonStarted(){
-		btnAddCont.setEnabled(false);
-		btnCastOff.setEnabled(true);
-		btnDeleteCont.setEnabled(false);
-		tfLastName.setEnabled(false);
-		tfFirstName.setEnabled(false);
-		tfContID.setEnabled(false);
+		refreshGameFields();
 	}
 	
 	/**
@@ -744,6 +742,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	 * <br> Currently:
 	 * - Tribe combobox
 	 * - Table
+	 * - Sets buttons enabled/disabled as appropriate.
 	 * @see GameDataDependant.refreshGameFields
 	 */
 	@Override
@@ -766,6 +765,24 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			}
 		});
 		
+		
+		// depends on season started:
+		boolean sStart = g.isSeasonStarted();
+		
+		btnAddCont.setEnabled(!sStart);
+		btnCastOff.setEnabled(sStart);
+		btnDeleteCont.setEnabled(!sStart);
+		tfLastName.setEnabled(!sStart);
+		tfFirstName.setEnabled(!sStart);
+		tfContID.setEnabled(!sStart);
+		
+		List<ActionListener> acts = Arrays.asList(imgDisplay.getActionListeners());
+		boolean actPresent = acts.contains(imgActionListener);
+		if (actPresent && sStart) {
+			imgDisplay.removeActionListener(imgActionListener);
+		} else if (!actPresent && !sStart) {
+			imgDisplay.addActionListener(imgActionListener);
+		}
 	}
 
 }
