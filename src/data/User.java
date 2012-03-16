@@ -244,16 +244,17 @@ public class User implements Person {
 		obj.put(KEY_ID, getID());
 		obj.put(KEY_POINTS, getPoints());
 		
-		GameData g = GameData.getCurrentGame();
 		Contestant c = getWeeklyPick();
-		if (c == null || c.isNull()) {
-			c = g.randomContestant(true);
+		if (c == null) {
+			c = new Contestant();
+			c.setNull();
 		}
 		obj.put(KEY_WEEKLY_PICK_ID, c.getID());
 		
 		c = getUltimatePick();
-		if (c == null || c.isNull()) {
-			c = g.randomContestant(true);
+		if (c == null) {
+			c = new Contestant();
+			c.setNull();
 		}
 		obj.put(KEY_ULT_PICK_ID, c.getID());
 		
@@ -270,11 +271,23 @@ public class User implements Person {
 			setPoints(((Integer)o.remove(KEY_POINTS)).intValue());
 			
 			String id = (String)o.remove(KEY_WEEKLY_PICK_ID);
-			Contestant c = GameData.getCurrentGame().getContestant(id);
+			Contestant c = null;
+			if (id.equals(Contestant.NULL_ID)){
+				c = new Contestant();
+				c.setNull();
+			} else {
+				c = GameData.getCurrentGame().getContestant(id);
+				
+			}
 			setWeeklyPick(c);
 			
 			id = (String)o.remove(KEY_ULT_PICK_ID);
-			c = GameData.getCurrentGame().getContestant(id);
+			if (id.equals(Contestant.NULL_ID)) {
+				c = new Contestant();
+				c.setNull();
+			} else {
+				c = GameData.getCurrentGame().getContestant(id);
+			}
 			setUltimatePick(c);
 			
 			setPoints(((Integer)o.remove(KEY_WIN_PICK_POINTS)).intValue());
