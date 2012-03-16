@@ -716,7 +716,7 @@ public class GameData {
 			g.addContestant(c1);
 			g.addContestant(c2);
 		} catch (InvalidFieldException ie) {};
-
+g.startSeason(5);
 		User u1;
 		try {
 			u1 = new User("First","last","flast");
