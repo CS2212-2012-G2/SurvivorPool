@@ -68,6 +68,17 @@ the season, and select the contestant from the contestant tab table list, and
 hit "cast off". To cancel a cast off, just hit cast off again while selecting
 the contestant.
 
+
+FOR BLACKBERRY SD CARD:
+IN the simulator, click on simulate->change sd card
+
+In the folder where the swing part was executed, a 'res' folder should exist. Click 'Add Directory' and add the folder that contains the 'res' folder.
+
+Hit the +harddrive button(mount selected).
+
+Start the app.
+
+
 28. This system must allow the player to: see the current standings (you 
 could display this within the blackberry using tables, or you could use 
 the browser to view an html page)
