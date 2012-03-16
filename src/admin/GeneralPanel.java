@@ -1,17 +1,26 @@
 package admin;
 
 //TODO: MAKE THIS PANEL LOOK BETTER!
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout; 
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import admin.Utils;
 
@@ -22,54 +31,124 @@ public class GeneralPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	JLabel lblGenInfo = new JLabel("General infos.");
-	JButton btnAdvWeek = new JButton("Start season");
+	Integer viewWeek = 0;
+	
+	JLabel lblWeek = new JLabel("View Week:");
+	JLabel lblTribes = new JLabel("Tribes:");
+	JLabel lblRemainingContestants = new JLabel("");
+	JLabel lblCastOffs = new JLabel("");
+
 	JTextField txtTribe1 = new JTextField();
 	JTextField txtTribe2 = new JTextField();
-	JButton btnChangeTribeName = new JButton("Change Tribe Name");
-
+	
+	JButton btnStartSeason = new JButton("Start Season");
+	JButton btnAdvanceWeek = new JButton("Advance Week");
+	JButton btnChangeTribeName = new JButton("Save Changes");
+	
+	SpinnerNumberModel weekModel = new SpinnerNumberModel(0,0,0,1); //default,low,min,step
+	JSpinner spnWeek = new JSpinner(weekModel);
+	
+	JPanel pnlRemainingContestants = new JPanel();
+	JPanel pnlCastOffs = new JPanel();	
+	
+	GridBagLayout gbl = new GridBagLayout();
+	GridBagConstraints gbc = new GridBagConstraints();
+	
+	
 	public GeneralPanel() {
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(gbl);
 		initPnlInfo();
 		initListeners();
-		btnAdvWeek.setVisible(!GameData.getCurrentGame().isSeasonEnded());
 	}
 
 	private void initPnlInfo() {
-		JPanel pnlInfo = new JPanel(new BorderLayout());
-		JPanel pnlGenInfo = new JPanel();
-		JPanel pnlTribes = new JPanel();
-
-		pnlGenInfo.setLayout(new BorderLayout());
-		txtTribe1.setText(GameData.getCurrentGame().getTribeNames()[0]);
-		txtTribe2.setText(GameData.getCurrentGame().getTribeNames()[1]);
-
-		pnlGenInfo.add(lblGenInfo, BorderLayout.CENTER);
-		pnlGenInfo.add(btnAdvWeek, BorderLayout.SOUTH);
-
-		if (GameData.getCurrentGame().isSeasonStarted()) {
-			btnAdvWeek.setText("Advance Week");
-		} 
 		
-
-		// TODO: actually set info here rather than just weeks.
-		lblGenInfo.setText("<html>"
-				+ Integer.toString(GameData.getCurrentGame().weeksLeft())
-				+ " weeks left. File -> Reset to start new season</html>");
-		pnlInfo.add(pnlGenInfo, BorderLayout.CENTER);
-		pnlInfo.setPreferredSize(new Dimension(450, 400));
-
-		pnlTribes.add(txtTribe1);
-		pnlTribes.add(txtTribe2);
-		pnlTribes.add(btnChangeTribeName);
-
-		this.add(pnlInfo);
-		this.add(pnlTribes);
-
+		txtTribe1.setText(GameData.getCurrentGame().getTribeNames()[0]);
+		txtTribe2.setText(GameData.getCurrentGame().getTribeNames()[1]);	
+		
+		btnAdvanceWeek.setEnabled(false);
+		
+		pnlRemainingContestants.setBorder(BorderFactory.createTitledBorder("Contestants"));
+		pnlCastOffs.setBorder(BorderFactory.createTitledBorder("Cast Offs"));
+		pnlCastOffs.setPreferredSize(new Dimension(150, 200));
+		
+		pnlRemainingContestants.add(lblRemainingContestants);
+		pnlCastOffs.add(lblCastOffs);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 0;		
+		gbc.weighty = 1;
+		gbc.weightx = 1;	
+		gbc.gridwidth = 2;
+		gbc.gridheight = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(0, 20, 10, 20);
+		add(btnStartSeason, gbc);
+		
+		gbc.gridx = 2;	
+		add(btnAdvanceWeek, gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridy++;
+		gbc.gridwidth = 1;
+		gbc.anchor = GridBagConstraints.LINE_START;
+		add(lblTribes, gbc);
+		
+		gbc.gridx++;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		add(txtTribe1, gbc);
+		
+		gbc.gridx++;
+		add(txtTribe2, gbc);
+		
+		gbc.gridx++;
+		add(btnChangeTribeName, gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridy++;
+		add(lblWeek, gbc);
+		
+		gbc.gridx = 1;
+		add(spnWeek, gbc);
+		
+		gbc.gridx = 0;
+		gbc.gridy++;	
+		gbc.gridwidth = 2;
+		gbc.gridheight = 40;
+		gbc.fill = GridBagConstraints.BOTH;
+		add(pnlRemainingContestants, gbc);
+		
+		gbc.gridx = 2;	
+		add(pnlCastOffs, gbc);
 	}
 
+	private void setRemainingContestantsLabel(){
+		String s = "<HTML>";
+		for (int i = 0; i < GameData.getCurrentGame().getAllContestants().size(); i++){			
+			if (GameData.getCurrentGame().getAllContestants().get(i).getCastDate() >= (Integer)spnWeek.getValue() 
+					|| GameData.getCurrentGame().getAllContestants().get(i).getCastDate() == -1)
+				s += GameData.getCurrentGame().getAllContestants().get(i) + "<BR>";
+		}
+		s += "</HTML>";
+		lblRemainingContestants.setText(s);
+	}
+	
+	private void setCastOffContestantsLabel(){
+		String s = "<HTML>";
+		for (int i = 0; i < GameData.getCurrentGame().getAllContestants().size(); i++){
+			if (GameData.getCurrentGame().getAllContestants().get(i).getCastDate() < (Integer)spnWeek.getValue()
+					&& GameData.getCurrentGame().getAllContestants().get(i).getCastDate() != -1)
+				s += GameData.getCurrentGame().getAllContestants().get(i).toString() 
+					+ " Cast-Off Week "
+					+ GameData.getCurrentGame().getAllContestants().get(i).getCastDate()
+					+ "<BR>";
+		}		
+		s += "</HTML>";
+		lblCastOffs.setText(s);
+	}
+	
 	private void initListeners() {
-		btnAdvWeek.addActionListener(new ActionListener() {
+		btnStartSeason.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -88,21 +167,31 @@ public class GeneralPanel extends JPanel {
 						if (Integer.parseInt(s) >= 0) {
 							GameData.getCurrentGame().startSeason(Integer.parseInt(s));
 							MainFrame.getRunningFrame().seasonStarted();
-							btnAdvWeek.setText("Advance Week");
+							btnStartSeason.setEnabled(false);	
+							btnAdvanceWeek.setEnabled(true);
+							setRemainingContestantsLabel();
 							return;
 						}
 						return;
 					}
 					JOptionPane.showMessageDialog(null, "Invalid amount entered.");
-				} else {
-					GameData.getCurrentGame().advanceWeek();
-					lblGenInfo.setText("<html>" + Integer.toString(GameData.getCurrentGame().weeksLeft())
-							+ " weeks left. File -> Reset to start new season</html>");
-					btnAdvWeek.setVisible(!GameData.getCurrentGame().isSeasonEnded());
 				}
 			}
 		});
 
+		btnAdvanceWeek.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				GameData.getCurrentGame().advanceWeek();
+				btnAdvanceWeek.setEnabled(!GameData.getCurrentGame().isSeasonEnded());
+				setRemainingContestantsLabel();
+				setCastOffContestantsLabel();
+				weekModel.setMaximum(GameData.getCurrentGame().getCurrentWeek());
+				weekModel.setValue(GameData.getCurrentGame().getCurrentWeek());
+			}
+		});
+		
 		btnChangeTribeName.addActionListener(new ActionListener() {
 
 			@Override
@@ -124,6 +213,16 @@ public class GeneralPanel extends JPanel {
 				}
 			}
 
+		});
+		
+		spnWeek.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				setRemainingContestantsLabel();
+				setCastOffContestantsLabel();				
+			}
+			
 		});
 	}
 }

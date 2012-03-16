@@ -109,7 +109,7 @@ public class GameData {
 
 		return active;
 	}
-
+	
 	/**
 	 * getInitialContestants returns an integer of the number of initial
 	 * contestants that are in the game.
