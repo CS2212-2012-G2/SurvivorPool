@@ -377,21 +377,32 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		labelPts.setText(Integer.toString(u.getPoints()));
 		
-		// iterate through combo boxes setting indexes as necessary
+		// iterate through combo boxes setting indexes as necessary	
+		Contestant ultPick = u.getUltimatePick();
+		if (ultPick == null) {
+			ultPick = new Contestant();
+			ultPick.setNull();
+		}
+		Contestant weekPick = u.getWeeklyPick();
+		if (weekPick == null) {
+			weekPick = new Contestant();
+			weekPick.setNull();
+		}
+		
 		boolean ultSet = false, weekSet = false;
+		
 		for (int i = 0; i < cbUltPick.getItemCount(); i++) {
 			
 			// get the contestant to compare with, both store same values
-			Contestant c = u.getUltimatePick();
+			
 			
 			Contestant cbCon = cbUltPick.getItemAt(i);
-			if (!ultSet && c.getID().equals(cbCon.getID())) {
+			if (!ultSet && ultPick.getID().equals(cbCon.getID())) {
 				cbUltPick.setSelectedIndex(i);
 				ultSet = true;
 			}
 			
-			c = u.getWeeklyPick();
-			if (!weekSet && c.getID().equals(cbCon.getID())) {
+			if (!weekSet && weekPick.getID().equals(cbCon.getID())) {
 				cbWeeklyPick.setSelectedIndex(i);
 				weekSet = true;
 			}
