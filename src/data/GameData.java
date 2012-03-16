@@ -373,9 +373,6 @@ public class GameData {
 		if (elimExists == false)
 			return;
 
-		weeksRem -= 1; // reduce num of weeks remaining
-		weeksPassed += 1; // increment number of weeks passed
-
 		for (User u : allUsers) {
 			if (u.getWeeklyPick().isNull()) {
 				try {
@@ -394,6 +391,10 @@ public class GameData {
 
 		allocatePoints(elimCont);
 		elimCont.castOff();
+		
+		weeksRem -= 1; // reduce num of weeks remaining
+		weeksPassed += 1; // increment number of weeks passed
+
 	}
 
 	/**
