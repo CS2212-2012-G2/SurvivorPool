@@ -1,0 +1,38 @@
+<project name="SurvivorPool-Admin">
+
+  <property name="jar-out" value="Group2Standalone.jar"/>
+  <property name="src-dir" value="src/"/>
+  <property name="bin-dir" value="bin/"/>
+
+  <target name="clean">
+    <delete dir="${bin-dir}" />
+    <mkdir dir="${bin-dir}" />
+  </target>
+
+  <target name="build" depends="clean">
+    <javac srcdir="${src-dir}" destdir="${bin-dir}" />
+  </target>
+
+  <target name="run" depends="build">
+    <java classname="admin.MainFrame" classpath="${bin-dir}" fork="true"/>
+  </target>
+
+  <target name="clean-run" depends="build">
+    <delete file="res/data/Settings.dat"/>
+    <java classname="admin.MainFrame" classpath="${bin-dir}" fork="true"/>
+  </target>
+
+  <target name="jar-sub-clean" depends="build">
+
+    <delete file="res/data/Settings.dat"/>
+    <delete file="${jar-out}"/>
+    <jar destfile="${jar-out}"
+         basedir="./"
+         includes="${bin-dir}**/*.class,${src-dir}**/*.java,res**">
+      <manifest>
+	<attribute name="Main-Class" value="admin.MainFrame" />
+	<attribute name="Class-Path" value="${bin-dir}" />
+      </manifest>
+    </jar>
+  </target>
+</project>
