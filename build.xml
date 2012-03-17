@@ -3,6 +3,8 @@
   <property name="jar-out" value="Group2Standalone.jar"/>
   <property name="src-dir" value="src/"/>
   <property name="bin-dir" value="bin/"/>
+  <property name="javadoc-dir" value="doc/"/>
+  <property name="res-dir" value="res/"/>
 
   <target name="clean">
     <delete dir="${bin-dir}" />
@@ -22,13 +24,22 @@
     <java classname="admin.MainFrame" classpath="${bin-dir}" fork="true"/>
   </target>
 
-  <target name="jar-sub-clean" depends="build">
+  <target name="jar-sub">
 
     <delete file="res/data/Settings.dat"/>
     <delete file="${jar-out}"/>
     <jar destfile="${jar-out}"
          basedir="./"
-         includes="${bin-dir}**/*.class,${src-dir}**/*.java,doc/**,res**">
+	 defaultexcludes="yes">
+      <exclude name="**.jar" />
+      <exclude name="**/.classpath" />
+      <exclude name="**/.project" />
+      <exclude name="**/*.swp" />
+      <include name="${bin-dir}**/*.class" />
+      <include name="${src-dir}**/*.java" />
+      <include name="${javadoc-dir}**" />
+      <include name="${res-dir}**" />
+      <include name="*" />
       <manifest>
 	<attribute name="Main-Class" value="admin.MainFrame" />
 	<attribute name="Class-Path" value="${bin-dir}" />
@@ -36,10 +47,16 @@
     </jar>
   </target>
 
+  <target name="jar-sub-clean" depends="build">
+    <delete file="res/data/Settings.dat"/>
+
+    <antcall target="jar-sub"/>
+   </target> 
+
   <target name="doc">
-    <delete dir="doc/"/>
-    <mkdir dir="doc/"/>
-    <javadoc destdir="doc/"
+    <delete dir="${javadoc-dir}"/>
+    <mkdir dir="${javadoc-dir}"/>
+    <javadoc destdir="${javadoc-dir}"
 	     author="true"
 	     version="true"
 	     use="true"
@@ -57,5 +74,6 @@
     <antcall target="clean"/>
     <antcall target="build"/>
     <antcall target="doc"/>
+    <antcall target="jar-sub"/>
   </target>
 </project>
