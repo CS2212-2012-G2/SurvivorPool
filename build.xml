@@ -28,7 +28,7 @@
     <delete file="${jar-out}"/>
     <jar destfile="${jar-out}"
          basedir="./"
-         includes="${bin-dir}**/*.class,${src-dir}**/*.java,res**">
+         includes="${bin-dir}**/*.class,${src-dir}**/*.java,doc/**,res**">
       <manifest>
 	<attribute name="Main-Class" value="admin.MainFrame" />
 	<attribute name="Class-Path" value="${bin-dir}" />
