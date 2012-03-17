@@ -35,4 +35,27 @@
       </manifest>
     </jar>
   </target>
+
+  <target name="doc">
+    <delete dir="doc/"/>
+    <mkdir dir="doc/"/>
+    <javadoc destdir="doc/"
+	     author="true"
+	     version="true"
+	     use="true"
+	     windowtitle="CS2212 Group 2 2012 - Javadoc">
+      
+      <fileset dir="src" defaultexcludes="yes">
+        <include name="admin/**"/>
+	<include name="data/**"/>
+	<include name="test/**"/>
+      </fileset>
+    </javadoc>
+  </target>
+
+  <target name="all">
+    <antcall target="clean"/>
+    <antcall target="build"/>
+    <antcall target="doc"/>
+  </target>
 </project>
