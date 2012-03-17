@@ -1,4 +1,4 @@
-<project name="SurvivorPool-Admin">
+<project name="SurvivorPool-Admin" default="all">
 
   <property name="jar-out" value="Group2Standalone.jar"/>
   <property name="src-dir" value="src/"/>
