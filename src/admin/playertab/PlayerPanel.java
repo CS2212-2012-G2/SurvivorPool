@@ -461,7 +461,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 						"Invalid ID (in use)");
 			}
 			
-			tableModel.updateUser(user);
+			tableModel.updatePerson(user);
 		} catch (InvalidFieldException e) {
 			setExceptionError(e);
 			return;
@@ -470,7 +470,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		isNewUser = false;
 		fieldsChanged = false;
 		
-		int row = tableModel.getRowByUser(user);
+		int row = tableModel.getRowByPerson(user);
 		if (row >= 0 && table.getSelectedRow() != row) // select a row
 			table.setRowSelectionInterval(row, row);
 	}
@@ -540,7 +540,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					}
 
 					boolean selRow = (table.getRowCount() > 1);
-					tableModel.removeUser(u);
+					tableModel.removePerson(u);
 					if (selRow) {
 						row %= table.getRowCount();
 						table.setRowSelectionInterval(row, row);

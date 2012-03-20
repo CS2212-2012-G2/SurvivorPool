@@ -423,7 +423,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		try {
 			con = getContestant();
 			
-			tableModel.updateContestant(con);
+			tableModel.updatePerson(con);
 		} catch (InvalidFieldException e) {
 			setExceptionError(e);
 			return;	
@@ -433,7 +433,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		isNewContestant = false;
 		setFieldsChanged(false);
 		
-		int row = tableModel.getRowByContestant(con);
+		int row = tableModel.getRowByPerson(con);
 		if (row > -1 && table.getSelectedRow() != row)
 			table.setRowSelectionInterval(row, row);
 	}
@@ -609,11 +609,11 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					// get the contestant by the ID passed 
 					Contestant t = g.getContestant(c.getID());
 					
-					int row = tableModel.getRowByContestant(t);
+					int row = tableModel.getRowByPerson(t);
 					boolean selRow = (table.getRowCount() > 1);
 					
 					// remove the contestant from the game
-					tableModel.removeContestant(t);
+					tableModel.removePerson(t);
 					
 					if (selRow) {
 						row %= table.getRowCount();
@@ -680,7 +680,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		
 		run.run();
 		
-		int row = tableModel.getRowByContestant(c);
+		int row = tableModel.getRowByPerson(c);
 		if (row > -1 &&  				// only select if the row is valid
 				table.getSelectedRow() != row) // don't select if it we can't
 			table.setRowSelectionInterval(row, row);	
