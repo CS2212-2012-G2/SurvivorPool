@@ -21,6 +21,8 @@ public class InvalidFieldException extends Exception {
 	
 	private Field problemField;
 	
+	private boolean handled = false;
+	
 	public InvalidFieldException(Field field, String reason) {
 		this(reason);
 		
@@ -35,6 +37,14 @@ public class InvalidFieldException extends Exception {
 	
 	public Field getField() {
 		return problemField;
+	}
+	
+	public boolean isHandled() {
+		return handled;
+	}
+	
+	public void handle() {
+		handled = true;
 	}
 
 	private static final long serialVersionUID = 1L;

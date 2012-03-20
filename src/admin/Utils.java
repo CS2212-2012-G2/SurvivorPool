@@ -176,7 +176,6 @@ public class Utils {
 				}
 		} while (!valid); // check if the ID is present
 
-		System.out.println("Generated: " + newID);
 		return newID;
 	}
 

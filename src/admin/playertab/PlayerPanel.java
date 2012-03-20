@@ -164,7 +164,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			setPanelUser(users.get(0), false);
 			table.setRowSelectionInterval(0, 0);
 		} else {
-			setPanelUser(null, true);
+			btnAddNew.doClick(); // programatically click it. :D
 		}
 		
 		GameData.getCurrentGame().addObserver(this);
@@ -338,8 +338,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		if (fieldsChanged) {
 			System.out.println("Player panel changing, fields modified.");
-			saveUser();
-			fieldsChanged = false;
+			try {
+				saveUser();
+			} catch (InvalidFieldException e) {
+				System.out.println("we cant set a new user if invalid one is here..");
+				return;
+			}
+			
 		}
 		
 		if (isNewUser) {
@@ -420,6 +425,9 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	 * @param e Exception with the information necessary
 	 */
 	private void setExceptionError(InvalidFieldException e) {
+		if (e.isHandled()) 
+			return;
+		
 		MainFrame mf = MainFrame.getRunningFrame();
 		
 		switch (e.getField()) {
@@ -447,9 +455,11 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		default:
 			mf.setStatusErrorMsg("Unknown problem with fields");	
 		}
+		
+		e.handle();
 	}
 	
-	private void saveUser() {
+	private void saveUser() throws InvalidFieldException {
 		
 		User user = null;
 		try {
@@ -464,7 +474,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			tableModel.updatePerson(user);
 		} catch (InvalidFieldException e) {
 			setExceptionError(e);
-			return;
+			throw e;
 		} // end catch block
 		
 		isNewUser = false;
@@ -481,7 +491,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (fieldsChanged) {
-					saveUser();
+					try {
+						saveUser();
+					} catch (InvalidFieldException ex) {
+						// can't add new.. :/
+						setExceptionError(ex);
+						return;
+					}
 				}
 				
 				setPanelUser(null, true);
@@ -506,7 +522,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				}
 				
 				if (fieldsChanged) {
-					saveUser();
+					try { saveUser(); } catch (InvalidFieldException ex) { }
 				}
 			}
 		});
@@ -580,6 +596,15 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			public void valueChanged(ListSelectionEvent le) {
 				 int row = table.getSelectedRow();
 				 
+				 if (fieldsChanged) {
+					 try {
+						 saveUser();
+					 } catch (InvalidFieldException e) {
+						 setExceptionError(e);
+						 return;
+					 }
+				 }
+				 
 				 if (row < 0 || oldRow == row) return;
 				 
 				 oldRow = row;
@@ -587,10 +612,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				 User u = tableModel.getByRow(row);
 			     
 				 if (u != null){
-					 if (fieldsChanged) {
-						 saveUser();
-					 }
-					 
 					 setPanelUser(u, false); 
 				 }
 				 
@@ -658,7 +679,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-
+		return; // not useddd
 	}
 
 	@Override
