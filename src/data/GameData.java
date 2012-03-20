@@ -325,6 +325,10 @@ public class GameData extends Observable {
 					System.out.println("Added 40 points to " + u);
 				}
 			}
+			// if the end of the game and the person gets the right ultimate pick
+			if (u.getUltimatePick().equals(c) && this.isSeasonEnded()){
+				u.addPoints(u.getUltimatePoints());
+			}
 			itr.next();
 		}
 
