@@ -15,7 +15,7 @@ public class ShortAnswer extends BonusQuestion {
 		this.answer = answer;
 		this.active = active;
 		
-		type = BonusQuestion.TYPE_SHORT;
+		bonusType = BonusQuestion.BONUS_TYPE.MULTI;
 	}
 
 }

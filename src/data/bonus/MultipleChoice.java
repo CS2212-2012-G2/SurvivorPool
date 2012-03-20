@@ -27,7 +27,7 @@ public class MultipleChoice extends BonusQuestion {
 		this.answer = answer;
 		this.options = options;
 
-		type = BonusQuestion.TYPE_MULTI;
+		bonusType = BonusQuestion.BONUS_TYPE.MULTI;
 	}
 	
 	/**

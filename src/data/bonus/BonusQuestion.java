@@ -11,21 +11,15 @@ package data.bonus;
  */
 
 public class BonusQuestion {
-	/**
-	 * Used to show a question is a multiple choice question.
-	 */
-	public static int TYPE_MULTI = 0;
+	enum BONUS_TYPE{
+		MULTI,SHORT;
+	};
 	
-	/**
-	 * Used to show a question is a short answer question.
-	 */
-	public static int TYPE_SHORT = 1;
+	protected BONUS_TYPE bonusType;
 	
 	protected String prompt;
 	protected boolean active;
 	protected String answer;
-
-	protected int type;
 	
 	public BonusQuestion() {
 		System.out.println("Not implemented");
@@ -57,8 +51,8 @@ public class BonusQuestion {
 	 * 
 	 * @return this.type
 	 */
-	public int getType() {
-		return this.type;
+	public BONUS_TYPE getType() {
+		return this.bonusType;
 	}
 
 	/**
