@@ -25,7 +25,8 @@ public class BonusQuestion {
 	protected String prompt;
 	protected boolean active;
 	protected String answer;
-	protected String[] choices; //TODO: can we somehow implement short answr and mc together without this?
+	protected String[] choices; //TODO: can we somehow implement short answer and mc together without this?
+	protected int week;
 	
 	public static final String FILE_PATH="res/data/bonus.dat";
 	protected static final String KEY_TYPE="type";
@@ -33,20 +34,21 @@ public class BonusQuestion {
 	protected static final String KEY_ANSWER="answer";
 	protected static final String KEY_ACTIVE="active";
 	protected static final String KEY_CHOICES="mc_choices";//TODO:need a better name for type
-	
+	protected static final String KEY_WEEK="week";
 	
 	/**
 	 * Default constructor for Bonus Question
 	 * @param prompt The question(required)
 	 * @param answer The answer(required)
-	 * @param choices The possible choices(optional, only for MC)
+	 * @param choices The possible choices(null from short answer, and actual values for MC)
 	 */
-	public BonusQuestion(String prompt, String answer,String[] choices,boolean active){
+	public BonusQuestion(String prompt, String answer,String[] choices,boolean active,int week){
 		this.prompt  = prompt;
 		this.answer  = answer;
-		this.choices=choices;
-		bonusType = choices==null?BONUS_TYPE.SHORT:BONUS_TYPE.MULTI; 
+		this.choices = choices;
+		bonusType    = choices==null?BONUS_TYPE.SHORT:BONUS_TYPE.MULTI; 
 		this.active  = active;
+		this.week    = week;
 		//TODO: do we need to check if answer is in choices?
 	}
 	
@@ -138,6 +140,21 @@ public class BonusQuestion {
 		bonusType = BONUS_TYPE.MULTI;
 	}
 
+	/**
+	 * Get the week this question was asked
+	 * @return int
+	 */
+	public int getWeek() {
+		return week;
+	}
+
+	/**
+	 * Set the week this question was asked
+	 * @param week
+	 */
+	public void setWeek(int week) {
+		this.week = week;
+	}
 
 	/**
 	 * Converts Contestant object to a json object
@@ -161,6 +178,7 @@ public class BonusQuestion {
 		}
 		
 		obj.put(KEY_ACTIVE,active);
+		obj.put(KEY_WEEK, week);
 		return obj;
 	}
 	
@@ -180,6 +198,7 @@ public class BonusQuestion {
 				}
 				setChoices(choice);
 			}
+			setWeek(o.getInt(KEY_WEEK));
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -188,20 +207,20 @@ public class BonusQuestion {
 
 	
 	public static void main(String[] args) throws JSONException{
-		BonusQuestion b = new BonusQuestion("question","answer",null,true);
+		BonusQuestion b = new BonusQuestion("question","answer",null,true,1);
 		String shortActive = b.toJSONObject().toString(); 
 		System.out.println(shortActive);
 		
-		b = new BonusQuestion("question","answer",null,false);
+		b = new BonusQuestion("question","answer",null,false,2);
 		String shortNotActive = b.toJSONObject().toString(); 
 		System.out.println(shortNotActive);
 		
 		String[] choices = {"one","two","three","answer"};
-		b = new BonusQuestion("question","answer",choices,true);
+		b = new BonusQuestion("question","answer",choices,true,3);
 		String mcActive = b.toJSONObject().toString(); 
 		System.out.println(mcActive);
 		
-		b = new BonusQuestion("question","answer",choices,false);
+		b = new BonusQuestion("question","answer",choices,false,4);
 		String mcNotActive = b.toJSONObject().toString(); 
 		System.out.println(mcNotActive);
 		
