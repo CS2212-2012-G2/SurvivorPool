@@ -12,13 +12,14 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import data.GameData;
 import data.bonus.BonusQuestion;
@@ -44,6 +45,8 @@ public class BonusPanel extends JPanel {
 	JButton btnBack = new JButton("Back");
 	JButton btnSubmit = new JButton("Submit");
 	
+	JButton btnModify = new JButton("Modify");
+	
 	private JTextField txtQuestion;
 	private JTextField txtAnswer;
 	private JTextArea txtQuestionList;
@@ -68,11 +71,15 @@ public class BonusPanel extends JPanel {
 	private JRadioButton rbAnswerD;
 	
 	private Boolean shortAns;
+	private Boolean modifyBonusQuestion = false;
+	
+	private String[] questionList;
 	
 	private BonusQuestion bq;
 	
 	public BonusPanel() {
 		this.setLayout(new BorderLayout());
+		questionList = new String[GameData.getCurrentGame().weeksLeft()];
 		initPnlAddQuestion();
 		initPnlQuestionListing();
 		initListeners();
@@ -140,6 +147,7 @@ public class BonusPanel extends JPanel {
 	private void initPnlAddMultipleAnswer() {
 		pnlNewQ.removeAll();
 		pnlTypeQ.removeAll();
+		pnlMultA.removeAll();
 		
 		pnlNewQ.setLayout(new GridLayout(1, 2, 50, 20));
 		
@@ -194,6 +202,7 @@ public class BonusPanel extends JPanel {
 		
 		pnlViewWeek.add(lblViewWeek);
 		pnlViewWeek.add(spnWeek);
+		pnlViewWeek.add(btnModify);
 		
 		pnlListWeeks.add(txtQuestionList);
 		
@@ -204,11 +213,14 @@ public class BonusPanel extends JPanel {
 	}
 	
 	private void addQuestionToListing(BonusQuestion q) {
-		String s = txtQuestionList.getText() +
-		"Week: " + q.getWeek() + "\t" + "Question: " + q.getPrompt() + 
-		"\n" + "\t\t" + "Answer: " + q.getAnswer() + 
-		"\n\n";
-		txtQuestionList.setText(s);
+		questionList[GameData.getCurrentGame().getCurrentWeek() - 1] = 
+			"Week: " + q.getWeek() + "\t" + "Question: " + q.getPrompt() + 
+			"\n" + "\t\t" + "Answer: " + q.getAnswer() + "\n\n";
+		txtQuestionList.setText(questionList[GameData.getCurrentGame().getCurrentWeek() - 1]);
+	}
+	
+	private void setQuestionListingPanel() {
+		txtQuestionList.setText(questionList[(Integer)spnWeek.getValue()]);
 	}
 	
 	private void setQuestionAddingPanelUneditable(){
@@ -225,6 +237,23 @@ public class BonusPanel extends JPanel {
 		btnNext.setEnabled(true);
 	}
 	
+	private void setQuestionAddingPanel(){
+		setQuestionAddingPanelEditable();
+		txtQuestion.setText(bq.getPrompt());
+		modifyBonusQuestion = true;
+	}
+	
+	private void setAnswerAddingPanel(){
+		if (rbMultChoice.isSelected() && bq.getChoices() != null){
+			txtAnswerA.setText(bq.getChoices()[0]);
+			txtAnswerB.setText(bq.getChoices()[1]);
+			txtAnswerC.setText(bq.getChoices()[2]);
+			txtAnswerD.setText(bq.getChoices()[3]);
+		} else if (rbShortAnswer.isSelected() && bq.getChoices() == null){
+			txtAnswer.setText(bq.getAnswer());
+		}
+	}
+	
 	private void initListeners(){
 		
 		btnNext.addActionListener(new ActionListener() {
@@ -239,6 +268,7 @@ public class BonusPanel extends JPanel {
 					} else if (rbMultChoice.isSelected()){
 						shortAns = false;
 						initPnlAddMultipleAnswer();
+						if (modifyBonusQuestion) setAnswerAddingPanel();
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"You must select a question type."
@@ -264,6 +294,7 @@ public class BonusPanel extends JPanel {
 						initPnlAddQuestion();
 						addQuestionToListing(bq);
 						setQuestionAddingPanelUneditable();
+						modifyBonusQuestion = false;
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"Your answer must be 1-200 characters."
@@ -302,6 +333,7 @@ public class BonusPanel extends JPanel {
 						initPnlAddQuestion();
 						addQuestionToListing(bq);
 						setQuestionAddingPanelUneditable();
+						modifyBonusQuestion = false;
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"Your must write atleast one answer. Answers must be 1-200 characters."
@@ -316,6 +348,7 @@ public class BonusPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				initPnlAddQuestion();
+				if (modifyBonusQuestion) setQuestionAddingPanel();
 			}
 		});
 		
@@ -373,6 +406,22 @@ public class BonusPanel extends JPanel {
 				else if (rbAnswerC.isSelected()) rbAnswerC.setSelected(false);
 				else if (rbAnswerA.isSelected()) rbAnswerA.setSelected(false);
 			}			
+		});
+		
+		btnModify.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				setQuestionAddingPanel();
+			}			
+		});
+		
+		spnWeek.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				setQuestionListingPanel();
+			}
 		});
 	}
 }
