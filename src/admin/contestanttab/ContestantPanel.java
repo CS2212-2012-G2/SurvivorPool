@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -37,15 +39,13 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import admin.FileDrop;
-import admin.GameDataDependant;
 import admin.MainFrame;
 import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
-import data.InvalidFieldException.Field;
 
-public class ContestantPanel extends JPanel implements MouseListener, GameDataDependant {
+public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 	private static final long serialVersionUID = 1L;
 	private JButton imgDisplay;
@@ -160,7 +160,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 		
 		buildActions();
 		
-		refreshGameFields();
+		update(GameData.getCurrentGame(), null);
 		
 		if (cons.size() > 0) {
 			table.setRowSelectionInterval(0, 0);
@@ -168,6 +168,8 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			setPanelContestant(null, true);
 		}	
 		setFieldsChanged(false);
+		
+		GameData.getCurrentGame().addObserver(this);
 	}
 	
 	/**
@@ -572,7 +574,7 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 					btnCastOff.setText("Cast Off");
 				}	
 				
-				refreshGameFields();
+				update(GameData.getCurrentGame(), null);
 			}
 		});
 		
@@ -667,10 +669,6 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 			tf.addFocusListener(fa);
 		}
 	}
-
-	public void seasonStarted(){
-		refreshGameFields();
-	}
 	
 	/**
 	 * Helper method that will get the selected row, call the runnable method
@@ -746,8 +744,8 @@ public class ContestantPanel extends JPanel implements MouseListener, GameDataDe
 	 * @see GameDataDependant.refreshGameFields
 	 */
 	@Override
-	public void refreshGameFields() {
-		GameData g = GameData.getCurrentGame();
+	public void update(Observable obj, Object arg) {
+		GameData g = (GameData)obj;
 		
 		// tribe combobox
 		String[] newTribes = g.getTribeNames();

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 import java.util.Random;
 
 import admin.Utils;
@@ -21,7 +22,7 @@ import data.me.json.JSONObject;
  *         Brightwell
  */
 
-public class GameData {
+public class GameData extends Observable {
 
 	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
 										// passed
@@ -200,6 +201,9 @@ public class GameData {
 		}
 
 		allContestants.add(c);
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -221,6 +225,9 @@ public class GameData {
 
 		allContestants.remove(i);
 		updateSortAllContestants(Utils.CompType.CONTNT_ID);
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -248,6 +255,9 @@ public class GameData {
 		}
 		
 		allUsers.add(u);
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -263,6 +273,9 @@ public class GameData {
 				return;
 			}
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -301,6 +314,9 @@ public class GameData {
 			}
 			itr.next();
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -354,6 +370,11 @@ public class GameData {
 
 	// ----------------- MUTATOR METHODS ------------------//
 
+	/**
+	 * TOOD:
+	 * @param isActive
+	 * @return
+	 */
 	public Contestant randomContestant(boolean isActive) {
 		List<Contestant> list = null;
 		if (isActive) {
@@ -397,6 +418,8 @@ public class GameData {
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -439,6 +462,9 @@ public class GameData {
 				} catch (InvalidFieldException e) { }
 			}
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -556,6 +582,8 @@ public class GameData {
 	public void endCurrentGame() {
 		GameData.currentGame = null;
 
+		notifyObservers();
+		
 		JSONUtils.resetSeason();
 	}
 
@@ -644,6 +672,9 @@ public class GameData {
 			u.fromJSONObject(users.getJSONObject(i));
 			try { addUser(u); } catch (InvalidFieldException ie) { }
 		}
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**
@@ -718,7 +749,8 @@ public class GameData {
 			g.addContestant(c1);
 			g.addContestant(c2);
 		} catch (InvalidFieldException ie) {};
-g.startSeason(5);
+		
+		g.startSeason(5);
 		User u1;
 		try {
 			u1 = new User("First","last","flast");
@@ -731,36 +763,12 @@ g.startSeason(5);
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-/* uncomment to show why the previous random generator was failing
-		int size = g.getActiveContestants().size();
-		int prevCount = 0;
-		int newCount=0;
-		Random r = new Random();
 
-		for(int i =0;i<500;i++){
-			int index = (int) Math.round(Math.random() * size);
-			if(index<0||index>=size)
-				prevCount++;
-			index = r.nextInt(size);
-			if(index<0||index>=size)
-				newCount++;
-		}
-		System.out.println(prevCount+" "+newCount);
-*/		
 		try {
 			System.out.println(g.toJSONObject().toString());
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
-
-		
-		/*GameData g2 = new GameData(6);
-
-		try {
-			g2.fromJSONObject(g.toJSONObject());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}*/
 
 	}
 
