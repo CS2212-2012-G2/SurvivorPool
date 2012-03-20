@@ -49,6 +49,7 @@ public class BonusQuestion {
 		bonusType    = choices==null?BONUS_TYPE.SHORT:BONUS_TYPE.MULTI; 
 		this.active  = active;
 		this.week    = week;
+		Bonus.addNewQuestion(this);
 		//TODO: do we need to check if answer is in choices?
 	}
 	
