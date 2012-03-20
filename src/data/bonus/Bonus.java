@@ -1,7 +1,9 @@
 package data.bonus;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import data.JSONUtils;
 import data.me.json.JSONArray;
 import data.me.json.JSONException;
 import data.me.json.JSONObject;
@@ -17,7 +19,7 @@ public class Bonus {
 	static ArrayList<BonusQuestion> questions = new ArrayList<BonusQuestion>();
 
 	private static final String KEY_QUESTIONS = "questions";
-	public static final String fileName = "res/data/bonus.dat";
+	public static final String filePath = "res/data/bonus.dat";
 
 	/**
 	 * DO NOT CALL THIS FUNCTION! Only used fromJSONObject or when a
@@ -66,11 +68,27 @@ public class Bonus {
 	}
 
 	public static void fromJSONObject(JSONObject o) throws JSONException {
+		if(o==null)
+			return;
 		JSONArray qA = o.getJSONArray(KEY_QUESTIONS);
 		for (int i = 0; i < qA.length(); i++) {
 			BonusQuestion b = new BonusQuestion();
 			b.fromJSONObject(qA.getJSONObject(i));
 			addNewQuestion(b);
+		}
+	}
+	
+	/**
+	 * Initalize bonus
+	 */
+	public static void initBonus(){
+		try {
+			fromJSONObject(JSONUtils.readFile(filePath));
+		} catch (FileNotFoundException e) {
+			System.out.println("could not read "+filePath);
+		} catch (JSONException e) {
+			System.out.println("could not convert to json object "+filePath);
+			e.printStackTrace();
 		}
 	}
 }

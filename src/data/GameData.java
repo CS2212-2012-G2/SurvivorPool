@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Random;
 
 import admin.Utils;
+import data.bonus.Bonus;
 import data.me.json.JSONArray;
 import data.me.json.JSONException;
 import data.me.json.JSONObject;
@@ -59,6 +60,8 @@ public class GameData extends Observable {
 	private static final String KEY_TRIBES = "tribes_arr";
 
 	private static final String KEY_SEASON_STARTED = "season_started";
+	
+	public static String filePath = "res/data/Settings.dat";
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -729,7 +732,7 @@ public class GameData extends Observable {
 	public static GameData initGameData() {
 		JSONObject json;
 		try {
-			json = JSONUtils.readFile(JSONUtils.seasonFile);
+			json = JSONUtils.readFile(filePath);
 		} catch (FileNotFoundException e) {
 			return (GameData) currentGame;
 		}
@@ -745,7 +748,7 @@ public class GameData extends Observable {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
+		Bonus.initBonus();
 		return (GameData) currentGame;
 	}
 
@@ -755,7 +758,8 @@ public class GameData extends Observable {
 	public void writeData() {
 
 		try {
-			JSONUtils.writeJSON(JSONUtils.seasonFile, this.toJSONObject());
+			JSONUtils.writeJSON(filePath, this.toJSONObject());
+			JSONUtils.writeJSON(filePath, Bonus.toJSONObject());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
