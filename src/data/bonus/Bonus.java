@@ -16,7 +16,7 @@ public class Bonus {
 	static ArrayList<BonusQuestion> questions = new ArrayList<BonusQuestion>();
 	
 	private static final String KEY_QUESTIONS = "questions";
-	
+	public static final String  fileName 	  = "res/data/bonus.dat";
 	/**
 	 * DO NOT CALL THIS FUNCTION! Only used fromJSONObject or when a bonusquestion is created
 	 * @param b
