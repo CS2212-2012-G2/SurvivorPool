@@ -5,7 +5,6 @@ import data.me.json.JSONArray;
 import data.me.json.JSONException;
 import data.me.json.JSONObject;
 
-
 /**
  * BonusQuestion is the class that will deal with the numerous bonus questions
  * that users can answer at their leisure during the competition.
@@ -16,50 +15,61 @@ import data.me.json.JSONObject;
  */
 
 public class BonusQuestion {
-	public static enum BONUS_TYPE{
-		MULTI,SHORT;
+	public static enum BONUS_TYPE {
+		MULTI, SHORT;
 	};
-	
+
 	protected BONUS_TYPE bonusType;
-	
+
 	protected String prompt;
 	protected boolean active;
 	protected String answer;
-	protected String[] choices; //TODO: can we somehow implement short answer and mc together without this?
+	protected String[] choices; // TODO: can we somehow implement short answer
+								// and mc together without this?
 	protected int week;
-	
-	public static final String FILE_PATH="res/data/bonus.dat";
-	protected static final String KEY_TYPE="type";
-	protected static final String KEY_PROMPT="prompt";
-	protected static final String KEY_ANSWER="answer";
-	protected static final String KEY_ACTIVE="active";
-	protected static final String KEY_CHOICES="mc_choices";//TODO:need a better name for type
-	protected static final String KEY_WEEK="week";
-	
+
+	public static final String FILE_PATH = "res/data/bonus.dat";
+	protected static final String KEY_TYPE = "type";
+	protected static final String KEY_PROMPT = "prompt";
+	protected static final String KEY_ANSWER = "answer";
+	protected static final String KEY_ACTIVE = "active";
+	protected static final String KEY_CHOICES = "mc_choices";// TODO:need a
+																// better name
+																// for type
+	protected static final String KEY_WEEK = "week";
+
 	/**
 	 * Default constructor for Bonus Question
-	 * @param prompt The question(required)
-	 * @param answer The answer(required)
-	 * @param choices The possible choices(null from short answer, and actual values for MC)
+	 * 
+	 * @param prompt
+	 *            The question(required)
+	 * @param answer
+	 *            The answer(required)
+	 * @param choices
+	 *            The possible choices(null from short answer, and actual values
+	 *            for MC)
 	 */
-	public BonusQuestion(String prompt, String answer,String[] choices,boolean active,int week){
-		this.prompt  = prompt;
-		this.answer  = answer;
+	public BonusQuestion(String prompt, String answer, String[] choices,
+			boolean active, int week) {
+		this.prompt = prompt;
+		this.answer = answer;
 		this.choices = choices;
-		bonusType    = choices==null?BONUS_TYPE.SHORT:BONUS_TYPE.MULTI; 
-		this.active  = active;
-		this.week    = week;
+		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
+		this.active = active;
+		this.week = week;
 		Bonus.addNewQuestion(this);
-		//TODO: do we need to check if answer is in choices?
+		// TODO: do we need to check if answer is in choices?
 	}
-	
+
 	/**
 	 * Only used for fromJsonObject
 	 */
-	public BonusQuestion(){}
-	
+	public BonusQuestion() {
+	}
+
 	/**
 	 * Get the type of question.
+	 * 
 	 * @return
 	 */
 	public BONUS_TYPE getBonusType() {
@@ -68,6 +78,7 @@ public class BonusQuestion {
 
 	/**
 	 * Set the bonus type
+	 * 
 	 * @param bonusType
 	 */
 	public void setBonusType(BONUS_TYPE bonusType) {
@@ -76,6 +87,7 @@ public class BonusQuestion {
 
 	/**
 	 * Get the question prompt
+	 * 
 	 * @return String of prompt
 	 */
 	public String getPrompt() {
@@ -83,7 +95,8 @@ public class BonusQuestion {
 	}
 
 	/**
-	 * Set the question prompt 
+	 * Set the question prompt
+	 * 
 	 * @param prompt
 	 */
 	public void setPrompt(String prompt) {
@@ -92,6 +105,7 @@ public class BonusQuestion {
 
 	/**
 	 * Returns if the question is still active
+	 * 
 	 * @return
 	 */
 	public boolean isActive() {
@@ -100,24 +114,25 @@ public class BonusQuestion {
 
 	/**
 	 * Set if question is active
+	 * 
 	 * @param active
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
 	}
 
-
 	/**
 	 * Get the answer to the question
+	 * 
 	 * @return
 	 */
 	public String getAnswer() {
 		return answer;
 	}
 
-
 	/**
 	 * Set answer to question
+	 * 
 	 * @param answer
 	 */
 	public void setAnswer(String answer) {
@@ -126,6 +141,7 @@ public class BonusQuestion {
 
 	/**
 	 * Get possible choices or null if question is short answre
+	 * 
 	 * @return
 	 */
 	public String[] getChoices() {
@@ -134,6 +150,7 @@ public class BonusQuestion {
 
 	/**
 	 * Set choices. CHANGES TYPE TO MULTIPLE CHOICE!
+	 * 
 	 * @param choices
 	 */
 	public void setChoices(String[] choices) {
@@ -143,6 +160,7 @@ public class BonusQuestion {
 
 	/**
 	 * Get the week this question was asked
+	 * 
 	 * @return int
 	 */
 	public int getWeek() {
@@ -151,6 +169,7 @@ public class BonusQuestion {
 
 	/**
 	 * Set the week this question was asked
+	 * 
 	 * @param week
 	 */
 	public void setWeek(int week) {
@@ -159,91 +178,90 @@ public class BonusQuestion {
 
 	/**
 	 * Converts Contestant object to a json object
+	 * 
 	 * @return a JSON object containing all the data needed
 	 * @throws JSONException
 	 */
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
-		obj.put(KEY_PROMPT,prompt);
-		obj.put(KEY_ANSWER,answer);
-		
-		if(choices!=null){
+		obj.put(KEY_PROMPT, prompt);
+		obj.put(KEY_ANSWER, answer);
+
+		if (choices != null) {
 			JSONArray sChoice = new JSONArray();
-			for (String c: choices) {
+			for (String c : choices) {
 				if (c != null)
 					sChoice.put(c);
 			}
-			obj.put(KEY_CHOICES,sChoice);
-		}else{
-			obj.put(KEY_CHOICES,null);
+			obj.put(KEY_CHOICES, sChoice);
+		} else {
+			obj.put(KEY_CHOICES, null);
 		}
-		
-		obj.put(KEY_ACTIVE,active);
+
+		obj.put(KEY_ACTIVE, active);
 		obj.put(KEY_WEEK, week);
 		return obj;
 	}
-	
-	public void fromJSONObject(JSONObject o) {
-		try {
-			setPrompt(o.getString(KEY_PROMPT));
-			setAnswer(o.getString(KEY_ANSWER));
-			setActive(o.getBoolean(KEY_ACTIVE));
-			
-			JSONArray jChoices =o.getJSONArray(KEY_CHOICES);
-			if(jChoices==null){
-				setChoices(null);
-			}else{
-				String[] choice = new String[jChoices.length()];
-				for(int i =0;i<jChoices.length();i++){
-					choice[i]=jChoices.getString(i);
-				}
-				setChoices(choice);
+
+	public void fromJSONObject(JSONObject o) throws JSONException {
+
+		setPrompt(o.getString(KEY_PROMPT));
+		setAnswer(o.getString(KEY_ANSWER));
+		setActive(o.getBoolean(KEY_ACTIVE));
+
+		JSONArray jChoices = o.getJSONArray(KEY_CHOICES);
+		if (jChoices == null) {
+			setChoices(null);
+		} else {
+			String[] choice = new String[jChoices.length()];
+			for (int i = 0; i < jChoices.length(); i++) {
+				choice[i] = jChoices.getString(i);
 			}
-			setWeek(o.getInt(KEY_WEEK));
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
+			setChoices(choice);
 		}
+		setWeek(o.getInt(KEY_WEEK));
+
 	}
 
-	
-	public static void main(String[] args) throws JSONException{
-		BonusQuestion b = new BonusQuestion("question","answer",null,true,1);
-		String shortActive = b.toJSONObject().toString(); 
+	public static void main(String[] args) throws JSONException {
+		BonusQuestion b = new BonusQuestion("question", "answer", null, true, 1);
+		String shortActive = b.toJSONObject().toString();
 		System.out.println(shortActive);
-		
-		b = new BonusQuestion("question","answer",null,false,2);
-		String shortNotActive = b.toJSONObject().toString(); 
+
+		b = new BonusQuestion("question", "answer", null, false, 2);
+		String shortNotActive = b.toJSONObject().toString();
 		System.out.println(shortNotActive);
-		
-		String[] choices = {"one","two","three","answer"};
-		b = new BonusQuestion("question","answer",choices,true,3);
-		String mcActive = b.toJSONObject().toString(); 
+
+		String[] choices = { "one", "two", "three", "answer" };
+		b = new BonusQuestion("question", "answer", choices, true, 3);
+		String mcActive = b.toJSONObject().toString();
 		System.out.println(mcActive);
-		
-		b = new BonusQuestion("question","answer",choices,false,4);
-		String mcNotActive = b.toJSONObject().toString(); 
+
+		b = new BonusQuestion("question", "answer", choices, false, 4);
+		String mcNotActive = b.toJSONObject().toString();
 		System.out.println(mcNotActive);
-		
+
+		System.out.println(Bonus.toJSONObject().toString());
 		System.out.println("\n\n\nGenerating fromJSONObject");
 		JSONObject o = new JSONObject(shortActive);
 		BonusQuestion bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
-		
+
 		o = new JSONObject(shortNotActive);
 		bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
-		
+
 		o = new JSONObject(mcActive);
 		bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
-		
+
 		o = new JSONObject(mcNotActive);
 		bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
+		System.out.println(Bonus.toJSONObject().toString());
 	}
 }
