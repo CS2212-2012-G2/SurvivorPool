@@ -66,7 +66,6 @@ public class StatusPanel extends JPanel{
 	public void setErrorMsgLabel(String txt, Component... comps){
 		if(t!=null&&t.isRunning()){
 			t.stop();
-			System.out.println("yeah");
 		}else{
 			t= new Timer(TIMER_TIME,displayError);
 			t.setRepeats(false);

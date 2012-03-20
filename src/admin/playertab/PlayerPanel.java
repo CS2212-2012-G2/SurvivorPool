@@ -674,7 +674,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			}
 		}
 		
-		
 	}
 
 	@Override
