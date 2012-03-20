@@ -1,6 +1,7 @@
 package data.bonus;
 
-import data.Contestant;
+import java.util.List;
+
 import data.me.json.JSONArray;
 import data.me.json.JSONException;
 import data.me.json.JSONObject;
@@ -224,24 +225,27 @@ public class BonusQuestion {
 	}
 
 	public static void main(String[] args) throws JSONException {
-		BonusQuestion b = new BonusQuestion("question", "answer", null, true, 1);
+		/*	************to json test*********************/
+		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, true, 3);
 		String shortActive = b.toJSONObject().toString();
 		System.out.println(shortActive);
 
-		b = new BonusQuestion("question", "answer", null, false, 2);
+		b = new BonusQuestion("question week 2", "answer", null, false, 2);
 		String shortNotActive = b.toJSONObject().toString();
 		System.out.println(shortNotActive);
 
 		String[] choices = { "one", "two", "three", "answer" };
-		b = new BonusQuestion("question", "answer", choices, true, 3);
+		b = new BonusQuestion("question week 4", "answer", choices, true, 4);
 		String mcActive = b.toJSONObject().toString();
 		System.out.println(mcActive);
 
-		b = new BonusQuestion("question", "answer", choices, false, 4);
+		b = new BonusQuestion("question week 1", "answer", choices, false, 1);
 		String mcNotActive = b.toJSONObject().toString();
 		System.out.println(mcNotActive);
-
+		
 		System.out.println(Bonus.toJSONObject().toString());
+		
+		/* **from json test**********************/
 		System.out.println("\n\n\nGenerating fromJSONObject");
 		JSONObject o = new JSONObject(shortActive);
 		BonusQuestion bq = new BonusQuestion();
@@ -263,5 +267,15 @@ public class BonusQuestion {
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
 		System.out.println(Bonus.toJSONObject().toString());
+		
+		/* ****************TESTING SORT*************************/
+		System.out.println("\n\nTesting sort**************************");
+		List<BonusQuestion> list = Bonus.getAllQuestions();
+		for(BonusQuestion quest: list){
+			System.out.println(quest.getWeek());
+		}
+		
+		BonusQuestion byWeek = Bonus.getQuestionByWeek(2);
+		System.out.println(byWeek.getPrompt());
 	}
 }
