@@ -415,6 +415,22 @@ public class GameData extends Observable {
 		allocatePoints(elimCont);
 		elimCont.castOff();
 		
+		/* clear all weekly picks */
+		for (User u : allUsers) {
+				try {
+					u.setWeeklyPick(null);
+				} catch (InvalidFieldException e) {
+				} // wont happen
+				
+				/* clear defunct ult picks */
+				if (u.getUltimatePick().getID().equals(elimCont.getID())) { 
+					try {
+						u.setUltimatePick(null);
+					} catch (InvalidFieldException e) {
+					} // wont happen
+				}
+			}
+		
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
