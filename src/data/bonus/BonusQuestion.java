@@ -1,9 +1,9 @@
 package data.bonus;
 
-import data.Contestant;
-import data.me.json.JSONArray;
-import data.me.json.JSONException;
-import data.me.json.JSONObject;
+import json.simple.JSONArray;
+import json.simple.JSONObject;
+import json.simple.JSONValue;
+import json.simple.parser.ParseException;
 
 /**
  * BonusQuestion is the class that will deal with the numerous bonus questions
@@ -182,7 +182,7 @@ public class BonusQuestion {
 	 * @return a JSON object containing all the data needed
 	 * @throws JSONException
 	 */
-	public JSONObject toJSONObject() throws JSONException {
+	public JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
 		obj.put(KEY_PROMPT, prompt);
 		obj.put(KEY_ANSWER, answer);
@@ -191,7 +191,7 @@ public class BonusQuestion {
 			JSONArray sChoice = new JSONArray();
 			for (String c : choices) {
 				if (c != null)
-					sChoice.put(c);
+					sChoice.add(c);
 			}
 			obj.put(KEY_CHOICES, sChoice);
 		} else {
@@ -203,27 +203,27 @@ public class BonusQuestion {
 		return obj;
 	}
 
-	public void fromJSONObject(JSONObject o) throws JSONException {
+	public void fromJSONObject(JSONObject o) throws ParseException {
 
-		setPrompt(o.getString(KEY_PROMPT));
-		setAnswer(o.getString(KEY_ANSWER));
-		setActive(o.getBoolean(KEY_ACTIVE));
+		setPrompt((String)o.get(KEY_PROMPT));
+		setAnswer((String)o.get(KEY_ANSWER));
+		setActive((Boolean)o.get(KEY_ACTIVE));
 
-		JSONArray jChoices = o.getJSONArray(KEY_CHOICES);
+		JSONArray jChoices = (JSONArray)o.get(KEY_CHOICES);
 		if (jChoices == null) {
 			setChoices(null);
 		} else {
-			String[] choice = new String[jChoices.length()];
-			for (int i = 0; i < jChoices.length(); i++) {
-				choice[i] = jChoices.getString(i);
+			String[] choice = new String[jChoices.size()];
+			for (int i = 0; i < jChoices.size(); i++) {
+				choice[i] = (String)jChoices.get(i);
 			}
 			setChoices(choice);
 		}
-		setWeek(o.getInt(KEY_WEEK));
+		setWeek((Integer)o.get(KEY_WEEK));
 
 	}
 
-	public static void main(String[] args) throws JSONException {
+	public static void main(String[] args) throws ParseException {
 		BonusQuestion b = new BonusQuestion("question", "answer", null, true, 1);
 		String shortActive = b.toJSONObject().toString();
 		System.out.println(shortActive);
@@ -243,22 +243,22 @@ public class BonusQuestion {
 
 		System.out.println(Bonus.toJSONObject().toString());
 		System.out.println("\n\n\nGenerating fromJSONObject");
-		JSONObject o = new JSONObject(shortActive);
+		JSONObject o = (JSONObject)JSONValue.parse(shortActive);
 		BonusQuestion bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
 
-		o = new JSONObject(shortNotActive);
+		o = (JSONObject)JSONValue.parse(shortNotActive);
 		bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
 
-		o = new JSONObject(mcActive);
+		o = (JSONObject)JSONValue.parse(mcActive);
 		bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());
 
-		o = new JSONObject(mcNotActive);
+		o = (JSONObject)JSONValue.parse(mcNotActive);
 		bq = new BonusQuestion();
 		bq.fromJSONObject(o);
 		System.out.println(bq.toJSONObject().toString());

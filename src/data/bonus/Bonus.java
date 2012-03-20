@@ -2,9 +2,9 @@ package data.bonus;
 
 import java.util.ArrayList;
 
-import data.me.json.JSONArray;
-import data.me.json.JSONException;
-import data.me.json.JSONObject;
+import json.simple.JSONArray;
+import json.simple.JSONObject;
+import json.simple.parser.ParseException;
 
 /**
  * This class holds all the bonus questions
@@ -54,22 +54,22 @@ public class Bonus {
 
 	}
 
-	public static JSONObject toJSONObject() throws JSONException {
+	public static JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
 
 		JSONArray qA = new JSONArray();
 		for (BonusQuestion b : questions) {
-			qA.put(b.toJSONObject());
+			qA.add(b.toJSONObject());
 		}
 		obj.put(KEY_QUESTIONS, qA);
 		return obj;
 	}
 
-	public static void fromJSONObject(JSONObject o) throws JSONException {
-		JSONArray qA = o.getJSONArray(KEY_QUESTIONS);
-		for (int i = 0; i < qA.length(); i++) {
+	public static void fromJSONObject(JSONObject o) throws ParseException {
+		JSONArray qA = (JSONArray)o.get(KEY_QUESTIONS);
+		for (int i = 0; i < qA.size(); i++) {
 			BonusQuestion b = new BonusQuestion();
-			b.fromJSONObject(qA.getJSONObject(i));
+			b.fromJSONObject((JSONObject)qA.get(i));
 			addNewQuestion(b);
 		}
 	}

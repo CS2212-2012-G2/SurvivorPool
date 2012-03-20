@@ -6,8 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import data.me.json.JSONException;
-import data.me.json.JSONObject;
+import json.simple.JSONObject;
+import json.simple.JSONValue;
 
 /**
  * Use this class to get the keys, to write to a file, and getting values. This
@@ -25,14 +25,13 @@ public class JSONUtils {
 			throw new FileNotFoundException();
 		try {
 			String jString = fileToString(path);
-			JSONObject obj = new JSONObject(jString);
+			JSONObject obj = (JSONObject) JSONValue.parse(jString);
 			return obj;
 
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
 		}
+		
 		return null;
 	}
 
