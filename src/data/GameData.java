@@ -373,6 +373,7 @@ public class GameData {
 		if (elimExists == false)
 			return;
 
+		/* Fill weekly NULLs */
 		for (User u : allUsers) {
 			if (u.getWeeklyPick().isNull()) {
 				try {
@@ -381,6 +382,7 @@ public class GameData {
 				} // wont happen
 			}
 
+			/* Fill ultimate NULLs */
 			if (u.getUltimatePick().isNull()) {
 				try {
 					u.setUltimatePick(randomContestant(true));
