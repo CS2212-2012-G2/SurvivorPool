@@ -17,6 +17,7 @@ import java.util.Observer;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -506,16 +507,25 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		});
 		
 		btnSave.addActionListener(new ActionListener() {
+			// FIXME: global setting? Its reset every time the GUI is loaded right now
+			boolean dontShowConfirm = false;
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				// make sure they want to save initially.
-				if (isNewUser) {
+				if (isNewUser && !dontShowConfirm) {
+					JCheckBox checkbox = new JCheckBox("Don't show again?");
+					String msg = "Would you like to save a new selected " +
+							"user? You can not change ID after first save.";
+					Object[] objs = { msg, checkbox };
+					
 					int response = JOptionPane.showConfirmDialog(null,
-						"Would you like to save a new selected user? You can " +
-						"not change ID after first save.",
+						objs,
 						"Save User?",
 						JOptionPane.YES_NO_OPTION);
+					
+					dontShowConfirm = checkbox.isSelected();
 					if(response == JOptionPane.NO_OPTION){
 						return;
 					}
