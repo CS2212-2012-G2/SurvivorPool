@@ -137,7 +137,7 @@ public class User implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setFirstName(String first) throws InvalidFieldException {
-		first = first.trim().toLowerCase();
+		first = first.trim();
 		if (!Utils.checkString(first, REGEX_FIRST_NAME))
 			throw new InvalidFieldException(Field.USER_FIRST,
 					"Invalid First Name (User)");
@@ -152,7 +152,7 @@ public class User implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setLastName(String last) throws InvalidFieldException {
-		last = last.trim().toLowerCase();
+		last = last.trim();
 		if (!Utils.checkString(last, REGEX_LAST_NAME))
 			throw new InvalidFieldException(Field.USER_LAST,
 					"Invalid Last Name (User)");

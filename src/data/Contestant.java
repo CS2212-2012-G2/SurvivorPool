@@ -140,7 +140,7 @@ public class Contestant implements Person {
 	 * @throws InvalidFieldException 
 	 */
 	public void setFirstName(String name) throws InvalidFieldException {
-		name = name.trim().toLowerCase();
+		name = name.trim();
 		if (!Utils.checkString(name,REGEX_FIRST_NAME))
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_FIRST,
 					"Invalid First Name");
@@ -154,7 +154,7 @@ public class Contestant implements Person {
 	 * @param name New last name of the contestant
 	 */
 	public void setLastName(String name) throws InvalidFieldException {
-		name = name.trim().toLowerCase();
+		name = name.trim();
 		if (!Utils.checkString(name,REGEX_LAST_NAME))
 			throw new InvalidFieldException(InvalidFieldException.Field.CONT_LAST,
 					"Invalid Last Name");
