@@ -17,8 +17,6 @@ import data.me.json.JSONObject;
  */
 public class JSONUtils {
 
-	public static String seasonFile = "res/data/Settings.dat";
-
 	public static JSONObject readFile(String path) throws FileNotFoundException {
 		File f = new File(path);
 		if (!f.exists())
@@ -96,7 +94,7 @@ public class JSONUtils {
 	 * @return True if sucessfully reset season.
 	 */
 	public static boolean resetSeason() {
-		File f = new File(seasonFile);
+		File f = new File(GameData.filePath);
 		f.delete();
 		return f.exists();
 	}
