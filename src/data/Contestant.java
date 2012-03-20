@@ -1,8 +1,8 @@
 package data;
 
-import data.me.json.*;
+import json.simple.JSONObject;
+import json.simple.parser.ParseException;
 import admin.Utils;
-import data.GameData;
 
 /**
  * The contestant class will be used to create a person who will be competing in
@@ -307,7 +307,7 @@ public class Contestant implements Person {
 	 * @return a JSON object containing all the data needed
 	 * @throws JSONException
 	 */
-	public JSONObject toJSONObject() throws JSONException {
+	public JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
 
 		obj.put(KEY_FIRST_NAME, getFirstName());
@@ -315,7 +315,7 @@ public class Contestant implements Person {
 		obj.put(KEY_ID, getID());
 		obj.put(KEY_PICTURE, getPicture());
 		obj.put(KEY_TRIBE, getTribe());
-		obj.put(KEY_DATE, new Integer(getCastDate()));
+		obj.put(KEY_DATE, getCastDate());
 		return obj;
 	}
 
@@ -337,7 +337,7 @@ public class Contestant implements Person {
 			setLastName((String) o.remove(KEY_LAST_NAME));
 			setTribe((String) o.remove(KEY_TRIBE));
 			setPicture((String) o.remove(KEY_PICTURE));
-			setCastDate(((Integer) o.remove(KEY_DATE)).intValue());
+			setCastDate(Utils.numToInt(o.remove(KEY_DATE)).intValue());
 		} catch (InvalidFieldException e) {
 			System.out
 					.println("Warning: InvalidFieldException in fromJSONObject");
@@ -351,7 +351,7 @@ public class Contestant implements Person {
 
 		try {
 			System.out.println(c.toJSONObject().toString());
-		} catch (JSONException e1) {
+		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
 

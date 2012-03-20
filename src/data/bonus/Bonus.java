@@ -8,9 +8,9 @@ import java.util.List;
 
 import admin.Utils;
 import data.JSONUtils;
-import data.me.json.JSONArray;
-import data.me.json.JSONException;
-import data.me.json.JSONObject;
+import json.simple.JSONArray;
+import json.simple.JSONObject;
+import json.simple.parser.ParseException;
 
 /**
  * This class holds all the bonus questions
@@ -82,24 +82,24 @@ public class Bonus {
 
 	}
 
-	public static JSONObject toJSONObject() throws JSONException {
+	public static JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
 
 		JSONArray qA = new JSONArray();
 		for (BonusQuestion b : questions) {
-			qA.put(b.toJSONObject());
+			qA.add(b.toJSONObject());
 		}
 		obj.put(KEY_QUESTIONS, qA);
 		return obj;
 	}
 
-	public static void fromJSONObject(JSONObject o) throws JSONException {
+	public static void fromJSONObject(JSONObject o) throws ParseException {
 		if(o==null)
-			return;
-		JSONArray qA = o.getJSONArray(KEY_QUESTIONS);
-		for (int i = 0; i < qA.length(); i++) {
+		    return;
+		JSONArray qA = (JSONArray)o.get(KEY_QUESTIONS);
+		for (int i = 0; i < qA.size(); i++) {
 			BonusQuestion b = new BonusQuestion();
-			b.fromJSONObject(qA.getJSONObject(i));
+			b.fromJSONObject((JSONObject)qA.get(i));
 			addNewQuestion(b);
 		}
 	}
@@ -112,7 +112,7 @@ public class Bonus {
 			fromJSONObject(JSONUtils.readFile(filePath));
 		} catch (FileNotFoundException e) {
 			System.out.println("could not read "+filePath);
-		} catch (JSONException e) {
+		} catch (ParseException e) {
 			System.out.println("could not convert to json object "+filePath);
 			e.printStackTrace();
 		}

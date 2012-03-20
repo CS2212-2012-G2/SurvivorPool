@@ -11,7 +11,6 @@ import java.util.List;
 import data.Contestant;
 import data.Person;
 import data.User;
-import data.me.regexp.RE;
 
 public class Utils {
 
@@ -379,8 +378,7 @@ public class Utils {
 			return false;
 		if (val.length() == 0)
 			return false;
-		RE r = new RE(pattern);
-		return r.match(val);
+		return val.matches(val);
 	}
 
 	/**
@@ -405,5 +403,28 @@ public class Utils {
 		}
 
 		return result;
+	}
+	
+	/**
+	 * Converts a Number object into an Integer. Takes a cast and method call.
+	 * This provides a simple wrapper.
+	 * @param n	Number to convert
+	 * @return	Integer representation of n
+	 */
+	public static Integer numToInt(Number n) {
+		return (Integer)(n.intValue());
+	}
+	
+	/**
+	 * Wrapper for {@link Utils.numToInt(Number)}.
+	 * @param o
+	 * @return
+	 * @see Utils.numToInt(Number)
+	 */
+	public static Integer numToInt(Object o) {
+		if (o instanceof Number) {
+			return numToInt((Number)o);
+		}
+		return null;
 	}
 }

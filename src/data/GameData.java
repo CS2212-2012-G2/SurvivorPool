@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 
+import json.simple.JSONArray;
+import json.simple.JSONObject;
+import json.simple.parser.ParseException;
 import admin.Utils;
 import data.bonus.Bonus;
-import data.me.json.JSONArray;
-import data.me.json.JSONException;
-import data.me.json.JSONObject;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -640,25 +640,25 @@ public class GameData extends Observable {
 	 * @return a JSONObject with all the relevant data
 	 * @throws JSONException
 	 */
-	public JSONObject toJSONObject() throws JSONException {
+	public JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
 
 		obj.put(KEY_NUM_CONTEST, new Integer(numInitialContestants));
 		JSONArray cons = new JSONArray();
 		for (Object o : allContestants) {
 			if (o != null)
-				cons.put(((Contestant) o).toJSONObject());
+				cons.add(((Contestant) o).toJSONObject());
 		}
 
 		JSONArray users = new JSONArray();
 		for (Object o : allUsers) {
 			if (o != null)
-				users.put(((User) o).toJSONObject());
+				users.add(((User) o).toJSONObject());
 		}
 
 		JSONArray ts = new JSONArray();
-		ts.put(tribeNames[0]);
-		ts.put(tribeNames[1]);
+		ts.add(tribeNames[0]);
+		ts.add(tribeNames[1]);
 
 		obj.put(KEY_CONTESTANTS, cons);
 		obj.put(KEY_USERS, users);
@@ -677,7 +677,7 @@ public class GameData extends Observable {
 	 *            a JSONObject that contains all the values
 	 * @throws JSONException
 	 */
-	public void fromJSONObject(JSONObject obj) throws JSONException {
+	public void fromJSONObject(JSONObject obj) throws ParseException {
 		numInitialContestants = ((Number) obj.get(KEY_NUM_CONTEST)).intValue();
 
 		// tribes
@@ -685,19 +685,19 @@ public class GameData extends Observable {
 		setTribeNames((String) ts.get(0), (String) ts.get(1));
 
 		// week info:
-		weeksRem = obj.getInt(KEY_WEEKS_REMAIN);
-		weeksPassed = obj.getInt(KEY_WEEKS_PASSED);
+		weeksRem = Utils.numToInt(obj.get(KEY_WEEKS_REMAIN));
+		weeksPassed = Utils.numToInt(obj.get(KEY_WEEKS_PASSED));
 
-		seasonStarted = obj.getBoolean(KEY_SEASON_STARTED);
+		seasonStarted = (Boolean) obj.get(KEY_SEASON_STARTED);
 
 		// Contestants must be loaded before users, but after others!
 		allContestants = new ArrayList<Contestant>(numInitialContestants);
 
 		// load the contestant array.
 		JSONArray cons = (JSONArray) obj.get(KEY_CONTESTANTS);
-		for (int i = 0; i < cons.length(); i++) {
+		for (int i = 0; i < cons.size(); i++) {
 			Contestant c = new Contestant();
-			c.fromJSONObject(cons.getJSONObject(i));
+			c.fromJSONObject((JSONObject)cons.get(i));
 			try {
 				addContestant(c);
 			} catch (InvalidFieldException ie) {
@@ -706,10 +706,10 @@ public class GameData extends Observable {
 
 		// users:
 		JSONArray users = (JSONArray) obj.get(KEY_USERS);
-		allUsers = new ArrayList<User>(users.length());
-		for (int i = 0; i < users.length(); i++) {
+		allUsers = new ArrayList<User>(users.size());
+		for (int i = 0; i < users.size(); i++) {
 			User u = new User();
-			u.fromJSONObject(users.getJSONObject(i));
+			u.fromJSONObject((JSONObject)users.get(i));
 			try {
 				addUser(u);
 			} catch (InvalidFieldException ie) {
@@ -743,18 +743,15 @@ public class GameData extends Observable {
 		try {
 			json = JSONUtils.readFile(filePath);
 		} catch (FileNotFoundException e) {
-			return (GameData) currentGame;
+			return currentGame;
 		}
 
-		try {
-			currentGame = new GameData(
-					((Number) json.get(KEY_NUM_CONTEST)).intValue());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		currentGame = new GameData(
+				((Number) json.get(KEY_NUM_CONTEST)).intValue());
+		// TODO: Combine?
 		try {
 			GameData.getCurrentGame().fromJSONObject(json);
-		} catch (JSONException e) {
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		Bonus.initBonus();
@@ -769,7 +766,7 @@ public class GameData extends Observable {
 		try {
 			JSONUtils.writeJSON(filePath, this.toJSONObject());
 			JSONUtils.writeJSON(filePath, Bonus.toJSONObject());
-		} catch (JSONException e) {
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
@@ -812,7 +809,7 @@ public class GameData extends Observable {
 
 		try {
 			System.out.println(g.toJSONObject().toString());
-		} catch (JSONException e1) {
+		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}
 
