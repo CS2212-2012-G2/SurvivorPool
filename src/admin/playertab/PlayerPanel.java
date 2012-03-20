@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -34,15 +36,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import admin.GameDataDependant;
 import admin.MainFrame;
 import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.InvalidFieldException.Field;
 import data.Person;
 import data.User;
-import data.InvalidFieldException.Field;
 
 
 /**
@@ -51,7 +52,7 @@ import data.InvalidFieldException.Field;
  *
  */
 public class PlayerPanel extends JPanel implements ChangeListener,
-		MouseListener, GameDataDependant {
+		MouseListener, Observer {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -157,7 +158,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		// init the GUI components
 		
-		refreshGameFields();
+		update(GameData.getCurrentGame(), null);
 		
 		if (users.size() > 0) {
 			setPanelUser(users.get(0), false);
@@ -165,6 +166,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		} else {
 			setPanelUser(null, true);
 		}
+		
+		GameData.getCurrentGame().addObserver(this);
 	}
 
 	/**
@@ -652,18 +655,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		
 		
 	}
-	
-	/**
-	 * Changes all fields that have data changed. <br>
-	 * Currently calls:
-	 * - Table update
-	 * - Updates ComboBoxes
-	 */
-	@Override
-	public void refreshGameFields() {
-		refreshContestantCBs();
-		tableModel.fireTableDataChanged();
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
@@ -715,5 +706,17 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	public void mouseReleased(MouseEvent arg0) {
 		// Currently unused stubs.
 		return;
+	}
+
+	/**
+	 * Changes all fields that have data changed. <br>
+	 * Currently calls:
+	 * - Table update
+	 * - Updates ComboBoxes
+	 */
+	@Override
+	public void update(Observable o, Object arg) {
+		refreshContestantCBs();
+		tableModel.fireTableDataChanged();
 	}
 }

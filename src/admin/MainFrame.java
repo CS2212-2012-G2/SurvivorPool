@@ -221,8 +221,8 @@ public class MainFrame extends JFrame{
 	 * 
 	 */
 	public void seasonStarted(){
-		conPanel.seasonStarted();
-		playerPanel.seasonStarted();
+		GameData g = GameData.getCurrentGame();
+		g.notifyObservers();
 	}
 	
 	/**
@@ -273,11 +273,7 @@ public class MainFrame extends JFrame{
 	 * implement GameDataDependant
 	 */
 	public void forceGameDataRefresh() {
-		for (Component c: tabPane.getComponents()) {
-			if (c instanceof GameDataDependant) {
-				((GameDataDependant)c).refreshGameFields();
-			}
-		}
+		GameData.getCurrentGame().notifyObservers();
 	}
 	
 	private void windowClose(){
