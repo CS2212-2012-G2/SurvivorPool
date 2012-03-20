@@ -160,6 +160,8 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		else
 			g.addUser((User) p);
 
+		
+		
 		data.add(p);
 		sortTable();
 	}

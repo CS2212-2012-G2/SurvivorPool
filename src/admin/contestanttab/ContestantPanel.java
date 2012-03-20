@@ -523,12 +523,12 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 				GameData g = GameData.getCurrentGame();
 				// check if too many contestants
 				if (g.getAllContestants().size() == g.getInitialContestants()) {
-					JOptionPane
-							.showMessageDialog(
+					JOptionPane.showMessageDialog(
 									null,
 									"There are already the maximum "
-											+ "number of contestants in the game.  To add another "
-											+ "you must delete an existing contestant.");
+											+ "number of contestants in the " +
+											"game.  To add another you must " +
+											"delete an existing contestant.");
 					return;
 				}
 
@@ -571,12 +571,13 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 				if (s.equals("Cast Off")) {
 					// check if someone is already cast off
 					if (GameData.getCurrentGame().doesElimExist() == true) {
-						JOptionPane
-								.showMessageDialog(
+						JOptionPane.showMessageDialog(
 										null,
-										"You can't cast off more than one person per week. "
-												+ "If you accidently casted the wrong person, you can undo the incorrect "
-												+ "cast first, and then cast off the correct one.");
+										"You can't cast off more than one " +
+										"person per week. If you accidently" +
+										" casted the wrong person, you can " +
+										"undo the incorrect cast first, and " +
+										"then cast off the correct one.");
 						return;
 					}
 					// can't cast off someone already off.
@@ -650,6 +651,8 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 										// setPanelUser fires this event
 
 					public void valueChanged(ListSelectionEvent le) {
+						if (le.getValueIsAdjusting()) return;
+						
 						int row = table.getSelectedRow();
 						if (row < 0 || oldRow == row)
 							return;
