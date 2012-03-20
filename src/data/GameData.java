@@ -317,8 +317,13 @@ public class GameData extends Observable {
 		while (itr.hasNext()) {
 			u = itr.next();
 			if (u.getWeeklyPick().equals(c)) {
+				if (!this.isSeasonEnded()){ // normal week
 				u.addPoints(20);
 				System.out.println("Added 20 points to " + u);
+				} else { // last week
+					u.addPoints(40);
+					System.out.println("Added 40 points to " + u);
+				}
 			}
 			itr.next();
 		}
