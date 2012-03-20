@@ -18,9 +18,9 @@ public class Utils {
 	// A clean way to handle themes with minimal code.
 	enum THEMES {
 		// ThemeName(Foreground Color,Background Color);
-		Western(new Color(255, 255, 255), new Color(79, 38, 100), Color.WHITE), 
-		Snow(new Color(0, 0, 255), new Color(255, 255, 255), Color.BLUE), 
-		BandW(new Color(255, 255, 255), new Color(0, 0, 0), Color.GRAY);
+		Western(new Color(255, 255, 255), new Color(79, 38, 100), Color.WHITE), Snow(
+				new Color(0, 0, 255), new Color(255, 255, 255), Color.BLUE), BandW(
+				new Color(255, 255, 255), new Color(0, 0, 0), Color.GRAY);
 		Color fore, back, table;
 
 		THEMES(Color f, Color b, Color t) {
@@ -36,18 +36,17 @@ public class Utils {
 		public Color getForeground() {
 			return fore;
 		}
-		
+
 		public Color getTableHighlight() {
 			return table;
 		}
 	};
-	
+
 	public enum CompType {
 		// Contestants:
-		CONTNT_FIRST_NAME, CONTNT_LAST_NAME, CONTNT_ID, CONTNT_TRIBE, CONTNT_DATE, 
+		CONTNT_FIRST_NAME, CONTNT_LAST_NAME, CONTNT_ID, CONTNT_TRIBE, CONTNT_DATE,
 		// Users:
-		USER_FIRST_NAME, USER_LAST_NAME, USER_ID, USER_POINTS, USER_ULT_PICK, 
-		USER_WEEKLY_PICK
+		USER_FIRST_NAME, USER_LAST_NAME, USER_ID, USER_POINTS, USER_ULT_PICK, USER_WEEKLY_PICK
 	}
 
 	private static THEMES theme = THEMES.Snow;
@@ -69,9 +68,10 @@ public class Utils {
 	public static Color getThemeFG() {
 		return theme.getForeground();
 	}
-	
+
 	/**
 	 * The table highlight colour.
+	 * 
 	 * @return Color of the table to highlight.
 	 */
 	public static Color getThemeTableHighlight() {
@@ -194,22 +194,23 @@ public class Utils {
 
 		return list;
 	}
-	
+
 	/**
 	 * Creates a new list of the objects cast as the type passed as target.
-	 * WARNING: BESURE YOU KNOW THIS WILL WORK. 
-	 * @param list 
+	 * WARNING: BESURE YOU KNOW THIS WILL WORK.
+	 * 
+	 * @param list
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T, V> List<V> castListElem(List<T> list, V target) {
 		List<V> result = new ArrayList<V>(list.size());
-		for (T elem: list) {
-			result.add((V)elem);
+		for (T elem : list) {
+			result.add((V) elem);
 		}
 		return result;
 	}
-	
+
 	/**
 	 * removes null entries before performing binary search on a list.
 	 * 
@@ -221,30 +222,31 @@ public class Utils {
 	@SuppressWarnings("unchecked")
 	public static <T> int BinSearchSafe(List<T> list, T target,
 			CompType compType) {
-		
+
 		Comparator<T> comp = null;
 		if (target instanceof Contestant)
-			comp = (Comparator<T>)getContComparator(compType);
+			comp = (Comparator<T>) getContComparator(compType);
 		else if (target instanceof User)
-			comp = (Comparator<T>)getUserComparator(compType);
-		
+			comp = (Comparator<T>) getUserComparator(compType);
+
 		return Collections.binarySearch(list, target, comp);
 	}
-	
+
 	/**
 	 * Traverses a list of Persons for an ID.
+	 * 
 	 * @param list
 	 * @param searchID
 	 * @return Index if found, index <0 if not found.
 	 */
 	public static <T> int BinIDSearchSafe(List<T> list, String searchID) {
 		List<String> idList = new ArrayList<String>(list.size());
-		for (T elem: list) {
+		for (T elem : list) {
 			if (elem instanceof Person) {
-				idList.add(((Person)elem).getID());
+				idList.add(((Person) elem).getID());
 			}
 		}
-		
+
 		return Collections.binarySearch(idList, searchID);
 	}
 
@@ -259,7 +261,7 @@ public class Utils {
 					return (f1.compareTo(f2));
 				}
 			};
-			
+
 		case CONTNT_LAST_NAME:
 			return new Comparator<Contestant>() {
 				@Override
@@ -269,7 +271,7 @@ public class Utils {
 					return (l1.compareTo(l2));
 				}
 			};
-			
+
 		case CONTNT_ID:
 			return new Comparator<Contestant>() {
 				@Override
@@ -277,7 +279,7 @@ public class Utils {
 					return (c1.getID().compareTo(c2.getID()));
 				}
 			};
-			
+
 		case CONTNT_DATE:
 			return new Comparator<Contestant>() {
 				@Override
@@ -285,7 +287,7 @@ public class Utils {
 					return (c1.getCastDate() - c2.getCastDate());
 				}
 			};
-			
+
 		case CONTNT_TRIBE:
 			return new Comparator<Contestant>() {
 				@Override
@@ -293,12 +295,12 @@ public class Utils {
 					return (c1.getTribe().compareTo(c2.getTribe()));
 				}
 			};
-		
+
 		default:
 			return null;
 		}
 	}
-	
+
 	public static Comparator<User> getUserComparator(CompType t) {
 		switch (t) {
 		case USER_FIRST_NAME:
@@ -310,7 +312,7 @@ public class Utils {
 					return (f1.compareTo(f2));
 				}
 			};
-			
+
 		case USER_LAST_NAME:
 			return new Comparator<User>() {
 				@Override
@@ -320,7 +322,7 @@ public class Utils {
 					return (l1.compareTo(l2));
 				}
 			};
-			
+
 		case USER_ID:
 			return new Comparator<User>() {
 				@Override
@@ -328,7 +330,7 @@ public class Utils {
 					return (u1.getID().compareTo(u2.getID()));
 				}
 			};
-			
+
 		case USER_POINTS:
 			return new Comparator<User>() {
 				@Override
@@ -336,67 +338,72 @@ public class Utils {
 					return (u1.getPoints() - u2.getPoints());
 				}
 			};
-			
+
 		case USER_ULT_PICK:
 			return new Comparator<User>() {
 				Comparator<Contestant> comp = getContComparator(CompType.CONTNT_ID);
-				
+
 				@Override
 				public int compare(User u1, User u2) {
-					return comp.compare(u1.getUltimatePick(), u2.getUltimatePick());
+					return comp.compare(u1.getUltimatePick(),
+							u2.getUltimatePick());
 				}
 			};
-			
+
 		case USER_WEEKLY_PICK:
 			return new Comparator<User>() {
 				Comparator<Contestant> comp = getContComparator(CompType.CONTNT_ID);
-				
+
 				@Override
 				public int compare(User u1, User u2) {
 					return comp.compare(u1.getWeeklyPick(), u2.getWeeklyPick());
 				}
 			};
-		
+
 		default:
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Checks if string matches pattern.
-	 * @param val The string to check for validity
-	 * @param pattern A regex pattern that has all possible valid values
+	 * 
+	 * @param val
+	 *            The string to check for validity
+	 * @param pattern
+	 *            A regex pattern that has all possible valid values
 	 * @return true if string matches pattern
 	 */
-	public static boolean checkString(String val, String pattern){
-		if(val==null)
+	public static boolean checkString(String val, String pattern) {
+		if (val == null)
 			return false;
-		if(val.length()==0)
+		if (val.length() == 0)
 			return false;
 		RE r = new RE(pattern);
-		return r.match(val);                
+		return r.match(val);
 	}
-	
+
 	/**
 	 * Capitalizes a string. Does not remove existing capitals.
+	 * 
 	 * @param s
 	 * @return
 	 */
-	public static String strCapitalize(String s){
+	public static String strCapitalize(String s) {
 		String result = "";
-		
+
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
-			if ((i+1 < s.length()) && (c == ' ' || c == '-' || c == '_')) {
+			if ((i + 1 < s.length()) && (c == ' ' || c == '-' || c == '_')) {
 				result += c;
 				result += Character.toUpperCase(s.charAt(++i));
 			} else if (i == 0) {
 				result += Character.toUpperCase(c);
-			} else{
+			} else {
 				result += c;
 			}
 		}
-		
+
 		return result;
 	}
 }

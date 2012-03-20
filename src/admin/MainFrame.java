@@ -30,142 +30,142 @@ import admin.seasoncreate.SeasonCreatePanel;
 
 import data.GameData;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
 	static MainFrame m;
-	
+
 	private JTabbedPane tabPane = new JTabbedPane();
-	
+
 	private JLabel lblGeneral = new JLabel(GENERAL_PANEL);
 	private JLabel lblContestants = new JLabel(CONTESTANT_PANEL);
 	private JLabel lblPlayers = new JLabel(PLAYER_PANEL);
 	private JLabel lblBonus = new JLabel(BONUS_PANEL);
-	
+
 	private static JMenuBar menuBar = new JMenuBar();
 	private JMenu mnuFile = new JMenu("File");
 	private JMenu mnuTheme = new JMenu("Theme");
-	
+
 	private JMenuItem mnuItemReset;
 	private JMenuItem mnuItemExit;
 	private JRadioButtonMenuItem mnuItemTheme1;
 	private JRadioButtonMenuItem mnuItemTheme2;
 	private JRadioButtonMenuItem mnuItemTheme3;
-	
-	public static final String GENERAL_PANEL 		= "General",
-							   CONTESTANT_PANEL 	= "Contestants",
-							   PLAYER_PANEL 		= "Players",
-							   BONUS_PANEL			= "Bonus";
-	
+
+	public static final String GENERAL_PANEL = "General",
+			CONTESTANT_PANEL = "Contestants", PLAYER_PANEL = "Players",
+			BONUS_PANEL = "Bonus";
+
 	private StatusPanel statusBar;
 
 	private ContestantPanel conPanel;
 	private PlayerPanel playerPanel;
 	private BonusPanel bonusPanel;
-	
+
 	ActionListener al = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == mnuItemExit) {
 				windowClose();
-			}else if (ae.getSource() == mnuItemReset){
+			} else if (ae.getSource() == mnuItemReset) {
 				resetSeason();
-			}else if (ae.getSource() == mnuItemTheme1) {
+			} else if (ae.getSource() == mnuItemTheme1) {
 				changeTheme(ae.getActionCommand());
-			}else if (ae.getSource() == mnuItemTheme3) {
+			} else if (ae.getSource() == mnuItemTheme3) {
 				changeTheme(ae.getActionCommand());
-			}else if (ae.getSource() == mnuItemTheme2) {
+			} else if (ae.getSource() == mnuItemTheme2) {
 				changeTheme(ae.getActionCommand());
 			}
 		}
 	};
-	
+
 	ChangeListener cl = new ChangeListener() {
 		public void stateChanged(ChangeEvent ce) {
 			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
-		    String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
-		    statusBar.setTabLabel(tab);
+			String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
+			statusBar.setTabLabel(tab);
 		}
 	};
-	
-	public MainFrame(){
-		
+
+	public MainFrame() {
+
 		GameData g = GameData.initGameData();
-		
+
 		initMenuBar();
-		
-		if(g!=null)
+
+		if (g != null)
 			initGUI();
-		else 
+		else
 			initSeasonCreateGUI();
-		
+
 		applyTheme();
 		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
-		this.addWindowListener(new WindowAdapter(){
+		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				windowClose();
 			}
 		});
 	}
-	
-	private void initSeasonCreateGUI(){
+
+	private void initSeasonCreateGUI() {
 		this.setLayout(new BorderLayout());
 		statusBar = new StatusPanel();
-		this.add(new SeasonCreatePanel(),BorderLayout.CENTER);
+		this.add(new SeasonCreatePanel(), BorderLayout.CENTER);
 		this.add(statusBar, BorderLayout.SOUTH);
 		statusBar.setTabLabel("SEASON CREATE");
 	}
-	
-	private void initGUI(){				
-		Dimension d = new Dimension(100,20);
-		
+
+	private void initGUI() {
+		Dimension d = new Dimension(100, 20);
+
 		lblGeneral.setPreferredSize(d);
 		lblContestants.setPreferredSize(d);
 		lblPlayers.setPreferredSize(d);
 		lblBonus.setPreferredSize(d);
-		
+
 		conPanel = new ContestantPanel();
 		playerPanel = new PlayerPanel();
 		bonusPanel = new BonusPanel();
 
-		tabPane.addTab(lblGeneral.getText(),new GeneralPanel());
-		tabPane.addTab(lblContestants.getText(),conPanel);
+		tabPane.addTab(lblGeneral.getText(), new GeneralPanel());
+		tabPane.addTab(lblContestants.getText(), conPanel);
 		tabPane.addTab(lblPlayers.getText(), playerPanel);
 		tabPane.addTab(lblBonus.getText(), bonusPanel);
-		
+
 		tabPane.addChangeListener(playerPanel);
-		
+
 		tabPane.setTabComponentAt(0, lblGeneral);
 		tabPane.setTabComponentAt(1, lblContestants);
 		tabPane.setTabComponentAt(2, lblPlayers);
 		tabPane.setTabComponentAt(3, lblBonus);
-		//tabPane.setBackground(Color.cyan);//tab background color,not the panel
-		
+		// tabPane.setBackground(Color.cyan);//tab background color,not the
+		// panel
+
 		tabPane.addChangeListener(cl);
 		statusBar.setTabLabel(GENERAL_PANEL);
-		
+
 		this.setLayout(new BorderLayout());
-		
+
 		this.add(tabPane);
 		this.add(statusBar, BorderLayout.SOUTH);
-		if(GameData.getCurrentGame().isSeasonStarted())
+		if (GameData.getCurrentGame().isSeasonStarted())
 			seasonStarted();
 	}
-	
+
 	private void initMenuBar() {
 		mnuItemReset = new JMenuItem("Reset Season");
-		
+
 		mnuItemExit = new JMenuItem("Exit");
 		String[] themeName = Utils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
 		mnuItemTheme3 = new JRadioButtonMenuItem(themeName[1]);
 		mnuItemTheme2 = new JRadioButtonMenuItem(themeName[2]);
-		
+
 		statusBar = new StatusPanel();
-		
+
 		ButtonGroup g = new ButtonGroup();
 		mnuTheme.add(mnuItemTheme1);
 		g.add(mnuItemTheme1);
@@ -173,122 +173,131 @@ public class MainFrame extends JFrame{
 		g.add(mnuItemTheme3);
 		mnuTheme.add(mnuItemTheme2);
 		g.add(mnuItemTheme2);
-		
+
 		mnuFile.add(mnuItemReset);
 		mnuFile.add(mnuItemExit);
-		
+
 		menuBar.add(mnuFile);
 		menuBar.add(mnuTheme);
-		
+
 		mnuItemReset.addActionListener(al);
 		mnuItemExit.addActionListener(al);
 		mnuItemTheme1.addActionListener(al);
 		mnuItemTheme3.addActionListener(al);
 		mnuItemTheme2.addActionListener(al);
-	
+
 		this.setJMenuBar(menuBar);
 	}
 
-	
 	/**
 	 * Apply the theme to current components.
 	 */
-	private void applyTheme(){
+	private void applyTheme() {
 		Utils.style(this);
 	}
-	
+
 	/**
 	 * Change the current theme.
-	 * @param name The theme name
+	 * 
+	 * @param name
+	 *            The theme name
 	 */
-	private void changeTheme(String name){
+	private void changeTheme(String name) {
 		Utils.changeTheme(name);
 		applyTheme();
 	}
-	
+
 	/**
 	 * Called by SeasonCreatePanel when a new season has been created/
 	 */
-	public static void createSeason(){
+	public static void createSeason() {
 		GameData.initGameData();
 		m.getContentPane().removeAll();
 		m.initGUI();
 		m.applyTheme();
 	}
-	
+
 	/**
 	 * Used when a season has been started(from gen panel)
 	 * 
 	 */
-	public void seasonStarted(){
+	public void seasonStarted() {
 		GameData g = GameData.getCurrentGame();
 		g.notifyObservers();
 	}
-	
+
 	/**
 	 * Set the statusbar message
+	 * 
 	 * @param msg
 	 */
-	public void setStatusMsg(String msg){
+	public void setStatusMsg(String msg) {
 		statusBar.setMsgLabel(msg);
 	}
-	
+
 	/**
 	 * Set an error message in the status bar.
-	 * @param msg The message to set
+	 * 
+	 * @param msg
+	 *            The message to set
 	 */
 	public void setStatusErrorMsg(String msg) {
 		setStatusErrorMsg(msg);
 	}
-	
+
 	/**
-	 * Set an error message in the statusbar. If comp is not null,
-	 * it will set the background of that component to red.
+	 * Set an error message in the statusbar. If comp is not null, it will set
+	 * the background of that component to red.
+	 * 
 	 * @param msg
-	 * @param comps Multiple components
+	 * @param comps
+	 *            Multiple components
 	 */
-	public void setStatusErrorMsg(String msg, Component... comps){
-		statusBar.setErrorMsgLabel(msg,comps);
+	public void setStatusErrorMsg(String msg, Component... comps) {
+		statusBar.setErrorMsgLabel(msg, comps);
 	}
-	
+
 	/**
 	 * Delete season file and show season create panel
 	 */
 	private void resetSeason() {
 		int response = JOptionPane.showConfirmDialog(null,
-							"Would you like to delete current season?","Reset Season",
-									JOptionPane.YES_NO_OPTION);
-		if(response == JOptionPane.YES_OPTION){
+				"Would you like to delete current season?", "Reset Season",
+				JOptionPane.YES_NO_OPTION);
+		if (response == JOptionPane.YES_OPTION) {
 			try {
-			GameData.getCurrentGame().endCurrentGame();
-			m.getJMenuBar().removeAll();
-			m.dispose();
-			m = new MainFrame();
-			} catch (Exception e){}
+				GameData.getCurrentGame().endCurrentGame();
+				m.getJMenuBar().removeAll();
+				m.dispose();
+				m = new MainFrame();
+			} catch (Exception e) {
+			}
 		}
 	}
-	
+
 	/**
-	 * Checks all components and force calls refreshGameFields if they 
-	 * implement GameDataDependant
+	 * Checks all components and force calls refreshGameFields if they implement
+	 * GameDataDependant
 	 */
 	public void forceGameDataRefresh() {
 		GameData.getCurrentGame().notifyObservers();
 	}
-	
-	private void windowClose(){
-		if(GameData.getCurrentGame()!=null)
+
+	private void windowClose() {
+		if (GameData.getCurrentGame() != null)
 			GameData.getCurrentGame().writeData();
-	    System.exit(0);
+		System.exit(0);
 	}
+
 	/**
 	 * Used to get reference to the running GUI.
+	 * 
 	 * @return Gets the running MainFrame.
 	 */
 	public static MainFrame getRunningFrame() {
 		return m;
 	}
-	
+
 	public static void main(String[] args) {
 		m = new MainFrame();
 	}

@@ -17,21 +17,21 @@ public class User implements Person {
 	private String firstName, lastName, unID; // first and last names and unique
 												// ID (UWO ID format)
 	private int points; // point total, points user receives if that
-									// pick wins
+						// pick wins
 	protected int ultPoints;
-	
+
 	private Contestant ultPick, weeklyPick; // users pick of the winner and
-										    // their weekly pick
-	
+											// their weekly pick
+
 	// JSON Keys:
-	
+
 	// TODO: enum
 	protected static final String KEY_ID = "id";
 	protected static final String KEY_FIRST_NAME = "first";
 	protected static final String KEY_LAST_NAME = "last";
 	protected static final String KEY_POINTS = "curr_points";
 	protected static final String KEY_WIN_PICK_POINTS = "win_points";
-	protected static final String KEY_ULT_PICK_ID	= "ult_pick";
+	protected static final String KEY_ULT_PICK_ID = "ult_pick";
 	protected static final String KEY_WEEKLY_PICK_ID = "week_pick";
 
 	/**
@@ -43,10 +43,11 @@ public class User implements Person {
 	 *            last name
 	 * @param id
 	 *            unique ID
-	 * @throws InvalidFieldException Thrown if any of the parameters passed are
-	 * 		invalid
+	 * @throws InvalidFieldException
+	 *             Thrown if any of the parameters passed are invalid
 	 */
-	public User(String first, String last, String id) throws InvalidFieldException {
+	public User(String first, String last, String id)
+			throws InvalidFieldException {
 		setFirstName(first);
 		setLastName(last);
 		setID(id);
@@ -95,15 +96,14 @@ public class User implements Person {
 	public Contestant getWeeklyPick() {
 		return weeklyPick;
 	}
-	
+
 	public int getPoints() {
 		return points;
 	}
-	
+
 	public void setPoints(int points) {
 		this.points = points;
 	}
-
 
 	/**
 	 * getWinPick returns the users selection for which contestant will win the
@@ -111,11 +111,9 @@ public class User implements Person {
 	 * 
 	 * @return this.winPick
 	 */
-	public Contestant getUltimatePick()  {
+	public Contestant getUltimatePick() {
 		return ultPick;
 	}
-	
-	
 
 	// ---------------- MUTATOR METHODS ----------------- //
 
@@ -134,7 +132,7 @@ public class User implements Person {
 	 * 
 	 * @param first
 	 *            users first name
-	 * @throws InvalidFieldException 
+	 * @throws InvalidFieldException
 	 */
 	public void setFirstName(String first) throws InvalidFieldException {
 		first = first.trim();
@@ -149,7 +147,7 @@ public class User implements Person {
 	 * 
 	 * @param last
 	 *            users last name
-	 * @throws InvalidFieldException 
+	 * @throws InvalidFieldException
 	 */
 	public void setLastName(String last) throws InvalidFieldException {
 		last = last.trim();
@@ -164,9 +162,10 @@ public class User implements Person {
 	 * 
 	 * @param pick
 	 *            contestant choice
-	 * @throws InvalidFieldException if Pick is null.
+	 * @throws InvalidFieldException
+	 *             if Pick is null.
 	 */
-	public void setWeeklyPick(Contestant pick) throws InvalidFieldException  {
+	public void setWeeklyPick(Contestant pick) throws InvalidFieldException {
 		if (pick == null) {
 			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
 					"Weekly Pick was null");
@@ -181,34 +180,39 @@ public class User implements Person {
 	 * 
 	 * @param winner
 	 *            contestant choice
-	 * @throws InvalidFieldException If null, throws exception.
+	 * @throws InvalidFieldException
+	 *             If null, throws exception.
 	 */
-	public void setUltimatePick(Contestant winner) throws InvalidFieldException  {
+	public void setUltimatePick(Contestant winner) throws InvalidFieldException {
 		setUltimatePickNoSetPts(winner);
 		ultPoints = 2 * GameData.getCurrentGame().weeksLeft();
 	}
+
 	/**
 	 * just sets the same as prior without setting pts.
+	 * 
 	 * @param winner
 	 * @throws InvalidFieldException
 	 */
-	public void setUltimatePickNoSetPts(Contestant winner) throws InvalidFieldException  {
+	public void setUltimatePickNoSetPts(Contestant winner)
+			throws InvalidFieldException {
 		if (winner == null) {
 			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
 					"Weekly pick was null");
 		}
-		
+
 		ultPick = winner;
 	}
-	
+
 	/**
 	 * Get the ultimate points based on ultimate pick
+	 * 
 	 * @return the ultimate points
 	 */
 	public int getUltimatePoints() {
 		return ultPoints;
 	}
-	
+
 	public void setUltimatePoints(int pts) {
 		ultPoints = pts;
 	}
@@ -218,72 +222,69 @@ public class User implements Person {
 	 */
 	public void setID(String id) throws InvalidFieldException {
 		id = id.toLowerCase().trim();
-		if (!Utils.checkString(id,REGEX_PLAYER_ID)) 
-			throw new InvalidFieldException(Field.USER_ID,
-					"Invalid Player ID");
-		
+		if (!Utils.checkString(id, REGEX_PLAYER_ID))
+			throw new InvalidFieldException(Field.USER_ID, "Invalid Player ID");
+
 		unID = id;
 	}
-	
+
 	/**
 	 * toString returns a string of the contestant's information in JSON format.
 	 */
 	public String toString() {
-		return new String("User<FN: " + "\"" + firstName + "\"" + ", LN: " + "\"" + lastName + "\"" + 
-				", Points: " + "\"" + points + "\"" + ", ID: " + "\"" + unID + "\">");
+		return new String("User<FN: " + "\"" + firstName + "\"" + ", LN: "
+				+ "\"" + lastName + "\"" + ", Points: " + "\"" + points + "\""
+				+ ", ID: " + "\"" + unID + "\">");
 	}
 
 	// ----------------- JSON ----------------- //
-	
-	
-
 
 	public JSONObject toJSONObject() throws JSONException {
 		JSONObject obj = new JSONObject();
-		
+
 		obj.put(KEY_FIRST_NAME, getFirstName());
 		obj.put(KEY_LAST_NAME, getLastName());
 		obj.put(KEY_ID, getID());
 		obj.put(KEY_POINTS, getPoints());
-		
+
 		Contestant c = getWeeklyPick();
 		if (c == null) {
 			c = new Contestant();
 			c.setNull();
 		}
 		obj.put(KEY_WEEKLY_PICK_ID, c.getID());
-		
+
 		c = getUltimatePick();
 		if (c == null) {
 			c = new Contestant();
 			c.setNull();
 		}
 		obj.put(KEY_ULT_PICK_ID, c.getID());
-		
+
 		obj.put(KEY_WIN_PICK_POINTS, new Integer(getUltimatePoints()));
-		
+
 		return obj;
 	}
-	
+
 	public void fromJSONObject(JSONObject o) {
 		try {
-			setFirstName((String)o.remove(KEY_FIRST_NAME));
-			setLastName((String)o.remove(KEY_LAST_NAME));
-			setID((String)o.remove(KEY_ID));
-			setPoints(((Integer)o.remove(KEY_POINTS)).intValue());
-			
-			String id = (String)o.remove(KEY_WEEKLY_PICK_ID);
+			setFirstName((String) o.remove(KEY_FIRST_NAME));
+			setLastName((String) o.remove(KEY_LAST_NAME));
+			setID((String) o.remove(KEY_ID));
+			setPoints(((Integer) o.remove(KEY_POINTS)).intValue());
+
+			String id = (String) o.remove(KEY_WEEKLY_PICK_ID);
 			Contestant c = null;
-			if (id.equals(Contestant.NULL_ID)){
+			if (id.equals(Contestant.NULL_ID)) {
 				c = new Contestant();
 				c.setNull();
 			} else {
 				c = GameData.getCurrentGame().getContestant(id);
-				
+
 			}
 			setWeeklyPick(c);
-			
-			id = (String)o.remove(KEY_ULT_PICK_ID);
+
+			id = (String) o.remove(KEY_ULT_PICK_ID);
 			if (id.equals(Contestant.NULL_ID)) {
 				c = new Contestant();
 				c.setNull();
@@ -291,57 +292,62 @@ public class User implements Person {
 				c = GameData.getCurrentGame().getContestant(id);
 			}
 			setUltimatePick(c);
-			
-			setPoints(((Integer)o.remove(KEY_WIN_PICK_POINTS)).intValue());
+
+			setPoints(((Integer) o.remove(KEY_WIN_PICK_POINTS)).intValue());
 		} catch (InvalidFieldException e) {
-			System.out.println("Warning: InvalidFieldException in fromJSONObject");
+			System.out
+					.println("Warning: InvalidFieldException in fromJSONObject");
 			System.out.println(e.getMessage());
 		}
 
 	}
-	
+
 	/**
 	 * Updates the stored user with any not null information in the passed user
-	 * @param u The user to update from.
-	 * @throws InvalidFieldException Thrown if anything is of the wrong format.
+	 * 
+	 * @param u
+	 *            The user to update from.
+	 * @throws InvalidFieldException
+	 *             Thrown if anything is of the wrong format.
 	 * 
 	 */
-	public void update(User u) throws InvalidFieldException {	
+	public void update(User u) throws InvalidFieldException {
 		if (u.getFirstName() != null) {
 			setFirstName(u.getFirstName());
 		}
-		
+
 		if (u.getLastName() != null) {
 			setLastName(u.getLastName());
 		}
-		
+
 		if (u.getID() != null) {
 			setID(u.getID());
 		}
-		
+
 		if (u.getPoints() != getPoints()) {
 			setPoints(u.getPoints());
 		}
-		
+
 		if (u.getWeeklyPick() != null && !u.getWeeklyPick().isNull()) {
 			setWeeklyPick(u.getWeeklyPick());
 		}
-		
+
 		if (u.getUltimatePick() != null && !u.getUltimatePick().isNull()) {
 			setUltimatePickNoSetPts(u.getUltimatePick());
 		}
-		
+
 		if (u.getUltimatePoints() != getUltimatePoints()) {
 			setUltimatePoints(u.getUltimatePoints());
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		User u = null;
 		try {
 			u = new User("bob", "builder", "bbuilde");
-		} catch (InvalidFieldException e) { }
-		
+		} catch (InvalidFieldException e) {
+		}
+
 		Contestant c = new Contestant();
 		Contestant ul = new Contestant();
 		try {
@@ -352,12 +358,12 @@ public class User implements Person {
 		} catch (InvalidFieldException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		try {
 			System.out.println(u.toJSONObject().toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 }

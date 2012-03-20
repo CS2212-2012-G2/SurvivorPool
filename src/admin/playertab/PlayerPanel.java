@@ -46,17 +46,17 @@ import data.InvalidFieldException.Field;
 import data.Person;
 import data.User;
 
-
 /**
  * TODO: Doc
+ * 
  * @author kevin
- *
+ * 
  */
 public class PlayerPanel extends JPanel implements ChangeListener,
 		MouseListener, Observer {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	// input fields:
 	private JLabel labelName;
 	private JTextField tfFirstName;
@@ -72,7 +72,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	private JComboBox<Contestant> cbUltPick;
 
 	// etc
-	/* FIXME: Break into two labels one with "Points:" other with actual value 
+	/*
+	 * FIXME: Break into two labels one with "Points:" other with actual value
 	 * of pts
 	 */
 	private JLabel labelPts;
@@ -87,13 +88,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	private JButton btnAddNew;
 	private JButton btnDelete;
 	private PlayerFieldsPanel playerFields;
-	
+
 	// Vars
 	private boolean isNewUser;
-	
+
 	// has the PlayerFields changed?
 	private boolean fieldsChanged;
-	
+
 	/**
 	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
 	 * YOU KNOW WHAT YOU ARE DOING.
@@ -154,20 +155,20 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		buildTopPanel();
 		buildTablePanel();
 		buildBottomPanel();
-		
+
 		buildActions();
-		
+
 		// init the GUI components
-		
+
 		update(GameData.getCurrentGame(), null);
-		
+
 		if (users.size() > 0) {
 			setPanelUser(users.get(0), false);
 			table.setRowSelectionInterval(0, 0);
 		} else {
 			btnAddNew.doClick(); // programatically click it. :D
 		}
-		
+
 		GameData.getCurrentGame().addObserver(this);
 	}
 
@@ -270,7 +271,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		}
 	}
 
-	public void seasonStarted(){
+	public void seasonStarted() {
 		tfID.setEnabled(false);
 		tfFirstName.setEnabled(false);
 		tfLastName.setEnabled(false);
@@ -278,7 +279,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		btnAddNew.setEnabled(false);
 		btnDelete.setEnabled(false);
 	}
-	
+
 	/**
 	 * Currently used to check if a tab is changed, and if its changed to the
 	 * PlayerPanel, it will modify ComboBoxes.
@@ -288,105 +289,108 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		Object obj = e.getSource();
 		if (obj instanceof JTabbedPane) // tab clicked
-		{	
+		{
 
 			JTabbedPane tab = (JTabbedPane) obj;
-	
+
 			if (tab.getSelectedIndex() != 2)
 				return;
-	
+
 			refreshContestantCBs();
 			return;
 		}
 	}
-	
+
 	/**
 	 * Returns a new user represented by the data in the User fields.
+	 * 
 	 * @return New User
-	 * @throws InvalidFieldException thrown if any field is invalid.
+	 * @throws InvalidFieldException
+	 *             thrown if any field is invalid.
 	 */
 	private User getUser() throws InvalidFieldException {
-		
+
 		User u = (User) loadedPerson;
 		String uID = tfID.getText();
-		
+
 		u.setID(uID);
-		
+
 		u.setFirstName(tfFirstName.getText().trim());
 		u.setLastName(tfLastName.getText().trim());
-		
+
 		int item = cbUltPick.getSelectedIndex();
 		Contestant c = cbUltPick.getItemAt(item);
 		u.setUltimatePick(c);
-		
-		
+
 		item = cbWeeklyPick.getSelectedIndex();
 		c = cbWeeklyPick.getItemAt(item);
 		u.setWeeklyPick(c);
-		
+
 		return u;
 	}
-	
+
 	/**
 	 * Sets the user on the screen to the specified container. If newUser is
 	 * true, it will specify that when save is hit, then the GUI should add it
 	 * to the table rather than modify a pre-existing data.
+	 * 
 	 * @param u
 	 * @param newUser
 	 */
 	private void setPanelUser(User u, boolean newUser) {
 		isNewUser = newUser;
-		
+
 		if (fieldsChanged) {
 			System.out.println("Player panel changing, fields modified.");
 			try {
 				saveUser();
 			} catch (InvalidFieldException e) {
-				System.out.println("we cant set a new user if invalid one is here..");
+				System.out
+						.println("we cant set a new user if invalid one is here..");
 				return;
 			}
-			
+
 		}
-		
+
 		if (isNewUser) {
 			loadedPerson = new User();
 		} else {
 			loadedPerson = u;
 		}
-		
+
 		tfID.setEnabled(isNewUser);
 		btnGenID.setEnabled(isNewUser);
 		btnSave.setEnabled(false);
-		
+
 		if (newUser || u == null) {
 			// set default values
 			tfID.setText("");
 			tfFirstName.setText("First Name");
 			tfLastName.setText("Last Name");
-			
+
 			cbUltPick.setSelectedIndex(0);
 			cbWeeklyPick.setSelectedIndex(0);
-			
+
 			labelPts.setText(Integer.toString(0));
-			
-			//we don't want any rows selected
+
+			// we don't want any rows selected
 			ListSelectionModel m = table.getSelectionModel();
 			int row = table.getSelectedRow();
 			if (row >= 0) {
 				m.removeIndexInterval(row, row);
 			}
-			
+
 			return;
 		}
-		
+
 		tfID.setText(u.getID());
-		
+
 		tfFirstName.setText(u.getFirstName());
 		tfLastName.setText(u.getLastName());
-		
+
 		labelPts.setText(Integer.toString(u.getPoints()));
-		
-		// iterate through combo boxes setting indexes as necessary	
+
+		// iterate through combo boxes setting indexes as necessary
 		Contestant ultPick = u.getUltimatePick();
 		if (ultPick == null) {
 			ultPick = new Contestant();
@@ -397,55 +401,56 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			weekPick = new Contestant();
 			weekPick.setNull();
 		}
-		
+
 		boolean ultSet = false, weekSet = false;
-		
+
 		for (int i = 0; i < cbUltPick.getItemCount(); i++) {
-			
+
 			// get the contestant to compare with, both store same values
-			
-			
+
 			Contestant cbCon = cbUltPick.getItemAt(i);
 			if (!ultSet && ultPick.getID().equals(cbCon.getID())) {
 				cbUltPick.setSelectedIndex(i);
 				ultSet = true;
 			}
-			
+
 			if (!weekSet && weekPick.getID().equals(cbCon.getID())) {
 				cbWeeklyPick.setSelectedIndex(i);
 				weekSet = true;
 			}
-			
-			if (ultSet && weekSet) 
+
+			if (ultSet && weekSet)
 				break; // break if both are set
 		}
 	}
-	
+
 	/**
 	 * Sets the error infromation based on an exception!
-	 * @param e Exception with the information necessary
+	 * 
+	 * @param e
+	 *            Exception with the information necessary
 	 */
 	private void setExceptionError(InvalidFieldException e) {
-		if (e.isHandled()) 
+		if (e.isHandled())
 			return;
-		
+
 		MainFrame mf = MainFrame.getRunningFrame();
-		
+
 		switch (e.getField()) {
 		case USER_ID:
-			mf.setStatusErrorMsg("Invalid ID (must be between 2 and 7 chars" +
-					" long, followed by numbers)", tfID);
-			break;	
+			mf.setStatusErrorMsg("Invalid ID (must be between 2 and 7 chars"
+					+ " long, followed by numbers)", tfID);
+			break;
 		case USER_ID_DUP:
 			mf.setStatusErrorMsg("Invalid ID (in use)", tfID);
 			break;
 		case USER_FIRST:
-			mf.setStatusErrorMsg("Invalid First Name (must be alphabetic" +
-					", 1-20 characters)", tfFirstName);
+			mf.setStatusErrorMsg("Invalid First Name (must be alphabetic"
+					+ ", 1-20 characters)", tfFirstName);
 			break;
 		case USER_LAST:
-			mf.setStatusErrorMsg("Invalid Last Name (must be alphabetic" +
-					", 1-20 characters)", tfLastName);
+			mf.setStatusErrorMsg("Invalid Last Name (must be alphabetic"
+					+ ", 1-20 characters)", tfLastName);
 			break;
 		case USER_ULT_PICK:
 			mf.setStatusErrorMsg("Invalid Ultimate Pick", cbUltPick);
@@ -454,38 +459,38 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 			mf.setStatusErrorMsg("Invalid Weekly Pick", cbWeeklyPick);
 			break;
 		default:
-			mf.setStatusErrorMsg("Unknown problem with fields");	
+			mf.setStatusErrorMsg("Unknown problem with fields");
 		}
-		
+
 		e.handle();
 	}
-	
+
 	private void saveUser() throws InvalidFieldException {
-		
+
 		User user = null;
 		try {
 			user = getUser();
-			
+
 			GameData g = GameData.getCurrentGame();
 			if (isNewUser && g.isUserIDInUse(user.getID())) {
-				throw new InvalidFieldException(Field.USER_ID_DUP, 
+				throw new InvalidFieldException(Field.USER_ID_DUP,
 						"Invalid ID (in use)");
 			}
-			
+
 			tableModel.updatePerson(user);
 		} catch (InvalidFieldException e) {
 			setExceptionError(e);
 			throw e;
 		} // end catch block
-		
+
 		isNewUser = false;
 		fieldsChanged = false;
-		
+
 		int row = tableModel.getRowByPerson(user);
 		if (row >= 0 && table.getSelectedRow() != row) // select a row
 			table.setRowSelectionInterval(row, row);
 	}
-	
+
 	private void buildActions() {
 		btnAddNew.addActionListener(new ActionListener() {
 
@@ -500,67 +505,71 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 						return;
 					}
 				}
-				
+
 				setPanelUser(null, true);
 			}
-			
+
 		});
-		
+
 		btnSave.addActionListener(new ActionListener() {
-			// FIXME: global setting? Its reset every time the GUI is loaded right now
+			// FIXME: global setting? Its reset every time the GUI is loaded
+			// right now
 			boolean dontShowConfirm = false;
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				// make sure they want to save initially.
 				if (isNewUser && !dontShowConfirm) {
 					JCheckBox checkbox = new JCheckBox("Don't show again?");
-					String msg = "Would you like to save a new selected " +
-							"user? You can not change ID after first save.";
+					String msg = "Would you like to save a new selected "
+							+ "user? You can not change ID after first save.";
 					Object[] objs = { msg, checkbox };
-					
-					int response = JOptionPane.showConfirmDialog(null,
-						objs,
-						"Save User?",
-						JOptionPane.YES_NO_OPTION);
-					
+
+					int response = JOptionPane.showConfirmDialog(null, objs,
+							"Save User?", JOptionPane.YES_NO_OPTION);
+
 					dontShowConfirm = checkbox.isSelected();
-					if(response == JOptionPane.NO_OPTION){
+					if (response == JOptionPane.NO_OPTION) {
 						return;
 					}
 				}
-				
+
 				if (fieldsChanged) {
-					try { saveUser(); } catch (InvalidFieldException ex) { }
+					try {
+						saveUser();
+					} catch (InvalidFieldException ex) {
+					}
 				}
 			}
 		});
-		
+
 		btnDelete.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
-				
+
 				if (row < 0) {
 					// no one to delete
 					System.out.println("Can't delete no one..");
-					JOptionPane.showMessageDialog(null, "Must select user to delete");
+					JOptionPane.showMessageDialog(null,
+							"Must select user to delete");
 					return;
 				}
-				
+
 				int response = JOptionPane.showConfirmDialog(null,
-						"Would you like to delete currently selected user?","Delete User",
-								JOptionPane.YES_NO_OPTION);
-				if(response == JOptionPane.YES_OPTION){
+						"Would you like to delete currently selected user?",
+						"Delete User", JOptionPane.YES_NO_OPTION);
+				if (response == JOptionPane.YES_OPTION) {
 					User u = null;
 					try {
 						u = getUser();
 					} catch (InvalidFieldException ex) {
 						if (ex.getField() == InvalidFieldException.Field.USER_ID) {
-							MainFrame.getRunningFrame().setStatusErrorMsg("Can not delete User (invalid ID)", tfID);
+							MainFrame.getRunningFrame().setStatusErrorMsg(
+									"Can not delete User (invalid ID)", tfID);
 							return;
-						} 
+						}
 						setExceptionError(ex);
 						return;
 					}
@@ -576,9 +585,9 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				}
 			}
 		});
-		
+
 		btnGenID.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				User u = new User();
@@ -591,89 +600,89 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				}
 				GameData g = GameData.getCurrentGame();
 				List<Person> userList = Utils.castListElem(g.getAllUsers(),
-						(Person)(new User())); // lol so ugly.
-				
+						(Person) (new User())); // lol so ugly.
+
 				String id = Utils.generateID(u, userList);
-				
+
 				tfID.setText(id);
 			}
 		});
-		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 
-			int oldRow = -1; // breaks an infinite loop since setPanelUser fires this event
-			
-			public void valueChanged(ListSelectionEvent le) {
-				 int row = table.getSelectedRow();
-				 
-				 if (fieldsChanged) {
-					 try {
-						 saveUser();
-					 } catch (InvalidFieldException e) {
-						 setExceptionError(e);
-						 return;
-					 }
-				 }
-				 
-				 if (row < 0 || oldRow == row) return;
-				 
-				 oldRow = row;
-				 
-				 User u = tableModel.getByRow(row);
-			     
-				 if (u != null){
-					 setPanelUser(u, false); 
-				 }
-				 
-				 
-			}
-		});
-		
+		table.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+
+					int oldRow = -1; // breaks an infinite loop since
+										// setPanelUser fires this event
+
+					public void valueChanged(ListSelectionEvent le) {
+						int row = table.getSelectedRow();
+
+						if (fieldsChanged) {
+							try {
+								saveUser();
+							} catch (InvalidFieldException e) {
+								setExceptionError(e);
+								return;
+							}
+						}
+
+						if (row < 0 || oldRow == row)
+							return;
+
+						oldRow = row;
+
+						User u = tableModel.getByRow(row);
+
+						if (u != null) {
+							setPanelUser(u, false);
+						}
+
+					}
+				});
+
 		FocusAdapter fa = new FocusAdapter() {
 			JTextField src;
-			
+
 			public void focusGained(FocusEvent evt) {
-				src = (JTextField)evt.getComponent();
-				
-				SwingUtilities.invokeLater( new Runnable() {
-    				@Override
-    				public void run() {
-    					src.selectAll();		
-    				}
-    			});
-    	    }
+				src = (JTextField) evt.getComponent();
+
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						src.selectAll();
+					}
+				});
+			}
 		};
-		
-		List<JTextField> tfArr = Arrays.asList(tfID, tfFirstName, 
-				tfLastName);
-		for (JTextField tf: tfArr) {
+
+		List<JTextField> tfArr = Arrays.asList(tfID, tfFirstName, tfLastName);
+		for (JTextField tf : tfArr) {
 			tf.addFocusListener(fa);
 		}
 	}
-	
+
 	/**
-	 * Loads the contestant data in the ComboBoxes 
-	 * from the GameData.
+	 * Loads the contestant data in the ComboBoxes from the GameData.
 	 */
 	private void refreshContestantCBs() {
 		GameData g = (GameData) GameData.getCurrentGame();
-		
+
 		if (g == null) {
 			return;
 		}
-		
+
 		List<Contestant> cons = g.getActiveContestants();
 
 		cbWeeklyPick.removeAllItems();
 		cbUltPick.removeAllItems();
-		
+
 		boolean seasonStarted = g.isSeasonStarted();
 		cbUltPick.setEnabled(seasonStarted);
 		cbWeeklyPick.setEnabled(seasonStarted);
-		
+
 		Contestant nullC = new Contestant();
 		nullC.setNull();
-		
+
 		cbWeeklyPick.addItem(nullC);
 		cbUltPick.addItem(nullC);
 
@@ -683,7 +692,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 				cbUltPick.addItem(c);
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -725,8 +734,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	@Override
 	public void mousePressed(MouseEvent me) {
 		Component c = me.getComponent();
-		if (c == tfFirstName || c == tfLastName || c == tfID || 
-				c == cbUltPick || c == cbWeeklyPick) {
+		if (c == tfFirstName || c == tfLastName || c == tfID || c == cbUltPick
+				|| c == cbWeeklyPick) {
 			fieldsChanged = true;
 			btnSave.setEnabled(true);
 		}
@@ -740,9 +749,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 	/**
 	 * Changes all fields that have data changed. <br>
-	 * Currently calls:
-	 * - Table update
-	 * - Updates ComboBoxes
+	 * Currently calls: - Table update - Updates ComboBoxes
 	 */
 	@Override
 	public void update(Observable o, Object arg) {

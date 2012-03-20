@@ -110,7 +110,7 @@ public class GameData extends Observable {
 
 		return active;
 	}
-	
+
 	/**
 	 * getInitialContestants returns an integer of the number of initial
 	 * contestants that are in the game.
@@ -155,9 +155,11 @@ public class GameData extends Observable {
 	public Contestant getContestant(String first, String last) {
 		// loop through array
 		for (Contestant j : allContestants) {
-			if (first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure																	// match
+			if (first.equals(j.getFirstName()) && last.equals(j.getLastName())) { // ensure
+																					// //
+																					// match
 				// return info on player
-				return j; 
+				return j;
 			}
 		}
 
@@ -175,8 +177,8 @@ public class GameData extends Observable {
 	 */
 	public Contestant getContestant(String id) {
 		int i = getContestantIndexID(id);
-		
-		if (i >= 0) 
+
+		if (i >= 0)
 			return allContestants.get(i);
 		else
 			return null;
@@ -194,14 +196,15 @@ public class GameData extends Observable {
 			System.out.println("Too many contestants.");
 			return;
 		}
-		
+
 		if (isContestantIDInUse(c.getID())) {
-			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID_DUP,
+			throw new InvalidFieldException(
+					InvalidFieldException.Field.CONT_ID_DUP,
 					"Contestant ID invald (in use)");
 		}
 
 		allContestants.add(c);
-		
+
 		setChanged();
 		notifyObservers();
 	}
@@ -225,7 +228,7 @@ public class GameData extends Observable {
 
 		allContestants.remove(i);
 		updateSortAllContestants(Utils.CompType.CONTNT_ID);
-		
+
 		setChanged();
 		notifyObservers();
 	}
@@ -246,16 +249,18 @@ public class GameData extends Observable {
 	 * 
 	 * @param u
 	 *            New user to add.
-	 * @throws InvalidFieldException Thrown if ID already in use.
+	 * @throws InvalidFieldException
+	 *             Thrown if ID already in use.
 	 */
 	public void addUser(User u) throws InvalidFieldException {
 		if (isUserIDInUse(u.getID())) {
-			throw new InvalidFieldException(InvalidFieldException.Field.CONT_ID_DUP,
+			throw new InvalidFieldException(
+					InvalidFieldException.Field.CONT_ID_DUP,
 					"Contestant ID invald (in use)");
 		}
-		
+
 		allUsers.add(u);
-		
+
 		setChanged();
 		notifyObservers();
 	}
@@ -273,7 +278,7 @@ public class GameData extends Observable {
 				return;
 			}
 		}
-		
+
 		setChanged();
 		notifyObservers();
 	}
@@ -314,7 +319,7 @@ public class GameData extends Observable {
 			}
 			itr.next();
 		}
-		
+
 		setChanged();
 		notifyObservers();
 	}
@@ -372,6 +377,7 @@ public class GameData extends Observable {
 
 	/**
 	 * TOOD:
+	 * 
 	 * @param isActive
 	 * @return
 	 */
@@ -414,23 +420,23 @@ public class GameData extends Observable {
 
 		allocatePoints(elimCont);
 		elimCont.castOff();
-		
+
 		/* clear all weekly picks */
 		for (User u : allUsers) {
+			try {
+				u.setWeeklyPick(null);
+			} catch (InvalidFieldException e) {
+			} // wont happen
+
+			/* clear defunct ult picks */
+			if (u.getUltimatePick().getID().equals(elimCont.getID())) {
 				try {
-					u.setWeeklyPick(null);
+					u.setUltimatePick(null);
 				} catch (InvalidFieldException e) {
 				} // wont happen
-				
-				/* clear defunct ult picks */
-				if (u.getUltimatePick().getID().equals(elimCont.getID())) { 
-					try {
-						u.setUltimatePick(null);
-					} catch (InvalidFieldException e) {
-					} // wont happen
-				}
 			}
-		
+		}
+
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
@@ -461,24 +467,26 @@ public class GameData extends Observable {
 		// temp tribe vars.
 		String oldT1 = tribeNames[0];
 		String oldT2 = tribeNames[1];
-		
+
 		// set the new tribes (Contestant requires this)
 		tribeNames[0] = Utils.strCapitalize(tribeOne.toLowerCase().trim());
 		tribeNames[1] = Utils.strCapitalize(tribeTwo.toLowerCase().trim());
-		
+
 		// update all tribes first..
-		for (Contestant c: allContestants) {
+		for (Contestant c : allContestants) {
 			if (c.getTribe().equalsIgnoreCase(oldT1)) {
 				try {
 					c.setTribe(tribeOne);
-				} catch (InvalidFieldException e) { }
+				} catch (InvalidFieldException e) {
+				}
 			} else if (c.getTribe().equalsIgnoreCase(oldT2)) {
 				try {
 					c.setTribe(tribeTwo);
-				} catch (InvalidFieldException e) { }
+				} catch (InvalidFieldException e) {
+				}
 			}
 		}
-		
+
 		setChanged();
 		notifyObservers();
 	}
@@ -552,7 +560,7 @@ public class GameData extends Observable {
 	public boolean isContestantIDInUse(String id) {
 		return (getContestantIndexID(id) >= 0);
 	}
-	
+
 	/**
 	 * Tells whether a User ID is in use.
 	 * 
@@ -565,8 +573,9 @@ public class GameData extends Observable {
 	}
 
 	/**
-	 * Gets a Users index in the stored list by ID. Uses a binary search
-	 * for speed.
+	 * Gets a Users index in the stored list by ID. Uses a binary search for
+	 * speed.
+	 * 
 	 * @param searchID
 	 * @return Index in the list, index <0 if not found.
 	 */
@@ -581,7 +590,7 @@ public class GameData extends Observable {
 	public int getBetAmount() {
 		return betAmount;
 	}
-	
+
 	/**
 	 * Returns the currently stored Game, this removed need to reference the
 	 * game data all the time. But also allows objects to read data, cleanly.
@@ -599,7 +608,7 @@ public class GameData extends Observable {
 		GameData.currentGame = null;
 
 		notifyObservers();
-		
+
 		JSONUtils.resetSeason();
 	}
 
@@ -662,7 +671,7 @@ public class GameData extends Observable {
 		// tribes
 		JSONArray ts = (JSONArray) obj.get(KEY_TRIBES);
 		setTribeNames((String) ts.get(0), (String) ts.get(1));
-		
+
 		// week info:
 		weeksRem = obj.getInt(KEY_WEEKS_REMAIN);
 		weeksPassed = obj.getInt(KEY_WEEKS_PASSED);
@@ -677,7 +686,10 @@ public class GameData extends Observable {
 		for (int i = 0; i < cons.length(); i++) {
 			Contestant c = new Contestant();
 			c.fromJSONObject(cons.getJSONObject(i));
-			try { addContestant(c); } catch (InvalidFieldException ie) { }
+			try {
+				addContestant(c);
+			} catch (InvalidFieldException ie) {
+			}
 		}
 
 		// users:
@@ -686,9 +698,12 @@ public class GameData extends Observable {
 		for (int i = 0; i < users.length(); i++) {
 			User u = new User();
 			u.fromJSONObject(users.getJSONObject(i));
-			try { addUser(u); } catch (InvalidFieldException ie) { }
+			try {
+				addUser(u);
+			} catch (InvalidFieldException ie) {
+			}
 		}
-		
+
 		setChanged();
 		notifyObservers();
 	}
@@ -760,17 +775,19 @@ public class GameData extends Observable {
 		} catch (InvalidFieldException e) {
 			// wont happen.
 		}
- 
+
 		try {
 			g.addContestant(c1);
 			g.addContestant(c2);
-		} catch (InvalidFieldException ie) {};
-		
+		} catch (InvalidFieldException ie) {
+		}
+		;
+
 		g.startSeason(5);
 		User u1;
 		try {
-			u1 = new User("First","last","flast");
-			User u2 = new User("Firsto","lasto","flasto");
+			u1 = new User("First", "last", "flast");
+			User u2 = new User("Firsto", "lasto", "flasto");
 			g.addUser(u1);
 			g.addUser(u2);
 			u1.setPoints(10);

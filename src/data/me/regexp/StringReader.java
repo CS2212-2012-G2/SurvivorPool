@@ -19,55 +19,55 @@ package data.me.regexp;
 import java.io.Reader;
 
 /**
- *
+ * 
  * @author Nikolay Neizvesny
  */
 public class StringReader extends Reader {
-    
-    private static final char NEW_LINE = '\n';
 
-    private String str;
-    private int pointer = 0;
+	private static final char NEW_LINE = '\n';
 
-    public StringReader(String str) {
-        this.str = str;
-    }
-    
-    public int read() {
-        if (pointer >= str.length()) {
-            return -1;
-        }
-        return str.charAt(pointer++);
-    }
+	private String str;
+	private int pointer = 0;
 
-    public int read(char[] cbuf, int off, int len) {
-        if (pointer >= str.length()) {
-            return -1;
-        }
-        int read = 0;
-        for (int i = 0; i < len && pointer < str.length(); i++, read++) {
-            cbuf[off + i] = str.charAt(pointer++);
-        }
-        return read;
-    }
+	public StringReader(String str) {
+		this.str = str;
+	}
 
-    public void close() {
-    }
+	public int read() {
+		if (pointer >= str.length()) {
+			return -1;
+		}
+		return str.charAt(pointer++);
+	}
 
-    public String readLine() {
-        if (pointer >= str.length()) {
-            return null;
-        }
-        int nextLine = str.indexOf(NEW_LINE, pointer);
-        if (nextLine == -1) {
-            nextLine = str.length();
-        }
-        String result = str.substring(pointer, nextLine);
-        pointer = nextLine + 1;
-        return result;
-    }
+	public int read(char[] cbuf, int off, int len) {
+		if (pointer >= str.length()) {
+			return -1;
+		}
+		int read = 0;
+		for (int i = 0; i < len && pointer < str.length(); i++, read++) {
+			cbuf[off + i] = str.charAt(pointer++);
+		}
+		return read;
+	}
 
-    public boolean ready() {
-        return pointer < str.length();
-    }
+	public void close() {
+	}
+
+	public String readLine() {
+		if (pointer >= str.length()) {
+			return null;
+		}
+		int nextLine = str.indexOf(NEW_LINE, pointer);
+		if (nextLine == -1) {
+			nextLine = str.length();
+		}
+		String result = str.substring(pointer, nextLine);
+		pointer = nextLine + 1;
+		return result;
+	}
+
+	public boolean ready() {
+		return pointer < str.length();
+	}
 }
