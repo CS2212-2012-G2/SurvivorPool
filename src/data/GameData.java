@@ -45,10 +45,18 @@ public class GameData extends Observable {
 	// store contestant who was cast off
 	private Contestant elimCont;
 
+	private Field updatedComponent;
+	
 	/**
 	 * JSON Keys
 	 */
-	// TODO: enum
+	public enum Field {
+		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
+		ADD_CONTESTANT, REMOVE_CONTESTANT, 
+		ADD_USER, REMOVE_USER, 
+		END_GAME, ALLOCATE_POINTS,
+	}
+	
 	private static final String KEY_CONTESTANTS = "cons";
 	private static final String KEY_NUM_CONTEST = "cons_num";
 
@@ -209,8 +217,9 @@ public class GameData extends Observable {
 
 		allContestants.add(c);
 
+		updatedComponent = Field.ADD_CONTESTANT;
 		setChanged();
-		notifyObservers();
+		notifyObservers(updatedComponent);
 	}
 
 	/**
@@ -233,8 +242,9 @@ public class GameData extends Observable {
 		allContestants.remove(i);
 		updateSortAllContestants(Utils.CompType.CONTNT_ID);
 
+		updatedComponent = Field.REMOVE_CONTESTANT;
 		setChanged();
-		notifyObservers();
+		notifyObservers(updatedComponent);
 	}
 
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -265,8 +275,9 @@ public class GameData extends Observable {
 
 		allUsers.add(u);
 
+		updatedComponent = Field.ADD_USER;
 		setChanged();
-		notifyObservers();
+		notifyObservers(updatedComponent);
 	}
 
 	/**
@@ -283,8 +294,9 @@ public class GameData extends Observable {
 			}
 		}
 
+		updatedComponent = Field.REMOVE_USER;
 		setChanged();
-		notifyObservers();
+		notifyObservers(updatedComponent);
 	}
 
 	/**
@@ -333,8 +345,9 @@ public class GameData extends Observable {
 			itr.next();
 		}
 
+		updatedComponent = Field.ALLOCATE_POINTS;
 		setChanged();
-		notifyObservers();
+		notifyObservers(updatedComponent);
 	}
 
 	/**
@@ -453,8 +466,9 @@ public class GameData extends Observable {
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
+		updatedComponent = Field.ADVANCE_WEEK;
 		setChanged();
-		notifyObservers();
+		notifyObservers(updatedComponent);
 	}
 
 	/**
@@ -465,6 +479,10 @@ public class GameData extends Observable {
 	public void startSeason(int bet) {
 		this.setBetAmount(bet);
 		seasonStarted = true;
+		
+		updatedComponent = Field.START_SEASON;
+		setChanged();
+		notifyObservers(updatedComponent);
 	}
 
 	/**
@@ -500,8 +518,9 @@ public class GameData extends Observable {
 			}
 		}
 
+		updatedComponent = Field.SET_TRIBE_NAMES;
 		setChanged();
-		notifyObservers();
+		notifyObservers(updatedComponent);
 	}
 
 	/**
@@ -620,7 +639,8 @@ public class GameData extends Observable {
 	public void endCurrentGame() {
 		GameData.currentGame = null;
 
-		notifyObservers();
+		updatedComponent = Field.END_GAME;
+		notifyObservers(updatedComponent);
 
 		JSONUtils.resetSeason();
 	}
