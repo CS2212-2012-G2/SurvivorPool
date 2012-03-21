@@ -29,6 +29,7 @@ import admin.playertab.PlayerPanel;
 import admin.seasoncreate.SeasonCreatePanel;
 
 import data.GameData;
+import data.bonus.Bonus;
 
 public class MainFrame extends JFrame {
 
@@ -103,6 +104,7 @@ public class MainFrame extends JFrame {
 		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
+		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
 				windowClose();
@@ -284,9 +286,18 @@ public class MainFrame extends JFrame {
 		GameData.getCurrentGame().notifyObservers();
 	}
 
+	/**
+	 * Saves all data associated with the application
+	 */
+	
+	// FIXME: Theme data etc needs to be saved.
 	private void windowClose() {
 		if (GameData.getCurrentGame() != null)
 			GameData.getCurrentGame().writeData();
+		
+		if (Bonus.getAllQuestions() != null) 
+			Bonus.writeData();
+		
 		System.exit(0);
 	}
 

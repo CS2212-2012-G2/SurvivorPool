@@ -40,7 +40,6 @@ public class Bonus {
 	public static void addNewQuestion(BonusQuestion b) {
 		questions.add(b);
 		sortQuestions();
-		// TODO: should sort it so get by week is quicker
 	}
 	
 	private static void sortQuestions(){
@@ -114,6 +113,14 @@ public class Bonus {
 		} catch (ParseException	e) {
 			System.out.println("could not convert to json object "+filePath);
 			e.printStackTrace();
+		}
+	}
+	
+	public static void writeData() {
+		try {
+			JSONUtils.writeJSON(filePath, toJSONObject());
+		} catch (ParseException p) {
+			p.printStackTrace();
 		}
 	}
 
