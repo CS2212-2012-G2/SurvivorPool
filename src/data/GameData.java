@@ -747,7 +747,7 @@ public class GameData extends Observable {
 		}
 
 		currentGame = new GameData(
-				((Number) json.get(KEY_NUM_CONTEST)).intValue());
+				Utils.numToInt(json.get(KEY_NUM_CONTEST)).intValue());
 		// TODO: Combine?
 		try {
 			GameData.getCurrentGame().fromJSONObject(json);
