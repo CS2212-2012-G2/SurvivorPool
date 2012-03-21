@@ -653,16 +653,36 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					public void valueChanged(ListSelectionEvent le) {
 						if (le.getValueIsAdjusting()) return;
 						
-						int row = table.getSelectedRow();
+						System.out.println("index: " + le.getFirstIndex());
+						
+						final int row = table.getSelectedRow();
 						if (row < 0 || oldRow == row)
 							return;
+						
 						oldRow = row;
+						
+						SwingUtilities.invokeLater(new Runnable() {
 
-						Contestant c = tableModel.getByRow(row);
+							@Override
+							public void run() {
+								if (getFieldsChanged()) {
+									try {
+										saveContestant();
+									} catch (InvalidFieldException e) {
+										setExceptionError(e);
+										return;
+									}
+								}
+								
+								Contestant c = tableModel.getByRow(row);
 
-						if (c != null) {
-							setPanelContestant(c, false);
-						}
+								if (c != null) {
+									setPanelContestant(c, false);
+								}
+							}
+							
+						});
+						
 					}
 				});
 

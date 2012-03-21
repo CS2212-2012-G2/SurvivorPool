@@ -378,7 +378,7 @@ public class Utils {
 			return false;
 		if (val.length() == 0)
 			return false;
-		return val.matches(val);
+		return val.matches(pattern);
 	}
 
 	/**

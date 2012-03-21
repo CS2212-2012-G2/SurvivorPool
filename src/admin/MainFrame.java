@@ -211,6 +211,7 @@ public class MainFrame extends JFrame {
 	 * Called by SeasonCreatePanel when a new season has been created/
 	 */
 	public static void createSeason() {
+		// TODO: This is called twice for some reason. once at full init, once now
 		GameData.initGameData();
 		m.getContentPane().removeAll();
 		m.initGUI();
