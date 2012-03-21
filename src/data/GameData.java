@@ -61,7 +61,8 @@ public class GameData extends Observable {
 
 	private static final String KEY_SEASON_STARTED = "season_started";
 	
-	public static String filePath = "res/data/Settings.dat";
+	public static String pathGame = "res/data/Settings.dat";
+	public static String pathBonus = "res/data/bonus.dat";
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -741,7 +742,7 @@ public class GameData extends Observable {
 	public static GameData initGameData() {
 		JSONObject json;
 		try {
-			json = JSONUtils.readFile(filePath);
+			json = JSONUtils.readFile(pathGame);
 		} catch (FileNotFoundException e) {
 			return currentGame;
 		}
@@ -764,8 +765,7 @@ public class GameData extends Observable {
 	public void writeData() {
 
 		try {
-			JSONUtils.writeJSON(filePath, this.toJSONObject());
-			JSONUtils.writeJSON(filePath, Bonus.toJSONObject());
+			JSONUtils.writeJSON(pathGame, this.toJSONObject());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
