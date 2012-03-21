@@ -6,11 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import admin.Utils;
-import data.JSONUtils;
 import json.simple.JSONArray;
 import json.simple.JSONObject;
 import json.simple.parser.ParseException;
+import data.JSONUtils;
 
 /**
  * This class holds all the bonus questions
@@ -112,7 +111,7 @@ public class Bonus {
 			fromJSONObject(JSONUtils.readFile(filePath));
 		} catch (FileNotFoundException e) {
 			System.out.println("could not read "+filePath);
-		} catch (ParseException e) {
+		} catch (ParseException	e) {
 			System.out.println("could not convert to json object "+filePath);
 			e.printStackTrace();
 		}
