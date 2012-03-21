@@ -465,6 +465,9 @@ public class GameData extends Observable {
 	public void startSeason(int bet) {
 		this.setBetAmount(bet);
 		seasonStarted = true;
+		
+		setChanged();
+		notifyObservers();
 	}
 
 	/**

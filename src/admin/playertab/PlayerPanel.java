@@ -753,7 +753,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		GameData g = (GameData)o;
+		btnAddNew.setEnabled(!g.isSeasonStarted());
+		btnDelete.setEnabled(!g.isSeasonStarted());
+		
 		refreshContestantCBs();
+				
 		tableModel.fireTableDataChanged();
 	}
 }
