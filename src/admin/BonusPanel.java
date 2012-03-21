@@ -214,8 +214,10 @@ public class BonusPanel extends JPanel {
 	
 	private void addQuestionToListing(BonusQuestion q) {
 		questionList[GameData.getCurrentGame().getCurrentWeek() - 1] = 
-			"Week: " + q.getWeek() + "\t" + "Question: " + q.getPrompt() + 
-			"\n" + "\t\t" + "Answer: " + q.getAnswer() + "\n\n";
+			"Week: " + "\t" + q.getWeek() + "\n" + 
+			"Question Type: " + "\t" + q.getBonusType() + "\n" + 
+			"Question: " + "\t" + q.getPrompt() + "\n" + 
+			"Answer: " + "\t" + q.getAnswer() + "\n\n";
 		txtQuestionList.setText(questionList[GameData.getCurrentGame().getCurrentWeek() - 1]);
 	}
 	

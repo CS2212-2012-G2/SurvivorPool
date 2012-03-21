@@ -141,9 +141,14 @@ public class SeasonCreatePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					if (!checkValidTribeNames()) {
+					if (checkValidTribeName(txtTribe1.getText())) {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
-								"Invalid tribe names", txtTribe1, txtTribe2);
+								"Invalid tribe name", txtTribe1);
+						// lblAlert.setText("Invalid tribe names!");
+						return;
+					} else if (checkValidTribeName(txtTribe2.getText())) {
+						MainFrame.getRunningFrame().setStatusErrorMsg(
+								"Invalid tribe name", txtTribe2);
 						// lblAlert.setText("Invalid tribe names!");
 						return;
 					} else if (txtTribe1.getText().equals(txtTribe2.getText())) {
@@ -192,10 +197,9 @@ public class SeasonCreatePanel extends JPanel {
 	 * @return boolean depending if tribe names are alphanumber and between 1-30
 	 *         characters
 	 */
-	private boolean checkValidTribeNames() {
+	private boolean checkValidTribeName(String t) {
 		// regex for alphanumeric and between 1-30 characters long
-		return Utils.checkString(txtTribe1.getText(), Person.TRIBE_PATTERN)
-				&& Utils.checkString(txtTribe2.getText(), Person.TRIBE_PATTERN);
+		return !(Utils.checkString(t, Person.TRIBE_PATTERN));
 	}
 
 }
