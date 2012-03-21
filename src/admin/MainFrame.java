@@ -245,7 +245,7 @@ public class MainFrame extends JFrame {
 	 *            The message to set
 	 */
 	public void setStatusErrorMsg(String msg) {
-		setStatusErrorMsg(msg);
+		setStatusErrorMsg(msg, (Component)null);
 	}
 
 	/**
