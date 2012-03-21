@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -22,9 +24,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import data.GameData;
+import data.GameData.Field;
 import data.bonus.BonusQuestion;
 
-public class BonusPanel extends JPanel {
+public class BonusPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -83,6 +86,9 @@ public class BonusPanel extends JPanel {
 		initPnlAddQuestion();
 		initPnlQuestionListing();
 		initListeners();
+		GameData.getCurrentGame().addObserver(this);
+		setQuestionAddingPanelUneditable();
+		btnModify.setEnabled(false);
 	}
 
 	private void initPnlAddQuestion() {
@@ -213,12 +219,14 @@ public class BonusPanel extends JPanel {
 	}
 	
 	private void addQuestionToListing(BonusQuestion q) {
-		questionList[GameData.getCurrentGame().getCurrentWeek() - 1] = 
+		questionList[GameData.getCurrentGame().getCurrentWeek()] = 
 			"Week: " + "\t" + q.getWeek() + "\n" + 
 			"Question Type: " + "\t" + q.getBonusType() + "\n" + 
 			"Question: " + "\t" + q.getPrompt() + "\n" + 
 			"Answer: " + "\t" + q.getAnswer() + "\n\n";
-		txtQuestionList.setText(questionList[GameData.getCurrentGame().getCurrentWeek() - 1]);
+		weekModel.setValue(GameData.getCurrentGame().getCurrentWeek());
+		btnModify.setEnabled(true);
+		setQuestionListingPanel();
 	}
 	
 	private void setQuestionListingPanel() {
@@ -423,7 +431,24 @@ public class BonusPanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				setQuestionListingPanel();
+				if (spnWeek.getValue().equals(GameData.getCurrentGame().getCurrentWeek()))
+					btnModify.setEnabled(true);
+				else btnModify.setEnabled(false);
 			}
 		});
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if (arg1.equals(Field.START_SEASON)){
+			setQuestionAddingPanelEditable();
+			weekModel.setMaximum(((GameData) arg0).getCurrentWeek());
+			weekModel.setValue(((GameData) arg0).getCurrentWeek());
+		}
+		if (arg1.equals(Field.ADVANCE_WEEK)){
+			setQuestionAddingPanelEditable();
+			weekModel.setMaximum(((GameData) arg0).getCurrentWeek());
+			weekModel.setValue(((GameData) arg0).getCurrentWeek());
+		}
 	}
 }

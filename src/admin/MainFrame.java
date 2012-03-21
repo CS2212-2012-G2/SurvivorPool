@@ -104,6 +104,8 @@ public class MainFrame extends JFrame {
 		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
+		// can resize frame
+		this.setResizable(false);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent we) {
