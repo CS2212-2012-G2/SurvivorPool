@@ -42,7 +42,7 @@ public class BonusPanel extends JPanel implements Observer {
 	
 	JLabel lblViewWeek = new JLabel("View Week:");
 	
-	SpinnerNumberModel weekModel = new SpinnerNumberModel(0, 0, 0, 0); // default,low,min,step
+	SpinnerNumberModel weekModel = new SpinnerNumberModel(1, 1, 1, 1); // default,low,min,step
 	JSpinner spnWeek = new JSpinner(weekModel);
 	
 	JButton btnBack = new JButton("Back");
@@ -219,13 +219,14 @@ public class BonusPanel extends JPanel implements Observer {
 	}
 	
 	private void addQuestionToListing(BonusQuestion q) {
-		questionList[GameData.getCurrentGame().getCurrentWeek() - 1] = 
+		questionList[GameData.getCurrentGame().getCurrentWeek()] = 
 			"Week: " + "\t" + q.getWeek() + "\n" + 
 			"Question Type: " + "\t" + q.getBonusType() + "\n" + 
 			"Question: " + "\t" + q.getPrompt() + "\n" + 
 			"Answer: " + "\t" + q.getAnswer() + "\n\n";
-		txtQuestionList.setText(questionList[GameData.getCurrentGame().getCurrentWeek() - 1]);
+		weekModel.setValue(GameData.getCurrentGame().getCurrentWeek());
 		btnModify.setEnabled(true);
+		setQuestionListingPanel();
 	}
 	
 	private void setQuestionListingPanel() {
