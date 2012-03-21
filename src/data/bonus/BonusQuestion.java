@@ -28,7 +28,7 @@ public class BonusQuestion {
 	protected String answer;
 	protected String[] choices; // TODO: can we somehow implement short answer
 								// and mc together without this?
-	protected int week;
+	protected String week;
 
 	public static final String FILE_PATH = "res/data/bonus.dat";
 	protected static final String KEY_TYPE = "type";
@@ -58,7 +58,7 @@ public class BonusQuestion {
 		this.choices = choices;
 		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
 		this.active = active;
-		this.week = week;
+		this.week = Integer.toString(week);
 		Bonus.addNewQuestion(this);
 		// TODO: do we need to check if answer is in choices?
 	}
@@ -166,7 +166,7 @@ public class BonusQuestion {
 	 * @return int
 	 */
 	public int getWeek() {
-		return week;
+		return Integer.parseInt(week);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class BonusQuestion {
 	 * 
 	 * @param week
 	 */
-	public void setWeek(int week) {
+	public void setWeek(String week) {
 		this.week = week;
 	}
 
@@ -221,7 +221,7 @@ public class BonusQuestion {
 			}
 			setChoices(choice);
 		}
-		setWeek((Integer)o.get(KEY_WEEK));
+		setWeek((String)o.get(KEY_WEEK));
 
 	}
 	
