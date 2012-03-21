@@ -227,8 +227,7 @@ public class MainFrame extends JFrame {
 	 * 
 	 */
 	public void seasonStarted() {
-		GameData g = GameData.getCurrentGame();
-		g.notifyObservers();
+		// FIXME: Anything need to happen here? :s
 	}
 
 	/**
@@ -291,7 +290,6 @@ public class MainFrame extends JFrame {
 	/**
 	 * Saves all data associated with the application
 	 */
-	
 	// FIXME: Theme data etc needs to be saved.
 	private void windowClose() {
 		if (GameData.getCurrentGame() != null)
