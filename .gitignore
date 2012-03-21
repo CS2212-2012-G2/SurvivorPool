@@ -9,4 +9,4 @@ doc/*
 .settings/
 BlackBerry_App_Descriptor.xml
 res/img/icon.png
-res/data/Settings.dat
+res/data/*.dat
