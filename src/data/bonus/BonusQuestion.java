@@ -24,7 +24,6 @@ public class BonusQuestion {
 	protected BONUS_TYPE bonusType;
 
 	protected String prompt;
-	protected boolean active;
 	protected String answer;
 	protected String[] choices; // TODO: can we somehow implement short answer
 								// and mc together without this?
@@ -34,7 +33,6 @@ public class BonusQuestion {
 	protected static final String KEY_TYPE = "type";
 	protected static final String KEY_PROMPT = "prompt";
 	protected static final String KEY_ANSWER = "answer";
-	protected static final String KEY_ACTIVE = "active";
 	protected static final String KEY_CHOICES = "mc_choices";// TODO:need a
 																// better name
 																// for type
@@ -51,13 +49,11 @@ public class BonusQuestion {
 	 *            The possible choices(null from short answer, and actual values
 	 *            for MC)
 	 */
-	public BonusQuestion(String prompt, String answer, String[] choices,
-			boolean active, int week) {
+	public BonusQuestion(String prompt, String answer, String[] choices,int week) {
 		this.prompt = prompt;
 		this.answer = answer;
 		this.choices = choices;
 		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
-		this.active = active;
 		this.week = Integer.toString(week);
 		Bonus.addNewQuestion(this);
 		// TODO: do we need to check if answer is in choices?
@@ -103,24 +99,6 @@ public class BonusQuestion {
 	 */
 	public void setPrompt(String prompt) {
 		this.prompt = prompt;
-	}
-
-	/**
-	 * Returns if the question is still active
-	 * 
-	 * @return
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
-	 * Set if question is active
-	 * 
-	 * @param active
-	 */
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	/**
@@ -200,7 +178,6 @@ public class BonusQuestion {
 			obj.put(KEY_CHOICES, null);
 		}
 
-		obj.put(KEY_ACTIVE, active);
 		obj.put(KEY_WEEK, week);
 		return obj;
 	}
@@ -209,7 +186,6 @@ public class BonusQuestion {
 
 		setPrompt((String)o.get(KEY_PROMPT));
 		setAnswer((String)o.get(KEY_ANSWER));
-		setActive((Boolean)o.get(KEY_ACTIVE));
 
 		JSONArray jChoices = (JSONArray)o.get(KEY_CHOICES);
 		if (jChoices == null) {
@@ -232,20 +208,20 @@ public class BonusQuestion {
 	 */
 	public static void main(String[] args) throws ParseException {
 		/*	************to json test*********************/
-		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, true, 3);
+		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, 3);
 		String shortActive = b.toJSONObject().toString();
 		System.out.println(shortActive);
 
-		b = new BonusQuestion("question week 2", "answer", null, false, 2);
+		b = new BonusQuestion("question week 2", "answer", null, 2);
 		String shortNotActive = b.toJSONObject().toString();
 		System.out.println(shortNotActive);
 
 		String[] choices = { "one", "two", "three", "answer" };
-		b = new BonusQuestion("question week 4", "answer", choices, true, 4);
+		b = new BonusQuestion("question week 4", "answer", choices,4);
 		String mcActive = b.toJSONObject().toString();
 		System.out.println(mcActive);
 
-		b = new BonusQuestion("question week 1", "answer", choices, false, 1);
+		b = new BonusQuestion("question week 1", "answer", choices,1);
 		String mcNotActive = b.toJSONObject().toString();
 		System.out.println(mcNotActive);
 		
