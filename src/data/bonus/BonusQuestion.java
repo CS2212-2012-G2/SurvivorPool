@@ -1,6 +1,9 @@
 package data.bonus;
 
+import java.io.FileNotFoundException;
 import java.util.List;
+
+import data.JSONUtils;
 
 import json.simple.JSONArray;
 import json.simple.JSONObject;
@@ -27,7 +30,7 @@ public class BonusQuestion {
 	protected String answer;
 	protected String[] choices; // TODO: can we somehow implement short answer
 								// and mc together without this?
-	protected String week;
+	protected int week;
 
 	public static final String FILE_PATH = "res/data/bonus.dat";
 	protected static final String KEY_TYPE = "type";
@@ -54,7 +57,7 @@ public class BonusQuestion {
 		this.answer = answer;
 		this.choices = choices;
 		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
-		this.week = Integer.toString(week);
+		this.week = week;
 		Bonus.addNewQuestion(this);
 		// TODO: do we need to check if answer is in choices?
 	}
@@ -145,7 +148,7 @@ public class BonusQuestion {
 	 * @return int
 	 */
 	public int getWeek() {
-		return Integer.parseInt(week);
+		return week;
 	}
 
 	/**
@@ -153,7 +156,7 @@ public class BonusQuestion {
 	 * 
 	 * @param week
 	 */
-	public void setWeek(String week) {
+	public void setWeek(int week) {
 		this.week = week;
 	}
 
@@ -198,7 +201,7 @@ public class BonusQuestion {
 			}
 			setChoices(choice);
 		}
-		setWeek((String)o.get(KEY_WEEK));
+		setWeek(((Number)o.get(KEY_WEEK)).intValue());
 
 	}
 	
@@ -206,8 +209,9 @@ public class BonusQuestion {
 	 * Drive for BonusQuestion
 	 * @param args
 	 * @throws ParseException
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws ParseException, FileNotFoundException {
 		/*	************to json test*********************/
 		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, 3);
 		String shortActive = b.toJSONObject().toString();
@@ -261,5 +265,11 @@ public class BonusQuestion {
 		BonusQuestion byWeek = Bonus.getQuestionByWeek(2);
 		System.out.println(byWeek.getPrompt());
 		System.out.println(byWeek.getBonusType());
+		System.out.println(Bonus.toJSONObject().toJSONString());
+		JSONUtils.writeJSON(Bonus.filePath, Bonus.toJSONObject());
+		JSONObject fileO = JSONUtils.readFile(Bonus.filePath+".as");
+		System.out.println(fileO.toJSONString());
+		Bonus.fromJSONObject(fileO);
+		
 	}
 }
