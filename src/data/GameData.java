@@ -54,7 +54,7 @@ public class GameData extends Observable {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
 		ADD_CONTESTANT, REMOVE_CONTESTANT, 
 		ADD_USER, REMOVE_USER, 
-		END_GAME, ALLOCATE_POINTS,
+		END_GAME, ALLOCATE_POINTS
 	}
 	
 	private static final String KEY_CONTESTANTS = "cons";
@@ -638,6 +638,7 @@ public class GameData extends Observable {
 	 */
 	public void endCurrentGame() {
 		GameData.currentGame = null;
+		Bonus.deleteAllQuestions();
 
 		updatedComponent = Field.END_GAME;
 		notifyObservers(updatedComponent);

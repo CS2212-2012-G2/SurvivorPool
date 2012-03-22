@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,7 +23,7 @@ import javax.swing.event.ChangeListener;
 import data.GameData;
 import data.Person;
 
-public class GeneralPanel extends JPanel {
+public class GeneralPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,6 +54,8 @@ public class GeneralPanel extends JPanel {
 		this.setLayout(gbl);
 		initPnlInfo();
 		initListeners();
+		
+		if (!GameData.getCurrentGame().getAllContestants().isEmpty()) initExistingGame();
 	}
 
 	private void initPnlInfo() {
@@ -116,6 +120,13 @@ public class GeneralPanel extends JPanel {
 		add(pnlCastOffs, gbc);
 	}
 
+	private void initExistingGame() {
+		setRemainingContestantsLabel();
+		setCastOffContestantsLabel();
+		btnStartSeason.setEnabled(false);
+		btnAdvanceWeek.setEnabled(true);
+	}
+	
 	private void setRemainingContestantsLabel() {
 		String s = "<HTML>";
 		for (int i = 0; i < GameData.getCurrentGame().getAllContestants()
@@ -243,5 +254,11 @@ public class GeneralPanel extends JPanel {
 			}
 
 		});
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
 	}
 }

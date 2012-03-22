@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Observable;
 
 import json.simple.JSONArray;
 import json.simple.JSONObject;
@@ -17,7 +18,7 @@ import data.JSONUtils;
  * @author Ramesh
  * 
  */
-public class Bonus {
+public class Bonus extends Observable {
 
 	static List<BonusQuestion> questions = new ArrayList<BonusQuestion>();
 
@@ -31,6 +32,7 @@ public class Bonus {
 
 		
 	};;
+	
 	/**
 	 * DO NOT CALL THIS FUNCTION! Only used fromJSONObject or when a
 	 * bonusquestion is created
@@ -46,7 +48,10 @@ public class Bonus {
 		Collections.sort(questions, comp);
 	}
 	
-
+	public static void deleteAllQuestions(){
+		questions.clear();
+	}
+	
 	/**
 	 * Get all the questions. Probably not as useful as get by week
 	 * 
@@ -77,9 +82,43 @@ public class Bonus {
 		}
 		
 		return null;
-
+	}
+	
+	/**
+	 * Get the question that was asked on a certain week
+	 * 
+	 * @param week
+	 * @return a possible null BonusQuestion
+	 */
+	public static BonusQuestion getQuestionByWeekAndNumber(int week, int number) {
+		for (int i = 0; i < questions.size(); i++) {
+			BonusQuestion b = questions.get(i);
+			System.out.println("Week " + b.getWeek());
+			System.out.println("Week Searched " + week);
+			System.out.println("Number " + b.getNumber());
+			System.out.println("Number Searched " + number);
+			if (b.getWeek() == week && b.getNumber() == number){
+				System.out.println("pass");
+				return b;				
+			}
+		}
+		return null;
 	}
 
+	/**
+	 * Get the number of questions in a particular week
+	 * @param week
+	 * @return t: total number of questions in a week
+	 */
+	public static int getNumQuestionsInWeek(int week) {
+		int t = 0;
+		for (int i = 0; i < questions.size(); i++) {
+			BonusQuestion b = questions.get(i);
+			if (b.getWeek() == week) t++;
+		}
+		return t;
+	}
+	
 	public static JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
 

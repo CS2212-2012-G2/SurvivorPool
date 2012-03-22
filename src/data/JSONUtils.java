@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import data.bonus.Bonus;
+
 import json.simple.JSONObject;
 import json.simple.JSONValue;
 
@@ -95,7 +97,9 @@ public class JSONUtils {
 	public static boolean resetSeason() {
 		File f = new File(GameData.pathGame);
 		f.delete();
-		return f.exists();
+		File fB = new File(Bonus.filePath);
+		fB.delete();
+		return (f.exists() && fB.exists());
 	}
 
 }

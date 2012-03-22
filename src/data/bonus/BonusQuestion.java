@@ -29,6 +29,7 @@ public class BonusQuestion {
 	protected String[] choices; // TODO: can we somehow implement short answer
 								// and mc together without this?
 	protected String week;
+	protected String number;
 
 	public static final String FILE_PATH = "res/data/bonus.dat";
 	protected static final String KEY_TYPE = "type";
@@ -39,6 +40,7 @@ public class BonusQuestion {
 																// better name
 																// for type
 	protected static final String KEY_WEEK = "week";
+	protected static final String KEY_NUMBER = "number";
 
 	/**
 	 * Default constructor for Bonus Question
@@ -52,13 +54,14 @@ public class BonusQuestion {
 	 *            for MC)
 	 */
 	public BonusQuestion(String prompt, String answer, String[] choices,
-			boolean active, int week) {
+			boolean active, int week, int number) {
 		this.prompt = prompt;
 		this.answer = answer;
 		this.choices = choices;
 		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
 		this.active = active;
 		this.week = Integer.toString(week);
+		this.number = Integer.toString(number);
 		Bonus.addNewQuestion(this);
 		// TODO: do we need to check if answer is in choices?
 	}
@@ -177,7 +180,25 @@ public class BonusQuestion {
 	public void setWeek(String week) {
 		this.week = week;
 	}
+	
+	/**
+	 * Get the question number in a particular week
+	 * 
+	 * @return int
+	 */
+	public int getNumber() {
+		return Integer.parseInt(number);
+	}
 
+	/**
+	 * Set the question number within a particular week
+	 * 
+	 * @param number
+	 */
+	public void setNumber(String number) {
+		this.number = number;
+	}
+	
 	/**
 	 * Converts Contestant object to a json object
 	 * 
@@ -202,6 +223,7 @@ public class BonusQuestion {
 
 		obj.put(KEY_ACTIVE, active);
 		obj.put(KEY_WEEK, week);
+		obj.put(KEY_NUMBER, number);
 		return obj;
 	}
 
@@ -222,7 +244,7 @@ public class BonusQuestion {
 			setChoices(choice);
 		}
 		setWeek((String)o.get(KEY_WEEK));
-
+		setNumber((String)o.get(KEY_NUMBER));
 	}
 	
 	/** 
@@ -232,20 +254,20 @@ public class BonusQuestion {
 	 */
 	public static void main(String[] args) throws ParseException {
 		/*	************to json test*********************/
-		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, true, 3);
+		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, true, 3, 1);
 		String shortActive = b.toJSONObject().toString();
 		System.out.println(shortActive);
 
-		b = new BonusQuestion("question week 2", "answer", null, false, 2);
+		b = new BonusQuestion("question week 2", "answer", null, false, 2, 1);
 		String shortNotActive = b.toJSONObject().toString();
 		System.out.println(shortNotActive);
 
 		String[] choices = { "one", "two", "three", "answer" };
-		b = new BonusQuestion("question week 4", "answer", choices, true, 4);
+		b = new BonusQuestion("question week 4", "answer", choices, true, 4, 1);
 		String mcActive = b.toJSONObject().toString();
 		System.out.println(mcActive);
 
-		b = new BonusQuestion("question week 1", "answer", choices, false, 1);
+		b = new BonusQuestion("question week 1", "answer", choices, false, 1, 1);
 		String mcNotActive = b.toJSONObject().toString();
 		System.out.println(mcNotActive);
 		
