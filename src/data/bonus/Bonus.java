@@ -27,10 +27,13 @@ public class Bonus extends Observable {
 	static Comparator<BonusQuestion> comp =new Comparator<BonusQuestion>(){
 
 		public int compare(BonusQuestion o1, BonusQuestion o2) {
-			return o1.getWeek()-o2.getWeek();
+			int weekDiff = o1.getWeek()-o2.getWeek();
+			if(weekDiff==0){
+				return o1.getNumber()-o2.getNumber();
+			}else{
+				return o1.getWeek()-o2.getWeek();
+			}	
 		}
-
-		
 	};;
 	
 	/**
@@ -68,40 +71,46 @@ public class Bonus extends Observable {
 	 * @return a possible null BonusQuestion
 	 */
 	public static BonusQuestion getQuestionByWeek(int week) {
+		return questions.get(getQuestionLoc(week));
+	}
+	
+	private static int getQuestionLoc(int week){
 		int min = 0;
 		int max = questions.size();
 		while(min<=max){
 			int middle = (min+max)/2;
 			BonusQuestion b = questions.get(middle);
 			if(b.getWeek()==week)
-				return b; 
+				return middle; 
 			else if(b.getWeek()>week)
 				max=middle-1;
 			else
 				min=middle+1;
 		}
 		
-		return null;
+		return -1;
 	}
 	
 	/**
 	 * Get the question that was asked on a certain week
 	 * 
 	 * @param week
+	 * @param number The question number in the given week.(Index starts at 0)
 	 * @return a possible null BonusQuestion
 	 */
 	public static BonusQuestion getQuestionByWeekAndNumber(int week, int number) {
-		for (int i = 0; i < questions.size(); i++) {
-			BonusQuestion b = questions.get(i);
-			System.out.println("Week " + b.getWeek());
-			System.out.println("Week Searched " + week);
-			System.out.println("Number " + b.getNumber());
-			System.out.println("Number Searched " + number);
-			if (b.getWeek() == week && b.getNumber() == number){
-				System.out.println("pass");
+		int loc = getQuestionLoc(week);
+		loc +=number;
+		BonusQuestion b = questions.get(loc);
+		System.out.println("Week " + b.getWeek());
+		System.out.println("Week Searched " + week);
+		System.out.println("Number " + b.getNumber());
+		System.out.println("Number Searched " + number);
+		if (b.getWeek()==week&&b.getNumber() == number){
+			System.out.println("pass");
 				return b;				
-			}
 		}
+
 		return null;
 	}
 
