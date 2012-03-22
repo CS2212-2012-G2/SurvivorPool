@@ -54,7 +54,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	private ContestantFieldsPanel paneEditFields;
 	// container for top stuff
 	private JButton btnCastOff;
-	private JButton btnSaveCont;
+	private JButton btnSaveCon;
 	
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
@@ -73,8 +73,8 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	private ContestantTableModel tableModel; 
 	private JTableHeader header;
 	
-	private JButton btnAddCont;
-	private JButton btnDeleteCont;
+	private JButton btnAddNew;
+	private JButton btnDelCon;
 	
 	// vars:
 	private boolean isNewContestant = false;
@@ -135,7 +135,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		if (!GameData.getCurrentGame().isSeasonStarted())
 			btnCastOff.setEnabled(false);
 		
-		btnSaveCont = new JButton("Save");
+		btnSaveCon = new JButton("Save");
 		
 		//////////////////////////////
 		// Mid (table!)
@@ -151,8 +151,8 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		//////////////////////////////
 		// Bottom
 		//////////////////////////////
-		btnAddCont = new JButton("Add New");
-		btnDeleteCont = new JButton("Delete");
+		btnAddNew = new JButton("New");
+		btnDelCon = new JButton("Delete");
 		
 		// build the two panes
 		//setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -206,7 +206,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			
 		paneButtons.add(btnCastOff);
 		
-		paneButtons.add(btnSaveCont);
+		paneButtons.add(btnSaveCon);
 		
 		// add all components on top:
 		panel.add(imgDisplay, BorderLayout.LINE_START);
@@ -281,8 +281,8 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
-		panel.add(btnAddCont);
-		panel.add(btnDeleteCont);
+		panel.add(btnAddNew);
+		panel.add(btnDelCon);
 		
 		add(panel, BorderLayout.PAGE_END);
 		// add the mouse listener to all components.
@@ -382,11 +382,14 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		
 		if (isNewContestant) {
 			loadedContestant = new Contestant();
+			btnSaveCon.setText("Add");
 		} else {
 			if (loadedContestant == c) {
 				return; // don't need to set it then..
 			}
+			
 			loadedContestant = c;
+			btnSaveCon.setText("Save");
 		}
 		
 		GameData g = GameData.getCurrentGame();
@@ -450,7 +453,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	 */
 	private void setFieldsChanged(boolean value) {
 		fieldsChanged = value;
-		btnSaveCont.setEnabled(value);
+		btnSaveCon.setEnabled(value);
 	}
 	
 	/**
@@ -501,7 +504,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	}
 
 	private void buildActions() {
-		btnAddCont.addActionListener(new ActionListener() {
+		btnAddNew.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -528,7 +531,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			}
 		});
 		
-		btnSaveCont.addActionListener(new ActionListener() {
+		btnSaveCon.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {		
@@ -590,7 +593,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			}
 		});
 		
-		btnDeleteCont.addActionListener(new ActionListener(){
+		btnDelCon.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -638,7 +641,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 						row %= table.getRowCount();
 						tableModel.setRowSelect(row);
 					} else {
-						btnAddCont.doClick();
+						btnAddNew.doClick();
 					}
 				}
 			}
@@ -655,7 +658,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			     
 				 if (c != null){
 					 if (getFieldsChanged())
-						 btnSaveCont.doClick();
+						 btnSaveCon.doClick();
 					 
 					 setPanelContestant(c, false); 
 				 }
@@ -724,9 +727,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			mf.setStatusMsg("Click to select image");
 		} else if (c == table) {
 			mf.setStatusMsg("Click row to edit contestant");
-		} else if (c == btnAddCont) {
+		} else if (c == btnAddNew) {
 			mf.setStatusMsg("Click to add new contestant");
-		} else if (c == btnSaveCont) {
+		} else if (c == btnSaveCon) {
 			mf.setStatusMsg("Click to save contestant data");
 		}
 		//System.out.println("MouseEntered: " + c.toString());
@@ -785,9 +788,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		// depends on season started:
 		boolean sStart = g.isSeasonStarted();
 		
-		btnAddCont.setEnabled(!sStart);
+		btnAddNew.setEnabled(!sStart);
 		btnCastOff.setEnabled(sStart);
-		btnDeleteCont.setEnabled(!sStart);
+		btnDelCon.setEnabled(!sStart);
 		tfLastName.setEnabled(!sStart);
 		tfFirstName.setEnabled(!sStart);
 		tfContID.setEnabled(!sStart);
