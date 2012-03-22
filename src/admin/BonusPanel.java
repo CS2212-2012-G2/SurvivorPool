@@ -246,8 +246,7 @@ public class BonusPanel extends JPanel implements Observer {
 			"Question Type: " + "\t\t" + q.getBonusType() + "\n" + 
 			"Question: " + "\t\t" + q.getPrompt() + "\n" + 
 			"Answer: " + "\t\t" + q.getAnswer() + "\n\n";
-		btnModify.setEnabled(true);
-		setQuestionListingPanel();
+		txtQuestionList.setText(currentQuestion);
 	}
 	
 	private void setWeekSpinner(int week, int question) {
@@ -257,15 +256,11 @@ public class BonusPanel extends JPanel implements Observer {
 		spnWeek.addChangeListener(clWeek);
 	}
 	
-	private void setQuestionSpinner(int week, int qValue, int qMax) {
+	private void setQuestionSpinner(int qValue, int qMax) {
 		spnQuestion.removeChangeListener(clQuestion);
-		snmQuestion.setMaximum(qMax);
 		snmQuestion.setValue(qValue);
+		snmQuestion.setMaximum(qMax);
 		spnQuestion.addChangeListener(clQuestion);
-	}
-	
-	private void setQuestionListingPanel() {
-		txtQuestionList.setText(currentQuestion);
 	}
 	
 	private void setQuestionAddingPanelUneditable(){
@@ -336,7 +331,7 @@ public class BonusPanel extends JPanel implements Observer {
 		setWeekSpinner(currentWeek, currentQuestionNumber);
 		snmQuestion.setMaximum(Bonus.getNumQuestionsInWeek(currentWeek));
 		snmQuestion.setValue(1);
-		setQuestionListingPanel();
+		addQuestionToListing(bq);
 	}
 	
 	private void initListeners(){
@@ -415,13 +410,14 @@ public class BonusPanel extends JPanel implements Observer {
 				} else if (shortAns){
 					if (txtAnswer.getText().length() > 0 && txtAnswer.getText().length() < 201){
 						if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;					
-						setQuestionSpinner(currentWeek, currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+						setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 						answer = txtAnswer.getText();						
 						bq = new BonusQuestion(question, answer, null, 
 								currentWeek, currentQuestionNumber);
 						answer = txtAnswer.getText();
 						initPnlAddQuestion();
 						addQuestionToListing(bq);
+						btnModify.setEnabled(true);
 						modifyBonusQuestion = false;
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
@@ -436,11 +432,12 @@ public class BonusPanel extends JPanel implements Observer {
 						
 						if (a != null){
 							if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;
-							setQuestionSpinner(currentWeek, currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+							setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 							bq = new BonusQuestion(question, a, answers, 
 									currentWeek, currentQuestionNumber);
 							initPnlAddQuestion();
 							addQuestionToListing(bq);
+							btnModify.setEnabled(true);
 							modifyBonusQuestion = false;
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
@@ -537,12 +534,12 @@ public class BonusPanel extends JPanel implements Observer {
 				currentWeek = (Integer)spnWeek.getValue();
 				currentQuestionNumber = 1;
 				bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
-				setQuestionSpinner(currentWeek, currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
-				setQuestionListingPanel();
-				if (spnWeek.getValue().equals(GameData.getCurrentGame().getCurrentWeek()))
+				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+				addQuestionToListing(bq);
+				if (currentWeek == GameData.getCurrentGame().getCurrentWeek())
 					btnModify.setEnabled(true);
 				else btnModify.setEnabled(false);
-			}
+			}			
 		};
 		
 		spnWeek.addChangeListener(clWeek);
@@ -552,7 +549,8 @@ public class BonusPanel extends JPanel implements Observer {
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				currentQuestionNumber = (Integer)spnQuestion.getValue();
-				setQuestionSpinner(currentWeek, currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+				System.out.println(currentQuestionNumber);
+				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 				bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
 				addQuestionToListing(bq);
 			}
@@ -568,14 +566,14 @@ public class BonusPanel extends JPanel implements Observer {
 			currentWeek = ((GameData) arg0).getCurrentWeek();
 			currentQuestionNumber = 1;
 			setWeekSpinner(currentWeek, currentQuestionNumber);
-			setQuestionSpinner(currentWeek, currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 		}
 		if (arg1.equals(Field.ADVANCE_WEEK)){
 			setQuestionAddingPanelEditable();
 			currentWeek = ((GameData) arg0).getCurrentWeek();
 			currentQuestionNumber = 1;
 			setWeekSpinner(currentWeek, currentQuestionNumber);
-			setQuestionSpinner(currentWeek, currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 		}
 	}
 }
