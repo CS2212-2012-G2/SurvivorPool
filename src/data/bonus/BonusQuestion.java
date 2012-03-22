@@ -135,7 +135,8 @@ public class BonusQuestion {
 	 */
 	public void setChoices(String[] choices) {
 		this.choices = choices;
-		bonusType = BONUS_TYPE.MULTI;
+		if(choices!=null)
+			bonusType = BONUS_TYPE.MULTI;
 	}
 
 	/**
@@ -259,5 +260,6 @@ public class BonusQuestion {
 		
 		BonusQuestion byWeek = Bonus.getQuestionByWeek(2);
 		System.out.println(byWeek.getPrompt());
+		System.out.println(byWeek.getBonusType());
 	}
 }
