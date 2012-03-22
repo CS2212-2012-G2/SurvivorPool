@@ -15,7 +15,7 @@ import data.JSONUtils;
 /**
  * This class holds all the bonus questions
  * 
- * @author Ramesh
+ * @author Ramesh Raj
  * 
  */
 public class Bonus extends Observable {

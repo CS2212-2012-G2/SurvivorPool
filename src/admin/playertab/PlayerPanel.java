@@ -139,8 +139,10 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		// Mid
 		// ////////////////////////////
 		List<User> users = GameData.getCurrentGame().getAllUsers();
-		tableModel = new PlayerTableModel(users);
-		table = new JTable(tableModel);
+		table = new JTable();
+		tableModel = new PlayerTableModel(table, users);
+		table.setModel(tableModel);
+		
 		header = table.getTableHeader();
 
 		// ////////////////////////////
@@ -164,7 +166,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		if (users.size() > 0) {
 			setPanelUser(users.get(0), false);
-			table.setRowSelectionInterval(0, 0);
+			tableModel.setRowSelect(0);
 		} else {
 			btnAddNew.doClick(); // programatically click it. :D
 		}
@@ -485,10 +487,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		isNewUser = false;
 		fieldsChanged = false;
-
-		int row = tableModel.getRowByPerson(user);
-		if (row >= 0 && table.getSelectedRow() != row) // select a row
-			table.setRowSelectionInterval(row, row);
+		
+		tableModel.setRowSelect(user);
 	}
 
 	private void buildActions() {
@@ -578,7 +578,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					tableModel.removePerson(u);
 					if (selRow) {
 						row %= table.getRowCount();
-						table.setRowSelectionInterval(row, row);
+						tableModel.setRowSelect(row);
 					} else {
 						btnAddNew.doClick();
 					}
