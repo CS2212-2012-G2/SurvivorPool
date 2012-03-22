@@ -299,8 +299,7 @@ public class BonusPanel extends JPanel implements Observer {
 				if (shortAns){
 					if (txtAnswer.getText().length() > 0 && txtAnswer.getText().length() < 201){
 						answer = txtAnswer.getText();
-						bq = new BonusQuestion(question, answer, null, 
-								true, GameData.getCurrentGame().getCurrentWeek());
+						bq = new BonusQuestion(question, answer, null, GameData.getCurrentGame().getCurrentWeek());
 						initPnlAddQuestion();
 						addQuestionToListing(bq);
 						setQuestionAddingPanelUneditable();
@@ -324,16 +323,16 @@ public class BonusPanel extends JPanel implements Observer {
 						if (txtAnswerD.getText().length() > 0) answers[3] = txtAnswerD.getText();
 						if (rbAnswerA.isSelected()){
 							bq = new BonusQuestion(question, txtAnswerA.getText(), answers, 
-									true, GameData.getCurrentGame().getCurrentWeek());
+									GameData.getCurrentGame().getCurrentWeek());
 						} else if (rbAnswerB.isSelected()){
 							bq = new BonusQuestion(question, txtAnswerB.getText(), answers, 
-									true, GameData.getCurrentGame().getCurrentWeek());
+									GameData.getCurrentGame().getCurrentWeek());
 						} else if (rbAnswerC.isSelected()){
 							bq = new BonusQuestion(question, txtAnswerC.getText(), answers, 
-									true, GameData.getCurrentGame().getCurrentWeek());
+									GameData.getCurrentGame().getCurrentWeek());
 						} else if (rbAnswerD.isSelected()){
 							bq = new BonusQuestion(question, txtAnswerD.getText(), answers, 
-									true, GameData.getCurrentGame().getCurrentWeek());
+									GameData.getCurrentGame().getCurrentWeek());
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
 									"You must select one correct answer."
