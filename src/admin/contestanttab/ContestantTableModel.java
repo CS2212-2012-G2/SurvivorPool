@@ -36,8 +36,8 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 	 * 			maintain data persistance with the two, while allowing order 
 	 * 			manipulation.
 	 */
-	public ContestantTableModel(List<Contestant> _globaldata) {
-		super(_globaldata);
+	public ContestantTableModel(JTable table, List<Contestant> _globaldata) {
+		super(table, _globaldata);
 		
 		columnNames = new String[] {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"

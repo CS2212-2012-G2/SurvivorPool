@@ -138,11 +138,14 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		btnSaveCont = new JButton("Save");
 		
 		//////////////////////////////
-		// Mid
+		// Mid (table!)
 		//////////////////////////////
 		List<Contestant> cons = GameData.getCurrentGame().getAllContestants();
-		tableModel = new ContestantTableModel(cons);
-		table = new JTable(tableModel);
+		
+		table = new JTable();
+		tableModel = new ContestantTableModel(table, cons);
+		table.setModel(tableModel);
+		
 		header = table.getTableHeader();
 		
 		//////////////////////////////
@@ -163,7 +166,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		update(GameData.getCurrentGame(), null);
 		
 		if (cons.size() > 0) {
-			table.setRowSelectionInterval(0, 0);
+			tableModel.setRowSelect(0);
 		} else {
 			setPanelContestant(null, true);
 		}	
@@ -380,6 +383,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		if (isNewContestant) {
 			loadedContestant = new Contestant();
 		} else {
+			if (loadedContestant == c) {
+				return; // don't need to set it then..
+			}
 			loadedContestant = c;
 		}
 		
@@ -402,10 +408,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			
 			//we don't want any rows selected
 			ListSelectionModel m = table.getSelectionModel();
-			int row = table.getSelectedRow();
-			if (row >= 0) {
-				m.removeIndexInterval(row, row);
-			}
+			m.clearSelection();
 
 			return;
 		}
@@ -420,6 +423,8 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		tfContID.setText(c.getID());
 		
 		updateContPicture(c.getPicture());
+		
+		tableModel.setRowSelect(c);
 	}
 	
 	private void saveContestant() throws InvalidFieldException {
@@ -437,10 +442,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		// set that its now NOT a new contestant, and no fields have changed.
 		isNewContestant = false;
 		setFieldsChanged(false);
-		
-		int row = tableModel.getRowByPerson(con);
-		if (row > -1 && table.getSelectedRow() != row)
-			table.setRowSelectionInterval(row, row);
 	}
 	
 	/**
@@ -531,11 +532,19 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {		
-				if (getFieldsChanged()) {
-					try { 
-						saveContestant(); 
-					} catch (InvalidFieldException ex) { }
-				}
+				if (!getFieldsChanged()) 
+					return;
+				
+				try { 
+					saveContestant(); 
+					
+					Contestant c = getContestant(); // this wont cause exception
+					
+					tableModel.setRowSelect(c);
+				} catch (InvalidFieldException ex) {
+					setExceptionError(ex);
+					return;
+				}				
 			}
 			
 		});
@@ -627,7 +636,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					
 					if (selRow && (t != null)) {
 						row %= table.getRowCount();
-						table.setRowSelectionInterval(row, row);
+						tableModel.setRowSelect(row);
 					} else {
 						btnAddCont.doClick();
 					}
@@ -635,18 +644,19 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			}
 		});
 		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-
-			int oldRow = -1; // breaks an infinite loop since setPanelUser fires this event
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 			public void valueChanged(ListSelectionEvent le) {
 				 int row = table.getSelectedRow();
-				 if (row < 0 || oldRow == row) return;
-				 oldRow = row;
+				 if (row < 0) return;
+				// oldRow = row;
 				 
 				 Contestant c = tableModel.getByRow(row);
 			     
 				 if (c != null){
+					 if (getFieldsChanged())
+						 btnSaveCont.doClick();
+					 
 					 setPanelContestant(c, false); 
 				 }
 			}
@@ -691,9 +701,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		run.run();
 		
 		int row = tableModel.getRowByPerson(c);
-		if (row > -1 &&  				// only select if the row is valid
-				table.getSelectedRow() != row) // don't select if it we can't
-			table.setRowSelectionInterval(row, row);	
+		tableModel.setRowSelect(row);	
 	}
 	
 	@Override

@@ -36,8 +36,8 @@ public class PlayerTableModel extends PersonTableModel<User> {
 	 * Creates the table model which controls the table's actions and data.
 	 * @param users The global reference to the actual GameData.
 	 */
-	public PlayerTableModel(List<User> users) {
-		super(users);
+	public PlayerTableModel(JTable table, List<User> users) {
+		super(table, users);
 		
 		columnNames = new String[] { "ID", "Last", "First", "Points", 
 				"Weekly Pick", "Ultimate Pick" };

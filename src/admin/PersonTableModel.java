@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
@@ -35,13 +36,15 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	protected int sortColumn;
 	protected List<P> globalData;
 	
+	protected JTable parent;
+	
 	/**
 	 * Creates the table model which controls the table's actions and data.
 	 * @param _globaldata The global data stored in GameData, this is done to
 	 * 			maintain data persistance with the two, while allowing order 
 	 * 			manipulation.
 	 */
-	public PersonTableModel(List<P> _globaldata) {
+	public PersonTableModel(JTable table, List<P> _globaldata) {
 		columnNames = new String[] {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
@@ -49,6 +52,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		globalData = _globaldata;
 		data = new ArrayList<P>(globalData);
 		
+		parent = table;
 	}
 
 	@Override
@@ -228,6 +232,40 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		sortTable();
 	}
 	
+	private RowSelector curRowSelect;
+	
+	/**
+	 * Helper method that forces only ONE row select per event call. 
+	 * Thus, if multiple sources ask it to change rows, it maintains the old,
+	 * but will invalidate them, thus <i>not</i> allowing them to run. This
+	 * breaks nothing as all those calls do is use up time and memory.
+	 * @param row Row to select
+	 * @throws IndexOutOfBoundsException On row < -1.
+	 */
+	public void setRowSelect(int row) {
+		if (row < -1)
+			throw new IndexOutOfBoundsException();
+		
+		if (curRowSelect != null) {
+			curRowSelect.valid = false;
+		}
+		
+		curRowSelect = new RowSelector(row);
+		
+		SwingUtilities.invokeLater(curRowSelect);
+	}
+	
+	/**
+	 * Helper method for {@link PersonTableModel.setRowSelect(int)} for passing
+	 * a Person in. 
+	 * @param p
+	 */
+	public void setRowSelect(P p) {
+		int r = getRowByPerson(p);
+		
+		setRowSelect(r);
+	}
+	
 	/**
 	 * 
 	 * TODO:
@@ -262,5 +300,30 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	        int r = model.getRowByPerson(p);
 	        table.setRowSelectionInterval(r, r);
 	    }
+	}
+	
+	private class RowSelector implements Runnable {
+
+		protected int row;
+		protected boolean hasRun = false;
+		protected boolean valid = true;
+		
+		public RowSelector(int row) {
+			this.row = row;
+		}
+		
+		@Override
+		public void run() {
+			if (hasRun || !valid) {
+				return;
+			}
+			
+			if (row > -1 && parent.getSelectedRow() != row) {
+				parent.setRowSelectionInterval(row, row);
+			}
+			
+			hasRun = true;
+		}
+		
 	}
 }
