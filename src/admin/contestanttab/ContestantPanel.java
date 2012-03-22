@@ -504,15 +504,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (getFieldsChanged()) {
-					try {
-						saveContestant();
-					} catch (InvalidFieldException ex) {
-						setExceptionError(ex);
-						return;
-					}
-				}
-				
 				GameData g = GameData.getCurrentGame();
 				// check if too many contestants
 				if(g.getAllContestants().size() == g.getInitialContestants()) {
@@ -520,6 +511,15 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 							                      "number of contestants in the game.  To add another " +
 							                      "you must delete an existing contestant.");
 					return;
+				}
+				
+				if (getFieldsChanged()) {
+					try {
+						saveContestant();
+					} catch (InvalidFieldException ex) {
+						setExceptionError(ex);
+						return;
+					}
 				}
 				
 				isNewContestant = true;
@@ -549,12 +549,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					c = getContestant();
 				} catch (InvalidFieldException ie) {
 					// FIXME: Intelligently respond on the exception.
-					// In theory, it shouldn't happen, but we can't cast
-					// someone with an invalid ID.. :/
+					// In theory, it shouldn't happen, but we shouldn't cast
+					// someone who isn't fully in the game.. :/
 					return;
-					//if (ie.getField() != Field.CONT_ID) {
-					//	setExceptionError(ie);
-					//}
 				}
 				
 				if(s.equals("Cast Off")){
@@ -565,6 +562,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 								                       "cast first, and then cast off the correct one.");
 						return;
 					}
+					
 					// can't cast off someone already off.
 					if (c.isCastOff()) {
 						JOptionPane.showMessageDialog(null,"This person is already out of the game.");
@@ -607,6 +605,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 										tfContID);
 							return;
 						}
+						System.out.println("Delete contestant, exception");
 					}
 	
 					// actually delete the contestant
@@ -614,13 +613,19 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					// get the contestant by the ID passed 
 					Contestant t = g.getContestant(c.getID());
 					
+					if (t == null) {
+						System.out.println("We goofed really badly.");
+						throw new NullPointerException("Could not get " +
+								"contestant from game data.");
+					}
+					
 					int row = tableModel.getRowByPerson(t);
 					boolean selRow = (table.getRowCount() > 1);
 					
 					// remove the contestant from the game
 					tableModel.removePerson(t);
 					
-					if (selRow) {
+					if (selRow && (t != null)) {
 						row %= table.getRowCount();
 						table.setRowSelectionInterval(row, row);
 					} else {

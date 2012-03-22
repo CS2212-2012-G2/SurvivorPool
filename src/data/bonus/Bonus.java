@@ -8,8 +8,9 @@ import data.me.json.JSONObject;
 
 /**
  * This class holds all the bonus questions
- * @author Ramesh
- *
+ * 
+ * @author Ramesh Raj
+ * 
  */
 public class Bonus {
 
