@@ -30,12 +30,8 @@ public class BonusQuestion {
 	protected String answer;
 	protected String[] choices; // TODO: can we somehow implement short answer
 								// and mc together without this?
-<<<<<<< HEAD
-	protected String week;
-	protected String number;
-=======
 	protected int week;
->>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
+	protected int number;
 
 	public static final String FILE_PATH = "res/data/bonus.dat";
 	protected static final String KEY_TYPE = "type";
@@ -58,23 +54,13 @@ public class BonusQuestion {
 	 *            The possible choices(null from short answer, and actual values
 	 *            for MC)
 	 */
-<<<<<<< HEAD
-	public BonusQuestion(String prompt, String answer, String[] choices,
-			boolean active, int week, int number) {
-=======
-	public BonusQuestion(String prompt, String answer, String[] choices,int week) {
->>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
+	public BonusQuestion(String prompt, String answer, String[] choices, int week, int number) {
 		this.prompt = prompt;
 		this.answer = answer;
 		this.choices = choices;
 		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
-<<<<<<< HEAD
-		this.active = active;
-		this.week = Integer.toString(week);
-		this.number = Integer.toString(number);
-=======
 		this.week = week;
->>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
+		this.number = number;
 		Bonus.addNewQuestion(this);
 		// TODO: do we need to check if answer is in choices?
 	}
@@ -183,7 +169,7 @@ public class BonusQuestion {
 	 * @return int
 	 */
 	public int getNumber() {
-		return Integer.parseInt(number);
+		return number;
 	}
 
 	/**
@@ -191,7 +177,7 @@ public class BonusQuestion {
 	 * 
 	 * @param number
 	 */
-	public void setNumber(String number) {
+	public void setNumber(int number) {
 		this.number = number;
 	}
 	
@@ -237,13 +223,9 @@ public class BonusQuestion {
 			}
 			setChoices(choice);
 		}
-<<<<<<< HEAD
-		setWeek((String)o.get(KEY_WEEK));
-		setNumber((String)o.get(KEY_NUMBER));
-=======
+		setWeek((Integer)o.get(KEY_WEEK));
+		setNumber((Integer)o.get(KEY_NUMBER));
 		setWeek(((Number)o.get(KEY_WEEK)).intValue());
-
->>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
 	}
 	
 	/** 
@@ -254,36 +236,24 @@ public class BonusQuestion {
 	 */
 	public static void main(String[] args) throws ParseException, FileNotFoundException {
 		/*	************to json test*********************/
-<<<<<<< HEAD
-		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, true, 3, 1);
+		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, 3, 1);
 		String shortActive = b.toJSONObject().toString();
 		System.out.println(shortActive);
 
-		b = new BonusQuestion("question week 2", "answer", null, false, 2, 1);
-=======
-		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, 3);
-		String shortActive = b.toJSONObject().toString();
-		System.out.println(shortActive);
+		b = new BonusQuestion("question week 2", "answer", null, 2, 1);
 
-		b = new BonusQuestion("question week 2", "answer", null, 2);
->>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
+		b = new BonusQuestion("question week 2", "answer", null, 2, 1);
 		String shortNotActive = b.toJSONObject().toString();
 		System.out.println(shortNotActive);
 
 		String[] choices = { "one", "two", "three", "answer" };
-<<<<<<< HEAD
-		b = new BonusQuestion("question week 4", "answer", choices, true, 4, 1);
+
+		b = new BonusQuestion("question week 1", "answer", choices, 1, 1);
+		b = new BonusQuestion("question week 4", "answer", choices, 4, 2);
 		String mcActive = b.toJSONObject().toString();
 		System.out.println(mcActive);
 
-		b = new BonusQuestion("question week 1", "answer", choices, false, 1, 1);
-=======
-		b = new BonusQuestion("question week 4", "answer", choices,4);
-		String mcActive = b.toJSONObject().toString();
-		System.out.println(mcActive);
-
-		b = new BonusQuestion("question week 1", "answer", choices,1);
->>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
+		b = new BonusQuestion("question week 1", "answer", choices, 1, 2);
 		String mcNotActive = b.toJSONObject().toString();
 		System.out.println(mcNotActive);
 		
