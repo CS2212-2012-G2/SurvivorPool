@@ -342,7 +342,6 @@ public class GameData extends Observable {
 			if (u.getUltimatePick().equals(c) && this.isSeasonEnded()){
 				u.addPoints(u.getUltimatePoints());
 			}
-			itr.next();
 		}
 
 		updatedComponent = Field.ALLOCATE_POINTS;

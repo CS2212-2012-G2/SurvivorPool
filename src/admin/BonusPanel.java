@@ -257,7 +257,7 @@ public class BonusPanel extends JPanel implements Observer {
 		spnWeek.addChangeListener(clWeek);
 	}
 	
-	private void setQuestionSpinner(int week, int qValue, int qMax){
+	private void setQuestionSpinner(int week, int qValue, int qMax) {
 		spnQuestion.removeChangeListener(clQuestion);
 		snmQuestion.setMaximum(qMax);
 		snmQuestion.setValue(qValue);
@@ -420,6 +420,8 @@ public class BonusPanel extends JPanel implements Observer {
 						bq = new BonusQuestion(question, answer, null, 
 								true, currentWeek, 
 								currentQuestionNumber);
+						answer = txtAnswer.getText();
+						bq = new BonusQuestion(question, answer, null, GameData.getCurrentGame().getCurrentWeek());
 						initPnlAddQuestion();
 						addQuestionToListing(bq);
 						modifyBonusQuestion = false;
@@ -443,6 +445,29 @@ public class BonusPanel extends JPanel implements Observer {
 							initPnlAddQuestion();
 							addQuestionToListing(bq);
 							modifyBonusQuestion = false;
+					if ((txtAnswerA.getText().length() > 0 && txtAnswerA.getText().length() < 201)
+							|| (txtAnswerB.getText().length() > 0 && txtAnswerB.getText().length() < 201)
+							|| (txtAnswerC.getText().length() > 0 && txtAnswerC.getText().length() < 201)
+							|| (txtAnswerD.getText().length() > 0 && txtAnswerD.getText().length() < 201)
+							&& txtAnswerA.getText().length() < 201 && txtAnswerB.getText().length() < 201
+							&& txtAnswerC.getText().length() < 201 && txtAnswerD.getText().length() < 201){
+						String[] answers = new String[4];
+						if (txtAnswerA.getText().length() > 0) answers[0] = txtAnswerA.getText();
+						if (txtAnswerB.getText().length() > 0) answers[1] = txtAnswerB.getText();
+						if (txtAnswerC.getText().length() > 0) answers[2] = txtAnswerC.getText();
+						if (txtAnswerD.getText().length() > 0) answers[3] = txtAnswerD.getText();
+						if (rbAnswerA.isSelected()){
+							bq = new BonusQuestion(question, txtAnswerA.getText(), answers, 
+									GameData.getCurrentGame().getCurrentWeek());
+						} else if (rbAnswerB.isSelected()){
+							bq = new BonusQuestion(question, txtAnswerB.getText(), answers, 
+									GameData.getCurrentGame().getCurrentWeek());
+						} else if (rbAnswerC.isSelected()){
+							bq = new BonusQuestion(question, txtAnswerC.getText(), answers, 
+									GameData.getCurrentGame().getCurrentWeek());
+						} else if (rbAnswerD.isSelected()){
+							bq = new BonusQuestion(question, txtAnswerD.getText(), answers, 
+									GameData.getCurrentGame().getCurrentWeek());
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
 									"You must select one correct answer."

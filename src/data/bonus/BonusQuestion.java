@@ -1,6 +1,9 @@
 package data.bonus;
 
+import java.io.FileNotFoundException;
 import java.util.List;
+
+import data.JSONUtils;
 
 import json.simple.JSONArray;
 import json.simple.JSONObject;
@@ -24,18 +27,20 @@ public class BonusQuestion {
 	protected BONUS_TYPE bonusType;
 
 	protected String prompt;
-	protected boolean active;
 	protected String answer;
 	protected String[] choices; // TODO: can we somehow implement short answer
 								// and mc together without this?
+<<<<<<< HEAD
 	protected String week;
 	protected String number;
+=======
+	protected int week;
+>>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
 
 	public static final String FILE_PATH = "res/data/bonus.dat";
 	protected static final String KEY_TYPE = "type";
 	protected static final String KEY_PROMPT = "prompt";
 	protected static final String KEY_ANSWER = "answer";
-	protected static final String KEY_ACTIVE = "active";
 	protected static final String KEY_CHOICES = "mc_choices";// TODO:need a
 																// better name
 																// for type
@@ -53,15 +58,23 @@ public class BonusQuestion {
 	 *            The possible choices(null from short answer, and actual values
 	 *            for MC)
 	 */
+<<<<<<< HEAD
 	public BonusQuestion(String prompt, String answer, String[] choices,
 			boolean active, int week, int number) {
+=======
+	public BonusQuestion(String prompt, String answer, String[] choices,int week) {
+>>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
 		this.prompt = prompt;
 		this.answer = answer;
 		this.choices = choices;
 		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
+<<<<<<< HEAD
 		this.active = active;
 		this.week = Integer.toString(week);
 		this.number = Integer.toString(number);
+=======
+		this.week = week;
+>>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
 		Bonus.addNewQuestion(this);
 		// TODO: do we need to check if answer is in choices?
 	}
@@ -109,24 +122,6 @@ public class BonusQuestion {
 	}
 
 	/**
-	 * Returns if the question is still active
-	 * 
-	 * @return
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
-	 * Set if question is active
-	 * 
-	 * @param active
-	 */
-	public void setActive(boolean active) {
-		this.active = active;
-	}
-
-	/**
 	 * Get the answer to the question
 	 * 
 	 * @return
@@ -160,7 +155,8 @@ public class BonusQuestion {
 	 */
 	public void setChoices(String[] choices) {
 		this.choices = choices;
-		bonusType = BONUS_TYPE.MULTI;
+		if(choices!=null)
+			bonusType = BONUS_TYPE.MULTI;
 	}
 
 	/**
@@ -169,7 +165,7 @@ public class BonusQuestion {
 	 * @return int
 	 */
 	public int getWeek() {
-		return Integer.parseInt(week);
+		return week;
 	}
 
 	/**
@@ -177,7 +173,7 @@ public class BonusQuestion {
 	 * 
 	 * @param week
 	 */
-	public void setWeek(String week) {
+	public void setWeek(int week) {
 		this.week = week;
 	}
 	
@@ -221,7 +217,6 @@ public class BonusQuestion {
 			obj.put(KEY_CHOICES, null);
 		}
 
-		obj.put(KEY_ACTIVE, active);
 		obj.put(KEY_WEEK, week);
 		obj.put(KEY_NUMBER, number);
 		return obj;
@@ -231,7 +226,6 @@ public class BonusQuestion {
 
 		setPrompt((String)o.get(KEY_PROMPT));
 		setAnswer((String)o.get(KEY_ANSWER));
-		setActive((Boolean)o.get(KEY_ACTIVE));
 
 		JSONArray jChoices = (JSONArray)o.get(KEY_CHOICES);
 		if (jChoices == null) {
@@ -243,31 +237,53 @@ public class BonusQuestion {
 			}
 			setChoices(choice);
 		}
+<<<<<<< HEAD
 		setWeek((String)o.get(KEY_WEEK));
 		setNumber((String)o.get(KEY_NUMBER));
+=======
+		setWeek(((Number)o.get(KEY_WEEK)).intValue());
+
+>>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
 	}
 	
 	/** 
 	 * Drive for BonusQuestion
 	 * @param args
 	 * @throws ParseException
+	 * @throws FileNotFoundException 
 	 */
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws ParseException, FileNotFoundException {
 		/*	************to json test*********************/
+<<<<<<< HEAD
 		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, true, 3, 1);
 		String shortActive = b.toJSONObject().toString();
 		System.out.println(shortActive);
 
 		b = new BonusQuestion("question week 2", "answer", null, false, 2, 1);
+=======
+		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, 3);
+		String shortActive = b.toJSONObject().toString();
+		System.out.println(shortActive);
+
+		b = new BonusQuestion("question week 2", "answer", null, 2);
+>>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
 		String shortNotActive = b.toJSONObject().toString();
 		System.out.println(shortNotActive);
 
 		String[] choices = { "one", "two", "three", "answer" };
+<<<<<<< HEAD
 		b = new BonusQuestion("question week 4", "answer", choices, true, 4, 1);
 		String mcActive = b.toJSONObject().toString();
 		System.out.println(mcActive);
 
 		b = new BonusQuestion("question week 1", "answer", choices, false, 1, 1);
+=======
+		b = new BonusQuestion("question week 4", "answer", choices,4);
+		String mcActive = b.toJSONObject().toString();
+		System.out.println(mcActive);
+
+		b = new BonusQuestion("question week 1", "answer", choices,1);
+>>>>>>> 91846a4d181a8aee45b41eb24d4dcb4148ed063d
 		String mcNotActive = b.toJSONObject().toString();
 		System.out.println(mcNotActive);
 		
@@ -305,5 +321,12 @@ public class BonusQuestion {
 		
 		BonusQuestion byWeek = Bonus.getQuestionByWeek(2);
 		System.out.println(byWeek.getPrompt());
+		System.out.println(byWeek.getBonusType());
+		System.out.println(Bonus.toJSONObject().toJSONString());
+		JSONUtils.writeJSON(Bonus.filePath, Bonus.toJSONObject());
+		JSONObject fileO = JSONUtils.readFile(Bonus.filePath+".as");
+		System.out.println(fileO.toJSONString());
+		Bonus.fromJSONObject(fileO);
+		
 	}
 }
