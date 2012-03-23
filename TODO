@@ -13,13 +13,8 @@ Admin (SWING)
 			~ I've gone through and checked all the input textfields, and they all seem to
 			meet the project requirements. Is this an old TODO or is someone thinking
 			of implementing a different way? - Jon
-			
-		- On a user input error, pass the component in error (or the associated 
-		  	label) to a method in MainFrame that will some how show that its 
-		  	invalid.
-		  	~ Perhaps set the text to be Color.RED? This would be refreshed to 
-		  		normal next time they try to save input 
-		  	~ Is this one old as well? - Jon
+			~ No, this was to proactively stop people. But I think we
+			  can scrap this since we have the warnings. - kb
 		
 	Main.java
 		
@@ -30,48 +25,32 @@ Admin (SWING)
 			- Set how to iterate updating items, easiest is probably setting most objects to have transparent backgrounds
 				~ would theses all be set on low priority due to the 
 				 	TA's comments on us already meeting the style requirement? - Jon
+				~ this is already done, the themes at start
+				  is not, but I asked justin and he claimed to
+				  want to do it. - kb
 		
-	GeneralPanel.java
-	
-		- MAKE IT LOOK BETTER!
-			~ I don't see what else we could improve on, at least in the context of our assignment requirements. 
-				If you have a specific suggestion, add it in please - Jon
-		
-	data
-	~~~~
-		- Document ComparatorFactory (its piss easy.)
-
 	ContestantPanel
 	~~~~~~~~~~~~~~~
 	
-		- Get the table to reselect the row after you reorder the columns
-		- Add a way to change the cast off date
-		- Implement loading a "blank" contestant when clicking add
+		- Add a way to change the cast off date - IMPORTANT
 	
 	PlayerPanel
 	~~~~~~~~~~~
-		- Add focus events to highlight the text in the box. Its annoying
-		  having to manually highlight the text. Obviously low priority
 		
 	SeasonCreatePanel.java
 		
 		- MAKE IT LOOK BETTER!
 			~ I'm pretty happy with how it looks now, what were you thinking of improving? - Jon
+			~ You guessed it, old! - kb
 
-	- MAKE THEME ACTUALLY LOOK GOOD(LOW PRIORITY)
-		~ I think they already look good.. (Kevin)
-		~ Agreed, and the TA in the meeting said ours met the quality needed - Jon
 
 Data
 ----
 
-	GameData
-		- Check what needs to be abstracted and what doesn't
-		- JSON might not need to be
-		- Sorting will need to be done in the subclass and methods overridden where necessary
-		
-	Contestant & User
-		- Make as little abstract as possible (saves time for Jon)
-			~ With J2ME JSON, one should be able to use all the same JSON methods
-			~ Pretty sure admin version is obsolete
+  - Document everything fully (javadoc), inline comments for clarity
+
+  GameData
+  ~~~~~~~~
+    - History restructure
+
 		
