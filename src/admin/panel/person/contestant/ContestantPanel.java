@@ -165,6 +165,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		
 		table.setModel(tableModel);
 		table.setRowSorter(sort);
+		sort.toggleSortOrder(ContestantTableModel.INDEX_ID);
 		
 		header = table.getTableHeader();
 
@@ -662,25 +663,20 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 						}
 						System.out.println("Delete contestant, exception");
 					}
-
-					// actually delete the contestant
-					GameData g = GameData.getCurrentGame();
-					// get the contestant by the ID passed
-					Contestant t = g.getContestant(c.getID());
 					
-					if (t == null) {
+					if (c == null) {
 						System.out.println("We goofed really badly.");
 						throw new NullPointerException("Could not get " +
 								"contestant from game data.");
 					}
 					
-					int row = tableModel.getRowByPerson(t);
+					int row = tableModel.getRowByPerson(c);
 					boolean selRow = (table.getRowCount() > 1);
 
 					// remove the contestant from the game
-					tableModel.removePerson(t);
+					tableModel.removePerson(c);
 					
-					if (selRow && (t != null)) {
+					if (selRow && (c != null)) {
 						row %= table.getRowCount();
 						tableModel.setRowSelect(row, false);
 					} else {

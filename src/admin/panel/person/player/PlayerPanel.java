@@ -157,9 +157,11 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		tableModel = new PlayerTableModel(table, users);
 		TableRowSorter<PersonTableModel<User>> sort = 
 				new TableRowSorter<PersonTableModel<User>>(tableModel);
+		
 		tableModel.setComparators(sort);
 		table.setModel(tableModel);
 		table.setRowSorter(sort);
+		sort.toggleSortOrder(PlayerTableModel.INDEX_ID);
 		
 		header = table.getTableHeader();
 

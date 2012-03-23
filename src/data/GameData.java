@@ -231,16 +231,8 @@ public class GameData extends Observable {
 	 */
 	public void removeContestant(Contestant target) {
 		// is the contestant there?
-		int i = Utils.BinSearchSafe(allContestants, (Contestant) target,
-				Utils.CompType.CONTNT_ID);
-
-		if (i < 0) {
-			// i < 0 implies not found.
-			return;
-		}
-
-		allContestants.remove(i);
-		updateSortAllContestants(Utils.CompType.CONTNT_ID);
+		allContestants.remove(target);
+		Collections.sort(allContestants);
 
 		updatedComponent = Field.REMOVE_CONTESTANT;
 		setChanged();
@@ -287,12 +279,7 @@ public class GameData extends Observable {
 	 *            User to remove.
 	 */
 	public void removeUser(User u) {
-		for (User arrU : allUsers) {
-			if (u.getID().equals(arrU.getID())) {
-				allUsers.remove(arrU);
-				return;
-			}
-		}
+		allUsers.remove(u);
 
 		updatedComponent = Field.REMOVE_USER;
 		setChanged();
