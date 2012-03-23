@@ -18,7 +18,6 @@ Admin (SWING)
 		
 	Main.java
 		
-		- CHANGE TAB SIZE
 		- IMPLEMENT THEMES
 			- MARK WHICH THEME IS ACTIVE AT START
 				activeTheme.setSelected() or could use doClick() which would programatically call the action listener associated
