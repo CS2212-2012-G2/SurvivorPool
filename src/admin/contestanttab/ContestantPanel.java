@@ -145,9 +145,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		// buttons:
 		btnCastOff = new JButton("Cast Off");
 		/* check to stop casting off before start */
-		if (!GameData.getCurrentGame().isSeasonStarted())
+		if (!GameData.getCurrentGame().isSeasonStarted()) {
 			btnCastOff.setEnabled(false);
-		
+		}
 		btnSaveCon = new JButton("Save");
 		
 		//////////////////////////////
@@ -424,7 +424,11 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		tfContID.setEnabled(!g.isSeasonStarted());
 
 		btnCastOff.setEnabled(!isNewContestant);
-
+		
+		// delete button activation
+		btnDelCon.setEnabled(table.getRowCount() > 0);
+			
+		
 		if (newContestant || c == null) {
 			// set default values
 			tfContID.setText("");
@@ -460,7 +464,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 	private void saveContestant() throws InvalidFieldException {
 		Contestant con = null;
-
+		
+		// when a contestant is added, delete becomes active
+		btnDelCon.setEnabled(true);
 		try {
 			con = getContestant();
 
@@ -539,6 +545,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				GameData g = GameData.getCurrentGame();
+				
 				// check if too many contestants
 				if (g.getAllContestants().size() == g.getInitialContestants()) {
 					JOptionPane.showMessageDialog(
@@ -558,7 +565,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 						return;
 					}
 				}
-				
+
 				isNewContestant = true;
 				setPanelContestant(null, true);
 			}
@@ -643,6 +650,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 				if (response == JOptionPane.YES_OPTION) {
 					// user said they want to delete contestant
+					
 					Contestant c = null;
 					try {
 						c = getContestant();
