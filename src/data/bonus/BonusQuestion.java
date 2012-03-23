@@ -223,9 +223,8 @@ public class BonusQuestion {
 			}
 			setChoices(choice);
 		}
-		setWeek((Integer)o.get(KEY_WEEK));
-		setNumber((Integer)o.get(KEY_NUMBER));
 		setWeek(((Number)o.get(KEY_WEEK)).intValue());
+		setNumber(((Number)o.get(KEY_NUMBER)).intValue());
 	}
 	
 	/** 
