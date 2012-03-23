@@ -95,12 +95,16 @@ public class BonusPanel extends JPanel implements Observer {
 	private ChangeListener clWeek;
 	private ChangeListener clQuestion;
 	
+	/**
+	 * Constructor for Bonus Panel
+	 */
 	public BonusPanel() {
 		this.setLayout(new BorderLayout());
 		currentQuestion = "";
 		initPnlAddQuestion();
 		initPnlQuestionListing();
 		
+		//check if bonus questions already exist
 		if (Bonus.getAllQuestions().isEmpty()){
 			setQuestionAddingPanelUneditable();
 			btnModify.setEnabled(false);
@@ -112,6 +116,9 @@ public class BonusPanel extends JPanel implements Observer {
 		GameData.getCurrentGame().addObserver(this);
 	}
 
+	/**
+	 * construct the top panel
+	 */
 	private void initPnlAddQuestion() {
 		pnlNewQ.removeAll();
 		pnlTypeQ.removeAll();
@@ -149,6 +156,9 @@ public class BonusPanel extends JPanel implements Observer {
 		this.revalidate();
 	}
 	
+	/**
+	 * construct the short answer question adding panel
+	 */
 	private void initPnlAddShortAnswer() {
 		pnlNewQ.removeAll();
 		pnlTypeQ.removeAll();
@@ -171,6 +181,9 @@ public class BonusPanel extends JPanel implements Observer {
 		this.revalidate();
 	}
 	
+	/**
+	 * construct the multiple choice answer adding panel
+	 */
 	private void initPnlAddMultipleAnswer() {
 		pnlNewQ.removeAll();
 		pnlTypeQ.removeAll();
@@ -217,6 +230,9 @@ public class BonusPanel extends JPanel implements Observer {
 		this.revalidate();
 	}
 	
+	/**
+	 * construct the questing LISTING panel
+	 */
 	private void initPnlQuestionListing() {		
 		pnlListQ.setLayout(new BorderLayout());
 		pnlListWeeks.setPreferredSize(new Dimension(640, 200));
@@ -241,6 +257,11 @@ public class BonusPanel extends JPanel implements Observer {
 		this.add(pnlListQ, BorderLayout.SOUTH);
 	}
 	
+	/**
+	 * add the indicated bonus question to the LISTING panel 
+	 * 		basically, turn the bonus question into readable text
+	 * @param q
+	 */
 	private void addQuestionToListing(BonusQuestion q) {
 		currentQuestion = 
 			"Week: " + "\t\t" + q.getWeek() + "\n" + 
@@ -251,13 +272,23 @@ public class BonusPanel extends JPanel implements Observer {
 		txtQuestionList.setText(currentQuestion);
 	}
 	
-	private void setWeekSpinner(int week, int question) {
+	/**
+	 * set the value, and maximum value of the WEEK spinner
+	 * @param wValue
+	 * @param wMax
+	 */
+	private void setWeekSpinner(int wValue, int wMax) {
 		spnWeek.removeChangeListener(clWeek);
-		weekModel.setMaximum(week);
-		weekModel.setValue(question);
+		weekModel.setValue(wValue);
+		weekModel.setMaximum(wMax);
 		spnWeek.addChangeListener(clWeek);
 	}
 	
+	/**
+	 * set the value and maximum value of the QUESTION spinner
+	 * @param qValue
+	 * @param qMax
+	 */
 	private void setQuestionSpinner(int qValue, int qMax) {
 		spnQuestion.removeChangeListener(clQuestion);
 		snmQuestion.setValue(qValue);
@@ -265,6 +296,9 @@ public class BonusPanel extends JPanel implements Observer {
 		spnQuestion.addChangeListener(clQuestion);
 	}
 	
+	/**
+	 * sets components in the questing adding panel to UNEDITABLE
+	 */
 	private void setQuestionAddingPanelUneditable(){
 		txtQuestion.setEnabled(false);
 		rbMultChoice.setEnabled(false);
@@ -272,6 +306,9 @@ public class BonusPanel extends JPanel implements Observer {
 		btnNext.setEnabled(false);
 	}
 	
+	/**
+	 * sets components in the questing adding panel to EDITABLE
+	 */
 	private void setQuestionAddingPanelEditable(){
 		txtQuestion.setEnabled(true);
 		rbMultChoice.setEnabled(true);
@@ -279,13 +316,19 @@ public class BonusPanel extends JPanel implements Observer {
 		btnNext.setEnabled(true);
 	}
 	
+	/**
+	 * loads the question adding panel with the current bonus question
+	 */
 	private void setQuestionAddingPanel(){
 		setQuestionAddingPanelEditable();
 		txtQuestion.setText(bq.getPrompt());
 		modifyBonusQuestion = true;
 	}
 	
-	private void setAnswerAddingPanel(int week, int num){
+	/**
+	 * loads the answer adding panel with the current bonus question
+	 */
+	private void setAnswerAddingPanel(){
 		if (rbMultChoice.isSelected() && bq.getChoices() != null){
 			txtAnswerA.setText(bq.getChoices()[0]);
 			txtAnswerB.setText(bq.getChoices()[1]);
@@ -296,6 +339,11 @@ public class BonusPanel extends JPanel implements Observer {
 		}
 	}
 	
+	/**
+	 * returns the correct answer of a multiple choice question, 
+	 * 		indicated by the selected radio button
+	 * @return
+	 */
 	private String getMultiAnswer(){
 		if (rbAnswerA.isSelected()){
 			return txtAnswerA.getText();
@@ -308,6 +356,10 @@ public class BonusPanel extends JPanel implements Observer {
 		} else return null;
 	}
 	
+	/**
+	 * returns a string array of the multiple choice answers
+	 * @return answers
+	 */
 	private String[] getMultiAnswerArray(){
 		String[] answers = new String[4];
 		if (txtAnswerA.getText().length() > 0) answers[0] = txtAnswerA.getText();
@@ -317,6 +369,11 @@ public class BonusPanel extends JPanel implements Observer {
 		return answers;
 	}
 	
+	/**
+	 * checks if all multiple choice answers are 1-200 characters 
+	 * 		AND if at least one answer exists
+	 * @return
+	 */
 	private Boolean getValidMultiAnswers() {
 		return (txtAnswerA.getText().length() > 0 && txtAnswerA.getText().length() < 201)
 		|| (txtAnswerB.getText().length() > 0 && txtAnswerB.getText().length() < 201)
@@ -326,32 +383,119 @@ public class BonusPanel extends JPanel implements Observer {
 		&& txtAnswerC.getText().length() < 201 && txtAnswerD.getText().length() < 201;
 	}
 	
+	/**
+	 * checks if a textfield is 1-200 characters
+	 * @param t
+	 * @return true if text is 1-200 char
+	 */
+	private Boolean getValidQuestionOrAnswer(JTextField t){
+		return (t.getText().length() > 0 && t.getText().length() < 201);
+	}
+	
+	/**
+	 * adds a new short answer question:
+	 * 		sets Question spinner,
+	 * 		adds bonus question to backend,
+	 * 		resets question adding panel,
+	 * 		adds question to the gui LIST
+	 */
+	private void addNewShortAnswer() {
+		if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;					
+		setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+		answer = txtAnswer.getText();						
+		bq = new BonusQuestion(question, answer, null, 
+				currentWeek, currentQuestionNumber);
+		initPnlAddQuestion();
+		addQuestionToListing(bq);
+		btnModify.setEnabled(true);
+		modifyBonusQuestion = false;
+	}
+	
+	/**
+	 * adds a new multiple choice question:
+	 * 		sets the question spinner,
+	 * 		adds the bonus question to backend,
+	 * 		sets gui fields
+	 * @param answer: the correct answer
+	 * @param answers: the list of possible answers
+	 */
+	private void addNewMultipleChoice(String answer, String[] answers){
+		if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;
+		setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+		bq = new BonusQuestion(question, answer, answers, 
+				currentWeek, currentQuestionNumber);
+		initPnlAddQuestion();
+		addQuestionToListing(bq);
+		btnModify.setEnabled(true);
+		modifyBonusQuestion = false;
+	}
+
+	/**
+	 * modifies the current short answer question & 
+	 * 		sets appropriate gui fields.
+	 */
+	private void modifyShortAnswer(){
+		bq.setAnswer(txtAnswer.getText());
+		bq.setChoices(null);
+		bq.setBonusType(BONUS_TYPE.SHORT);
+		initPnlAddQuestion();
+		addQuestionToListing(bq);
+		modifyBonusQuestion = false;
+	}
+	
+	/**
+	 * modifies the current multiple choice bonus question &
+	 * 		resets appropriate gui fields.
+	 * @param answer
+	 * @param answers
+	 */
+	private void modifyMultipleChoice(String answer, String[] answers){
+		bq.setAnswer(answer);
+		bq.setChoices(answers);
+		bq.setBonusType(BONUS_TYPE.MULTI);
+		initPnlAddQuestion();
+		addQuestionToListing(bq);
+		modifyBonusQuestion = false;
+	}
+	
+	/**
+	 * initialise the bonus panel if bonus questions already exist
+	 */
 	private void initExistingBonus() {
 		currentWeek = GameData.getCurrentGame().getCurrentWeek();
 		currentQuestionNumber = 1;
 		bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
-		setWeekSpinner(currentWeek, currentQuestionNumber);
+		setWeekSpinner(currentWeek, GameData.getCurrentGame().getCurrentWeek());
 		snmQuestion.setMaximum(Bonus.getNumQuestionsInWeek(currentWeek));
 		snmQuestion.setValue(1);
 		addQuestionToListing(bq);
 	}
 	
+	/**
+	 * initialises all of the listeners
+	 */
 	private void initListeners(){
 		
 		btnNext.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				if (txtQuestion.getText().length() > 0 && txtQuestion.getText().length() < 201){
+				if (getValidQuestionOrAnswer(txtQuestion)){
+					
 					question = txtQuestion.getText();
+					
 					if (rbShortAnswer.isSelected()){
+						
 						shortAns = true;
 						initPnlAddShortAnswer();	
-						if (modifyBonusQuestion) setAnswerAddingPanel(currentWeek, currentQuestionNumber);
+						if (modifyBonusQuestion) setAnswerAddingPanel();
+						
 					} else if (rbMultChoice.isSelected()){
+						
 						shortAns = false;
 						initPnlAddMultipleAnswer();
-						if (modifyBonusQuestion) setAnswerAddingPanel(currentWeek, currentQuestionNumber);
+						if (modifyBonusQuestion) setAnswerAddingPanel();
+						
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"You must select a question type."
@@ -369,33 +513,31 @@ public class BonusPanel extends JPanel implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent ae) {
+				// enter if we are modifying a question
 				if (modifyBonusQuestion){
 					bq.setPrompt(txtQuestion.getText());
+					
+					// is it a short answer?
 					if (shortAns){
-						if (txtAnswer.getText().length() > 0 && txtAnswer.getText().length() < 201){
-							bq.setAnswer(txtAnswer.getText());
-							bq.setChoices(null);
-							bq.setBonusType(BONUS_TYPE.SHORT);
-							initPnlAddQuestion();
-							addQuestionToListing(bq);
-							modifyBonusQuestion = false;
+						if (getValidQuestionOrAnswer(txtAnswer)){
+							
+							modifyShortAnswer();
+							
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
 									"Your answer must be 1-200 characters."
 											+ " (invalid answer)", txtAnswer);
-							return;
 						}
+						// otherwise it is a multiple choice question
 					} else {
 						if (getValidMultiAnswers()){
+							
 							String[] answers = getMultiAnswerArray();	
 							String a = getMultiAnswer();
+							
 							if (a != null){
-								bq.setAnswer(a);
-								bq.setChoices(answers);
-								bq.setBonusType(BONUS_TYPE.MULTI);
-								initPnlAddQuestion();
-								addQuestionToListing(bq);
-								modifyBonusQuestion = false;
+								
+								modifyMultipleChoice(a, answers);
 							} else {
 								MainFrame.getRunningFrame().setStatusErrorMsg(
 										"You must select one correct answer."
@@ -409,23 +551,18 @@ public class BonusPanel extends JPanel implements Observer {
 							return;
 						}
 					}
+					//otherwise, we are adding a NEW bonus question
 				} else if (shortAns){
-					if (txtAnswer.getText().length() > 0 && txtAnswer.getText().length() < 201){
-						if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;					
-						setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
-						answer = txtAnswer.getText();						
-						bq = new BonusQuestion(question, answer, null, 
-								currentWeek, currentQuestionNumber);
-						answer = txtAnswer.getText();
-						initPnlAddQuestion();
-						addQuestionToListing(bq);
-						btnModify.setEnabled(true);
-						modifyBonusQuestion = false;
+					if (getValidQuestionOrAnswer(txtAnswer)){
+						
+						addNewShortAnswer();
+						
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"Your answer must be 1-200 characters."
 										+ " (invalid answer)", txtAnswer);
 					}
+					// otherwise, we are adding a NEW MULTIPLE CHOICE
 				} else {
 					if (getValidMultiAnswers()){
 				
@@ -433,19 +570,11 @@ public class BonusPanel extends JPanel implements Observer {
 						String a = getMultiAnswer();
 						
 						if (a != null){
-							if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;
-							setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
-							bq = new BonusQuestion(question, a, answers, 
-									currentWeek, currentQuestionNumber);
-							initPnlAddQuestion();
-							addQuestionToListing(bq);
-							btnModify.setEnabled(true);
-							modifyBonusQuestion = false;
+							addNewMultipleChoice(a, answers);
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
 									"You must select one correct answer."
 											+ " (correct answer unselected)", rbAnswerA, rbAnswerB, rbAnswerC, rbAnswerD);
-							return;
 						}
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
@@ -536,7 +665,7 @@ public class BonusPanel extends JPanel implements Observer {
 				currentWeek = (Integer)spnWeek.getValue();
 				currentQuestionNumber = 1;
 				bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
-				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+//				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 				addQuestionToListing(bq);
 				if (currentWeek == GameData.getCurrentGame().getCurrentWeek())
 					btnModify.setEnabled(true);
@@ -552,7 +681,7 @@ public class BonusPanel extends JPanel implements Observer {
 			public void stateChanged(ChangeEvent ce) {
 				currentQuestionNumber = (Integer)spnQuestion.getValue();
 				System.out.println(currentQuestionNumber);
-				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+//				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 				bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
 				addQuestionToListing(bq);
 			}
@@ -567,14 +696,14 @@ public class BonusPanel extends JPanel implements Observer {
 			setQuestionAddingPanelEditable();
 			currentWeek = ((GameData) arg0).getCurrentWeek();
 			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, currentQuestionNumber);
+			setWeekSpinner(currentWeek, GameData.getCurrentGame().getCurrentWeek());
 			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 		}
 		if (arg1.equals(Field.ADVANCE_WEEK)){
 			setQuestionAddingPanelEditable();
 			currentWeek = ((GameData) arg0).getCurrentWeek();
 			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, currentQuestionNumber);
+			setWeekSpinner(currentWeek, GameData.getCurrentGame().getCurrentWeek());
 			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 		}
 	}
