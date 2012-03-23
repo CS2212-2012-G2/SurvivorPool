@@ -312,10 +312,6 @@ public class BonusPanel extends JPanel implements Observer {
 		weekModel.setValue(wValue);
 		weekModel.setMaximum(wMax);
 		spnWeek.addChangeListener(clWeek);
-<<<<<<< HEAD:src/admin/BonusPanel.java
-=======
-		//spnWeek.validate();
->>>>>>> 2bb3c919361f28b67c70ec04cc49536f79ed23f8:src/admin/panel/bonus/BonusPanel.java
 	}
 	
 	/**
@@ -328,20 +324,6 @@ public class BonusPanel extends JPanel implements Observer {
 		snmQuestion.setValue(qValue);
 		snmQuestion.setMaximum(qMax);
 		spnQuestion.addChangeListener(clQuestion);
-<<<<<<< HEAD:src/admin/BonusPanel.java
-	}
-	
-	/**
-	 * sets components in the questing adding panel to UNEDITABLE
-	 */
-	private void setQuestionAddingPanelUneditable(){
-		txtQuestion.setEnabled(false);
-		rbMultChoice.setEnabled(false);
-		rbShortAnswer.setEnabled(false);
-		btnNext.setEnabled(false);
-=======
-		//spnQuestion.validate();
->>>>>>> 2bb3c919361f28b67c70ec04cc49536f79ed23f8:src/admin/panel/bonus/BonusPanel.java
 	}
 	
 	/**
