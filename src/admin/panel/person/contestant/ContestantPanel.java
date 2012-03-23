@@ -810,13 +810,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		}
 
 		// updates the data in the table
-		callResetSelectedRow(new Runnable() {
-
-			@Override
-			public void run() {
-				tableModel.fireTableDataChanged();
-			}
-		});
+		tableModel.fireTableDataChanged();
 
 		// depends on season started:
 		boolean sStart = g.isSeasonStarted();
