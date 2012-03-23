@@ -68,6 +68,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		// Top Panel:
 		// ////////////////////////////
 		// left to subclass:
+		btnSave = new JButton("Save");
 
 		// buttons:
 
@@ -103,29 +104,6 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		// ////////////////////////////
 		btnAddNew = new JButton("New");
 		btnDelete = new JButton("Delete");
-
-		// build the two panes
-		// setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		setLayout(new BorderLayout(5, 5));
-		buildTopPanel();
-		buildTablePanel();
-		buildBottomPanel();
-
-		buildActions();
-		
-		setToolTips();
-
-		update(GameData.getCurrentGame(), null);
-
-		setFieldsChanged(false);
-
-		update(GameData.getCurrentGame(), null);
-
-		if (tableValuesPresent) {
-			tableModel.setRowSelect(0, false);
-		} else {
-			setPanelPerson(null, true);
-		}
 
 		GameData.getCurrentGame().addObserver(this);
 	}
@@ -308,6 +286,30 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 	 */
 	protected boolean getFieldsChanged() {
 		return fieldsChanged;
+	}
+	
+	/**
+	 * Puts the panel together based on abstract methods.
+	 */
+	protected void assembleAll() {
+		setLayout(new BorderLayout(5, 5));
+		buildTopPanel();
+		buildTablePanel();
+		buildBottomPanel();
+
+		buildActions();
+		
+		setToolTips();
+
+		update(GameData.getCurrentGame(), null);
+
+		setFieldsChanged(false);
+
+		if (tableModel.getRowCount() > 0) {
+			tableModel.setRowSelect(0, false);
+		} else {
+			setPanelPerson(null, true);
+		}
 	}
 
 	/**

@@ -2,6 +2,7 @@ package admin.panel.person.contestant;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -121,6 +122,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				labelCastStatus, labelTribe, cbTribe);
 		// add the mouse listener to all components.
 		for (Component c : ((JPanel)personFields).getComponents()) {
+			if (c instanceof JPanel) {
+				for (Component d: ((JPanel)c).getComponents())
+					d.addMouseListener(this);
+			}
 			c.addMouseListener(this);
 		}
 
@@ -143,6 +148,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// build the two panes
 		// setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
+		assembleAll();
 	}
 
 	/**
@@ -162,7 +168,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		paneButtons.add(btnSave);
 		
 		// add all components on top:
-		panel.add(paneEditFields, BorderLayout.CENTER);
+		panel.add((JPanel)personFields, BorderLayout.CENTER);
 		panel.add(paneButtons, BorderLayout.LINE_END);
 
 		add(panel, BorderLayout.PAGE_START);
@@ -568,9 +574,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		}
 	}
 
+	/**
+	 * Convienience wrapper. 
+	 * @param absolutePath
+	 */
 	protected void updateContPicture(String absolutePath) {
-		// TODO Auto-generated method stub
-		
+		((ContestantFieldsPanel)personFields).updateContPicture(absolutePath);
 	}
 
 	@Override

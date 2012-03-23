@@ -166,7 +166,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	 *            Path to new image.
 	 */
 	// apparently images have to be .png and alphanumeric
-	private void updateContPicture(String path) {
+	protected void updateContPicture(String path) {
 		// don't update if its already correct!
 		if (imgPath == path) {
 			return;
@@ -222,6 +222,8 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 			cbTribe.setSelectedIndex(0);
 
 			labelCastStatus.setText("Active");
+			
+			updateContPicture(DEFAULT_PICTURE);
 			return;
 		}
 
@@ -236,7 +238,9 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 			labelCastStatus.setText("Active");
 		} else {
 			labelCastStatus.setText("Week: 1");
-		}		
+		}
+		
+		updateContPicture(c.getPicture());
 	}
 	
 	/**
