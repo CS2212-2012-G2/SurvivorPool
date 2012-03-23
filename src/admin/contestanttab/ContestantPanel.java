@@ -80,11 +80,25 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	private boolean isNewContestant = false;
 	private boolean fieldsChanged = false;
 	
+	// static constants:
 	private static final String CAST_OFF_TEXT = "Cast Off";
 	private static final String UNDO_CAST_TEXT = "Undo Cast Off";
 	
-	private static String DEFAULT_PICTURE = "res/test/defaultpic.png";
-	private static int IMAGE_MAX_DIM = 75;
+	// tool tip texts:
+	protected static final String TOOL_NAME = "First and Last name must be alphabetic";
+	protected static final String TOOL_ID = "ID must be two characters long and " +
+			"alpha-numeric";
+	protected static final String TOOL_TRIBE = "Select a tribe";
+	protected static final String TOOL_CASTOFF = "Click to cast off contestant.";
+	protected static final String TOOL_SAVE = "Click to save contestant data";
+	protected static final String TOOL_IMAGE = "Click to select image";
+	protected static final String TOOL_ADDNEW = "Click to add new contestant";
+	protected static final String TOOL_DELETE = "Click to remove currently selected " +
+			"Contestant";
+	
+	
+	private static final String DEFAULT_PICTURE = "res/test/defaultpic.png";
+	private static final int IMAGE_MAX_DIM = 75;
 	
 	/**
 	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
@@ -208,6 +222,10 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		
 		paneButtons.add(btnSaveCon);
 		
+		btnCastOff.setToolTipText(TOOL_CASTOFF);
+		btnSaveCon.setToolTipText(TOOL_SAVE);
+		imgDisplay.setToolTipText(TOOL_IMAGE);
+		
 		// add all components on top:
 		panel.add(imgDisplay, BorderLayout.LINE_START);
 		panel.add(paneEditFields, BorderLayout.CENTER);
@@ -277,12 +295,18 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
  		}
 	}
 	
+	/**
+	 * Helper method to build the bottom panel of the container
+	 */
 	private void buildBottomPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		panel.add(btnAddNew);
 		panel.add(btnDelCon);
+		
+		btnAddNew.setToolTipText(TOOL_ADDNEW);
+		btnDelCon.setToolTipText(TOOL_DELETE);
 		
 		add(panel, BorderLayout.PAGE_END);
 		// add the mouse listener to all components.
@@ -714,25 +738,12 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		Component c = e.getComponent();
+		JComponent c = (JComponent)e.getComponent();
 		MainFrame mf = MainFrame.getRunningFrame();
 		
-		if (c == labelName || c == tfFirstName || c == tfLastName) {
-			mf.setStatusMsg("First and Last name must be alphabetic");
-		} else if (c == labelID || c == tfContID) {
-			mf.setStatusMsg("ID must be two characters long and alpha-numeric");
-		} else if (c == labelTribe || c == cbTribe) {
-			mf.setStatusMsg("Select a tribe");
-		} else if (c == imgDisplay) {
-			mf.setStatusMsg("Click to select image");
-		} else if (c == table) {
-			mf.setStatusMsg("Click row to edit contestant");
-		} else if (c == btnAddNew) {
-			mf.setStatusMsg("Click to add new contestant");
-		} else if (c == btnSaveCon) {
-			mf.setStatusMsg("Click to save contestant data");
-		}
-		//System.out.println("MouseEntered: " + c.toString());
+		String txt = c.getToolTipText();
+		if (txt != null)
+			mf.setStatusMsg(txt);
 	}
 
 	@Override
