@@ -41,7 +41,6 @@ import javax.swing.table.TableRowSorter;
 import admin.MainFrame;
 import admin.Utils;
 import admin.panel.person.PersonTableModel;
-import admin.panel.person.contestant.ContestantTableModel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
