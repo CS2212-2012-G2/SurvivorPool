@@ -1,24 +1,14 @@
 package admin.panel.person.player;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
-import admin.Utils;
 import admin.panel.person.PersonTableModel;
 import data.Contestant;
-import data.GameData;
 import data.InvalidFieldException;
-import data.InvalidFieldException.Field;
 import data.User;
 
 public class PlayerTableModel extends PersonTableModel<User> {
@@ -51,6 +41,7 @@ public class PlayerTableModel extends PersonTableModel<User> {
 	@Override
 	public Object getValueAt(int row, int col) {
 		User user = (User) globalData.get(row);
+		
 		switch (col) {
 		case INDEX_ID:
 			return user.getID();
@@ -104,55 +95,6 @@ public class PlayerTableModel extends PersonTableModel<User> {
 		}
 
 		fireTableCellUpdated(row, col);
-	}
-
-	/**
-	 * Sorts the table by the column specified, will update the table.
-	 * 
-	 * @param col
-	 *            -1 for stored value, else the column passed. Default to no
-	 *            sorting otherwise.
-	 */
-	protected void sortTableBy(int col) {
-		/*Comparator<User> comp;
-
-		// use the stored column if -1 is passed.
-		col = (col == -1 ? sortColumn : col);
-
-		switch (col) {
-		case INDEX_ID:
-			comp = Utils.getUserComparator(Utils.CompType.USER_ID);
-			break;
-
-		case INDEX_FIRSTNAME:
-			comp = Utils.getUserComparator(Utils.CompType.USER_FIRST_NAME);
-			break;
-
-		case INDEX_LASTNAME:
-			comp = Utils.getUserComparator(Utils.CompType.USER_LAST_NAME);
-			break;
-
-		case INDEX_POINTS:
-			comp = Utils.getUserComparator(Utils.CompType.USER_POINTS);
-			break;
-
-		case INDEX_ULT_PICK:
-			comp = Utils.getUserComparator(Utils.CompType.USER_ULT_PICK);
-			break;
-
-		case INDEX_WEEKLY_PICK:
-			comp = Utils.getUserComparator(Utils.CompType.USER_WEEKLY_PICK);
-			break;
-
-		// others aren't valid to sort by (too ambiguous)
-		default:
-			return;
-		}
-
-		//Collections.sort(data, comp);
-		fireTableDataChanged();
-
-		sortColumn = col;*/
 	}
 
 	@Override

@@ -185,7 +185,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		if (users.size() > 0) {
 			setPanelUser(users.get(0), false);
-			tableModel.setRowSelect(0);
+			tableModel.setRowSelect(0, false);
 		} else {
 			btnAddNew.doClick(); // programatically click it. :D
 		}
@@ -600,7 +600,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					tableModel.removePerson(u);
 					if (selRow) {
 						row %= table.getRowCount();
-						tableModel.setRowSelect(row);
+						tableModel.setRowSelect(row, false);
 					} else {
 						btnAddNew.doClick();
 					}

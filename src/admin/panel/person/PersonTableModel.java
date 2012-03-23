@@ -97,7 +97,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	}
 
 	/**
-	 * Gets the row number of a User's ID
+	 * Gets the row number of a User's ID, returns the index in the Model.
 	 * 
 	 * @param u
 	 *            The user to find
@@ -107,32 +107,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		if (p == null)
 			return -1;
 
-		String id = ((Person) p).getID();
-
-		for (int i = 0; i < globalData.size(); i++) {
-			Person t = (Person) globalData.get(i);
-			if (t.getID().equals(id)) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	/**
-	 * Sorts the table by the column specified, will update the table.
-	 * 
-	 * @param col
-	 *            -1 for stored value, else the column passed. Default to no
-	 *            sorting otherwise.
-	 */
-	protected abstract void sortTableBy(int col);
-
-	/**
-	 * Sorts the table using sortTableBy with the current sorted column.
-	 */
-	protected void sortTable() {
-		sortTableBy(-1);
+		return globalData.indexOf(p);
 	}
 
 	/**
@@ -150,9 +125,6 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		else
 			g.addUser((User) p);
 		
-		
-		//data.add(p);
-		//sortTable();
 		fireTableDataChanged();
 	}
 
@@ -163,9 +135,6 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 *            Person to remove.
 	 */
 	public void removePerson(P p) {
-		//data.remove(p);
-		//sortTable();
-
 		GameData g = GameData.getCurrentGame();
 
 		if (p instanceof Contestant)
@@ -241,14 +210,19 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 * but will invalidate them, thus <i>not</i> allowing them to run. This
 	 * breaks nothing as all those calls do is use up time and memory.
 	 * @param row Row to select
+	 * @param viewIndex TODO
 	 * @throws IndexOutOfBoundsException On row < -1.
 	 */
-	public void setRowSelect(int row) {
-		if (row < -1)
-			throw new IndexOutOfBoundsException();
+	public void setRowSelect(int row, boolean viewIndex) {
+		if (row < 0)
+			return;
 		
 		if (curRowSelect != null) {
 			curRowSelect.valid = false;
+		}
+		
+		if (viewIndex) {
+			row = parent.getRowSorter().convertRowIndexToModel(row);
 		}
 		
 		curRowSelect = new RowSelector(row);
@@ -264,7 +238,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	public void setRowSelect(P p) {
 		int r = getRowByPerson(p);
 		
-		setRowSelect(r);
+		setRowSelect(r, false);
 	}
 	
 
@@ -324,7 +298,10 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 				return;
 			}
 			
-			if (row > -1 && parent.getSelectedRow() != row) {
+			int parentRow = parent.getSelectedRow();
+			row = parent.getRowSorter().convertRowIndexToView(row);
+			
+			if (row > -1 && parentRow != row) {
 				parent.setRowSelectionInterval(row, row);
 			}
 			

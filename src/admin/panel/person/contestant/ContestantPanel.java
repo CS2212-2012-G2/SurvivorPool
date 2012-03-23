@@ -186,7 +186,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		update(GameData.getCurrentGame(), null);
 
 		if (cons.size() > 0) {
-			tableModel.setRowSelect(0);
+			tableModel.setRowSelect(0, false);
 		} else {
 			setPanelContestant(null, true);
 		}
@@ -682,7 +682,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					
 					if (selRow && (t != null)) {
 						row %= table.getRowCount();
-						tableModel.setRowSelect(row);
+						tableModel.setRowSelect(row, false);
 					} else {
 						btnAddNew.doClick();
 					}
@@ -697,6 +697,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 				 if (row < 0) return;
 				// oldRow = row;
 				 
+				 row = table.getRowSorter().convertRowIndexToModel(row);
 				 Contestant c = tableModel.getByRow(row);
 			     
 				 if (c != null){
@@ -744,11 +745,18 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	 *            Method to run
 	 */
 	private void callResetSelectedRow(Runnable run) {
-		Contestant c = tableModel.getByRow(table.getSelectedRow());
+		int row = table.getSelectedRow();
+		Contestant c = null;
+		
+		if (row > -1) {
+			row = table.getRowSorter().convertRowIndexToModel(row);
+			c = tableModel.getByRow(row);
+		}
 
 		run.run();
 
-		tableModel.setRowSelect(c);	
+		if (c != null)
+			tableModel.setRowSelect(c);	
 	}
 
 	@Override
