@@ -1,19 +1,16 @@
 /**
  * 
  */
-package admin;
+package admin.panel.person;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
+import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
@@ -29,7 +26,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 
 	protected String[] columnNames;
-	protected List<P> data;
+	//protected List<P> data;
 
 	protected int sortColumn;
 	protected List<P> globalData;
@@ -50,7 +47,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		};
 		
 		globalData = _globaldata;
-		data = new ArrayList<P>(globalData);
+		//data = new ArrayList<P>(globalData);
 		
 		parent = table;
 	}
@@ -62,7 +59,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return data.size();
+		return globalData.size();
 	}
 
 	@Override
@@ -83,24 +80,6 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	public abstract void setValueAt(Object value, int row, int col);
 
 	/**
-	 * Checks if the table has an empty row.
-	 * 
-	 * @return
-	 */
-	public boolean hasEmptyRow() {
-		if (data.size() == 0)
-			return false;
-
-		Person p = (Person) data.get(data.size() - 1);
-
-		if (p.getFirstName().trim().equals("")
-				&& p.getLastName().trim().equals("") && p.getID().equals(""))
-			return true;
-		else
-			return false;
-	}
-
-	/**
 	 * Gets a person based on the row passed, this is used to read clicks.
 	 * 
 	 * @param row
@@ -108,11 +87,11 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 * @return Data contained in the Row in the Generic specified form
 	 */
 	public P getByRow(int row) {
-		return (row > -1 ? data.get(row) : null);
+		return (row > -1 ? globalData.get(row) : null);
 	}
 
 	/**
-	 * Gets the row number of a User's ID
+	 * Gets the row number of a User's ID, returns the index in the Model.
 	 * 
 	 * @param u
 	 *            The user to find
@@ -122,32 +101,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		if (p == null)
 			return -1;
 
-		String id = ((Person) p).getID();
-
-		for (int i = 0; i < data.size(); i++) {
-			Person t = (Person) data.get(i);
-			if (t.getID().equals(id)) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	/**
-	 * Sorts the table by the column specified, will update the table.
-	 * 
-	 * @param col
-	 *            -1 for stored value, else the column passed. Default to no
-	 *            sorting otherwise.
-	 */
-	protected abstract void sortTableBy(int col);
-
-	/**
-	 * Sorts the table using sortTableBy with the current sorted column.
-	 */
-	protected void sortTable() {
-		sortTableBy(-1);
+		return globalData.indexOf(p);
 	}
 
 	/**
@@ -165,8 +119,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		else
 			g.addUser((User) p);
 		
-		data.add(p);
-		sortTable();
+		fireTableDataChanged();
 	}
 
 	/**
@@ -176,15 +129,14 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 *            Person to remove.
 	 */
 	public void removePerson(P p) {
-		data.remove(p);
-		sortTable();
-
 		GameData g = GameData.getCurrentGame();
 
 		if (p instanceof Contestant)
 			g.removeContestant((Contestant) p);
 		else if (p instanceof User)
 			g.removeUser((User) p);
+		
+		fireTableDataChanged();
 	}
 
 	/**
@@ -240,7 +192,8 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 			}
 		}
 
-		sortTable();
+		//sortTable();
+		fireTableDataChanged();
 	}
 	
 	private RowSelector curRowSelect;
@@ -251,14 +204,19 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 * but will invalidate them, thus <i>not</i> allowing them to run. This
 	 * breaks nothing as all those calls do is use up time and memory.
 	 * @param row Row to select
+	 * @param viewIndex TODO
 	 * @throws IndexOutOfBoundsException On row < -1.
 	 */
-	public void setRowSelect(int row) {
-		if (row < -1)
-			throw new IndexOutOfBoundsException();
+	public void setRowSelect(int row, boolean viewIndex) {
+		if (row < 0)
+			return;
 		
 		if (curRowSelect != null) {
 			curRowSelect.valid = false;
+		}
+		
+		if (viewIndex) {
+			row = parent.getRowSorter().convertRowIndexToModel(row);
 		}
 		
 		curRowSelect = new RowSelector(row);
@@ -274,8 +232,12 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	public void setRowSelect(P p) {
 		int r = getRowByPerson(p);
 		
-		setRowSelect(r);
+		setRowSelect(r, false);
 	}
+	
+
+	
+	protected abstract void setComparators(TableRowSorter<PersonTableModel<P>> sort);
 	
 	/**
 	 * 
@@ -284,7 +246,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 * @author kevin
 	 * 
 	 */
-	public class SortColumnAdapter extends MouseAdapter {
+	/*public class SortColumnAdapter extends MouseAdapter {
 
 		public void mouseClicked(MouseEvent e) {
 			JTable table = ((JTableHeader) e.getSource()).getTable();
@@ -312,7 +274,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 			int r = model.getRowByPerson(p);
 			table.setRowSelectionInterval(r, r);
 		}
-	}
+	} */
 	
 	private class RowSelector implements Runnable {
 
@@ -330,7 +292,10 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 				return;
 			}
 			
-			if (row > -1 && parent.getSelectedRow() != row) {
+			int parentRow = parent.getSelectedRow();
+			row = parent.getRowSorter().convertRowIndexToView(row);
+			
+			if (row > -1 && parentRow != row) {
 				parent.setRowSelectionInterval(row, row);
 			}
 			

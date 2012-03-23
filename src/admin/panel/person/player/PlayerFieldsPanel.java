@@ -1,4 +1,4 @@
-package admin.playertab;
+package admin.panel.person.player;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

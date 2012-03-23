@@ -21,12 +21,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import admin.Utils;
-import admin.BonusPanel;
-import admin.GeneralPanel;
 import admin.StatusPanel;
-import admin.contestanttab.ContestantPanel;
-import admin.playertab.PlayerPanel;
-import admin.seasoncreate.SeasonCreatePanel;
+import admin.panel.bonus.BonusPanel;
+import admin.panel.person.contestant.ContestantPanel;
+import admin.panel.general.GeneralPanel;
+import admin.panel.person.player.PlayerPanel;
+import admin.panel.season.SeasonCreatePanel;
 
 import data.GameData;
 import data.bonus.Bonus;

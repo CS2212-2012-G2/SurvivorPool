@@ -13,7 +13,7 @@ import data.InvalidFieldException.Field;
  *         Justin McDonald
  */
 
-public class User implements Person {
+public class User implements Person, Comparable<User> {
 
 	private String firstName, lastName, unID; // first and last names and unique
 												// ID (UWO ID format)
@@ -340,6 +340,22 @@ public class User implements Person {
 		if (u.getUltimatePoints() != getUltimatePoints()) {
 			setUltimatePoints(u.getUltimatePoints());
 		}
+	}
+	
+	public int compareTo(User otherU) {
+		// ugly, but works. :)
+		int result = getID().compareToIgnoreCase(otherU.getID());
+		if (result == 0) {
+			result = getPoints() - otherU.getPoints();
+			if (result == 0) {
+				result = getLastName().compareToIgnoreCase(otherU.getLastName());
+				if (result == 0) {
+					result = getFirstName().compareToIgnoreCase(otherU.getLastName());
+				}
+			}
+		}
+		
+		return result;
 	}
 
 	public static void main(String[] args) {

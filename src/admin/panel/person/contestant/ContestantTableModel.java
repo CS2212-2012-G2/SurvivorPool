@@ -1,24 +1,14 @@
-package admin.contestanttab;
+package admin.panel.person.contestant;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
-import admin.PersonTableModel;
-import admin.Utils;
+import admin.panel.person.PersonTableModel;
 import data.Contestant;
-import data.GameData;
 import data.InvalidFieldException;
-import data.InvalidFieldException.Field;
 
 public class ContestantTableModel extends PersonTableModel<Contestant> {
 	private static final long serialVersionUID = 1L;
@@ -32,7 +22,7 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 
 	/**
 	 * Creates the table model which controls the table's actions and data.
-	 * 
+	 * @param sorter TODO
 	 * @param _globaldata
 	 *            The global data stored in GameData, this is done to maintain
 	 *            data persistance with the two, while allowing order
@@ -46,15 +36,14 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 		};
 		
 		globalData = _globaldata;
-		data = new ArrayList<Contestant>(globalData);
+		//data = new ArrayList<Contestant>(globalData);
 
 		sortColumn = INDEX_ID;
-
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Contestant player = (Contestant) data.get(row);
+		Contestant player = (Contestant) globalData.get(row);
 
 		switch (col) {
 		case INDEX_ID:
@@ -82,7 +71,7 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 
 	@Override
 	public void setValueAt(Object value, int row, int col) {
-		Contestant player = (Contestant) data.get(row);
+		Contestant player = (Contestant) globalData.get(row);
 
 		switch (col) {
 		case INDEX_ID:
@@ -118,47 +107,41 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 		fireTableCellUpdated(row, col);
 	}
 
-	/**
-	 * Sorts the table by the column specified, will update the table.
-	 * 
-	 * @param col
-	 *            -1 for stored value, else the column passed. Default to no
-	 *            sorting otherwise.
-	 */
-	protected void sortTableBy(int col) {
-		Comparator<Contestant> comp;
+	@Override
+	protected void setComparators(TableRowSorter<PersonTableModel<Contestant>> sort) {
+		Comparator<String> strCompNoCase = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareToIgnoreCase(o2);
+			}
+		};
+		
+		Comparator<Object> activeComp = new Comparator<Object>() {
 
-		// use the stored column if -1 is passed.
-		col = (col == -1 ? sortColumn : col);
-
-		switch (col) {
-		case INDEX_ID:
-			comp = Utils.getContComparator(Utils.CompType.CONTNT_ID);
-			break;
-
-		case INDEX_FIRSTNAME:
-			comp = Utils.getContComparator(Utils.CompType.CONTNT_FIRST_NAME);
-			break;
-
-		case INDEX_LASTNAME:
-			comp = Utils.getContComparator(Utils.CompType.CONTNT_LAST_NAME);
-			break;
-
-		case INDEX_TRIBE:
-			comp = Utils.getContComparator(Utils.CompType.CONTNT_TRIBE);
-			break;
-
-		case INDEX_DATECAST:
-			comp = Utils.getContComparator(Utils.CompType.CONTNT_DATE);
-			break;
-
-		default:
-			return;
-		}
-
-		Collections.sort(data, comp);
-		fireTableDataChanged();
-
-		sortColumn = col;
+			@Override
+			public int compare(Object o1, Object o2) {
+				if (o1 instanceof String && o2 instanceof String) {
+					return 0;
+				}
+				
+				if (o1 instanceof Integer && o2 instanceof String) {
+					return -1;
+				}
+				
+				if (o1 instanceof String && o2 instanceof Integer) {
+					return +1;
+				}
+				
+				// both are ints:
+				return (Integer)o1 - (Integer)o2;
+			}
+			
+		};
+		
+		sort.setComparator(INDEX_ID, strCompNoCase);
+		sort.setComparator(INDEX_FIRSTNAME, strCompNoCase);
+		sort.setComparator(INDEX_LASTNAME, strCompNoCase);
+		sort.setComparator(INDEX_DATECAST, activeComp);
+		sort.setComparator(INDEX_TRIBE, strCompNoCase);	
 	}
 }

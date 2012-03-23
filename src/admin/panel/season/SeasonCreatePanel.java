@@ -1,4 +1,4 @@
-package admin.seasoncreate;
+package admin.panel.season;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

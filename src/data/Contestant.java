@@ -12,7 +12,7 @@ import admin.Utils;
  *         Ramesh Raj
  */
 
-public class Contestant implements Person {
+public class Contestant implements Person, Comparable<Contestant> {
 
 	// player information
 	protected String firstName, lastName, tribe, picture;
@@ -376,5 +376,22 @@ public class Contestant implements Person {
 	public void setNull() {
 		cID = NULL_ID;
 		isNull = true;
+	}
+
+	@Override
+	public int compareTo(Contestant otherC) {
+		// ugly, but works. :)
+		int result = getID().compareToIgnoreCase(otherC.getID());
+		if (result == 0) {
+			result = getLastName().compareToIgnoreCase(otherC.getLastName());
+			if (result == 0) {
+				result = getFirstName().compareToIgnoreCase(otherC.getLastName());
+				if (result == 0) {
+					result = getTribe().compareTo(otherC.getTribe());
+				}
+			}
+		}
+		
+		return result;
 	}
 }

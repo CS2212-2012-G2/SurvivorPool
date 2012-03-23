@@ -1,4 +1,4 @@
-package admin.playertab;
+package admin.panel.person.player;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -36,9 +36,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import admin.MainFrame;
 import admin.Utils;
+import admin.panel.person.PersonTableModel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
@@ -151,8 +153,15 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		// ////////////////////////////
 		List<User> users = GameData.getCurrentGame().getAllUsers();
 		table = new JTable();
+		
 		tableModel = new PlayerTableModel(table, users);
+		TableRowSorter<PersonTableModel<User>> sort = 
+				new TableRowSorter<PersonTableModel<User>>(tableModel);
+		
+		tableModel.setComparators(sort);
 		table.setModel(tableModel);
+		table.setRowSorter(sort);
+		sort.toggleSortOrder(PlayerTableModel.INDEX_ID);
 		
 		header = table.getTableHeader();
 
@@ -177,7 +186,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		if (users.size() > 0) {
 			setPanelUser(users.get(0), false);
-			tableModel.setRowSelect(0);
+			tableModel.setRowSelect(0, false);
 		} else {
 			btnAddNew.doClick(); // programatically click it. :D
 		}
@@ -231,7 +240,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		header.addMouseListener(tableModel.new SortColumnAdapter());
+		//header.addMouseListener(tableModel.new SortColumnAdapter());
 
 		TableCellRenderer renderer = new TableCellRenderer() {
 
@@ -592,7 +601,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 					tableModel.removePerson(u);
 					if (selRow) {
 						row %= table.getRowCount();
-						tableModel.setRowSelect(row);
+						tableModel.setRowSelect(row, false);
 					} else {
 						btnAddNew.doClick();
 					}

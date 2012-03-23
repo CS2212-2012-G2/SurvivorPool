@@ -1,4 +1,4 @@
-package admin.contestanttab;
+package admin.panel.person.contestant;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -37,10 +37,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import admin.FileDrop;
 import admin.MainFrame;
 import admin.Utils;
+import admin.panel.person.PersonTableModel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
@@ -157,7 +159,13 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		
 		table = new JTable();
 		tableModel = new ContestantTableModel(table, cons);
+		TableRowSorter<PersonTableModel<Contestant>> sort = 
+				new TableRowSorter<PersonTableModel<Contestant>>(tableModel);
+		tableModel.setComparators(sort);
+		
 		table.setModel(tableModel);
+		table.setRowSorter(sort);
+		sort.toggleSortOrder(ContestantTableModel.INDEX_ID);
 		
 		header = table.getTableHeader();
 
@@ -179,7 +187,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		update(GameData.getCurrentGame(), null);
 
 		if (cons.size() > 0) {
-			tableModel.setRowSelect(0);
+			tableModel.setRowSelect(0, false);
 		} else {
 			setPanelContestant(null, true);
 		}
@@ -252,7 +260,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		header.addMouseListener(tableModel.new SortColumnAdapter());
+		//header.addMouseListener(tableModel.new SortColumnAdapter());
 
 		TableCellRenderer renderer = new TableCellRenderer() {
 
@@ -663,27 +671,22 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 						}
 						System.out.println("Delete contestant, exception");
 					}
-
-					// actually delete the contestant
-					GameData g = GameData.getCurrentGame();
-					// get the contestant by the ID passed
-					Contestant t = g.getContestant(c.getID());
 					
-					if (t == null) {
+					if (c == null) {
 						System.out.println("We goofed really badly.");
 						throw new NullPointerException("Could not get " +
 								"contestant from game data.");
 					}
 					
-					int row = tableModel.getRowByPerson(t);
+					int row = tableModel.getRowByPerson(c);
 					boolean selRow = (table.getRowCount() > 1);
 
 					// remove the contestant from the game
-					tableModel.removePerson(t);
+					tableModel.removePerson(c);
 					
-					if (selRow && (t != null)) {
+					if (selRow && (c != null)) {
 						row %= table.getRowCount();
-						tableModel.setRowSelect(row);
+						tableModel.setRowSelect(row, false);
 					} else {
 						btnAddNew.doClick();
 					}
@@ -698,6 +701,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 				 if (row < 0) return;
 				// oldRow = row;
 				 
+				 row = table.getRowSorter().convertRowIndexToModel(row);
 				 Contestant c = tableModel.getByRow(row);
 			     
 				 if (c != null){
@@ -706,7 +710,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					 
 					 setPanelContestant(c, false); 
 				 }
-				 table.setRowSelectionInterval(row, row);
 			}
 		});
 		
@@ -736,21 +739,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		for (JTextField tf : tfArr) {
 			tf.addFocusListener(fa);
 		}
-	}
-
-	/**
-	 * Helper method that will get the selected row, call the runnable method
-	 * then reset the table to where it was by the contestant.
-	 * 
-	 * @param run
-	 *            Method to run
-	 */
-	private void callResetSelectedRow(Runnable run) {
-		Contestant c = tableModel.getByRow(table.getSelectedRow());
-
-		run.run();
-
-		tableModel.setRowSelect(c);	
 	}
 
 	@Override
@@ -808,13 +796,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		}
 
 		// updates the data in the table
-		callResetSelectedRow(new Runnable() {
-
-			@Override
-			public void run() {
-				tableModel.fireTableDataChanged();
-			}
-		});
+		tableModel.fireTableDataChanged();
 
 		// depends on season started:
 		boolean sStart = g.isSeasonStarted();

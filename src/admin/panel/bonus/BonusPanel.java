@@ -1,4 +1,4 @@
-package admin;
+package admin.panel.bonus;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,12 +25,19 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import admin.MainFrame;
+
 import data.GameData;
 import data.GameData.Field;
 import data.bonus.Bonus;
 import data.bonus.BonusQuestion;
 import data.bonus.BonusQuestion.BONUS_TYPE;
 
+/**
+ * 
+ * @author Kevin Brightwell, Justin MacDonald, Ramesh Raj
+ *
+ */
 public class BonusPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
@@ -63,10 +72,7 @@ public class BonusPanel extends JPanel implements Observer {
 	
 	private JRadioButton rbMultChoice;
 	private JRadioButton rbShortAnswer;
-	
-	private ButtonGroup group;
-	private ButtonGroup group2;
-	
+
 	private String question;
 	private String answer;
 	
@@ -74,11 +80,13 @@ public class BonusPanel extends JPanel implements Observer {
 	private JTextField txtAnswerB;
 	private JTextField txtAnswerC;
 	private JTextField txtAnswerD;
+	private List<JTextField> txtAnsList;
 	
 	private JRadioButton rbAnswerA;
 	private JRadioButton rbAnswerB;
 	private JRadioButton rbAnswerC;
 	private JRadioButton rbAnswerD;
+	private List<JRadioButton> rbAnsList;
 	
 	private Boolean shortAns;
 	private Boolean modifyBonusQuestion = false;
@@ -97,6 +105,9 @@ public class BonusPanel extends JPanel implements Observer {
 	 * Constructor for Bonus Panel
 	 */
 	public BonusPanel() {
+		super();
+		initFields();
+		
 		this.setLayout(new BorderLayout());
 		currentQuestion = "";
 		initPnlAddQuestion();
@@ -104,7 +115,7 @@ public class BonusPanel extends JPanel implements Observer {
 		
 		//check if bonus questions already exist
 		if (Bonus.getAllQuestions().isEmpty()){
-			setQuestionAddingPanelUneditable();
+			setQuestionAddingPanelEditable(false);
 			btnModify.setEnabled(false);
 		} else {
 			initExistingBonus();
@@ -112,6 +123,42 @@ public class BonusPanel extends JPanel implements Observer {
 
 		initListeners();
 		GameData.getCurrentGame().addObserver(this);
+	}
+	
+	/**
+	 * Initiates all fields necessary, associates button groups
+	 */
+	private void initFields() {
+		txtQuestion = new JTextField("");
+		
+		rbMultChoice = new JRadioButton("Multiple Choice");
+		rbShortAnswer = new JRadioButton("Short Answer");
+		
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(rbMultChoice);
+		bg.add(rbShortAnswer);
+		
+		rbMultChoice.setSelected(true);
+		
+		// multiple choice answer radio buttons
+		bg = new ButtonGroup();
+		rbAnswerA = new JRadioButton("A");
+		rbAnswerB = new JRadioButton("B");
+		rbAnswerC = new JRadioButton("C");
+		rbAnswerD = new JRadioButton("D");
+		rbAnsList = Arrays.asList(rbAnswerA, rbAnswerB, rbAnswerC, rbAnswerD);
+		
+		rbAnswerA.setSelected(true);
+		
+		for (JRadioButton rb: rbAnsList) 
+			bg.add(rb);
+		
+		// multiple choice text fields:
+		txtAnswerA = new JTextField("");
+		txtAnswerB = new JTextField("");
+		txtAnswerC = new JTextField("");
+		txtAnswerD = new JTextField("");
+		txtAnsList = Arrays.asList(txtAnswerA, txtAnswerB, txtAnswerC, txtAnswerD);
 	}
 
 	/**
@@ -124,30 +171,18 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlNewQ.setLayout(new GridLayout(1, 4, 50, 20));
 		pnlTypeQ.setLayout(new BorderLayout());
 		
-		txtQuestion = new JTextField("");
 		txtQuestion.setBorder(BorderFactory.createTitledBorder("Question"));
 		txtQuestion.setPreferredSize(new Dimension(300, 100));
 		
-		group = new ButtonGroup();
-		group.add(rbMultChoice);
-		group.add(rbShortAnswer);
-		
-		rbMultChoice = new JRadioButton("Multiple Choice");
-		rbShortAnswer = new JRadioButton("Short Answer");
-		
 		rbMultChoice.setAlignmentY(Component.CENTER_ALIGNMENT);
 		rbShortAnswer.setAlignmentY(Component.CENTER_ALIGNMENT);
+		
 		pnlTypeQ.add(rbMultChoice, BorderLayout.WEST);
 		pnlTypeQ.add(rbShortAnswer, BorderLayout.EAST);
 		pnlTypeQ.add(btnNext, BorderLayout.SOUTH);
 		
 		pnlNewQ.add(txtQuestion);
 		pnlNewQ.add(pnlTypeQ);
-
-		rbAnswerA = new JRadioButton();
-		rbAnswerB = new JRadioButton();
-		rbAnswerC = new JRadioButton();
-		rbAnswerD = new JRadioButton();
 		
 		this.add(pnlNewQ, BorderLayout.NORTH);
 	}
@@ -188,29 +223,10 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlMultA.setLayout(new GridLayout(4, 2));
 		pnlMultA.setBorder(BorderFactory.createTitledBorder("Answers"));
 		
-		group2 = new ButtonGroup();
-		rbAnswerA = new JRadioButton("A");
-		rbAnswerB = new JRadioButton("B");
-		rbAnswerC = new JRadioButton("C");
-		rbAnswerD = new JRadioButton("D");
-		group2.add(rbAnswerA);
-		group2.add(rbAnswerB);
-		group2.add(rbAnswerC);
-		group2.add(rbAnswerD);
-		
-		txtAnswerA = new JTextField("");
-		txtAnswerB = new JTextField("");
-		txtAnswerC = new JTextField("");
-		txtAnswerD = new JTextField("");
-		
-		pnlMultA.add(rbAnswerA);
-		pnlMultA.add(txtAnswerA);
-		pnlMultA.add(rbAnswerB);
-		pnlMultA.add(txtAnswerB);
-		pnlMultA.add(rbAnswerC);
-		pnlMultA.add(txtAnswerC);
-		pnlMultA.add(rbAnswerD);
-		pnlMultA.add(txtAnswerD);
+		for (int i = 0; i < 4; i++) {
+			pnlMultA.add(rbAnsList.get(i));
+			pnlMultA.add(txtAnsList.get(i));
+		}
 		
 		pnlTypeQ.setLayout(new GridLayout(2, 1, 50, 20));
 		pnlTypeQ.add(btnBack);
@@ -296,6 +312,10 @@ public class BonusPanel extends JPanel implements Observer {
 		weekModel.setValue(wValue);
 		weekModel.setMaximum(wMax);
 		spnWeek.addChangeListener(clWeek);
+<<<<<<< HEAD:src/admin/BonusPanel.java
+=======
+		//spnWeek.validate();
+>>>>>>> 2bb3c919361f28b67c70ec04cc49536f79ed23f8:src/admin/panel/bonus/BonusPanel.java
 	}
 	
 	/**
@@ -308,6 +328,7 @@ public class BonusPanel extends JPanel implements Observer {
 		snmQuestion.setValue(qValue);
 		snmQuestion.setMaximum(qMax);
 		spnQuestion.addChangeListener(clQuestion);
+<<<<<<< HEAD:src/admin/BonusPanel.java
 	}
 	
 	/**
@@ -318,23 +339,27 @@ public class BonusPanel extends JPanel implements Observer {
 		rbMultChoice.setEnabled(false);
 		rbShortAnswer.setEnabled(false);
 		btnNext.setEnabled(false);
+=======
+		//spnQuestion.validate();
+>>>>>>> 2bb3c919361f28b67c70ec04cc49536f79ed23f8:src/admin/panel/bonus/BonusPanel.java
 	}
 	
 	/**
-	 * sets components in the questing adding panel to EDITABLE
+	 * sets components in the questing adding panel to edit
+	 * @param Whether editable or not (enabled).
 	 */
-	private void setQuestionAddingPanelEditable(){
-		txtQuestion.setEnabled(true);
-		rbMultChoice.setEnabled(true);
-		rbShortAnswer.setEnabled(true);
-		btnNext.setEnabled(true);
+	private void setQuestionAddingPanelEditable(boolean edit) {
+		txtQuestion.setEnabled(edit);
+		rbMultChoice.setEnabled(edit);
+		rbShortAnswer.setEnabled(edit);
+		btnNext.setEnabled(edit);
 	}
 	
 	/**
 	 * loads the question adding panel with the current bonus question
 	 */
 	private void setQuestionAddingPanel(){
-		setQuestionAddingPanelEditable();
+		setQuestionAddingPanelEditable(true);
 		txtQuestion.setText(bq.getPrompt());
 		modifyBonusQuestion = true;
 	}
@@ -343,12 +368,12 @@ public class BonusPanel extends JPanel implements Observer {
 	 * loads the answer adding panel with the current bonus question
 	 */
 	private void setAnswerAddingPanel(){
-		if (rbMultChoice.isSelected() && bq.getChoices() != null){
-			txtAnswerA.setText(bq.getChoices()[0]);
-			txtAnswerB.setText(bq.getChoices()[1]);
-			txtAnswerC.setText(bq.getChoices()[2]);
-			txtAnswerD.setText(bq.getChoices()[3]);
-		} else if (rbShortAnswer.isSelected() && bq.getChoices() == null){
+		String[] choices = bq.getChoices();
+		if (rbMultChoice.isSelected() && choices != null){
+			for (int i = 0; i < 4; i++) 
+				txtAnsList.get(i).setText(choices[i]);
+			
+		} else {//if (rbShortAnswer.isSelected()) { // one must be selected?
 			txtAnswer.setText(bq.getAnswer());
 		}
 	}
@@ -359,15 +384,13 @@ public class BonusPanel extends JPanel implements Observer {
 	 * @return
 	 */
 	private String getMultiAnswer(){
-		if (rbAnswerA.isSelected()){
-			return txtAnswerA.getText();
-		} else if (rbAnswerB.isSelected()){
-			return txtAnswerB.getText();
-		} else if (rbAnswerC.isSelected()){
-			return txtAnswerC.getText();
-		} else if (rbAnswerD.isSelected()){
-			return txtAnswerD.getText();
-		} else return null;
+		for (int i = 0; i < 4; i++) {
+			if (rbAnsList.get(i).isSelected()) {
+				return txtAnsList.get(i).getText();
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -376,10 +399,13 @@ public class BonusPanel extends JPanel implements Observer {
 	 */
 	private String[] getMultiAnswerArray(){
 		String[] answers = new String[4];
-		if (txtAnswerA.getText().length() > 0) answers[0] = txtAnswerA.getText();
-		if (txtAnswerB.getText().length() > 0) answers[1] = txtAnswerB.getText();
-		if (txtAnswerC.getText().length() > 0) answers[2] = txtAnswerC.getText();
-		if (txtAnswerD.getText().length() > 0) answers[3] = txtAnswerD.getText();
+		for (int i = 0; i < 4; i++) {
+			JTextField tf = txtAnsList.get(i);
+			if (tf.getText().length() > 0) {
+				answers[i] = tf.getText();
+			}
+		}
+		
 		return answers;
 	}
 	
@@ -388,13 +414,22 @@ public class BonusPanel extends JPanel implements Observer {
 	 * 		AND if at least one answer exists
 	 * @return
 	 */
+	// returns whether all four are valid as of now.. 
 	private Boolean getValidMultiAnswers() {
-		return (txtAnswerA.getText().length() > 0 && txtAnswerA.getText().length() < 201)
+		boolean res = true;
+		for (int i=0; i < 4 && res; i++) {
+			String s = txtAnsList.get(i).getText();
+			// checks each tf is (1,200)
+			res = res && (s.length() > 0 && s.length() <= 200); 
+		}
+		
+		return res;
+		/*return (txtAnswerA.getText().length() > 0 && txtAnswerA.getText().length() < 201)
 		|| (txtAnswerB.getText().length() > 0 && txtAnswerB.getText().length() < 201)
 		|| (txtAnswerC.getText().length() > 0 && txtAnswerC.getText().length() < 201)
 		|| (txtAnswerD.getText().length() > 0 && txtAnswerD.getText().length() < 201)
-		&& txtAnswerA.getText().length() < 201 && txtAnswerB.getText().length() < 201
-		&& txtAnswerC.getText().length() < 201 && txtAnswerD.getText().length() < 201;
+		&& txtAnswerA.getText().length() < 201 && txtAnswerB.getText().length() < 201	 // if you break down the logic here, 	
+		&& txtAnswerC.getText().length() < 201 && txtAnswerD.getText().length() < 201;*/ // these are already checked in the or's
 	}
 	
 	/**
@@ -546,7 +581,8 @@ public class BonusPanel extends JPanel implements Observer {
 							} else {
 								MainFrame.getRunningFrame().setStatusErrorMsg(
 										"You must select one correct answer."
-												+ " (correct answer unselected)", rbAnswerA, rbAnswerB, rbAnswerC, rbAnswerD);
+												+ " (correct answer unselected)", 
+												rbAnsList.toArray(new Component[0]));
 								return;
 							}													
 						} else {
@@ -597,62 +633,6 @@ public class BonusPanel extends JPanel implements Observer {
 				initPnlAddQuestion();
 				if (modifyBonusQuestion) setQuestionAddingPanel();
 			}
-		});
-		
-		rbMultChoice.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				if (rbShortAnswer.isSelected()) rbShortAnswer.setSelected(false);
-			}			
-		});
-		
-		rbShortAnswer.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				if (rbMultChoice.isSelected()) rbMultChoice.setSelected(false);
-			}			
-		});
-		
-		rbAnswerA.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				if (rbAnswerB.isSelected()) rbAnswerB.setSelected(false);
-				else if (rbAnswerC.isSelected()) rbAnswerC.setSelected(false);
-				else if (rbAnswerD.isSelected()) rbAnswerD.setSelected(false);
-			}			
-		});
-		
-		rbAnswerB.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				if (rbAnswerA.isSelected()) rbAnswerA.setSelected(false);
-				else if (rbAnswerC.isSelected()) rbAnswerC.setSelected(false);
-				else if (rbAnswerD.isSelected()) rbAnswerD.setSelected(false);
-			}			
-		});
-		
-		rbAnswerC.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				if (rbAnswerB.isSelected()) rbAnswerB.setSelected(false);
-				else if (rbAnswerA.isSelected()) rbAnswerA.setSelected(false);
-				else if (rbAnswerD.isSelected()) rbAnswerD.setSelected(false);
-			}			
-		});
-		
-		rbAnswerD.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				if (rbAnswerB.isSelected()) rbAnswerB.setSelected(false);
-				else if (rbAnswerC.isSelected()) rbAnswerC.setSelected(false);
-				else if (rbAnswerA.isSelected()) rbAnswerA.setSelected(false);
-			}			
 		});
 		
 		btnModify.addActionListener(new ActionListener() {
@@ -708,18 +688,20 @@ public class BonusPanel extends JPanel implements Observer {
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1) {
-		if (arg1.equals(Field.START_SEASON)){
-			setQuestionAddingPanelEditable();
-			currentWeek = ((GameData) arg0).getCurrentWeek();
+	public void update(Observable observ, Object obj) {
+		GameData g = (GameData)observ;
+		
+		if (obj.equals(Field.START_SEASON)){
+			setQuestionAddingPanelEditable(true);
+			currentWeek = g.getCurrentWeek();
 			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, GameData.getCurrentGame().getCurrentWeek());
+			setWeekSpinner(currentWeek, g.getCurrentWeek());
 			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 		}
-		if (arg1.equals(Field.ADVANCE_WEEK)){
-			currentWeek = ((GameData) arg0).getCurrentWeek();
+		if (obj.equals(Field.ADVANCE_WEEK)){
+			currentWeek = g.getCurrentWeek();
 			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, GameData.getCurrentGame().getCurrentWeek());
+			setWeekSpinner(currentWeek, g.getCurrentWeek());
 			setQuestionSpinner(1, 1);
 			txtQuestionList.setText("");
 		}

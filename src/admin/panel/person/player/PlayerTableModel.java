@@ -1,22 +1,14 @@
-package admin.playertab;
+package admin.panel.person.player;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
-import admin.PersonTableModel;
-import admin.Utils;
-import data.GameData;
+import admin.panel.person.PersonTableModel;
+import data.Contestant;
 import data.InvalidFieldException;
-import data.InvalidFieldException.Field;
 import data.User;
 
 public class PlayerTableModel extends PersonTableModel<User> {
@@ -33,7 +25,7 @@ public class PlayerTableModel extends PersonTableModel<User> {
 
 	/**
 	 * Creates the table model which controls the table's actions and data.
-	 * 
+	 * @param sorter TODO
 	 * @param users
 	 *            The global reference to the actual GameData.
 	 */
@@ -48,7 +40,8 @@ public class PlayerTableModel extends PersonTableModel<User> {
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		User user = (User) data.get(row);
+		User user = (User) globalData.get(row);
+		
 		switch (col) {
 		case INDEX_ID:
 			return user.getID();
@@ -75,7 +68,7 @@ public class PlayerTableModel extends PersonTableModel<User> {
 
 	@Override
 	public void setValueAt(Object value, int row, int col) {
-		User user = (User) data.get(row);
+		User user = (User) globalData.get(row);
 
 		switch (col) {
 		case INDEX_ID:
@@ -104,52 +97,42 @@ public class PlayerTableModel extends PersonTableModel<User> {
 		fireTableCellUpdated(row, col);
 	}
 
-	/**
-	 * Sorts the table by the column specified, will update the table.
-	 * 
-	 * @param col
-	 *            -1 for stored value, else the column passed. Default to no
-	 *            sorting otherwise.
-	 */
-	protected void sortTableBy(int col) {
-		Comparator<User> comp;
+	@Override
+	protected void setComparators(TableRowSorter<PersonTableModel<User>> sort) {
+		Comparator<Integer> intComp = new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o1-o2;
+			}	
+		};
+		
+		Comparator<String> strCompNoCase = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareToIgnoreCase(o2);
+			}
+		};
+		
+		Comparator<String> strCompCase = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareTo(o2);
+			}
+		};
+		
+		Comparator<Contestant> conComp = new Comparator<Contestant>() {
 
-		// use the stored column if -1 is passed.
-		col = (col == -1 ? sortColumn : col);
-
-		switch (col) {
-		case INDEX_ID:
-			comp = Utils.getUserComparator(Utils.CompType.USER_ID);
-			break;
-
-		case INDEX_FIRSTNAME:
-			comp = Utils.getUserComparator(Utils.CompType.USER_FIRST_NAME);
-			break;
-
-		case INDEX_LASTNAME:
-			comp = Utils.getUserComparator(Utils.CompType.USER_LAST_NAME);
-			break;
-
-		case INDEX_POINTS:
-			comp = Utils.getUserComparator(Utils.CompType.USER_POINTS);
-			break;
-
-		case INDEX_ULT_PICK:
-			comp = Utils.getUserComparator(Utils.CompType.USER_ULT_PICK);
-			break;
-
-		case INDEX_WEEKLY_PICK:
-			comp = Utils.getUserComparator(Utils.CompType.USER_WEEKLY_PICK);
-			break;
-
-		// others aren't valid to sort by (too ambiguous)
-		default:
-			return;
-		}
-
-		Collections.sort(data, comp);
-		fireTableDataChanged();
-
-		sortColumn = col;
+			@Override
+			public int compare(Contestant o1, Contestant o2) {
+				return o1.compareTo(o2);
+			}
+		};
+		
+		sort.setComparator(INDEX_ID, strCompCase);
+		sort.setComparator(INDEX_FIRSTNAME, strCompNoCase);
+		sort.setComparator(INDEX_LASTNAME, strCompNoCase);
+		sort.setComparator(INDEX_POINTS, intComp);
+		sort.setComparator(INDEX_ULT_PICK, conComp);	
+		sort.setComparator(INDEX_WEEKLY_PICK, conComp);
 	}
 }
