@@ -10,7 +10,6 @@ Admin (SWING)
 		- FORCE CHARACTER LIMIT FOR INPUT BOX (20 CHARS FOR NAMES, 30 FOR TRIBES)
 			~ Just use a ChangeListener on the textfield in question and then 
 				StatusPanel.setErrorMsg()
-		- Spacing for all the tabbed panels so they aren't butted right up against it
 		- On a user input error, pass the component in error (or the associated 
 		  	label) to a method in MainFrame that will some how show that its 
 		  	invalid.
@@ -19,7 +18,6 @@ Admin (SWING)
 		
 	Main.java
 		
-		- CHANGE TAB SIZE
 		- IMPLEMENT THEMES
 			- MARK WHICH THEME IS ACTIVE AT START
 				activeTheme.setSelected() or could use doClick() which would programatically call the action listener associated
