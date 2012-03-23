@@ -24,6 +24,7 @@ public class Bonus extends Observable {
 
 	private static final String KEY_QUESTIONS = "questions";
 	public static final String filePath = "res/data/bonus.dat";
+	
 	static Comparator<BonusQuestion> comp =new Comparator<BonusQuestion>(){
 
 		public int compare(BonusQuestion o1, BonusQuestion o2) {
@@ -51,6 +52,9 @@ public class Bonus extends Observable {
 		Collections.sort(questions, comp);
 	}
 	
+	/**
+	 * like it says.
+	 */
 	public static void deleteAllQuestions(){
 		questions.clear();
 	}
@@ -81,7 +85,7 @@ public class Bonus extends Observable {
 			int middle = (min+max)/2;
 			BonusQuestion b = questions.get(middle);
 			if(b.getWeek()==week)
-				return middle; 
+				return middle - 1; 
 			else if(b.getWeek()>week)
 				max=middle-1;
 			else
@@ -101,17 +105,9 @@ public class Bonus extends Observable {
 	public static BonusQuestion getQuestionByWeekAndNumber(int week, int number) {
 		int loc = getQuestionLoc(week);
 		loc +=number;
-		BonusQuestion b = questions.get(loc);
-		System.out.println("Week " + b.getWeek());
-		System.out.println("Week Searched " + week);
-		System.out.println("Number " + b.getNumber());
-		System.out.println("Number Searched " + number);
-		if (b.getWeek()==week&&b.getNumber() == number){
-			System.out.println("pass");
-				return b;				
-		}
 
-		return null;
+		BonusQuestion b = questions.get(loc);
+		return b;	
 	}
 
 	/**
