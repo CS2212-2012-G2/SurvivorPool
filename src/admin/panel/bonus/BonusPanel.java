@@ -265,7 +265,7 @@ public class BonusPanel extends JPanel implements Observer {
 		currentQuestionNumber = 1;
 		
 		try {
-			bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
+			bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
 		} catch (IndexOutOfBoundsException e) {
 			bq = null;
 		}
@@ -424,13 +424,13 @@ public class BonusPanel extends JPanel implements Observer {
 	 * 		adds question to the gui LIST
 	 */
 	private void addNewShortAnswer() {
-		if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;					
-		setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+		currentQuestionNumber = Bonus.getNumQuestionsInWeek(currentWeek) + 1;				
 		answer = txtAnswer.getText();						
 		bq = new BonusQuestion(question, answer, null, 
-				currentWeek, currentQuestionNumber);
+				GameData.getCurrentGame().getCurrentWeek(), currentQuestionNumber);
 		initPnlAddQuestion();
 		addQuestionToListing(bq);
+		setQuestionSpinner(currentQuestionNumber, currentQuestionNumber);
 		btnModify.setEnabled(true);
 		modifyBonusQuestion = false;
 	}
@@ -444,12 +444,12 @@ public class BonusPanel extends JPanel implements Observer {
 	 * @param answers: the list of possible answers
 	 */
 	private void addNewMultipleChoice(String answer, String[] answers){
-		if (Bonus.getNumQuestionsInWeek(currentWeek) != 0) currentQuestionNumber++;
-		setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+		currentQuestionNumber = Bonus.getNumQuestionsInWeek(currentWeek) + 1;
 		bq = new BonusQuestion(question, answer, answers, 
-				currentWeek, currentQuestionNumber);
+				GameData.getCurrentGame().getCurrentWeek(), currentQuestionNumber);
 		initPnlAddQuestion();
 		addQuestionToListing(bq);
+		setQuestionSpinner(currentQuestionNumber, currentQuestionNumber);
 		btnModify.setEnabled(true);
 		modifyBonusQuestion = false;
 	}
@@ -675,14 +675,14 @@ public class BonusPanel extends JPanel implements Observer {
 			public void stateChanged(ChangeEvent ce) {
 				currentWeek = (Integer)spnWeek.getValue();
 				currentQuestionNumber = 1;
+
+				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 				
 				try {
-					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
+					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
 				} catch (IndexOutOfBoundsException e){
 					bq = null;
 				}
-				
-				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 				
 				addQuestionToListing(bq);
 				
@@ -699,10 +699,9 @@ public class BonusPanel extends JPanel implements Observer {
 			@Override
 			public void stateChanged(ChangeEvent ce) {
 				currentQuestionNumber = (Integer)spnQuestion.getValue();
-				System.out.println(currentQuestionNumber);
 				
 				try {
-					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
+					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
 				} catch (IndexOutOfBoundsException e) {
 					bq = null;
 				}
