@@ -40,7 +40,7 @@ public class History {
 	 * @return true if week can be modified
 	 */
 	public boolean canCastoff(int weekNum,Contestant c){
-		for(int i =weekNum;i<GameData.getCurrentGame().getCurrentWeek();i++){
+		for(int i =weekNum;i<=GameData.getCurrentGame().getCurrentWeek();i++){
 			WeekHistory w = week[i];
 			ArrayList<Contestant> chosenConts = w.getContestants();
 			for(Contestant cont:chosenConts){
@@ -57,4 +57,5 @@ public class History {
 	}
 	
 	public void fromJSONObject(JSONObject obj) throws ParseException {}
+	
 }
