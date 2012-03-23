@@ -94,7 +94,18 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 	// has the PlayerFields changed?
 	private boolean fieldsChanged;
-
+	
+	// Constants:
+	protected static final String TOOL_NAME = "First and Last name must be alphabetic";
+	protected static final String TOOL_IDTXT = "ID must be 2-7 chars long and may end with numbers";
+	protected static final String TOOL_IDBTN = "Click to auto-generate ID from first and last name";
+	protected static final String TOOL_WEEKLY = "Select Weekly pick";
+	protected static final String TOOL_ULT = "Select Ultimate Winner";
+	protected static final String TOOL_SAVE = "";
+	protected static final String TOOL_DELETE = "Remove selected User from system";
+	protected static final String TOOL_NEW = "Add a new User to system";
+	protected static final String TOOL_TABLE = "Click Heading to sort by column";
+	
 	/**
 	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
 	 * YOU KNOW WHAT YOU ARE DOING.
@@ -148,7 +159,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		// ////////////////////////////
 		// Bottom
 		// ////////////////////////////
-		btnAddNew = new JButton("Add New");
+		btnAddNew = new JButton("New");
 		btnDelete = new JButton("Delete");
 
 		// build the two panes
@@ -180,6 +191,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	private void buildTopPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout(10, 10));
+		
+		btnSave.setToolTipText(TOOL_SAVE);
 
 		// this does not need to be referenced else where, only for layout
 		JPanel rightPane = new JPanel();
@@ -245,6 +258,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 		};
 		table.setDefaultRenderer(Object.class, renderer);
+		table.setToolTipText(TOOL_TABLE);
 
 		JScrollPane scroll = new JScrollPane(table);
 
@@ -262,7 +276,10 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 	private void buildBottomPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
+		
+		btnAddNew.setToolTipText(TOOL_NEW);
+		btnDelete.setToolTipText(TOOL_DELETE);
+		
 		panel.add(btnAddNew);
 		panel.add(btnDelete);
 
@@ -273,7 +290,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		}
 	}
 
-	public void seasonStarted() {
+	// FIXME: When is this called..?
+	public void seasonStarted(){
 		tfID.setEnabled(false);
 		tfFirstName.setEnabled(false);
 		tfLastName.setEnabled(false);
@@ -377,11 +395,8 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 			// we don't want any rows selected
 			ListSelectionModel m = table.getSelectionModel();
-			int row = table.getSelectedRow();
-			if (row >= 0) {
-				m.removeIndexInterval(row, row);
-			}
-
+			m.clearSelection();
+			
 			return;
 		}
 
@@ -409,7 +424,6 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		for (int i = 0; i < cbUltPick.getItemCount(); i++) {
 
 			// get the contestant to compare with, both store same values
-
 			Contestant cbCon = cbUltPick.getItemAt(i);
 			if (!ultSet && ultPick.getID().equals(cbCon.getID())) {
 				cbUltPick.setSelectedIndex(i);
@@ -702,27 +716,12 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		Component c = e.getComponent();
+		JComponent c = (JComponent)e.getComponent();
 		MainFrame mf = MainFrame.getRunningFrame();
-		if (c == labelName || c == tfFirstName || c == tfLastName) {
-			mf.setStatusMsg("First and Last name must be alphabetic");
-		} else if (c == labelID || c == tfID) {
-			mf.setStatusMsg("ID must be 2-7 chars long and may end with numbers");
-		} else if (c == btnGenID) {
-			mf.setStatusMsg("Click to auto-generate ID from first and last name");
-		} else if (c == labelWeekly || c == cbWeeklyPick) {
-			mf.setStatusMsg("Select Weekly pick");
-		} else if (c == labelUltimate || c == cbUltPick) {
-			mf.setStatusMsg("Select Ultimate Winner");
-		} else if (c == btnAddNew) {
-			mf.setStatusMsg("Add a new User to system");
-		} else if (c == btnDelete) {
-			mf.setStatusMsg("Remove selected User from system");
-		} else if (c == table || c == header) {
-			mf.setStatusMsg("Click Heading to sort by column");
-		}
-		// System.out.println("MouseEntered: " + c.toString());
-
+		
+		String txt = c.getToolTipText();
+		if (txt != null) 
+			mf.setStatusMsg(txt);
 	}
 
 	@Override

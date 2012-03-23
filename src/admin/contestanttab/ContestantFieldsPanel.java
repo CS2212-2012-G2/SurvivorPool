@@ -50,7 +50,17 @@ public class ContestantFieldsPanel extends JPanel {
 
 		labelID = _labelID;
 		tfContID = _tfContID;
-
+		
+		labelName.setToolTipText(ContestantPanel.TOOL_NAME);
+		tfFirstName.setToolTipText(ContestantPanel.TOOL_NAME);
+		tfLastName.setToolTipText(ContestantPanel.TOOL_NAME);
+		
+		labelID.setToolTipText(ContestantPanel.TOOL_ID);
+		tfContID.setToolTipText(ContestantPanel.TOOL_ID);
+		
+		labelTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
+		cbTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
+		
 		gbFields = new GridBagLayout();
 		gbFieldsConst = new GridBagConstraints();
 
