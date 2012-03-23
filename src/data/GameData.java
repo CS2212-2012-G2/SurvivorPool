@@ -548,15 +548,6 @@ public class GameData extends Observable {
 	// ----------------- HELPER METHODS ----------------- //
 
 	/**
-	 * Sorts all the data as appropriate.
-	 * 
-	 * @param compFactID
-	 */
-	private void updateSortAllContestants(Utils.CompType compFactID) {
-		Collections.sort(allContestants, Utils.getContComparator(compFactID));
-	}
-
-	/**
 	 * Helper method to get the index of a contestant ID in the
 	 * activeContestants array
 	 * 
