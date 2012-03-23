@@ -4,22 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -35,28 +30,26 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableRowSorter;
 
 import admin.FileDrop;
 import admin.MainFrame;
 import admin.Utils;
-import admin.panel.person.PersonTableModel;
+import admin.panel.person.PersonPanel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
 
-public class ContestantPanel extends JPanel implements MouseListener, Observer {
+public class ContestantPanel extends PersonPanel<Contestant> implements MouseListener, Observer {
 
 	private static final long serialVersionUID = 1L;
-	private JButton imgDisplay;
-	private String imgPath;
 
 	private ContestantFieldsPanel paneEditFields;
 	// container for top stuff
 	private JButton btnCastOff;
-	private JButton btnSaveCon;
+	
+	private JButton imgDisplay;
+	private String imgPath;
 	
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
@@ -70,13 +63,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 	private JTextField tfContID;
 	private JLabel labelID;
-
-	private JTable table;
-	private ContestantTableModel tableModel;
-	private JTableHeader header;
-	
-	private JButton btnAddNew;
-	private JButton btnDelCon;
 	
 	// vars:
 	private boolean isNewContestant = false;
@@ -98,10 +84,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	protected static final String TOOL_DELETE = "Click to remove currently selected " +
 			"Contestant";
 	
-	
-	private static final String DEFAULT_PICTURE = "res/test/defaultpic.png";
-	private static final int IMAGE_MAX_DIM = 75;
-	
 	/**
 	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
 	 * YOU KNOW WHAT YOU ARE DOING.
@@ -109,15 +91,13 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	private Contestant loadedContestant;
 
 	public ContestantPanel() {
-		super();
+		super(new Contestant());
 
 		// ////////////////////////////
 		// Top Panel:
 		// ////////////////////////////
 		// TODO: Better Test picture
 		imgDisplay = new JButton();
-		updateContPicture(DEFAULT_PICTURE); // apparently images have to be .png
-											// and alphanumeric
 
 		// Edit fields:
 		labelName = new JLabel("Name:");
@@ -136,11 +116,11 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		tfContID = new JTextField(2);
 
 		// holds all the fields
-		paneEditFields = new ContestantFieldsPanel(labelName, tfFirstName,
-				tfLastName, labelID, tfContID, labelCastOff, labelCastStatus,
-				labelTribe, cbTribe);
+		personFields = new ContestantFieldsPanel(imgDisplay, labelName, 
+				tfFirstName, tfLastName, labelID, tfContID, labelCastOff, 
+				labelCastStatus, labelTribe, cbTribe);
 		// add the mouse listener to all components.
-		for (Component c : paneEditFields.getComponents()) {
+		for (Component c : ((JPanel)personFields).getComponents()) {
 			c.addMouseListener(this);
 		}
 
@@ -150,73 +130,26 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		if (!GameData.getCurrentGame().isSeasonStarted()) {
 			btnCastOff.setEnabled(false);
 		}
-		btnSaveCon = new JButton("Save");
 		
 		//////////////////////////////
 		// Mid (table!)
 		//////////////////////////////
-		List<Contestant> cons = GameData.getCurrentGame().getAllContestants();
-		
-		table = new JTable();
-		tableModel = new ContestantTableModel(table, cons);
-		TableRowSorter<PersonTableModel<Contestant>> sort = 
-				new TableRowSorter<PersonTableModel<Contestant>>(tableModel);
-		tableModel.setComparators(sort);
-		
-		table.setModel(tableModel);
-		table.setRowSorter(sort);
-		sort.toggleSortOrder(ContestantTableModel.INDEX_ID);
-		
-		header = table.getTableHeader();
+		// handled by super call
 
 		// ////////////////////////////
 		// Bottom
 		//////////////////////////////
-		btnAddNew = new JButton("New");
-		btnDelCon = new JButton("Delete");
 		
 		// build the two panes
 		// setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		setLayout(new BorderLayout(5, 5));
-		buildTopPanel();
-		buildTablePanel();
-		buildBottomPanel();
-
-		buildActions();
-
-		update(GameData.getCurrentGame(), null);
-
-		if (cons.size() > 0) {
-			tableModel.setRowSelect(0, false);
-		} else {
-			setPanelContestant(null, true);
-		}
-		setFieldsChanged(false);
-
-		GameData.getCurrentGame().addObserver(this);
+		
 	}
-
-	/**
-	 * The action listener used by the Image Button.
-	 */
-	private ActionListener imgActionListener = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser fc = new JFileChooser();
-			int ret = fc.showOpenDialog(null);
-			if (ret == JFileChooser.APPROVE_OPTION) {
-				// File f = fc.getSelectedFile();
-				updateContPicture(fc.getSelectedFile().getAbsolutePath());
-			}
-		}
-
-	};
 
 	/**
 	 * Builds the top panel including all the editable information
 	 */
-	private void buildTopPanel() {
+	@Override
+	protected void buildTopPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout(10, 10));
 
@@ -226,14 +159,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		paneButtons.setLayout(bl);
 
 		paneButtons.add(btnCastOff);
-		paneButtons.add(btnSaveCon);
-		
-		btnCastOff.setToolTipText(TOOL_CASTOFF);
-		btnSaveCon.setToolTipText(TOOL_SAVE);
-		imgDisplay.setToolTipText(TOOL_IMAGE);
+		paneButtons.add(btnSave);
 		
 		// add all components on top:
-		panel.add(imgDisplay, BorderLayout.LINE_START);
 		panel.add(paneEditFields, BorderLayout.CENTER);
 		panel.add(paneButtons, BorderLayout.LINE_END);
 
@@ -251,7 +179,8 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	/**
 	 * Builds the panel containing the JTable
 	 */
-	private void buildTablePanel() {
+	@Override
+	protected void buildTablePanel() {
 		JPanel panel = new JPanel();
 
 		// settings:
@@ -304,15 +233,13 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	/**
 	 * Helper method to build the bottom panel of the container
 	 */
-	private void buildBottomPanel() {
+	@Override
+	protected void buildBottomPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		panel.add(btnAddNew);
-		panel.add(btnDelCon);
-		
-		btnAddNew.setToolTipText(TOOL_ADDNEW);
-		btnDelCon.setToolTipText(TOOL_DELETE);
+		panel.add(btnDelete);
 		
 		add(panel, BorderLayout.PAGE_END);
 		// add the mouse listener to all components.
@@ -320,152 +247,49 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			c.addMouseListener(this);
 		}
 	}
-
+	
 	/**
-	 * Updates the image displayed to have the path associated, helper method <br>
-	 * <b>Note:</b> Pictures must be PNG format.
-	 * 
-	 * @param path
-	 *            Path to new image.
+	 * Sets the tool tips for all the components.
 	 */
-	// apparently images have to be .png and alphanumeric
-	private void updateContPicture(String path) {
-		// don't update if its already correct!
-		if (imgPath == path) {
-			return;
-		}
-
-		try {
-			Image img = ImageIO.read(new File(path));
-			if (img == null)
-				throw new IOException();
-
-			// TODO: Make this scale more approriately using Image's
-			// resolution/aspect ratio
-			// scale the image!
-			if (img.getWidth(null) > IMAGE_MAX_DIM
-					|| img.getHeight(null) > IMAGE_MAX_DIM) {
-				img = img.getScaledInstance(
-						Math.min(IMAGE_MAX_DIM, img.getWidth(null)),
-						Math.min(IMAGE_MAX_DIM, img.getHeight(null)),
-						Image.SCALE_SMOOTH);
-			}
-
-			// NO IO errors occured if getting here:
-			ImageIcon imgD = new ImageIcon(img);
-			imgDisplay.setIcon(imgD);
-			imgPath = path;
-		} catch (IOException e) {
-			System.out.println("Exception loading image for contestant "
-					+ "picture [" + path + "]");
-			imgDisplay.setIcon(null);
-			MainFrame.getRunningFrame().setStatusErrorMsg("Could not load: "+path,imgDisplay );
-		}
-
+	@Override
+	protected void setToolTips() {
+		labelName.setToolTipText(ContestantPanel.TOOL_NAME);
+		tfFirstName.setToolTipText(ContestantPanel.TOOL_NAME);
+		tfLastName.setToolTipText(ContestantPanel.TOOL_NAME);
+		
+		labelID.setToolTipText(ContestantPanel.TOOL_ID);
+		tfContID.setToolTipText(ContestantPanel.TOOL_ID);
+		
+		labelTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
+		cbTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
+		
+		btnCastOff.setToolTipText(TOOL_CASTOFF);
+		btnSave.setToolTipText(TOOL_SAVE);
+		imgDisplay.setToolTipText(TOOL_IMAGE);
+		
+		btnAddNew.setToolTipText(TOOL_ADDNEW);
+		btnDelete.setToolTipText(TOOL_DELETE);
 	}
 
 	/**
-	 * gets the current information with the current contestant, will update
-	 * from the fields associated.
-	 * 
-	 * @return Current contestant loaded
-	 * @throws InvalidFieldException
-	 *             Thrown on any bad fields passed
-	 */
-	private Contestant getContestant() throws InvalidFieldException {
-		Contestant c = loadedContestant;
-
-		c.setID(tfContID.getText());
-		c.setFirstName(tfFirstName.getText().trim());
-		c.setLastName(tfLastName.getText().trim());
-		c.setTribe((String) cbTribe.getSelectedItem());
-		c.setPicture(imgPath);
-
-		return c;
-	}
-
-	private void setPanelIsActive(boolean castOff, int week) {
-		if (!castOff) {
-			labelCastStatus.setText("Active");
-			btnCastOff.setText(CAST_OFF_TEXT);
-		} else {
-			labelCastStatus.setText("Week " + week);
-			btnCastOff.setText(UNDO_CAST_TEXT);
-		}
-		btnCastOff.setEnabled(GameData.getCurrentGame().isSeasonStarted());
-	}
-
-	/**
-	 * Sets the panel to the passed Contestant value. If newContestant is true,
-	 * then it loads a NEW contestant object, otherwise it uses the reference
-	 * passed in.
+	 * Wrapper that allows the super class to do most of the work. Small 
+	 * adjustments for contestants vs. players.
 	 * 
 	 * @param c
 	 * @param newContestant
 	 */
 	private void setPanelContestant(Contestant c, boolean newContestant) {
-		if (getFieldsChanged()) {
-			System.out.println("Player panel changing, fields modified.");
-			try {
-				saveContestant();
-			} catch (InvalidFieldException e) {
-				setExceptionError(e);
-				return;
-			}
-		}
+		super.setPanelPerson(c, newContestant);
 
-		isNewContestant = newContestant;
-
-		if (isNewContestant) {
-			loadedContestant = new Contestant();
-			btnSaveCon.setText("Add");
-		} else {
-			if (loadedContestant == c) {
-				return; // don't need to set it then..
-			}
+		btnCastOff.setEnabled(GameData.getCurrentGame().isSeasonStarted());
 			
-			loadedContestant = c;
-			btnSaveCon.setText("Save");
-		}
-
-		GameData g = GameData.getCurrentGame();
-		tfContID.setEnabled(!g.isSeasonStarted());
-
-		btnCastOff.setEnabled(!isNewContestant);
-		
-		// delete button activation
-		btnDelCon.setEnabled(table.getRowCount() > 0);
-			
-		
 		if (newContestant || c == null) {
-			// set default values
-			tfContID.setText("");
-			tfFirstName.setText("First Name");
-			tfLastName.setText("Last Name");
-
-			cbTribe.setSelectedIndex(0);
-
-			setPanelIsActive(false, -1);
-
-			updateContPicture(DEFAULT_PICTURE);
-
 			// we don't want any rows selected
 			ListSelectionModel m = table.getSelectionModel();
 			m.clearSelection();
 
 			return;
 		}
-
-		tfFirstName.setText(c.getFirstName());
-		tfLastName.setText(c.getLastName());
-
-		setPanelIsActive(c.isCastOff(), c.getCastDate());
-
-		cbTribe.setSelectedItem(c.getTribe());
-
-		tfContID.setText(c.getID());
-
-		updateContPicture(c.getPicture());
 		
 		tableModel.setRowSelect(c);
 	}
@@ -474,9 +298,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		Contestant con = null;
 		
 		// when a contestant is added, delete becomes active
-		btnDelCon.setEnabled(true);
+		btnDelete.setEnabled(true);
 		try {
-			con = getContestant();
+			con = getPerson();
 
 			tableModel.updatePerson(con);
 		} catch (InvalidFieldException e) {
@@ -490,32 +314,13 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 	}
 
 	/**
-	 * Should ALWAYS used when modifying fieldsChanged.
-	 * 
-	 * @param value
-	 *            new value for fieldsChanged field.
-	 */
-	private void setFieldsChanged(boolean value) {
-		fieldsChanged = value;
-		btnSaveCon.setEnabled(value);
-	}
-
-	/**
-	 * Returns whether fields have changed or not.
-	 * 
-	 * @return True if changed, false otherwise.
-	 */
-	private boolean getFieldsChanged() {
-		return fieldsChanged;
-	}
-
-	/**
 	 * Sets the error infromation based on an exception!
 	 * 
 	 * @param e
 	 *            Exception with the information necessary
 	 */
-	private void setExceptionError(InvalidFieldException e) {
+	@Override
+	protected void setExceptionError(InvalidFieldException e) {
 		if (e.isHandled())
 			return;
 
@@ -547,7 +352,27 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		e.handle();
 	}
 
-	private void buildActions() {
+	/**
+	 * Used to store the listener event so we can remove it later.
+	 */
+	private ActionListener imgButtonListener = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser fc = new JFileChooser();
+			int ret = fc.showOpenDialog(null);
+			if (ret == JFileChooser.APPROVE_OPTION) {
+				// File f = fc.getSelectedFile();
+				updateContPicture(fc.getSelectedFile().getAbsolutePath());
+			}
+		}
+	};
+	
+	/**
+	 * 
+	 */
+	@Override
+	protected void buildActions() {
 		btnAddNew.addActionListener(new ActionListener() {
 			
 			@Override
@@ -579,7 +404,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			}
 		});
 		
-		btnSaveCon.addActionListener(new ActionListener() {
+		btnSave.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {		
@@ -589,7 +414,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 				try { 
 					saveContestant(); 
 					
-					Contestant c = getContestant(); // this wont cause exception
+					Contestant c = getPerson(); // this wont cause exception
 					
 					tableModel.setRowSelect(c);
 				} catch (InvalidFieldException ex) {
@@ -606,7 +431,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 				Contestant c = null;
 				try {
-					c = getContestant();
+					c = getPerson();
 				} catch (InvalidFieldException ie) {
 					// FIXME: Intelligently respond on the exception.
 					// In theory, it shouldn't happen, but we shouldn't cast
@@ -646,7 +471,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			}
 		});
 		
-		btnDelCon.addActionListener(new ActionListener(){
+		btnDelete.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -661,7 +486,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					
 					Contestant c = null;
 					try {
-						c = getContestant();
+						c = getPerson();
 					} catch (InvalidFieldException ex) {
 						if (ex.getField() == InvalidFieldException.Field.CONT_ID) {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
@@ -706,12 +531,14 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			     
 				 if (c != null){
 					 if (getFieldsChanged())
-						 btnSaveCon.doClick();
+						 btnSave.doClick();
 					 
 					 setPanelContestant(c, false); 
 				 }
 			}
 		});
+		
+		imgDisplay.addActionListener(imgButtonListener);
 		
 		new FileDrop( this, new FileDrop.Listener(){   
 			public void filesDropped( java.io.File[] files ){   
@@ -739,6 +566,11 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		for (JTextField tf : tfArr) {
 			tf.addFocusListener(fa);
 		}
+	}
+
+	protected void updateContPicture(String absolutePath) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -803,19 +635,18 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		
 		btnAddNew.setEnabled(!sStart);
 		btnCastOff.setEnabled(sStart);
-		btnDelCon.setEnabled(!sStart);
+		btnDelete.setEnabled(!sStart);
 		tfLastName.setEnabled(!sStart);
 		tfFirstName.setEnabled(!sStart);
 		tfContID.setEnabled(!sStart);
 
 		List<ActionListener> acts = Arrays.asList(imgDisplay
 				.getActionListeners());
-		boolean actPresent = acts.contains(imgActionListener);
+		boolean actPresent = acts.contains(imgButtonListener);
 		if (actPresent && sStart) {
-			imgDisplay.removeActionListener(imgActionListener);
+			imgDisplay.removeActionListener(imgButtonListener);
 		} else if (!actPresent && !sStart) {
-			imgDisplay.addActionListener(imgActionListener);
+			imgDisplay.addActionListener(imgButtonListener);
 		}
 	}
-
 }

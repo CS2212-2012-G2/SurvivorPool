@@ -33,6 +33,10 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 
 	protected JTable parent;
 	
+	public static final int INDEX_ID = 0;
+	public static final int INDEX_LASTNAME = 1;
+	public static final int INDEX_FIRSTNAME = 2;
+	
 	/**
 	 * Creates the table model which controls the table's actions and data.
 	 * 
@@ -42,10 +46,6 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 *            manipulation.
 	 */
 	public PersonTableModel(JTable table, List<P> _globaldata) {
-		columnNames = new String[] {
-				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
-		};
-		
 		globalData = _globaldata;
 		//data = new ArrayList<P>(globalData);
 		

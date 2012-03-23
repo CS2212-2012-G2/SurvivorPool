@@ -16,9 +16,6 @@ public class PlayerTableModel extends PersonTableModel<User> {
 	private static final long serialVersionUID = 1L;
 
 	// public static final int INDEX_SELECT = 0;
-	public static final int INDEX_ID = 0;
-	public static final int INDEX_LASTNAME = 1;
-	public static final int INDEX_FIRSTNAME = 2;
 	public static final int INDEX_POINTS = 3;
 	public static final int INDEX_WEEKLY_PICK = 4;
 	public static final int INDEX_ULT_PICK = 5;
