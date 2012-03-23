@@ -2,13 +2,10 @@ package admin.panel.person.contestant;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
@@ -27,10 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 
 import admin.FileDrop;
@@ -45,12 +39,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 
 	private static final long serialVersionUID = 1L;
 
-	private ContestantFieldsPanel paneEditFields;
 	// container for top stuff
 	private JButton btnCastOff;
 	
 	private JButton imgDisplay;
-	private String imgPath;
 	
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
@@ -64,10 +56,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 
 	private JTextField tfContID;
 	private JLabel labelID;
-	
-	// vars:
-	private boolean isNewContestant = false;
-	private boolean fieldsChanged = false;
 	
 	// static constants:
 	private static final String CAST_OFF_TEXT = "Cast Off";
@@ -84,12 +72,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	protected static final String TOOL_ADDNEW = "Click to add new contestant";
 	protected static final String TOOL_DELETE = "Click to remove currently selected " +
 			"Contestant";
-	
-	/**
-	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
-	 * YOU KNOW WHAT YOU ARE DOING.
-	 */
-	private Contestant loadedContestant;
 
 	public ContestantPanel() {
 		super(new Contestant());
@@ -284,7 +266,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	 * @param c
 	 * @param newContestant
 	 */
-	private void setPanelContestant(Contestant c, boolean newContestant) {
+	@Override
+	protected void setPanelPerson(Contestant c, boolean newContestant) {
 		super.setPanelPerson(c, newContestant);
 
 		btnCastOff.setEnabled(GameData.getCurrentGame().isSeasonStarted());
@@ -298,25 +281,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		}
 		
 		tableModel.setRowSelect(c);
-	}
-
-	private void saveContestant() throws InvalidFieldException {
-		Contestant con = null;
-		
-		// when a contestant is added, delete becomes active
-		btnDelete.setEnabled(true);
-		try {
-			con = getPerson();
-
-			tableModel.updatePerson(con);
-		} catch (InvalidFieldException e) {
-			setExceptionError(e);
-			throw e;
-		} // end catch block
-
-		// set that its now NOT a new contestant, and no fields have changed.
-		isNewContestant = false;
-		setFieldsChanged(false);
 	}
 
 	/**
@@ -379,6 +343,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	 */
 	@Override
 	protected void buildActions() {
+		super.buildActions();
+		
 		btnAddNew.addActionListener(new ActionListener() {
 			
 			@Override
@@ -398,38 +364,18 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				
 				if (getFieldsChanged()) {
 					try {
-						saveContestant();
+						savePerson();
 					} catch (InvalidFieldException ex) {
 						setExceptionError(ex);
 						return;
 					}
 				}
 
-				isNewContestant = true;
-				setPanelContestant(null, true);
+				setPanelPerson(null, true);
 			}
 		});
 		
-		btnSave.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {		
-				if (!getFieldsChanged()) 
-					return;
-				
-				try { 
-					saveContestant(); 
-					
-					Contestant c = getPerson(); // this wont cause exception
-					
-					tableModel.setRowSelect(c);
-				} catch (InvalidFieldException ex) {
-					setExceptionError(ex);
-					return;
-				}				
-			}
-
-		});
+		
 
 		btnCastOff.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -477,73 +423,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			}
 		});
 		
-		btnDelete.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// ask the admin for input on whether to delete or not
-				int response = JOptionPane.showConfirmDialog(null,
-						"Would you like to delete currently selected "
-								+ "Contestant?", "Delete Contestant?",
-						JOptionPane.YES_NO_OPTION);
-
-				if (response == JOptionPane.YES_OPTION) {
-					// user said they want to delete contestant
-					
-					Contestant c = null;
-					try {
-						c = getPerson();
-					} catch (InvalidFieldException ex) {
-						if (ex.getField() == InvalidFieldException.Field.CONT_ID) {
-							MainFrame.getRunningFrame().setStatusErrorMsg(
-									"Can not delete Contestant"
-											+ " (invalid ID)", tfContID);
-							return;
-						}
-						System.out.println("Delete contestant, exception");
-					}
-					
-					if (c == null) {
-						System.out.println("We goofed really badly.");
-						throw new NullPointerException("Could not get " +
-								"contestant from game data.");
-					}
-					
-					int row = tableModel.getRowByPerson(c);
-					boolean selRow = (table.getRowCount() > 1);
-
-					// remove the contestant from the game
-					tableModel.removePerson(c);
-					
-					if (selRow && (c != null)) {
-						row %= table.getRowCount();
-						tableModel.setRowSelect(row, false);
-					} else {
-						btnAddNew.doClick();
-					}
-				}
-			}
-		});
-		
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent le) {
-				 int row = table.getSelectedRow();
-				 if (row < 0) return;
-				// oldRow = row;
-				 
-				 row = table.getRowSorter().convertRowIndexToModel(row);
-				 Contestant c = tableModel.getByRow(row);
-			     
-				 if (c != null){
-					 if (getFieldsChanged())
-						 btnSave.doClick();
-					 
-					 setPanelContestant(c, false); 
-				 }
-			}
-		});
-		
 		imgDisplay.addActionListener(imgButtonListener);
 		
 		new FileDrop( this, new FileDrop.Listener(){   
@@ -552,25 +431,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			}
 		});
 
-		FocusAdapter fa = new FocusAdapter() {
-			JTextField src;
-
-			public void focusGained(FocusEvent evt) {
-				src = (JTextField) evt.getComponent();
-
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						src.selectAll();
-					}
-				});
-			}
-		};
-
 		List<JTextField> tfArr = Arrays.asList(tfContID, tfFirstName,
 				tfLastName);
 		for (JTextField tf : tfArr) {
-			tf.addFocusListener(fa);
+			tf.addFocusListener(editAdapt);
 		}
 	}
 

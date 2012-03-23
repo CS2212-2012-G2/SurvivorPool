@@ -2,6 +2,10 @@ package admin.panel.person;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -11,11 +15,16 @@ import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
@@ -75,18 +84,15 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		// ////////////////////////////
 		// Mid (table!)
 		// ////////////////////////////
-	
-		boolean tableValuesPresent;
+
 		table = new JTable();
 		
 		if (usingContestants) {
 			List<Contestant> cons = GameData.getCurrentGame().getAllContestants();
 			tableModel = (PersonTableModel<P>) new ContestantTableModel(table, cons);
-			tableValuesPresent = cons.size() > 0;
 		} else { 
 			List<User> users = GameData.getCurrentGame().getAllUsers();
 			tableModel = (PersonTableModel<P>) new PlayerTableModel(table, users);
-			tableValuesPresent = users.size() > 0;
 		}
 		
 		TableRowSorter<PersonTableModel<P>> sort = new TableRowSorter<PersonTableModel<P>>(
@@ -108,6 +114,22 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		GameData.getCurrentGame().addObserver(this);
 	}
 
+	protected FocusAdapter editAdapt = new FocusAdapter() {
+		JTextField src;
+
+		public void focusGained(FocusEvent evt) {
+			src = (JTextField) evt.getComponent();
+
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					src.selectAll();
+				}
+			});
+		}
+	};
+	
+	
 	protected abstract void setToolTips();
 
 	/**
@@ -320,7 +342,93 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 	 */
 	protected abstract void setExceptionError(InvalidFieldException e);
 
-	protected abstract void buildActions();
+	private String PString() {
+		return (usingContestants ? "Contestant" : "Player");
+	}
+	
+	protected void buildActions() {
+		btnDelete.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// ask the admin for input on whether to delete or not
+				int response = JOptionPane.showConfirmDialog(null,
+						"Would you like to delete currently selected "
+								+ PString(), "Delete " + PString(),
+						JOptionPane.YES_NO_OPTION);
+
+				if (response == JOptionPane.YES_OPTION) {
+					// user said they want to delete Person
+	
+					P p = null;
+					try {
+						p = getPerson();
+					} catch (InvalidFieldException ex) {
+						System.out.println("Delete contestant, exception");
+					}
+					
+					if (p == null) {
+						System.out.println("We goofed really badly.");
+						throw new NullPointerException("Could not get " +
+								PString() + " from game data.");
+					}
+					
+					int row = tableModel.getRowByPerson(p);
+					boolean selRow = (table.getRowCount() > 1);
+
+					// remove the contestant from the game
+					tableModel.removePerson(p);
+					
+					if (selRow && (p != null)) {
+						row %= table.getRowCount();
+						tableModel.setRowSelect(row, false);
+					} else {
+						btnAddNew.doClick();
+					}
+				}
+			}
+		});
+		
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {		
+				if (!getFieldsChanged()) 
+					return;
+				
+				try { 
+					savePerson(); 
+					
+					P p = getPerson(); // this wont cause exception
+					
+					tableModel.setRowSelect(p);
+				} catch (InvalidFieldException ex) {
+					setExceptionError(ex);
+					return;
+				}				
+			}
+
+		});
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			public void valueChanged(ListSelectionEvent le) {
+				 int row = table.getSelectedRow();
+				 if (row < 0) return;
+				// oldRow = row;
+				 
+				 row = table.getRowSorter().convertRowIndexToModel(row);
+				 P p = tableModel.getByRow(row);
+			     
+				 if (p != null){
+					 if (getFieldsChanged())
+						 btnSave.doClick();
+					 
+					 setPanelPerson(p, false); 
+				 }
+			}
+		});
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

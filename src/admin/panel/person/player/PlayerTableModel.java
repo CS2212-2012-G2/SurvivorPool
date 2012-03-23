@@ -53,10 +53,10 @@ public class PlayerTableModel extends PersonTableModel<User> {
 			return user.getPoints();
 
 		case INDEX_WEEKLY_PICK:
-			return user.getWeeklyPick().toString();
+			return user.getWeeklyPick();
 
 		case INDEX_ULT_PICK:
-			return user.getUltimatePick().toString();
+			return user.getUltimatePick();
 
 		default:
 			return null;
