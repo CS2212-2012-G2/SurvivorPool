@@ -41,7 +41,6 @@ Admin (SWING)
 		- Add a way to change the cast off date
 		- Display "Active" by default when making a new contestant
 		- Implement loading a "blank" contestant when clicking add
-		- Implement all things disabled when no contestant is "active" in the panel.
 	
 	PlayerPanel
 	~~~~~~~~~~~
