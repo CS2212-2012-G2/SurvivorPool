@@ -32,7 +32,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 
 	protected String[] columnNames;
-	protected List<P> data;
+	//protected List<P> data;
 
 	protected int sortColumn;
 	protected List<P> globalData;
@@ -53,7 +53,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		};
 		
 		globalData = _globaldata;
-		data = new ArrayList<P>(globalData);
+		//data = new ArrayList<P>(globalData);
 		
 		parent = table;
 	}
@@ -65,7 +65,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return data.size();
+		return globalData.size();
 	}
 
 	@Override
@@ -86,24 +86,6 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	public abstract void setValueAt(Object value, int row, int col);
 
 	/**
-	 * Checks if the table has an empty row.
-	 * 
-	 * @return
-	 */
-	public boolean hasEmptyRow() {
-		if (data.size() == 0)
-			return false;
-
-		Person p = (Person) data.get(data.size() - 1);
-
-		if (p.getFirstName().trim().equals("")
-				&& p.getLastName().trim().equals("") && p.getID().equals(""))
-			return true;
-		else
-			return false;
-	}
-
-	/**
 	 * Gets a person based on the row passed, this is used to read clicks.
 	 * 
 	 * @param row
@@ -111,7 +93,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 * @return Data contained in the Row in the Generic specified form
 	 */
 	public P getByRow(int row) {
-		return (row > -1 ? data.get(row) : null);
+		return (row > -1 ? globalData.get(row) : null);
 	}
 
 	/**
@@ -127,8 +109,8 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 
 		String id = ((Person) p).getID();
 
-		for (int i = 0; i < data.size(); i++) {
-			Person t = (Person) data.get(i);
+		for (int i = 0; i < globalData.size(); i++) {
+			Person t = (Person) globalData.get(i);
 			if (t.getID().equals(id)) {
 				return i;
 			}
@@ -168,8 +150,10 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		else
 			g.addUser((User) p);
 		
-		data.add(p);
-		sortTable();
+		
+		//data.add(p);
+		//sortTable();
+		fireTableDataChanged();
 	}
 
 	/**
@@ -179,8 +163,8 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 *            Person to remove.
 	 */
 	public void removePerson(P p) {
-		data.remove(p);
-		sortTable();
+		//data.remove(p);
+		//sortTable();
 
 		GameData g = GameData.getCurrentGame();
 
@@ -188,6 +172,8 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 			g.removeContestant((Contestant) p);
 		else if (p instanceof User)
 			g.removeUser((User) p);
+		
+		fireTableDataChanged();
 	}
 
 	/**
@@ -243,7 +229,8 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 			}
 		}
 
-		sortTable();
+		//sortTable();
+		fireTableDataChanged();
 	}
 	
 	private RowSelector curRowSelect;

@@ -47,14 +47,14 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 		};
 		
 		globalData = _globaldata;
-		data = new ArrayList<Contestant>(globalData);
+		//data = new ArrayList<Contestant>(globalData);
 
 		sortColumn = INDEX_ID;
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Contestant player = (Contestant) data.get(row);
+		Contestant player = (Contestant) globalData.get(row);
 
 		switch (col) {
 		case INDEX_ID:
@@ -82,7 +82,7 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 
 	@Override
 	public void setValueAt(Object value, int row, int col) {
-		Contestant player = (Contestant) data.get(row);
+		Contestant player = (Contestant) globalData.get(row);
 
 		switch (col) {
 		case INDEX_ID:
@@ -185,10 +185,32 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 			}
 		};
 		
+		Comparator<Object> activeComp = new Comparator<Object>() {
+
+			@Override
+			public int compare(Object o1, Object o2) {
+				if (o1 instanceof String && o2 instanceof String) {
+					return 0;
+				}
+				
+				if (o1 instanceof Integer && o2 instanceof String) {
+					return -1;
+				}
+				
+				if (o1 instanceof String && o2 instanceof Integer) {
+					return +1;
+				}
+				
+				// both are ints:
+				return (Integer)o1 - (Integer)o2;
+			}
+			
+		};
+		
 		sort.setComparator(INDEX_ID, strCompCase);
 		sort.setComparator(INDEX_FIRSTNAME, strCompNoCase);
 		sort.setComparator(INDEX_LASTNAME, strCompNoCase);
-		sort.setComparator(INDEX_DATECAST, intComp);
+		sort.setComparator(INDEX_DATECAST, activeComp);
 		sort.setComparator(INDEX_TRIBE, strCompNoCase);	
 	}
 }

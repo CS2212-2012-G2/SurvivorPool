@@ -50,7 +50,7 @@ public class PlayerTableModel extends PersonTableModel<User> {
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		User user = (User) data.get(row);
+		User user = (User) globalData.get(row);
 		switch (col) {
 		case INDEX_ID:
 			return user.getID();
@@ -77,7 +77,7 @@ public class PlayerTableModel extends PersonTableModel<User> {
 
 	@Override
 	public void setValueAt(Object value, int row, int col) {
-		User user = (User) data.get(row);
+		User user = (User) globalData.get(row);
 
 		switch (col) {
 		case INDEX_ID:
@@ -114,7 +114,7 @@ public class PlayerTableModel extends PersonTableModel<User> {
 	 *            sorting otherwise.
 	 */
 	protected void sortTableBy(int col) {
-		Comparator<User> comp;
+		/*Comparator<User> comp;
 
 		// use the stored column if -1 is passed.
 		col = (col == -1 ? sortColumn : col);
@@ -149,10 +149,10 @@ public class PlayerTableModel extends PersonTableModel<User> {
 			return;
 		}
 
-		Collections.sort(data, comp);
+		//Collections.sort(data, comp);
 		fireTableDataChanged();
 
-		sortColumn = col;
+		sortColumn = col;*/
 	}
 
 	@Override
