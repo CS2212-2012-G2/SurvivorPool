@@ -49,7 +49,9 @@ public class MainFrame extends JFrame {
 	private JMenu mnuTheme = new JMenu("Theme");
 
 	private JMenuItem mnuItemReset;
+	private JMenuItem mnuItemSave;
 	private JMenuItem mnuItemExit;
+	
 	private JRadioButtonMenuItem mnuItemTheme1;
 	private JRadioButtonMenuItem mnuItemTheme2;
 	private JRadioButtonMenuItem mnuItemTheme3;
@@ -71,6 +73,8 @@ public class MainFrame extends JFrame {
 				windowClose();
 			} else if (ae.getSource() == mnuItemReset) {
 				resetSeason();
+			} else if (ae.getSource() == mnuItemSave){
+				GameData.getCurrentGame().writeData();
 			} else if (ae.getSource() == mnuItemTheme1) {
 				changeTheme(ae.getActionCommand());
 			} else if (ae.getSource() == mnuItemTheme3) {
@@ -115,6 +119,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void initSeasonCreateGUI() {
+		mnuItemSave.setEnabled(false);
 		this.setLayout(new BorderLayout());
 		statusBar = new StatusPanel();
 		this.add(new SeasonCreatePanel(), BorderLayout.CENTER);
@@ -123,6 +128,7 @@ public class MainFrame extends JFrame {
 	}
 
 	private void initGUI() {
+		mnuItemSave.setEnabled(true);
 		Dimension d = new Dimension(135, 20);
 
 		lblGeneral.setPreferredSize(d);
@@ -161,7 +167,7 @@ public class MainFrame extends JFrame {
 
 	private void initMenuBar() {
 		mnuItemReset = new JMenuItem("Reset Season");
-
+		mnuItemSave = new JMenuItem("Save");
 		mnuItemExit = new JMenuItem("Exit");
 		String[] themeName = Utils.getThemes();
 		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
@@ -178,6 +184,7 @@ public class MainFrame extends JFrame {
 		mnuTheme.add(mnuItemTheme2);
 		g.add(mnuItemTheme2);
 
+		mnuFile.add(mnuItemSave);
 		mnuFile.add(mnuItemReset);
 		mnuFile.add(mnuItemExit);
 
@@ -185,6 +192,7 @@ public class MainFrame extends JFrame {
 		menuBar.add(mnuTheme);
 
 		mnuItemReset.addActionListener(al);
+		mnuItemSave.addActionListener(al);
 		mnuItemExit.addActionListener(al);
 		mnuItemTheme1.addActionListener(al);
 		mnuItemTheme3.addActionListener(al);
