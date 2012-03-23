@@ -1,4 +1,4 @@
-package admin;
+package admin.panel.bonus;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import admin.MainFrame;
 
 import data.GameData;
 import data.GameData.Field;

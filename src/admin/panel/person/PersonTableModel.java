@@ -1,7 +1,7 @@
 /**
  * 
  */
-package admin;
+package admin.panel.person;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,6 +13,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+
+import admin.Utils;
 
 import data.Contestant;
 import data.GameData;

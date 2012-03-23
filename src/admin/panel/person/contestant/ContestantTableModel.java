@@ -1,4 +1,4 @@
-package admin.contestanttab;
+package admin.panel.person.contestant;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,8 +13,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import admin.PersonTableModel;
 import admin.Utils;
+import admin.panel.person.PersonTableModel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;

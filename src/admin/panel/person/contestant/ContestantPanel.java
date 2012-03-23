@@ -1,4 +1,4 @@
-package admin.contestanttab;
+package admin.panel.person.contestant;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

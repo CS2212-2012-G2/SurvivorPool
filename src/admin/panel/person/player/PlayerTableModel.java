@@ -1,4 +1,4 @@
-package admin.playertab;
+package admin.panel.person.player;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,8 +12,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import admin.PersonTableModel;
 import admin.Utils;
+import admin.panel.person.PersonTableModel;
 import data.GameData;
 import data.InvalidFieldException;
 import data.InvalidFieldException.Field;

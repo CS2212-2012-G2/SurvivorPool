@@ -1,4 +1,4 @@
-package admin.contestanttab;
+package admin.panel.person.contestant;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

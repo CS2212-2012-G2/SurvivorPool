@@ -1,4 +1,4 @@
-package admin;
+package admin.panel.general;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -19,6 +19,9 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import admin.MainFrame;
+import admin.Utils;
 
 import data.GameData;
 import data.Person;
