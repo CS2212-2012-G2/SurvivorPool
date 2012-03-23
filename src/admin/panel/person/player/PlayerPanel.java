@@ -36,9 +36,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 
 import admin.MainFrame;
 import admin.Utils;
+import admin.panel.person.PersonTableModel;
+import admin.panel.person.contestant.ContestantTableModel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
@@ -151,8 +154,13 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		// ////////////////////////////
 		List<User> users = GameData.getCurrentGame().getAllUsers();
 		table = new JTable();
+		
 		tableModel = new PlayerTableModel(table, users);
+		TableRowSorter<PersonTableModel<User>> sort = 
+				new TableRowSorter<PersonTableModel<User>>(tableModel);
+		tableModel.setComparators(sort);
 		table.setModel(tableModel);
+		table.setRowSorter(sort);
 		
 		header = table.getTableHeader();
 
@@ -231,7 +239,7 @@ public class PlayerPanel extends JPanel implements ChangeListener,
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		header.addMouseListener(tableModel.new SortColumnAdapter());
+		//header.addMouseListener(tableModel.new SortColumnAdapter());
 
 		TableCellRenderer renderer = new TableCellRenderer() {
 

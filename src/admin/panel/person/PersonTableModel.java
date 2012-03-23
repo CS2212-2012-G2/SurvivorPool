@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import admin.Utils;
 
@@ -279,6 +280,10 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		setRowSelect(r);
 	}
 	
+
+	
+	protected abstract void setComparators(TableRowSorter<PersonTableModel<P>> sort);
+	
 	/**
 	 * 
 	 * TODO:
@@ -286,7 +291,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 	 * @author kevin
 	 * 
 	 */
-	public class SortColumnAdapter extends MouseAdapter {
+	/*public class SortColumnAdapter extends MouseAdapter {
 
 		public void mouseClicked(MouseEvent e) {
 			JTable table = ((JTableHeader) e.getSource()).getTable();
@@ -314,7 +319,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 			int r = model.getRowByPerson(p);
 			table.setRowSelectionInterval(r, r);
 		}
-	}
+	} */
 	
 	private class RowSelector implements Runnable {
 

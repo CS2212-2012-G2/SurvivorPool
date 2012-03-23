@@ -12,6 +12,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import admin.Utils;
 import admin.panel.person.PersonTableModel;
@@ -32,7 +33,7 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 
 	/**
 	 * Creates the table model which controls the table's actions and data.
-	 * 
+	 * @param sorter TODO
 	 * @param _globaldata
 	 *            The global data stored in GameData, this is done to maintain
 	 *            data persistance with the two, while allowing order
@@ -49,7 +50,6 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 		data = new ArrayList<Contestant>(globalData);
 
 		sortColumn = INDEX_ID;
-
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 	 *            sorting otherwise.
 	 */
 	protected void sortTableBy(int col) {
-		Comparator<Contestant> comp;
+	/*	Comparator<Contestant> comp;
 
 		// use the stored column if -1 is passed.
 		col = (col == -1 ? sortColumn : col);
@@ -137,7 +137,7 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 			break;
 
 		case INDEX_FIRSTNAME:
-			comp = Utils.getContComparator(Utils.CompType.CONTNT_FIRST_NAME);
+			comp = );
 			break;
 
 		case INDEX_LASTNAME:
@@ -159,6 +159,36 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 		Collections.sort(data, comp);
 		fireTableDataChanged();
 
-		sortColumn = col;
+		sortColumn = col; */
+	}
+
+	@Override
+	protected void setComparators(TableRowSorter<PersonTableModel<Contestant>> sort) {
+		Comparator<Integer> intComp = new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o1-o2;
+			}	
+		};
+		
+		Comparator<String> strCompNoCase = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareToIgnoreCase(o2);
+			}
+		};
+		
+		Comparator<String> strCompCase = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareTo(o2);
+			}
+		};
+		
+		sort.setComparator(INDEX_ID, strCompCase);
+		sort.setComparator(INDEX_FIRSTNAME, strCompNoCase);
+		sort.setComparator(INDEX_LASTNAME, strCompNoCase);
+		sort.setComparator(INDEX_DATECAST, intComp);
+		sort.setComparator(INDEX_TRIBE, strCompNoCase);	
 	}
 }

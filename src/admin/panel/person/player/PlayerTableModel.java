@@ -11,9 +11,11 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import admin.Utils;
 import admin.panel.person.PersonTableModel;
+import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
 import data.InvalidFieldException.Field;
@@ -33,7 +35,7 @@ public class PlayerTableModel extends PersonTableModel<User> {
 
 	/**
 	 * Creates the table model which controls the table's actions and data.
-	 * 
+	 * @param sorter TODO
 	 * @param users
 	 *            The global reference to the actual GameData.
 	 */
@@ -151,5 +153,44 @@ public class PlayerTableModel extends PersonTableModel<User> {
 		fireTableDataChanged();
 
 		sortColumn = col;
+	}
+
+	@Override
+	protected void setComparators(TableRowSorter<PersonTableModel<User>> sort) {
+		Comparator<Integer> intComp = new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o1-o2;
+			}	
+		};
+		
+		Comparator<String> strCompNoCase = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareToIgnoreCase(o2);
+			}
+		};
+		
+		Comparator<String> strCompCase = new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o1.compareTo(o2);
+			}
+		};
+		
+		Comparator<Contestant> conComp = new Comparator<Contestant>() {
+
+			@Override
+			public int compare(Contestant o1, Contestant o2) {
+				return o1.compareTo(o2);
+			}
+		};
+		
+		sort.setComparator(INDEX_ID, strCompCase);
+		sort.setComparator(INDEX_FIRSTNAME, strCompNoCase);
+		sort.setComparator(INDEX_LASTNAME, strCompNoCase);
+		sort.setComparator(INDEX_POINTS, intComp);
+		sort.setComparator(INDEX_ULT_PICK, conComp);	
+		sort.setComparator(INDEX_WEEKLY_PICK, conComp);
 	}
 }
