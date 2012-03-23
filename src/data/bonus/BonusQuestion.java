@@ -293,9 +293,9 @@ public class BonusQuestion {
 		System.out.println(byWeek.getBonusType());
 		System.out.println(Bonus.toJSONObject().toJSONString());
 		JSONUtils.writeJSON(Bonus.filePath, Bonus.toJSONObject());
-		JSONObject fileO = JSONUtils.readFile(Bonus.filePath+".as");
-		System.out.println(fileO.toJSONString());
-		Bonus.fromJSONObject(fileO);
+		//JSONObject fileO = JSONUtils.readFile(Bonus.filePath+".as");
+		//System.out.println(fileO.toJSONString());
+		//Bonus.fromJSONObject(fileO);
 		
 	}
 }

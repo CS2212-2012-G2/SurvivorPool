@@ -126,8 +126,8 @@ public class GeneralPanel extends JPanel implements Observer {
 	private void initExistingGame() {
 		setRemainingContestantsLabel();
 		setCastOffContestantsLabel();
-		btnStartSeason.setEnabled(false);
-		btnAdvanceWeek.setEnabled(true);
+		btnStartSeason.setEnabled(!GameData.getCurrentGame().isSeasonStarted());
+		btnAdvanceWeek.setEnabled(GameData.getCurrentGame().isSeasonStarted());
 	}
 	
 	private void setRemainingContestantsLabel() {
