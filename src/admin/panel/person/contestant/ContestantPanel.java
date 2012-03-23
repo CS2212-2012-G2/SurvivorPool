@@ -710,7 +710,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					 
 					 setPanelContestant(c, false); 
 				 }
-				 table.setRowSelectionInterval(row, row);
 			}
 		});
 		
