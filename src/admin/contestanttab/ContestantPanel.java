@@ -632,7 +632,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		});
 		
 		btnDelCon.addActionListener(new ActionListener(){
->>>>>>> working
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
