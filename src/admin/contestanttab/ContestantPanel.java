@@ -351,7 +351,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			System.out.println("Exception loading image for contestant "
 					+ "picture [" + path + "]");
 			imgDisplay.setIcon(null);
-			imgDisplay.setText("Could not load: " + path);
+			MainFrame.getRunningFrame().setStatusErrorMsg("Could not load: "+path,imgDisplay );
 		}
 
 	}
