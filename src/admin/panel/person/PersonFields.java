@@ -3,9 +3,6 @@
  */
 package admin.panel.person;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
 import data.InvalidFieldException;
 import data.Person;
 

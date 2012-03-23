@@ -15,11 +15,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 
 import admin.MainFrame;
 import admin.panel.person.PersonFields;
-
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
