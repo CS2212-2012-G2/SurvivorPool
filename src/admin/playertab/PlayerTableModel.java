@@ -37,10 +37,10 @@ public class PlayerTableModel extends PersonTableModel<User> {
 	 * @param users
 	 *            The global reference to the actual GameData.
 	 */
-	public PlayerTableModel(List<User> users) {
-		super(users);
-
-		columnNames = new String[] { "ID", "Last", "First", "Points",
+	public PlayerTableModel(JTable table, List<User> users) {
+		super(table, users);
+		
+		columnNames = new String[] { "ID", "Last", "First", "Points", 
 				"Weekly Pick", "Ultimate Pick" };
 
 		sortColumn = INDEX_ID;

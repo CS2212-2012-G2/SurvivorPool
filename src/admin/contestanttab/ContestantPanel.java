@@ -135,13 +135,16 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 			btnCastOff.setEnabled(false);
 
 		btnSaveCont = new JButton("Save");
-
-		// ////////////////////////////
-		// Mid
-		// ////////////////////////////
+		
+		//////////////////////////////
+		// Mid (table!)
+		//////////////////////////////
 		List<Contestant> cons = GameData.getCurrentGame().getAllContestants();
-		tableModel = new ContestantTableModel(cons);
-		table = new JTable(tableModel);
+		
+		table = new JTable();
+		tableModel = new ContestantTableModel(table, cons);
+		table.setModel(tableModel);
+		
 		header = table.getTableHeader();
 
 		// ////////////////////////////
@@ -162,7 +165,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		update(GameData.getCurrentGame(), null);
 
 		if (cons.size() > 0) {
-			table.setRowSelectionInterval(0, 0);
+			tableModel.setRowSelect(0);
 		} else {
 			setPanelContestant(null, true);
 		}
@@ -385,6 +388,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		if (isNewContestant) {
 			loadedContestant = new Contestant();
 		} else {
+			if (loadedContestant == c) {
+				return; // don't need to set it then..
+			}
 			loadedContestant = c;
 		}
 
@@ -407,10 +413,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 			// we don't want any rows selected
 			ListSelectionModel m = table.getSelectionModel();
-			int row = table.getSelectedRow();
-			if (row >= 0) {
-				m.removeIndexInterval(row, row);
-			}
+			m.clearSelection();
 
 			return;
 		}
@@ -425,6 +428,8 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		tfContID.setText(c.getID());
 
 		updateContPicture(c.getPicture());
+		
+		tableModel.setRowSelect(c);
 	}
 
 	private void saveContestant() throws InvalidFieldException {
@@ -442,10 +447,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		// set that its now NOT a new contestant, and no fields have changed.
 		isNewContestant = false;
 		setFieldsChanged(false);
-
-		int row = tableModel.getRowByPerson(con);
-		if (row > -1 && table.getSelectedRow() != row)
-			table.setRowSelectionInterval(row, row);
 	}
 
 	/**
@@ -511,15 +512,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (getFieldsChanged()) {
-					try {
-						saveContestant();
-					} catch (InvalidFieldException ex) {
-						setExceptionError(ex);
-						return;
-					}
-				}
-
 				GameData g = GameData.getCurrentGame();
 				// check if too many contestants
 				if (g.getAllContestants().size() == g.getInitialContestants()) {
@@ -531,7 +523,16 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 											"delete an existing contestant.");
 					return;
 				}
-
+				
+				if (getFieldsChanged()) {
+					try {
+						saveContestant();
+					} catch (InvalidFieldException ex) {
+						setExceptionError(ex);
+						return;
+					}
+				}
+				
 				isNewContestant = true;
 				setPanelContestant(null, true);
 			}
@@ -540,13 +541,20 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		btnSaveCont.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (getFieldsChanged()) {
-					try {
-						saveContestant();
-					} catch (InvalidFieldException ex) {
-					}
-				}
+			public void actionPerformed(ActionEvent e) {		
+				if (!getFieldsChanged()) 
+					return;
+				
+				try { 
+					saveContestant(); 
+					
+					Contestant c = getContestant(); // this wont cause exception
+					
+					tableModel.setRowSelect(c);
+				} catch (InvalidFieldException ex) {
+					setExceptionError(ex);
+					return;
+				}				
 			}
 
 		});
@@ -560,12 +568,9 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 					c = getContestant();
 				} catch (InvalidFieldException ie) {
 					// FIXME: Intelligently respond on the exception.
-					// In theory, it shouldn't happen, but we can't cast
-					// someone with an invalid ID.. :/
+					// In theory, it shouldn't happen, but we shouldn't cast
+					// someone who isn't fully in the game.. :/
 					return;
-					// if (ie.getField() != Field.CONT_ID) {
-					// setExceptionError(ie);
-					// }
 				}
 
 				if (s.equals("Cast Off")) {
@@ -580,6 +585,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 										"then cast off the correct one.");
 						return;
 					}
+					
 					// can't cast off someone already off.
 					if (c.isCastOff()) {
 						JOptionPane.showMessageDialog(null,
@@ -621,73 +627,56 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 											+ " (invalid ID)", tfContID);
 							return;
 						}
+						System.out.println("Delete contestant, exception");
 					}
 
 					// actually delete the contestant
 					GameData g = GameData.getCurrentGame();
 					// get the contestant by the ID passed
 					Contestant t = g.getContestant(c.getID());
-
+					
+					if (t == null) {
+						System.out.println("We goofed really badly.");
+						throw new NullPointerException("Could not get " +
+								"contestant from game data.");
+					}
+					
 					int row = tableModel.getRowByPerson(t);
 					boolean selRow = (table.getRowCount() > 1);
 
 					// remove the contestant from the game
 					tableModel.removePerson(t);
-
-					if (selRow) {
+					
+					if (selRow && (t != null)) {
 						row %= table.getRowCount();
-						table.setRowSelectionInterval(row, row);
+						tableModel.setRowSelect(row);
 					} else {
 						btnAddCont.doClick();
 					}
 				}
 			}
 		});
-
-		table.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-
-					int oldRow = -1; // breaks an infinite loop since
-										// setPanelUser fires this event
-
-					public void valueChanged(ListSelectionEvent le) {
-						if (le.getValueIsAdjusting()) return;
-						
-						System.out.println("index: " + le.getFirstIndex());
-						
-						final int row = table.getSelectedRow();
-						if (row < 0 || oldRow == row)
-							return;
-						
-						oldRow = row;
-						
-						SwingUtilities.invokeLater(new Runnable() {
-
-							@Override
-							public void run() {
-								if (getFieldsChanged()) {
-									try {
-										saveContestant();
-									} catch (InvalidFieldException e) {
-										setExceptionError(e);
-										return;
-									}
-								}
-								
-								Contestant c = tableModel.getByRow(row);
-
-								if (c != null) {
-									setPanelContestant(c, false);
-								}
-							}
-							
-						});
-						
-					}
-				});
-
-		new FileDrop(this, new FileDrop.Listener() {
-			public void filesDropped(java.io.File[] files) {
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			public void valueChanged(ListSelectionEvent le) {
+				 int row = table.getSelectedRow();
+				 if (row < 0) return;
+				// oldRow = row;
+				 
+				 Contestant c = tableModel.getByRow(row);
+			     
+				 if (c != null){
+					 if (getFieldsChanged())
+						 btnSaveCont.doClick();
+					 
+					 setPanelContestant(c, false); 
+				 }
+			}
+		});
+		
+		new FileDrop( this, new FileDrop.Listener(){   
+			public void filesDropped( java.io.File[] files ){   
 				updateContPicture(files[0].getAbsolutePath());
 			}
 		});
@@ -726,10 +715,7 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 
 		run.run();
 
-		int row = tableModel.getRowByPerson(c);
-		if (row > -1 && // only select if the row is valid
-				table.getSelectedRow() != row) // don't select if it we can't
-			table.setRowSelectionInterval(row, row);
+		tableModel.setRowSelect(c);	
 	}
 
 	@Override
