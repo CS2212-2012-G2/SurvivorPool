@@ -49,34 +49,20 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		labelName = _labelName;
 		tfFirstName = _tfFirstName;
 		tfLastName = _tfLastName;
-		
-		labelName.setToolTipText(PlayerPanel.TOOL_NAME);
-		tfFirstName.setToolTipText(PlayerPanel.TOOL_NAME);
-		tfLastName.setToolTipText(PlayerPanel.TOOL_NAME);
 		/// end name
 		
 		/// ID
 		labelID = _labelID;
 		tfID = _tfID;
 		btnGenID = _btnGenID;
-		
-		labelID.setToolTipText(PlayerPanel.TOOL_IDTXT);
-		tfID.setToolTipText(PlayerPanel.TOOL_IDTXT);
-		btnGenID.setToolTipText(PlayerPanel.TOOL_IDBTN);
 		/// end ID
 		
 		/// contestant picks:
 		labelWeekly = _labelWeekly;
 		cbWeeklyPick = _cbWeeklyPick;
 		
-		labelWeekly.setToolTipText(PlayerPanel.TOOL_WEEKLY);
-		cbWeeklyPick.setToolTipText(PlayerPanel.TOOL_WEEKLY);
-		
 		labelUltimate = _labelUltimate;
 		cbUltPick = _cbUltPick;
-		
-		labelUltimate.setToolTipText(PlayerPanel.TOOL_ULT);
-		cbUltPick.setToolTipText(PlayerPanel.TOOL_ULT);
 		/// end contestant picks
 		
 		gbFields = new GridBagLayout();
@@ -163,9 +149,6 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
 	@Override
 	public void setEditPane(User u, boolean newUser) {
-		tfID.setEnabled(newUser);
-		btnGenID.setEnabled(newUser);
-
 		if (newUser || u == null) {
 			// set default values
 			tfID.setText("");

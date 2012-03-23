@@ -140,8 +140,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	protected void buildTopPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout(10, 10));
-		
-		btnSave.setToolTipText(TOOL_SAVE);
 
 		// this does not need to be referenced else where, only for layout
 		JPanel rightPane = new JPanel();
@@ -168,68 +166,10 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			c.addMouseListener(this);
 	}
 
-	/**
-	 * Builds the panel containing the JTable
-	 */
-	@Override
-	protected void buildTablePanel() {
-		JPanel panel = new JPanel();
-
-		// settings:
-		header.setReorderingAllowed(false); // no moving.
-		table.setColumnSelectionAllowed(true);
-		table.setRowSelectionAllowed(true);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		//header.addMouseListener(tableModel.new SortColumnAdapter());
-
-		TableCellRenderer renderer = new TableCellRenderer() {
-
-			JLabel label = new JLabel();
-
-			@Override
-			public JComponent getTableCellRendererComponent(JTable table,
-					Object value, boolean isSelected, boolean hasFocus,
-					int row, int column) {
-
-				if (table.isRowSelected(row)) {
-					label.setBackground(Utils.getThemeTableHighlight());
-					label.setForeground(Utils.getThemeBG());
-				} else {
-					label.setBackground(UIManager.getColor("Table.background"));
-					label.setForeground(UIManager.getColor("Table.foreground"));
-				}
-
-				label.setOpaque(true);
-				label.setText("" + value);
-
-				return label;
-			}
-
-		};
-		table.setDefaultRenderer(Object.class, renderer);
-		table.setToolTipText(TOOL_TABLE);
-
-		JScrollPane scroll = new JScrollPane(table);
-
-		panel.setLayout(new BorderLayout(5, 5));
-		panel.add(scroll, BorderLayout.CENTER);
-
-		add(panel, BorderLayout.CENTER);
-
-		// add the mouse listener to all components.
-		for (Component c : scroll.getComponents()) {
-			c.addMouseListener(this);
-		}
-	}
-
 	@Override
 	protected void buildBottomPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		
-		btnAddNew.setToolTipText(TOOL_NEW);
-		btnDelete.setToolTipText(TOOL_DELETE);
 		
 		panel.add(btnAddNew);
 		panel.add(btnDelete);
@@ -239,16 +179,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		for (Component c : panel.getComponents()) {
 			c.addMouseListener(this);
 		}
-	}
-
-	// FIXME: When is this called..?
-	public void seasonStarted(){
-		tfID.setEnabled(false);
-		tfFirstName.setEnabled(false);
-		tfLastName.setEnabled(false);
-		btnGenID.setEnabled(false);
-		btnAddNew.setEnabled(false);
-		btnDelete.setEnabled(false);
 	}
 
 	/**
@@ -284,8 +214,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	protected void setPanelPerson(User u, boolean newUser) {
 		super.setPanelPerson(u, newUser);
 		
-		tfID.setEnabled(isNewPerson);
-		btnGenID.setEnabled(isNewPerson);
 		btnSave.setEnabled(false);
 
 		if (newUser || u == null) {
@@ -364,7 +292,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 		});
 
-		/*btnSave.addActionListener(new ActionListener() {
+		/* TODO: Is this necessary?
+		btnSave.addActionListener(new ActionListener() {
 			// FIXME: global setting? Its reset every time the GUI is loaded
 			// right now
 			boolean dontShowConfirm = false;
@@ -462,10 +391,10 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	@Override
 	public void mousePressed(MouseEvent me) {
 		Component c = me.getComponent();
-		if (c == tfFirstName || c == tfLastName || c == tfID || c == cbUltPick
-				|| c == cbWeeklyPick) {
+		if (c == tfFirstName || c == tfLastName || c == tfID || c == btnGenID || 
+				c == cbUltPick || c == cbWeeklyPick) {
 			fieldsChanged = true;
-			btnSave.setEnabled(true);
+			btnSave.setEnabled(c.isEnabled());
 		}
 	}
 
@@ -479,6 +408,9 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		btnAddNew.setEnabled(!g.isSeasonStarted());
 		btnDelete.setEnabled(!g.isSeasonStarted());
 		
+		btnGenID.setEnabled(!g.isSeasonStarted());
+		tfID.setEnabled(!g.isSeasonStarted());
+		
 		refreshContestantCBs();
 				
 		tableModel.fireTableDataChanged();
@@ -486,7 +418,25 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 	@Override
 	protected void setToolTips() {
-		// TODO Auto-generated method stub
+		
+		labelName.setToolTipText(TOOL_NAME);
+		tfFirstName.setToolTipText(TOOL_NAME);
+		tfLastName.setToolTipText(TOOL_NAME);
+		
+		labelID.setToolTipText(PlayerPanel.TOOL_IDTXT);
+		tfID.setToolTipText(PlayerPanel.TOOL_IDTXT);
+		btnGenID.setToolTipText(PlayerPanel.TOOL_IDBTN);
+
+		labelWeekly.setToolTipText(PlayerPanel.TOOL_WEEKLY);
+		cbWeeklyPick.setToolTipText(PlayerPanel.TOOL_WEEKLY);
+	
+		labelUltimate.setToolTipText(PlayerPanel.TOOL_ULT);
+		cbUltPick.setToolTipText(PlayerPanel.TOOL_ULT);
+		
+		btnSave.setToolTipText(TOOL_SAVE);
+		
+		btnAddNew.setToolTipText(TOOL_NEW);
+		btnDelete.setToolTipText(TOOL_DELETE);
 		
 	}
 }
