@@ -33,6 +33,11 @@ import data.bonus.Bonus;
 import data.bonus.BonusQuestion;
 import data.bonus.BonusQuestion.BONUS_TYPE;
 
+/**
+ * 
+ * @author Kevin Brightwell, Justin MacDonald, Ramesh Raj
+ *
+ */
 public class BonusPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;

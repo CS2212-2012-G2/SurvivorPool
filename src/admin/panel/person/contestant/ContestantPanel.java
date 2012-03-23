@@ -741,28 +741,6 @@ public class ContestantPanel extends JPanel implements MouseListener, Observer {
 		}
 	}
 
-	/**
-	 * Helper method that will get the selected row, call the runnable method
-	 * then reset the table to where it was by the contestant.
-	 * 
-	 * @param run
-	 *            Method to run
-	 */
-	private void callResetSelectedRow(Runnable run) {
-		int row = table.getSelectedRow();
-		Contestant c = null;
-		
-		if (row > -1) {
-			row = table.getRowSorter().convertRowIndexToModel(row);
-			c = tableModel.getByRow(row);
-		}
-
-		run.run();
-
-		if (c != null)
-			tableModel.setRowSelect(c);	
-	}
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		return;
