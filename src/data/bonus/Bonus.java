@@ -104,7 +104,7 @@ public class Bonus extends Observable {
 	 */
 	public static BonusQuestion getQuestionByWeekAndNumber(int week, int number) {
 		int loc = getQuestionLoc(week);
-		if (loc == 1) loc--;
+		if (week == 1) loc--;
 		loc +=number;
 
 		BonusQuestion b = questions.get(loc);

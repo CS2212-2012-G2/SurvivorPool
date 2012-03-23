@@ -150,8 +150,6 @@ public class BonusPanel extends JPanel implements Observer {
 		rbAnswerD = new JRadioButton();
 		
 		this.add(pnlNewQ, BorderLayout.NORTH);
-		this.repaint();
-		this.revalidate();
 	}
 	
 	/**
@@ -175,8 +173,6 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlNewQ.add(pnlTypeQ);
 
 		this.add(pnlNewQ, BorderLayout.NORTH);
-		this.repaint();
-		this.revalidate();
 	}
 	
 	/**
@@ -224,8 +220,6 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlNewQ.add(pnlTypeQ);
 
 		this.add(pnlNewQ, BorderLayout.NORTH);
-		this.repaint();
-		this.revalidate();
 	}
 	
 	/**
@@ -263,7 +257,7 @@ public class BonusPanel extends JPanel implements Observer {
 		currentQuestionNumber = 1;
 		
 		try {
-			bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
+			bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
 		} catch (IndexOutOfBoundsException e) {
 			bq = null;
 		}
@@ -302,7 +296,6 @@ public class BonusPanel extends JPanel implements Observer {
 		weekModel.setValue(wValue);
 		weekModel.setMaximum(wMax);
 		spnWeek.addChangeListener(clWeek);
-		spnWeek.validate();
 	}
 	
 	/**
@@ -315,7 +308,6 @@ public class BonusPanel extends JPanel implements Observer {
 		snmQuestion.setValue(qValue);
 		snmQuestion.setMaximum(qMax);
 		spnQuestion.addChangeListener(clQuestion);
-		spnQuestion.validate();
 	}
 	
 	/**
@@ -422,12 +414,14 @@ public class BonusPanel extends JPanel implements Observer {
 	 * 		adds question to the gui LIST
 	 */
 	private void addNewShortAnswer() {
+		currentWeek = GameData.getCurrentGame().getCurrentWeek();
 		currentQuestionNumber = Bonus.getNumQuestionsInWeek(currentWeek) + 1;				
 		answer = txtAnswer.getText();						
 		bq = new BonusQuestion(question, answer, null, 
 				GameData.getCurrentGame().getCurrentWeek(), currentQuestionNumber);
 		initPnlAddQuestion();
 		addQuestionToListing(bq);
+		setWeekSpinner(currentWeek, currentWeek);
 		setQuestionSpinner(currentQuestionNumber, currentQuestionNumber);
 		btnModify.setEnabled(true);
 		modifyBonusQuestion = false;
@@ -442,11 +436,13 @@ public class BonusPanel extends JPanel implements Observer {
 	 * @param answers: the list of possible answers
 	 */
 	private void addNewMultipleChoice(String answer, String[] answers){
+		currentWeek = GameData.getCurrentGame().getCurrentWeek();
 		currentQuestionNumber = Bonus.getNumQuestionsInWeek(currentWeek) + 1;
 		bq = new BonusQuestion(question, answer, answers, 
 				GameData.getCurrentGame().getCurrentWeek(), currentQuestionNumber);
 		initPnlAddQuestion();
 		addQuestionToListing(bq);
+		setWeekSpinner(currentWeek, currentWeek);
 		setQuestionSpinner(currentQuestionNumber, currentQuestionNumber);
 		btnModify.setEnabled(true);
 		modifyBonusQuestion = false;
@@ -677,7 +673,7 @@ public class BonusPanel extends JPanel implements Observer {
 				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 				
 				try {
-					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
+					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
 				} catch (IndexOutOfBoundsException e){
 					bq = null;
 				}
@@ -699,7 +695,7 @@ public class BonusPanel extends JPanel implements Observer {
 				currentQuestionNumber = (Integer)spnQuestion.getValue();
 				
 				try {
-					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
+					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
 				} catch (IndexOutOfBoundsException e) {
 					bq = null;
 				}
