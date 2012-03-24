@@ -430,8 +430,8 @@ public class GameData extends Observable {
 			}
 		}
 
-		allocatePoints(elimCont);
-		elimCont.castOff();
+		allocatePoints(getElimCont());
+		
 
 		/* clear all weekly picks */
 		for (User u : allUsers) {
@@ -441,13 +441,15 @@ public class GameData extends Observable {
 			} // wont happen
 
 			/* clear defunct ult picks */
-			if (u.getUltimatePick().getID().equals(elimCont.getID())) {
+			if (!getElimCont().isNull() && u.getUltimatePick().getID().equals(getElimCont().getID())) {
 				try {
 					u.setUltimatePick(null);
 				} catch (InvalidFieldException e) {
 				} // wont happen
 			}
 		}
+		
+		getElimCont().castOff();
 
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
