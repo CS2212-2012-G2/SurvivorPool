@@ -14,9 +14,6 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 	private static final long serialVersionUID = 1L;
 
 	// public static final int INDEX_SELECT = 0;
-	public static final int INDEX_ID = 0;
-	public static final int INDEX_LASTNAME = 1;
-	public static final int INDEX_FIRSTNAME = 2;
 	public static final int INDEX_TRIBE = 3;
 	public static final int INDEX_DATECAST = 4;
 
@@ -108,7 +105,7 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 	}
 
 	@Override
-	protected void setComparators(TableRowSorter<PersonTableModel<Contestant>> sort) {
+	public void setComparators(TableRowSorter<PersonTableModel<Contestant>> sort) {
 		Comparator<String> strCompNoCase = new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {

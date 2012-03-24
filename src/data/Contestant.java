@@ -381,6 +381,16 @@ public class Contestant implements Person, Comparable<Contestant> {
 	@Override
 	public int compareTo(Contestant otherC) {
 		// ugly, but works. :)
+		// account for null:
+		if (isNull() && otherC.isNull()) {
+			return 0;
+		} else if (isNull() && !otherC.isNull()) {
+			return -1;
+		} else if (!isNull() && otherC.isNull()) {
+			return 1;
+		}
+		
+		// otherwise both are not null:
 		int result = getID().compareToIgnoreCase(otherC.getID());
 		if (result == 0) {
 			result = getLastName().compareToIgnoreCase(otherC.getLastName());
