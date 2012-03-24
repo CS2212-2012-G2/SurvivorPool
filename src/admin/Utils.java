@@ -134,13 +134,13 @@ public class Utils {
 	 * Uses the stored first and last name, and the currently running Game to
 	 * generate a unique user ID.
 	 * 
-	 * @param activeCon
+	 * @param activeP
 	 *            person to use data from.
 	 * @param a
 	 *            Data to check through
 	 */
-	public static String generateID(Person activeCon, List<Person> a) {
-		if (activeCon.getLastName() == null || activeCon.getFirstName() == null) {
+	public static String generateID(Person activeP, List<Person> a) {
+		if (activeP.getLastName() == null || activeP.getFirstName() == null) {
 			System.out.println("generateContestantID: first or last name null");
 			return new String();
 		}
@@ -151,9 +151,9 @@ public class Utils {
 				ids.add(p.getID());
 
 		String newID;
-		String lastName = activeCon.getLastName().toLowerCase()
+		String lastName = activeP.getLastName().toLowerCase()
 				.replaceAll("\\s+", "");
-		String firstName = activeCon.getFirstName().toLowerCase();
+		String firstName = activeP.getFirstName().toLowerCase();
 		int lastSub = Math.min(6, lastName.length());
 		int num = 0;
 		boolean valid = false;
