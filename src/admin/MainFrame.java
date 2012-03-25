@@ -260,6 +260,13 @@ public class MainFrame extends JFrame {
 	public void setStatusErrorMsg(String msg, Component... comps) {
 		statusBar.setErrorMsgLabel(msg, comps);
 	}
+	
+	/**
+	 * Delegate to {@link StatusPanel.clearPanel()}.
+	 */
+	public void clearStatusError() {
+		statusBar.clearPanel();
+	}
 
 	/**
 	 * Delete season file and show season create panel

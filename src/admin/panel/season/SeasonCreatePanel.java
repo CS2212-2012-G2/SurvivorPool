@@ -160,13 +160,13 @@ public class SeasonCreatePanel extends JPanel {
 								txtTribe1, txtTribe2);
 						return;
 					}
-					MainFrame.getRunningFrame().setStatusMsg(
-							"Valid tribe names");
+
 					GameData.initSeason(Integer.parseInt(spnContestant
 							.getValue().toString()));
 					GameData.getCurrentGame().setTribeNames(
 							txtTribe1.getText(), txtTribe2.getText());
 
+					MainFrame.getRunningFrame().clearStatusError();
 					MainFrame.createSeason();
 				} catch (Exception i) {
 					i.printStackTrace();
