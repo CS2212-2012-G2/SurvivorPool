@@ -167,10 +167,10 @@ public class User implements Person, Comparable<User> {
 	 *             if Pick is null.
 	 */
 	public void setWeeklyPick(Contestant pick) throws InvalidFieldException {
-		if (pick == null) {
+	/*	if (pick == null) {
 			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
 					"Weekly Pick was null");
-		}
+		} */
 		weeklyPick = pick;
 	}
 
@@ -197,11 +197,11 @@ public class User implements Person, Comparable<User> {
 	 */
 	public void setUltimatePickNoSetPts(Contestant winner)
 			throws InvalidFieldException {
-		if (winner == null) {
+	/*	if (winner == null) {
 			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
 					"Weekly pick was null");
 		}
-
+	 */
 		ultPick = winner;
 	}
 
