@@ -154,7 +154,7 @@ public class SeasonCreatePanel extends JPanel {
 								"Invalid tribe name", txtTribe2);
 						// lblAlert.setText("Invalid tribe names!");
 						return;
-					} else if (txtTribe1.getText().equals(txtTribe2.getText())) {
+					} else if (txtTribe1.getText().equalsIgnoreCase(txtTribe2.getText())) {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"Invalid tribe names, cannot be the same",
 								txtTribe1, txtTribe2);
