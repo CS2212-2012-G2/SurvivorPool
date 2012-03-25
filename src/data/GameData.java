@@ -88,7 +88,7 @@ public class GameData extends Observable {
 		if (numInitialContestants > 15 || numInitialContestants < 6)
 			return; // if not, do not create GameData item
 
-		weeksRem = numInitialContestants - 3;
+		weeksRem = numInitialContestants - 2;
 		weeksPassed = 0;
 		setBetAmount(0);
 		this.numInitialContestants = numInitialContestants;
@@ -319,10 +319,8 @@ public class GameData extends Observable {
 			if (u.getWeeklyPick().equals(c)) {
 				if (!this.isSeasonEnded()){ // normal week
 				u.addPoints(20);
-				System.out.println("Added 20 points to " + u);
 				} else { // last week
 					u.addPoints(40);
-					System.out.println("Added 40 points to " + u);
 				}
 			}
 			// if the end of the game and the person gets the right ultimate pick
@@ -422,7 +420,7 @@ public class GameData extends Observable {
 
 		/* Fill weekly NULLs */
 		for (User u : allUsers) {
-			if (u.getWeeklyPick().isNull()) {
+			if (u.getWeeklyPick().isNull() || u.getWeeklyPick() == null) {
 				try {
 					u.setWeeklyPick(randomContestant(true));
 				} catch (InvalidFieldException e) {
