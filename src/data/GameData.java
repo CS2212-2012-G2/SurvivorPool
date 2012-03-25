@@ -115,7 +115,7 @@ public class GameData extends Observable {
 				allContestants.size());
 
 		for (Contestant c : allContestants) {
-			if ((c != null) && !c.isCastOff()) {
+			if ((c != null) && (!c.isCastOff()|| c.isToBeCast())) {
 				active.add(c);
 			}
 		}
