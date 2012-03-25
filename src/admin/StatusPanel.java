@@ -123,6 +123,15 @@ public class StatusPanel extends JPanel {
 		msgLabel.setForeground(Utils.getThemeFG());
 		this.setBackground(Utils.getThemeBG());
 	}
+	
+	/**
+	 * Clears the panels error messages
+	 */
+	public void clearPanel() {
+		t.stop();
+		
+		resetColor();
+	}
 
 	Action displayError = new AbstractAction() {
 
