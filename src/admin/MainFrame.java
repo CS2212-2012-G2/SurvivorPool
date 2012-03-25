@@ -86,6 +86,7 @@ public class MainFrame extends JFrame {
 	};
 
 	ChangeListener cl = new ChangeListener() {
+		@Override
 		public void stateChanged(ChangeEvent ce) {
 			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
 			String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
@@ -112,6 +113,7 @@ public class MainFrame extends JFrame {
 		this.setResizable(false);
 		
 		this.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent we) {
 				windowClose();
 			}
@@ -161,8 +163,6 @@ public class MainFrame extends JFrame {
 
 		this.add(tabPane);
 		this.add(statusBar, BorderLayout.SOUTH);
-		if (GameData.getCurrentGame().isSeasonStarted())
-			seasonStarted();
 	}
 
 	private void initMenuBar() {
@@ -228,14 +228,6 @@ public class MainFrame extends JFrame {
 		m.getContentPane().removeAll();
 		m.initGUI();
 		m.applyTheme();
-	}
-
-	/**
-	 * Used when a season has been started(from gen panel)
-	 * 
-	 */
-	public void seasonStarted() {
-		// FIXME: Anything need to happen here? :s
 	}
 
 	/**
