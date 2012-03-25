@@ -438,10 +438,6 @@ public class GameData extends Observable {
 		/* clear all weekly picks */
 		for (User u : allUsers) {
 			
-			System.out.println("Pre-- User: " + u.getID() + " Week Pick: " 
-					+ u.getWeeklyPick() + " Ult Pick: " 
-					+ u.getUltimatePick());
-			
 			try {
 				u.setWeeklyPick(nullC);				
 			} catch (InvalidFieldException e) {
@@ -455,9 +451,6 @@ public class GameData extends Observable {
 				} // wont happen
 			}
 			
-			System.out.println("Post-- User: " + u.getID() + " Week Pick: " 
-					+ u.getWeeklyPick() + " Ult Pick: " 
-					+ u.getUltimatePick() + "\n");
 			
 		}
 		
