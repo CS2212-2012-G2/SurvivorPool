@@ -187,10 +187,12 @@ public class GeneralPanel extends JPanel implements Observer {
 						if (Integer.parseInt(s) >= 0) {
 							GameData.getCurrentGame().startSeason(
 									Integer.parseInt(s));
-							MainFrame.getRunningFrame().seasonStarted();
+							
 							btnStartSeason.setEnabled(false);
 							btnAdvanceWeek.setEnabled(true);
+							
 							setRemainingContestantsLabel();
+							
 							weekModel.setMaximum(GameData.getCurrentGame()
 									.getCurrentWeek());
 							weekModel.setValue(GameData.getCurrentGame()
