@@ -44,19 +44,17 @@ public class GameData extends Observable {
 	private static GameData currentGame = null;
 	// store contestant who was cast off
 	private Contestant elimCont;
-
-	private Field updatedComponent;
 	
-	/**
-	 * JSON Keys
-	 */
-	public enum Field {
+	public enum UpdateTag {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
 		ADD_CONTESTANT, REMOVE_CONTESTANT, 
 		ADD_USER, REMOVE_USER, 
 		END_GAME, ALLOCATE_POINTS
 	}
 	
+	/**
+	 * JSON Keys
+	 */
 	private static final String KEY_CONTESTANTS = "cons";
 	private static final String KEY_NUM_CONTEST = "cons_num";
 
@@ -217,9 +215,8 @@ public class GameData extends Observable {
 
 		allContestants.add(c);
 
-		updatedComponent = Field.ADD_CONTESTANT;
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers(UpdateTag.ADD_CONTESTANT);
 	}
 
 	/**
@@ -233,10 +230,9 @@ public class GameData extends Observable {
 		// is the contestant there?
 		allContestants.remove(target);
 		Collections.sort(allContestants);
-
-		updatedComponent = Field.REMOVE_CONTESTANT;
+		
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers(UpdateTag.REMOVE_CONTESTANT);
 	}
 
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -267,9 +263,8 @@ public class GameData extends Observable {
 
 		allUsers.add(u);
 
-		updatedComponent = Field.ADD_USER;
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers(UpdateTag.ADD_USER);
 	}
 
 	/**
@@ -281,9 +276,8 @@ public class GameData extends Observable {
 	public void removeUser(User u) {
 		allUsers.remove(u);
 
-		updatedComponent = Field.REMOVE_USER;
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers(UpdateTag.REMOVE_USER);
 	}
 
 	/**
@@ -329,9 +323,8 @@ public class GameData extends Observable {
 			}
 		}
 
-		updatedComponent = Field.ALLOCATE_POINTS;
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers(UpdateTag.ALLOCATE_POINTS);
 	}
 
 	/**
@@ -465,9 +458,8 @@ public class GameData extends Observable {
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
-		updatedComponent = Field.ADVANCE_WEEK;
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers( UpdateTag.ADVANCE_WEEK);
 	}
 
 	/**
@@ -478,10 +470,9 @@ public class GameData extends Observable {
 	public void startSeason(int bet) {
 		this.setBetAmount(bet);
 		seasonStarted = true;
-		
-		updatedComponent = Field.START_SEASON;
+	
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers(UpdateTag.START_SEASON);
 	}
 
 	/**
@@ -517,9 +508,8 @@ public class GameData extends Observable {
 			}
 		}
 
-		updatedComponent = Field.SET_TRIBE_NAMES;
 		setChanged();
-		notifyObservers(updatedComponent);
+		notifyObservers(UpdateTag.SET_TRIBE_NAMES);
 	}
 
 	/**
@@ -630,8 +620,8 @@ public class GameData extends Observable {
 		GameData.currentGame = null;
 		Bonus.deleteAllQuestions();
 
-		updatedComponent = Field.END_GAME;
-		notifyObservers(updatedComponent);
+		setChanged();
+		notifyObservers(UpdateTag.END_GAME);
 
 		JSONUtils.resetSeason();
 	}
@@ -802,7 +792,6 @@ public class GameData extends Observable {
 			g.addContestant(c2);
 		} catch (InvalidFieldException ie) {
 		}
-		;
 
 		g.startSeason(5);
 		User u1;

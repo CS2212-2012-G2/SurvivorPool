@@ -28,7 +28,7 @@ import javax.swing.event.ChangeListener;
 import admin.MainFrame;
 
 import data.GameData;
-import data.GameData.Field;
+import data.GameData.UpdateTag;
 import data.bonus.Bonus;
 import data.bonus.BonusQuestion;
 import data.bonus.BonusQuestion.BONUS_TYPE;
@@ -673,14 +673,14 @@ public class BonusPanel extends JPanel implements Observer {
 	public void update(Observable observ, Object obj) {
 		GameData g = (GameData)observ;
 		
-		if (obj.equals(Field.START_SEASON)){
+		if (obj.equals(UpdateTag.START_SEASON)){
 			setQuestionAddingPanelEditable(true);
 			currentWeek = g.getCurrentWeek();
 			currentQuestionNumber = 1;
 			setWeekSpinner(currentWeek, g.getCurrentWeek());
 			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 		}
-		if (obj.equals(Field.ADVANCE_WEEK)){
+		if (obj.equals(UpdateTag.ADVANCE_WEEK)){
 			currentWeek = g.getCurrentWeek();
 			currentQuestionNumber = 1;
 			setWeekSpinner(currentWeek, g.getCurrentWeek());
