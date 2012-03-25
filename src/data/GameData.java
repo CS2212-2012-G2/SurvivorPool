@@ -414,7 +414,7 @@ public class GameData extends Observable {
 
 		/* Fill weekly NULLs */
 		for (User u : allUsers) {
-			if (u.getWeeklyPick() == null || u.getWeeklyPick().equals("None")) {
+			if (u.getWeeklyPick().isNull()) {
 				try {
 					u.setWeeklyPick(randomContestant(true));
 				} catch (InvalidFieldException e) {
@@ -422,7 +422,7 @@ public class GameData extends Observable {
 			}
 
 			/* Fill ultimate NULLs */
-			if (u.getUltimatePick() == null || u.getWeeklyPick().equals("None")) {
+			if (u.getUltimatePick().isNull()) {
 				try {
 					u.setUltimatePick(randomContestant(true));
 				} catch (InvalidFieldException e) {
@@ -432,7 +432,9 @@ public class GameData extends Observable {
 
 		allocatePoints(getElimCont());
 		
-
+		Contestant nullC = new Contestant();
+		nullC.setNull();
+		
 		/* clear all weekly picks */
 		for (User u : allUsers) {
 			
@@ -441,14 +443,14 @@ public class GameData extends Observable {
 					+ u.getUltimatePick());
 			
 			try {
-				u.setWeeklyPick(null);				
+				u.setWeeklyPick(nullC);				
 			} catch (InvalidFieldException e) {
 			} // wont happen
 
 			/* clear defunct ult picks */
 			if (u.getUltimatePick().getID().equals(getElimCont().getID())) {
 				try {
-					u.setUltimatePick(null);			
+					u.setUltimatePick(nullC);			
 				} catch (InvalidFieldException e) {
 				} // wont happen
 			}
