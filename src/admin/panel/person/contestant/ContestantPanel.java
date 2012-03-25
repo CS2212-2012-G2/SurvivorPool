@@ -506,6 +506,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// depends on season started:
 		boolean sStart = g.isSeasonStarted();
 		
+		// change text to "select winner" once its the final week
+		if (g.isFinalWeek())
+			btnCastOff.setText("Select Winner");
+		
 		btnAddNew.setEnabled(!sStart);
 		btnCastOff.setEnabled(sStart);
 		btnDelete.setEnabled(!sStart);
