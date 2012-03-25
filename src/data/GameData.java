@@ -414,7 +414,7 @@ public class GameData extends Observable {
 
 		/* Fill weekly NULLs */
 		for (User u : allUsers) {
-			if (u.getWeeklyPick().isNull()) {
+			if (u.getWeeklyPick() == null || u.getWeeklyPick().equals("None")) {
 				try {
 					u.setWeeklyPick(randomContestant(true));
 				} catch (InvalidFieldException e) {
@@ -422,7 +422,7 @@ public class GameData extends Observable {
 			}
 
 			/* Fill ultimate NULLs */
-			if (u.getUltimatePick().isNull()) {
+			if (u.getUltimatePick() == null || u.getWeeklyPick().equals("None")) {
 				try {
 					u.setUltimatePick(randomContestant(true));
 				} catch (InvalidFieldException e) {
@@ -435,18 +435,28 @@ public class GameData extends Observable {
 
 		/* clear all weekly picks */
 		for (User u : allUsers) {
+			
+			System.out.println("Pre-- User: " + u.getID() + " Week Pick: " 
+					+ u.getWeeklyPick() + " Ult Pick: " 
+					+ u.getUltimatePick());
+			
 			try {
-				u.setWeeklyPick(null);
+				u.setWeeklyPick(null);				
 			} catch (InvalidFieldException e) {
 			} // wont happen
 
 			/* clear defunct ult picks */
-			if (!getElimCont().isNull() && u.getUltimatePick().getID().equals(getElimCont().getID())) {
+			if (u.getUltimatePick().getID().equals(getElimCont().getID())) {
 				try {
-					u.setUltimatePick(null);
+					u.setUltimatePick(null);			
 				} catch (InvalidFieldException e) {
 				} // wont happen
 			}
+			
+			System.out.println("Post-- User: " + u.getID() + " Week Pick: " 
+					+ u.getWeeklyPick() + " Ult Pick: " 
+					+ u.getUltimatePick() + "\n");
+			
 		}
 		
 		getElimCont().castOff();
