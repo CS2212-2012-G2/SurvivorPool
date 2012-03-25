@@ -385,6 +385,14 @@ public class GameData extends Observable {
 		return weeksRem == 0;
 	}
 
+	/**
+	 * Checks if there are any more weeks remaining
+	 * 
+	 * @return true if weeks remaining = 1
+	 */
+	public boolean isFinalWeek() {
+		return weeksRem == 1;
+	}
 	// ----------------- MUTATOR METHODS ------------------//
 
 	/**
