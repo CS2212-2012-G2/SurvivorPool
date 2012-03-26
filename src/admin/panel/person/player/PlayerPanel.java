@@ -228,7 +228,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	}
 
 	/**
-	 * Sets the error infromation based on an exception!
+	 * Sets the error information based on an exception!
 	 * 
 	 * @param e
 	 *            Exception with the information necessary
