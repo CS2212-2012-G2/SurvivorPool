@@ -16,24 +16,21 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableCellRenderer;
 
 import admin.MainFrame;
 import admin.Utils;
 import admin.panel.person.PersonPanel;
 import data.Contestant;
 import data.GameData;
+import data.GameData.UpdateTag;
 import data.InvalidFieldException;
 import data.Person;
 import data.User;
@@ -63,29 +60,23 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	private JLabel labelUltimate;
 	private JComboBox<Contestant> cbUltPick;
 
-	// etc
 	/*
 	 * FIXME: Break into two labels one with "Points:" other with actual value
 	 * of pts
 	 */
 	private JLabel labelPts;
+	private JLabel labelPtsValue;
 	
 	// Constants:
-	protected static final String TOOL_NAME = "First and Last name must be alphabetic";
-	protected static final String TOOL_IDTXT = "ID must be 2-7 chars long and may end with numbers";
-	protected static final String TOOL_IDBTN = "Click to auto-generate ID from first and last name";
-	protected static final String TOOL_WEEKLY = "Select Weekly pick";
-	protected static final String TOOL_ULT = "Select Ultimate Winner";
-	protected static final String TOOL_SAVE = "";
-	protected static final String TOOL_DELETE = "Remove selected User from system";
-	protected static final String TOOL_NEW = "Add a new User to system";
-	protected static final String TOOL_TABLE = "Click Heading to sort by column";
-	
-	/**
-	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
-	 * YOU KNOW WHAT YOU ARE DOING.
-	 */
-	private Person loadedPerson;
+	protected static final String TOOL_NAME = "First and Last name must be alphabetic", 
+			TOOL_IDTXT = "ID must be 2-7 chars long and may end with numbers",
+			TOOL_IDBTN = "Click to auto-generate ID from first and last name",
+			TOOL_WEEKLY = "Select Weekly pick",
+			TOOL_ULT = "Select Ultimate Winner",
+			TOOL_SAVE = "",
+			TOOL_DELETE = "Remove selected User from system",
+			TOOL_NEW = "Add a new User to system",
+			TOOL_TABLE = "Click Heading to sort by column";
 
 	public PlayerPanel() {
 		super(new User());
@@ -108,17 +99,21 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 		labelUltimate = new JLabel("Ultimate Pick:");
 		cbUltPick = new JComboBox<Contestant>();
+		
+		labelPts = new JLabel("Current Points:");
+		labelPtsValue = new JLabel("0");
+		labelPtsValue.setHorizontalTextPosition(SwingConstants.RIGHT);
 
 		personFields = new PlayerFieldsPanel(labelName, tfFirstName,
 				tfLastName, labelID, tfID, btnGenID, labelWeekly, cbWeeklyPick,
-				labelUltimate, cbUltPick);
+				labelUltimate, cbUltPick, labelPts, labelPtsValue);
 		// add the mouse listener to all components.
 		for (Component c : ((JPanel)personFields).getComponents()) {
 			c.addMouseListener(this);
 		}
 
 		// right side!
-		labelPts = new JLabel("Points: 0");
+		
 
 		// ////////////////////////////
 		// Mid
@@ -146,8 +141,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		BoxLayout b = new BoxLayout(rightPane, BoxLayout.Y_AXIS);
 		rightPane.setLayout(b);
 		rightPane.add(Box.createVerticalStrut(32));
-		rightPane.add(labelPts);
-		rightPane.add(Box.createVerticalGlue());
+		//rightPane.add(labelPts);
+		//rightPane.add(Box.createVerticalGlue());
 		rightPane.add(btnSave);
 		rightPane.add(Box.createVerticalStrut(32));
 
@@ -292,40 +287,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 		});
 
-		/* TODO: Is this necessary?
-		btnSave.addActionListener(new ActionListener() {
-			// FIXME: global setting? Its reset every time the GUI is loaded
-			// right now
-			boolean dontShowConfirm = false;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				// make sure they want to save initially.
-				if (isNewUser && !dontShowConfirm) {
-					JCheckBox checkbox = new JCheckBox("Don't show again?");
-					String msg = "Would you like to save a new selected "
-							+ "user? You can not change ID after first save.";
-					Object[] objs = { msg, checkbox };
-
-					int response = JOptionPane.showConfirmDialog(null, objs,
-							"Save User?", JOptionPane.YES_NO_OPTION);
-
-					dontShowConfirm = checkbox.isSelected();
-					if (response == JOptionPane.NO_OPTION) {
-						return;
-					}
-				}
-
-				if (fieldsChanged) {
-					try {
-						saveUser();
-					} catch (InvalidFieldException ex) {
-					}
-				}
-			}
-		}); */
-
 		btnGenID.addActionListener(new ActionListener() {
 
 			@Override
@@ -404,16 +365,27 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		UpdateTag update = (UpdateTag)arg;
 		GameData g = (GameData)o;
-		btnAddNew.setEnabled(!g.isSeasonStarted());
-		btnDelete.setEnabled(!g.isSeasonStarted());
 		
-		btnGenID.setEnabled(!g.isSeasonStarted());
-		tfID.setEnabled(!g.isSeasonStarted());
+		if (update == UpdateTag.START_SEASON) {
+			
+			btnAddNew.setEnabled(!g.isSeasonStarted());
+			btnDelete.setEnabled(!g.isSeasonStarted());
+			
+			btnGenID.setEnabled(!g.isSeasonStarted());
+			tfID.setEnabled(!g.isSeasonStarted());
+		}
 		
-		refreshContestantCBs();
+		if (update == UpdateTag.ADD_CONTESTANT || update == UpdateTag.REMOVE_CONTESTANT) {
+			refreshContestantCBs();
 				
-		tableModel.fireTableDataChanged();
+			tableModel.fireTableDataChanged();
+		}
+		
+		if (update == UpdateTag.ADVANCE_WEEK) {
+			tableModel.fireTableDataChanged();
+		}
 	}
 
 	@Override

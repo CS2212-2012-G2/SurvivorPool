@@ -98,10 +98,18 @@ public class User implements Person, Comparable<User> {
 		return weeklyPick;
 	}
 
+	/**
+	 * Returns the users current score
+	 * @return
+	 */
 	public int getPoints() {
 		return points;
 	}
 
+	/**
+	 * Sets the users current score
+	 * @param points
+	 */
 	public void setPoints(int points) {
 		this.points = points;
 	}

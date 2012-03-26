@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -33,6 +34,9 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
 	private JLabel labelUltimate;
 	private JComboBox<Contestant> cbUltPick;
+	
+	private JLabel labelPts;
+	private JLabel labelPtsValue;
 
 	// store internal
 	private GridBagLayout gbFields;
@@ -42,7 +46,7 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 			JTextField _tfLastName, JLabel _labelID, JTextField _tfID,
 			JButton _btnGenID, JLabel _labelWeekly,
 			JComboBox<Contestant> _cbWeeklyPick, JLabel _labelUltimate,
-			JComboBox<Contestant> _cbUltPick) {
+			JComboBox<Contestant> _cbUltPick, JLabel ptsLabel, JLabel ptsValue) {
 		super();
 		
 		/// name
@@ -65,6 +69,9 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		cbUltPick = _cbUltPick;
 		/// end contestant picks
 		
+		labelPts = ptsLabel;
+		labelPtsValue = ptsValue;
+		
 		gbFields = new GridBagLayout();
 		gbFieldsConst = new GridBagConstraints();
 
@@ -81,6 +88,11 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		gbc.weighty = 0.5;
 		gbc.weightx = 0.5;
 		gbc.gridy = 0;
+		
+		JPanel ptsPanel = new JPanel();
+		ptsPanel.setLayout(new BoxLayout(ptsPanel, BoxLayout.PAGE_AXIS));
+		ptsPanel.add(labelPts);
+		ptsPanel.add(labelPtsValue);
 
 		// row: [Name Label] [First Name] [Last Name]
 		gbc.gridx = 0;
@@ -118,7 +130,7 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		gbc.insets = new Insets(0, 0, 5, 0);
 		add(btnGenID, gbc);
 
-		// row: [Combo Label] [Combo Box]
+		// row: [Combo Label] [Combo Box] [ pts label ]
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.gridwidth = 1;
@@ -128,22 +140,30 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
 		gbc.gridx = GridBagConstraints.RELATIVE;
 		gbc.anchor = GridBagConstraints.LINE_END;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.insets = new Insets(0, 0, 5, 0);
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		gbc.insets = new Insets(0, 0, 5, 5);
 		add(cbWeeklyPick, gbc);
+		
+		gbc.weightx = 0.5;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.gridheight = 2;
+		gbc.anchor = GridBagConstraints.LINE_END;
+		gbc.insets = new Insets(0, 0, 5, 0);
+		add(ptsPanel, gbc);
 
-		// row: [Combo Label] [Combo Box]
+		// row: [Combo Label] [Combo Box] [pts label cont]
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets = new Insets(0, 0, 5, 10);
 		add(labelUltimate, gbc);
 
 		gbc.gridx = GridBagConstraints.RELATIVE;
-		gbc.anchor = GridBagConstraints.LINE_END;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.insets = new Insets(0, 0, 5, 0);
+		//gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		gbc.insets = new Insets(0, 0, 5, 5);
 		add(cbUltPick, gbc);
 	}
 
@@ -158,8 +178,7 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 			cbUltPick.setSelectedIndex(0);
 			cbWeeklyPick.setSelectedIndex(0);
 
-			// FIXME: Need a better way to store points.
-			//labelPts.setText(Integer.toString(0));
+			labelPtsValue.setText("" + 0);
 			
 			return;
 		}
@@ -169,7 +188,7 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		tfFirstName.setText(u.getFirstName());
 		tfLastName.setText(u.getLastName());
 
-		//labelPts.setText(Integer.toString(u.getPoints()));
+		labelPtsValue.setText(Integer.toString(u.getPoints()));
 
 		// iterate through combo boxes setting indexes as necessary
 		Contestant ultPick = u.getUltimatePick();
@@ -206,12 +225,13 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
 	@Override
 	public void getFromPane(User u) throws InvalidFieldException {
-		String uID = tfID.getText();
-
-		u.setID(uID);
+		u.setID(tfID.getText());
 
 		u.setFirstName(tfFirstName.getText().trim());
 		u.setLastName(tfLastName.getText().trim());
+		
+		// not necessary since we cant change the pts anyway
+		//u.setPoints(Integer.parseInt(labelPtsValue.getText()));
 
 		int item = cbUltPick.getSelectedIndex();
 		Contestant c = cbUltPick.getItemAt(item);

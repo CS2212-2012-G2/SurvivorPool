@@ -90,8 +90,9 @@ public class GameData extends Observable {
 		weeksPassed = 0;
 		setBetAmount(0);
 		this.numInitialContestants = numInitialContestants;
+		
+		// containers for contestants and users
 		allContestants = new ArrayList<Contestant>(numInitialContestants);
-
 		allUsers = new ArrayList<User>(5);
 
 		currentGame = this;
