@@ -147,10 +147,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		JPanel paneButtons = new JPanel();
 		GridLayout bl = new GridLayout(2, 1);
 		paneButtons.setLayout(bl);
-
-		
-		btnCastOff.setEnabled(!GameData.getCurrentGame()
-				.isSeasonEnded());
 		
 		paneButtons.add(btnCastOff);
 		paneButtons.add(btnSave);
@@ -526,8 +522,15 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		if (g.isFinalWeek())
 			btnCastOff.setText("Select Winner");
 		
+		
+		
 		btnAddNew.setEnabled(!sStart);
-		btnCastOff.setEnabled(sStart);
+		
+		if (g.isSeasonEnded())
+			btnCastOff.setEnabled(false);
+		else
+			btnCastOff.setEnabled(sStart);
+		
 		btnDelete.setEnabled(!sStart);
 		tfLastName.setEnabled(!sStart);
 		tfFirstName.setEnabled(!sStart);
