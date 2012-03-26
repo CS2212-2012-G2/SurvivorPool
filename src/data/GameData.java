@@ -311,14 +311,14 @@ public class GameData extends Observable {
 		while (itr.hasNext()) {
 			u = itr.next();
 			if (u.getWeeklyPick().equals(c)) {
-				if (!this.isSeasonEnded()){ // normal week
-				u.addPoints(20);
-				} else { // last week
+				if (this.isFinalWeek()) // final week
 					u.addPoints(40);
-				}
+				else  // normal week
+					u.addPoints(20);
+				
 			}
 			// if the end of the game and the person gets the right ultimate pick
-			if (u.getUltimatePick().equals(c) && this.isSeasonEnded()){
+			if (u.getUltimatePick().equals(c) && this.isFinalWeek()){
 				u.addPoints(u.getUltimatePoints());
 			}
 		}
