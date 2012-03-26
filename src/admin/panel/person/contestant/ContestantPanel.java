@@ -397,7 +397,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					return;
 				}
 
-				if (s.equals("Cast Off")) {
+				if (s.equals("Cast Off") || s.equals("Select Winner")) {
 					// check if someone is already cast off
 					if (GameData.getCurrentGame().doesElimExist() == true) {
 						JOptionPane.showMessageDialog(
@@ -418,11 +418,17 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					}
 
 					c.toCastOff();
-					labelCastStatus.setText("Week " + c.getCastDate());
+					if (GameData.getCurrentGame().isFinalWeek())
+						labelCastStatus.setText("Winner");
+					else
+						labelCastStatus.setText("Week " + c.getCastDate());
 				} else {
 					c.undoCast();
 					labelCastStatus.setText("Active");
-					btnCastOff.setText("Cast Off");
+					if (GameData.getCurrentGame().isFinalWeek())
+						btnCastOff.setText("Select Winner");
+					else
+						btnCastOff.setText("Cast Off");
 				}
 
 				update(GameData.getCurrentGame(), null);
