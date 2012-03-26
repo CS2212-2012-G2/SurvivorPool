@@ -526,9 +526,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		
 		btnAddNew.setEnabled(!sStart);
 		
-		if (g.isSeasonEnded())
+		if (g.isSeasonEnded()) {
 			btnCastOff.setEnabled(false);
-		else
+			btnSave.setEnabled(false);
+		} else
 			btnCastOff.setEnabled(sStart);
 		
 		btnDelete.setEnabled(!sStart);
