@@ -398,15 +398,15 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		tfFirstName.setToolTipText(TOOL_NAME);
 		tfLastName.setToolTipText(TOOL_NAME);
 		
-		labelID.setToolTipText(PlayerPanel.TOOL_IDTXT);
-		tfID.setToolTipText(PlayerPanel.TOOL_IDTXT);
-		btnGenID.setToolTipText(PlayerPanel.TOOL_IDBTN);
+		labelID.setToolTipText(TOOL_IDTXT);
+		tfID.setToolTipText(TOOL_IDTXT);
+		btnGenID.setToolTipText(TOOL_IDBTN);
 
-		labelWeekly.setToolTipText(PlayerPanel.TOOL_WEEKLY);
-		cbWeeklyPick.setToolTipText(PlayerPanel.TOOL_WEEKLY);
+		labelWeekly.setToolTipText(TOOL_WEEKLY);
+		cbWeeklyPick.setToolTipText(TOOL_WEEKLY);
 	
-		labelUltimate.setToolTipText(PlayerPanel.TOOL_ULT);
-		cbUltPick.setToolTipText(PlayerPanel.TOOL_ULT);
+		labelUltimate.setToolTipText(TOOL_ULT);
+		cbUltPick.setToolTipText(TOOL_ULT);
 		
 		btnSave.setToolTipText(TOOL_SAVE);
 		
