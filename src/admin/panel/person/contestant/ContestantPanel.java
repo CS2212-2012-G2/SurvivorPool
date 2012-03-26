@@ -529,6 +529,9 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		tfFirstName.setEnabled(!sStart);
 		tfContID.setEnabled(!sStart);
 
+		btnCastOff.setEnabled(!GameData.getCurrentGame()
+				.isSeasonEnded());
+		
 		List<ActionListener> acts = Arrays.asList(imgDisplay
 				.getActionListeners());
 		boolean actPresent = acts.contains(imgButtonListener);
