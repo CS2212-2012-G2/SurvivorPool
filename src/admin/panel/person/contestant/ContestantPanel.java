@@ -148,6 +148,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		GridLayout bl = new GridLayout(2, 1);
 		paneButtons.setLayout(bl);
 
+		
+		btnCastOff.setEnabled(!GameData.getCurrentGame()
+				.isSeasonEnded());
+		
 		paneButtons.add(btnCastOff);
 		paneButtons.add(btnSave);
 		
@@ -529,8 +533,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		tfFirstName.setEnabled(!sStart);
 		tfContID.setEnabled(!sStart);
 
-		btnCastOff.setEnabled(!GameData.getCurrentGame()
-				.isSeasonEnded());
 		
 		List<ActionListener> acts = Arrays.asList(imgDisplay
 				.getActionListeners());
