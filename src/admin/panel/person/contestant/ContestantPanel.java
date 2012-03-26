@@ -61,6 +61,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	private static final String CAST_OFF_TEXT = "Cast Off";
 	private static final String UNDO_CAST_TEXT = "Undo Cast Off";
 	
+	
 	// tool tip texts:
 	protected static final String TOOL_NAME = "First and Last name must be alphabetic";
 	protected static final String TOOL_ID = "ID must be two characters long and " +
@@ -72,7 +73,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	protected static final String TOOL_ADDNEW = "Click to add new contestant";
 	protected static final String TOOL_DELETE = "Click to remove currently selected " +
 			"Contestant";
-
+	protected static final String TOOL_WINNER = "Click to choose winner";
+	
 	public ContestantPanel() {
 		super(new Contestant());
 
@@ -251,7 +253,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		labelTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		cbTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		
-		btnCastOff.setToolTipText(TOOL_CASTOFF);
+		if (GameData.getCurrentGame().isFinalWeek()){
+			btnCastOff.setToolTipText(TOOL_WINNER);
+		} else {
+			btnCastOff.setToolTipText(TOOL_CASTOFF);
+		}
 		btnSave.setToolTipText(TOOL_SAVE);
 		imgDisplay.setToolTipText(TOOL_IMAGE);
 		
