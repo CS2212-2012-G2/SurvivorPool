@@ -128,7 +128,8 @@ public class StatusPanel extends JPanel {
 	 * Clears the panels error messages
 	 */
 	public void clearPanel() {
-		t.stop();
+		if (t != null)	
+			t.stop();
 		
 		resetColor();
 	}

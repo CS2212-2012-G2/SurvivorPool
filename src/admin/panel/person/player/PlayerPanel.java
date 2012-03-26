@@ -125,6 +125,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		// ////////////////////////////
 	
 
+		refreshContestantCBs();
 		assembleAll();
 	}
 
@@ -377,7 +378,9 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			tfID.setEnabled(!g.isSeasonStarted());
 		}
 		
-		if (update == UpdateTag.ADD_CONTESTANT || update == UpdateTag.REMOVE_CONTESTANT) {
+		if (update == UpdateTag.ADD_CONTESTANT || 
+			update == UpdateTag.REMOVE_CONTESTANT ||
+			update == UpdateTag.START_SEASON) {
 			refreshContestantCBs();
 				
 			tableModel.fireTableDataChanged();

@@ -20,7 +20,7 @@
   </target>
 
   <target name="clean-run" depends="build">
-    <delete file="res/data/Settings.dat"/>
+    <delete file="res/data/*.dat"/>
     <java classname="admin.MainFrame" classpath="${bin-dir}" fork="true"/>
   </target>
 
@@ -75,5 +75,9 @@
     <antcall target="build"/>
     <antcall target="doc"/>
     <antcall target="jar-sub"/>
+  </target>
+	
+  <target name="run-no-build">
+    <java classname="admin.MainFrame" classpath="${bin-dir}" fork="true"/>
   </target>
 </project>
