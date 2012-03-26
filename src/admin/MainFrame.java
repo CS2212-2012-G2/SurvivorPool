@@ -282,6 +282,7 @@ public class MainFrame extends JFrame {
 				m.dispose();
 				m = new MainFrame();
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
