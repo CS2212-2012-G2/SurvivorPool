@@ -2,7 +2,6 @@ package admin.panel.person.contestant;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -145,12 +144,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// this does not need to be referenced else where, only for layout
 		JPanel rightPane = new JPanel();
 		BoxLayout b = new BoxLayout(rightPane, BoxLayout.Y_AXIS);
-		
-		//btnSave.setPreferredSize(btnPickWin.getPreferredSize());
-		Dimension size = btnPickWin.getSize();
-		size = btnPickWin.getPreferredSize();
-		size = btnPickWin.getMaximumSize();
-		
+
 		btnSave.setPreferredSize(btnPickWin.getPreferredSize());
 		
 		rightPane.setLayout(b);
@@ -337,7 +331,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				
 				GameData g = GameData.getCurrentGame();
 
-				if (s.equals("Cast Off") || s.equals("Select Winner")) {
+				if (s.equals("Cast Off")) {
 					// check if someone is already cast off
 					if (g.doesElimExist() == true) {
 						JOptionPane.showMessageDialog(
@@ -357,19 +351,13 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 						return;
 					}
 					
-					if (g.isFinalWeek()) {
-						tfCastDate.setText("Winner");
-					} else {
-						g.castOff(c);
-						tfCastDate.setText("" + c.getCastDate());
-					}
+					
+					g.castOff(c);
+					tfCastDate.setText("" + c.getCastDate());
 				} else {
 					g.undoCastOff(c);
 					tfCastDate.setText("Active");
-					if (g.isFinalWeek())
-						btnCastOff.setText("Select Winner");
-					else
-						btnCastOff.setText("Cast Off");
+					btnCastOff.setText("Cast Off");
 				}
 
 				update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
@@ -423,7 +411,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		@SuppressWarnings("unchecked")
 		EnumSet<UpdateTag> update = (EnumSet<GameData.UpdateTag>)arg;
 		
-		if (update == null || update.contains(UpdateTag.SET_TRIBE_NAMES) ||
+		if (update.size() == 0 || 
+				update.contains(UpdateTag.SET_TRIBE_NAMES) ||
 				update.contains(UpdateTag.CONTESTANT_CAST_OFF)) {
 			// tribe combobox
 			String[] newTribes = g.getTribeNames();
@@ -436,17 +425,17 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tableModel.fireTableDataChanged();
 		}
 		
-		//if (update == null) return;
-		
-		if (update == null || update.contains(UpdateTag.START_SEASON) ||  
+		/*
+		 * If the season has started, or the week has advanced
+		 */
+		if (update.size() == 0 ||
+				update.contains(UpdateTag.START_SEASON) ||  
 				update.contains(UpdateTag.ADVANCE_WEEK) || 
 				update.contains(UpdateTag.END_GAME)) {
 			// depends on season started:
 			boolean sStart = g.isSeasonStarted();
 			
 			// change text to "select winner" once its the final week
-			if (g.isFinalWeek())
-				btnCastOff.setText("Select Winner");
 			
 			btnAddNew.setEnabled(!sStart);
 			
@@ -472,6 +461,15 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			} else if (!actPresent && !sStart) {
 				imgDisplay.addActionListener(imgButtonListener);
 			}
+		}
+		
+		/*
+		 * Final week, so set the cast off disabled, and pick a winner
+		 */
+		if (update.contains(UpdateTag.FINAL_WEEK)) {
+			btnCastOff.setEnabled(false);
+			btnPickWin.setEnabled(true);
+			tfCastDate.setEditable(false);
 		}
 	}
 }

@@ -9,6 +9,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -38,6 +39,7 @@ import admin.panel.person.contestant.ContestantTableModel;
 import admin.panel.person.player.PlayerTableModel;
 import data.Contestant;
 import data.GameData;
+import data.GameData.UpdateTag;
 import data.InvalidFieldException;
 import data.Person;
 import data.User;
@@ -146,9 +148,9 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		JPanel rightPane = new JPanel();
 		BoxLayout b = new BoxLayout(rightPane, BoxLayout.Y_AXIS);
 		rightPane.setLayout(b);
-		rightPane.add(Box.createVerticalStrut(32));
+		rightPane.add(Box.createVerticalGlue());
 		rightPane.add(btnSave);
-		rightPane.add(Box.createVerticalStrut(32));
+		rightPane.add(Box.createVerticalGlue());
 
 		// add all components on top:
 		panel.add((JPanel)personFields, BorderLayout.CENTER);
@@ -224,6 +226,8 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 	protected void buildBottomPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		
+		btnAddNew.setPreferredSize(btnDelete.getPreferredSize());
 		
 		panel.add(btnAddNew);
 		panel.add(btnDelete);
@@ -363,7 +367,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		
 		setToolTips();
 
-		update(GameData.getCurrentGame(), null);
+		update(GameData.getCurrentGame(), EnumSet.noneOf(UpdateTag.class));
 
 		setFieldsChanged(false);
 

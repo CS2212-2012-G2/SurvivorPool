@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import data.bonus.Bonus;
-
 import json.simple.JSONObject;
 import json.simple.JSONValue;
 
