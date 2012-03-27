@@ -28,7 +28,7 @@ public class GameData extends Observable {
 	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
 										// passed
 	private int numInitialContestants;
-	private int betAmount;
+	private int betAmount, totalAmount;
 
 	private boolean seasonStarted = false;
 	private boolean elimExists = false;
@@ -66,6 +66,8 @@ public class GameData extends Observable {
 	private static final String KEY_TRIBES = "tribes_arr";
 
 	private static final String KEY_SEASON_STARTED = "season_started";
+	private static final String KEY_BET_AMOUNT = "bet_amount";
+	private static final String KEY_POOL_TOTAL = "pool_total";
 	
 	public static String pathGame = "res/data/Settings.dat";
 	public static String pathBonus = "res/data/bonus.dat";
@@ -470,6 +472,7 @@ public class GameData extends Observable {
 
 	public void startSeason(int bet) {
 		this.setBetAmount(bet);
+		this.setTotalAmount(bet * allUsers.size());
 		seasonStarted = true;
 	
 		setChanged();
@@ -603,6 +606,14 @@ public class GameData extends Observable {
 	public int getBetAmount() {
 		return betAmount;
 	}
+	
+	public void setTotalAmount(int total){
+		this.totalAmount = total;
+	}
+	
+	public int getTotalAmount(){
+		return totalAmount;
+	}
 
 	/**
 	 * Returns the currently stored Game, this removed need to reference the
@@ -669,7 +680,10 @@ public class GameData extends Observable {
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
 		obj.put(KEY_SEASON_STARTED, seasonStarted);
-
+		if(seasonStarted){
+		obj.put(KEY_BET_AMOUNT, betAmount);
+		obj.put(KEY_POOL_TOTAL, totalAmount);
+		}
 		return obj;
 	}
 
@@ -692,6 +706,11 @@ public class GameData extends Observable {
 		weeksPassed = Utils.numToInt(obj.get(KEY_WEEKS_PASSED));
 
 		seasonStarted = (Boolean) obj.get(KEY_SEASON_STARTED);
+		if(seasonStarted){
+		betAmount = Utils.numToInt(obj.get(KEY_BET_AMOUNT));
+		totalAmount = Utils.numToInt(obj.get(KEY_POOL_TOTAL));
+		System.out.println(betAmount + " " + totalAmount);
+		}
 
 		// Contestants must be loaded before users, but after others!
 		allContestants = new ArrayList<Contestant>(numInitialContestants);
