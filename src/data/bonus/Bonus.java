@@ -20,21 +20,20 @@ import data.JSONUtils;
  */
 public class Bonus extends Observable {
 
-	static List<BonusQuestion> questions = new ArrayList<BonusQuestion>();
+	private static List<BonusQuestion> questions = new ArrayList<BonusQuestion>();
 
 	private static final String KEY_QUESTIONS = "questions";
 	
-	public static final String pathBonus = "res/data/Bonus.dat";
-	
-	static Comparator<BonusQuestion> comp =new Comparator<BonusQuestion>(){
+	private static final Comparator<BonusQuestion> comp = new Comparator<BonusQuestion>() {
 
 		public int compare(BonusQuestion o1, BonusQuestion o2) {
 			int weekDiff = o1.getWeek()-o2.getWeek();
-			if(weekDiff==0){
+			
+			if (weekDiff==0) {
 				return o1.getNumber()-o2.getNumber();
-			}else{
-				return o1.getWeek()-o2.getWeek();
-			}	
+			}
+			
+			return weekDiff;
 		}
 	};;
 	
@@ -153,18 +152,18 @@ public class Bonus extends Observable {
 	 */
 	public static void initBonus(){
 		try {
-			fromJSONObject(JSONUtils.readFile(pathBonus));
+			fromJSONObject(JSONUtils.readFile(JSONUtils.pathBonus));
 		} catch (FileNotFoundException e) {
-			System.out.println("could not read "+pathBonus);
+			System.out.println("could not read "+JSONUtils.pathBonus);
 		} catch (ParseException	e) {
-			System.out.println("could not convert to json object "+pathBonus);
+			System.out.println("could not convert to json object "+JSONUtils.pathBonus);
 			e.printStackTrace();
 		}
 	}
 	
 	public static void writeData() {
 		try {
-			JSONUtils.writeJSON(pathBonus, toJSONObject());
+			JSONUtils.writeJSON(JSONUtils.pathBonus, toJSONObject());
 		} catch (ParseException p) {
 			p.printStackTrace();
 		}

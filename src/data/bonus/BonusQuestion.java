@@ -33,7 +33,6 @@ public class BonusQuestion {
 	protected int week;
 	protected int number;
 
-	public static final String FILE_PATH = "res/data/bonus.dat";
 	protected static final String KEY_TYPE = "type";
 	protected static final String KEY_PROMPT = "prompt";
 	protected static final String KEY_ANSWER = "answer";
@@ -292,7 +291,7 @@ public class BonusQuestion {
 		System.out.println(byWeek.getPrompt());
 		System.out.println(byWeek.getBonusType());
 		System.out.println(Bonus.toJSONObject().toJSONString());
-		JSONUtils.writeJSON(Bonus.pathBonus, Bonus.toJSONObject());
+		JSONUtils.writeJSON(JSONUtils.pathBonus, Bonus.toJSONObject());
 		//JSONObject fileO = JSONUtils.readFile(Bonus.filePath+".as");
 		//System.out.println(fileO.toJSONString());
 		//Bonus.fromJSONObject(fileO);
