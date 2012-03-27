@@ -306,7 +306,7 @@ public class User implements Person, Comparable<User> {
 			}
 			setUltimatePick(c);
 
-			setPoints(Utils.numToInt(o.remove(KEY_WIN_PICK_POINTS)));
+			setUltimatePoints(Utils.numToInt(o.remove(KEY_WIN_PICK_POINTS)));
 		} catch (InvalidFieldException e) {
 			System.out
 					.println("Warning: InvalidFieldException in fromJSONObject");
