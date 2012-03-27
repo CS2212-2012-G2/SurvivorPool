@@ -134,53 +134,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		
 		assembleAll();
 	}
-
-	/**
-	 * Builds the top panel including all the editable information
-	 */
-	@Override
-	protected void buildTopPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout(10, 10));
-
-		// this does not need to be referenced else where, only for layout
-		JPanel paneButtons = new JPanel(new BorderLayout(5, 5));
-		
-		//paneButtons.add(btnCastOff);
-		paneButtons.add(btnSave, BorderLayout.CENTER);
-		
-		// add all components on top:
-		panel.add((JPanel)personFields, BorderLayout.CENTER);
-		panel.add(paneButtons, BorderLayout.LINE_END);
-
-		add(panel, BorderLayout.PAGE_START);
-
-		// add the mouse listener to all components.
-		for (Component c : panel.getComponents()) {
-			c.addMouseListener(this);
-		}
-
-		for (Component c : paneButtons.getComponents())
-			c.addMouseListener(this);
-	}
-	
-	/**
-	 * Helper method to build the bottom panel of the container
-	 */
-	@Override
-	protected void buildBottomPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		
-		panel.add(btnAddNew);
-		panel.add(btnDelete);
-		
-		add(panel, BorderLayout.PAGE_END);
-		// add the mouse listener to all components.
-		for (Component c : panel.getComponents()) {
-			c.addMouseListener(this);
-		}
-	}
 	
 	/**
 	 * Sets the tool tips for all the components.
@@ -407,39 +360,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		return;
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		JComponent c = (JComponent)e.getComponent();
-		MainFrame mf = MainFrame.getRunningFrame();
-		
-		String txt = c.getToolTipText();
-		if (txt != null)
-			mf.setStatusMsg(txt);
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		mouseEntered(e);
-	}
-
-	// unused
-	@Override
 	public void mousePressed(MouseEvent e) {
 		Component c = e.getComponent();
 		if (c == tfContID || c == tfFirstName || c == tfLastName
 				|| c == cbTribe || c == table || c == btnCastOff) {
 			setFieldsChanged(true);
 		}
-	}
-
-	// unused
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		return;
 	}
 
 	/**
@@ -469,9 +395,9 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tableModel.fireTableDataChanged();
 		}
 		
-		if (update == null) return;
+		//if (update == null) return;
 		
-		if (update.contains(UpdateTag.START_SEASON) ||  
+		if (update == null || update.contains(UpdateTag.START_SEASON) ||  
 				update.contains(UpdateTag.ADVANCE_WEEK) || 
 				update.contains(UpdateTag.END_GAME)) {
 			// depends on season started:
@@ -486,14 +412,16 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			if (g.isSeasonEnded()) {
 				btnCastOff.setEnabled(false);
 				btnSave.setEnabled(false);
-			} else
+			} else {
 				btnCastOff.setEnabled(sStart);
+			}
 			
 			btnDelete.setEnabled(!sStart);
 			tfLastName.setEnabled(!sStart);
 			tfFirstName.setEnabled(!sStart);
 			tfContID.setEnabled(!sStart);
-	
+			
+			tfCastDate.setEditable(false);
 			
 			List<ActionListener> acts = Arrays.asList(imgDisplay
 					.getActionListeners());

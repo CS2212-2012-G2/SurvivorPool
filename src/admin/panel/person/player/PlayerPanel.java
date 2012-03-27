@@ -2,7 +2,6 @@ package admin.panel.person.player;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -127,54 +126,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 		refreshContestantCBs();
 		assembleAll();
-	}
-
-	/**
-	 * Builds the top panel including all the editable information
-	 */
-	@Override
-	protected void buildTopPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout(10, 10));
-
-		// this does not need to be referenced else where, only for layout
-		JPanel rightPane = new JPanel();
-		BoxLayout b = new BoxLayout(rightPane, BoxLayout.Y_AXIS);
-		rightPane.setLayout(b);
-		rightPane.add(Box.createVerticalStrut(32));
-		//rightPane.add(labelPts);
-		//rightPane.add(Box.createVerticalGlue());
-		rightPane.add(btnSave);
-		rightPane.add(Box.createVerticalStrut(32));
-
-		// add all components on top:
-		panel.add((JPanel)personFields, BorderLayout.CENTER);
-		panel.add(rightPane, BorderLayout.LINE_END);
-
-		add(panel, BorderLayout.PAGE_START);
-
-		// add the mouse listener to all components.
-		for (Component c : panel.getComponents()) {
-			c.addMouseListener(this);
-		}
-
-		for (Component c : rightPane.getComponents())
-			c.addMouseListener(this);
-	}
-
-	@Override
-	protected void buildBottomPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		
-		panel.add(btnAddNew);
-		panel.add(btnDelete);
-
-		add(panel, BorderLayout.PAGE_END);
-		// add the mouse listener to all components.
-		for (Component c : panel.getComponents()) {
-			c.addMouseListener(this);
-		}
 	}
 
 	/**
