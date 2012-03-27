@@ -179,6 +179,7 @@ public class User implements Person, Comparable<User> {
 			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
 					"Weekly Pick was null");
 		} 
+		
 		weeklyPick = pick;
 	}
 
@@ -284,11 +285,14 @@ public class User implements Person, Comparable<User> {
 
 			String id = (String) o.remove(KEY_WEEKLY_PICK_ID);
 			Contestant c = null;
+			
+			GameData g = GameData.getCurrentGame();
+			
 			if (id.equals(Contestant.NULL_ID)) {
 				c = new Contestant();
 				c.setNull();
 			} else {
-				c = GameData.getCurrentGame().getContestant(id);
+				c = g.getContestant(id);
 
 			}
 			setWeeklyPick(c);
@@ -298,7 +302,7 @@ public class User implements Person, Comparable<User> {
 				c = new Contestant();
 				c.setNull();
 			} else {
-				c = GameData.getCurrentGame().getContestant(id);
+				c = g.getContestant(id);
 			}
 			setUltimatePick(c);
 

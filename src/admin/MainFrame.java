@@ -3,6 +3,7 @@ package admin;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -110,7 +111,13 @@ public class MainFrame extends JFrame {
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
 		// can resize frame
-		this.setResizable(false);
+		//this.setResizable(false);
+		
+		// center the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int sHeight = screenSize.height;
+	    int sWidth = screenSize.width;
+	    setLocation(sWidth / 2 - getWidth(), sHeight / 2 - getHeight());
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
