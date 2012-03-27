@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Random;
+import java.util.EnumSet;
 
 import json.simple.JSONArray;
 import json.simple.JSONObject;
@@ -217,7 +218,7 @@ public class GameData extends Observable {
 		allContestants.add(c);
 
 		setChanged();
-		notifyObservers(UpdateTag.ADD_CONTESTANT);
+		notifyObservers(EnumSet.of(UpdateTag.ADD_CONTESTANT));
 	}
 
 	/**
@@ -233,7 +234,7 @@ public class GameData extends Observable {
 		Collections.sort(allContestants);
 		
 		setChanged();
-		notifyObservers(UpdateTag.REMOVE_CONTESTANT);
+		notifyObservers(EnumSet.of(UpdateTag.REMOVE_CONTESTANT));
 	}
 
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -265,7 +266,7 @@ public class GameData extends Observable {
 		allUsers.add(u);
 
 		setChanged();
-		notifyObservers(UpdateTag.ADD_USER);
+		notifyObservers(EnumSet.of(UpdateTag.ADD_USER));
 	}
 
 	/**
@@ -278,7 +279,7 @@ public class GameData extends Observable {
 		allUsers.remove(u);
 
 		setChanged();
-		notifyObservers(UpdateTag.REMOVE_USER);
+		notifyObservers(EnumSet.of(UpdateTag.REMOVE_USER));
 	}
 
 	/**
@@ -325,7 +326,7 @@ public class GameData extends Observable {
 		}
 
 		setChanged();
-		notifyObservers(UpdateTag.ALLOCATE_POINTS);
+		notifyObservers(EnumSet.of(UpdateTag.ALLOCATE_POINTS));
 	}
 
 	/**
@@ -460,7 +461,7 @@ public class GameData extends Observable {
 		weeksPassed += 1; // increment number of weeks passed
 
 		setChanged();
-		notifyObservers( UpdateTag.ADVANCE_WEEK);
+		notifyObservers(EnumSet.of(UpdateTag.ADVANCE_WEEK));
 	}
 
 	/**
@@ -473,7 +474,7 @@ public class GameData extends Observable {
 		seasonStarted = true;
 	
 		setChanged();
-		notifyObservers(UpdateTag.START_SEASON);
+		notifyObservers(EnumSet.of(UpdateTag.START_SEASON));
 	}
 
 	/**
@@ -485,7 +486,7 @@ public class GameData extends Observable {
 	 * @param tribeTwo
 	 *            name of tribe two
 	 */
-	public void setTribeNames(String tribeOne, String tribeTwo) {
+	public void setTribeNames(String tribeOne, String tribeTwo){
 		// temp tribe vars.
 		String oldT1 = tribeNames[0];
 		String oldT2 = tribeNames[1];
@@ -510,7 +511,7 @@ public class GameData extends Observable {
 		}
 
 		setChanged();
-		notifyObservers(UpdateTag.SET_TRIBE_NAMES);
+		notifyObservers(EnumSet.of(UpdateTag.SET_TRIBE_NAMES));
 	}
 
 	/**
@@ -649,7 +650,7 @@ public class GameData extends Observable {
 		Bonus.deleteAllQuestions();
 
 		setChanged();
-		notifyObservers(UpdateTag.END_GAME);
+		notifyObservers(EnumSet.of(UpdateTag.END_GAME));
 
 		JSONUtils.resetSeason();
 	}
@@ -843,4 +844,16 @@ public class GameData extends Observable {
 
 	}
 
+
+	/**
+	 * Creates a EnumSet of the tags passed, allowing for flexible notions
+	 * of multiple tags sent.
+	 * @param tags Sets the flags of the set.
+	 * @return EnumSet containing the tags passed.
+	 */
+	/*private EnumSet updateTagSet(UpdateTag... tags) {
+		EnumSet set = 
+		    new EnumSet(UpdateTag.class);
+		    return set.of(tags);
+	}*/
 }

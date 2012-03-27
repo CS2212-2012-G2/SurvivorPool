@@ -13,6 +13,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.EnumSet;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -375,6 +376,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	 * 
 	 * @see GameDataDependant.refreshGameFields
 	 */
+	// TODO: Make this use the EnumSet notion of what's passed in. 
 	@Override
 	public void update(Observable obj, Object arg) {
 		GameData g = (GameData) obj;
