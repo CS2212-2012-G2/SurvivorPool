@@ -47,7 +47,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JLabel labelCastStatus;
+	private JTextField tfCastDate;
 	private JLabel labelTribe;
 
 	private JTextField tfFirstName;
@@ -90,8 +90,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		tfLastName = new JTextField(20);
 
 		labelCastOff = new JLabel("Cast off:");
-		// TODO: FIx the init of this.. :>
-		labelCastStatus = new JLabel("-");
+		tfCastDate = new JTextField("-");
+		btnCastOff = new JButton("Cast Off");
 
 		labelTribe = new JLabel("Tribe:");
 		cbTribe = new JComboBox<String>(GameData.getCurrentGame()
@@ -103,7 +103,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// holds all the fields
 		personFields = new ContestantFieldsPanel(imgDisplay, labelName, 
 				tfFirstName, tfLastName, labelID, tfContID, labelCastOff, 
-				labelCastStatus, labelTribe, cbTribe);
+				tfCastDate, btnCastOff, labelTribe, cbTribe);
 		// add the mouse listener to all components.
 		for (Component c : ((JPanel)personFields).getComponents()) {
 			if (c instanceof JPanel) {
@@ -113,9 +113,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			c.addMouseListener(this);
 		}
 
-		// buttons:
-		btnCastOff = new JButton("Cast Off");
-		/* check to stop casting off before start */
+		// check to stop casting off before start
 		if (!GameData.getCurrentGame().isSeasonStarted()) {
 			btnCastOff.setEnabled(false);
 		}
@@ -144,12 +142,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		panel.setLayout(new BorderLayout(10, 10));
 
 		// this does not need to be referenced else where, only for layout
-		JPanel paneButtons = new JPanel();
-		GridLayout bl = new GridLayout(2, 1);
-		paneButtons.setLayout(bl);
+		JPanel paneButtons = new JPanel(new BorderLayout(5, 5));
 		
-		paneButtons.add(btnCastOff);
-		paneButtons.add(btnSave);
+		//paneButtons.add(btnCastOff);
+		paneButtons.add(btnSave, BorderLayout.CENTER);
 		
 		// add all components on top:
 		panel.add((JPanel)personFields, BorderLayout.CENTER);
@@ -164,60 +160,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 
 		for (Component c : paneButtons.getComponents())
 			c.addMouseListener(this);
-	}
-
-	/**
-	 * Builds the panel containing the JTable
-	 */
-	@Override
-	protected void buildTablePanel() {
-		JPanel panel = new JPanel();
-
-		// settings:
-		header.setReorderingAllowed(false); // no moving.
-		table.setColumnSelectionAllowed(true);
-		table.setRowSelectionAllowed(true);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		//header.addMouseListener(tableModel.new SortColumnAdapter());
-
-		TableCellRenderer renderer = new TableCellRenderer() {
-
-			JLabel label = new JLabel();
-
-			@Override
-			public JComponent getTableCellRendererComponent(JTable table,
-					Object value, boolean isSelected, boolean hasFocus,
-					int row, int column) {
-
-				if (table.isRowSelected(row)) {
-					label.setBackground(Utils.getThemeTableHighlight());
-					label.setForeground(Utils.getThemeBG());
-				} else {
-					label.setBackground(UIManager.getColor("Table.background"));
-					label.setForeground(UIManager.getColor("Table.foreground"));
-				}
-
-				label.setOpaque(true);
-				label.setText("" + value);
-
-				return label;
-			}
-
-		};
-		table.setDefaultRenderer(Object.class, renderer);
-
-		JScrollPane scroll = new JScrollPane(table);
-
-		panel.setLayout(new BorderLayout(5, 5));
-		panel.add(scroll, BorderLayout.CENTER);
-
-		add(panel, BorderLayout.CENTER);
-
-		// add the mouse listener to all components.
-		for (Component c : scroll.getComponents()) {
-			c.addMouseListener(this);
-		}
 	}
 	
 	/**
@@ -418,13 +360,13 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					}
 
 					c.toCastOff();
-					if (GameData.getCurrentGame().isFinalWeek())
+					/*if (GameData.getCurrentGame().isFinalWeek())
 						labelCastStatus.setText("Winner");
 					else
-						labelCastStatus.setText("Week " + c.getCastDate());
+						labelCastStatus.setText("Week " + c.getCastDate());*/
 				} else {
 					c.undoCast();
-					labelCastStatus.setText("Active");
+					tfCastDate.setText("Active");
 					if (GameData.getCurrentGame().isFinalWeek())
 						btnCastOff.setText("Select Winner");
 					else

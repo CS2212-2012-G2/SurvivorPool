@@ -1,6 +1,7 @@
 package admin.panel.person.contestant;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -33,7 +34,9 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JLabel labelCastStatus;
+	private JTextField tfCastDate;
+	private JButton btnCastOff;
+	
 	private JLabel labelTribe;
 
 	private JLabel labelID;
@@ -46,6 +49,8 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	// store internal
 	private GridBagLayout gbFields;
 	private GridBagConstraints gbFieldsConst;
+
+	
 	
 	// constants:
 	private static final String DEFAULT_PICTURE = "res/test/defaultpic.png";
@@ -53,8 +58,8 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 
 	public ContestantFieldsPanel(JButton _imgButton, JLabel _labelName, JTextField _tfFirstName,
 			JTextField _tfLastName, JLabel _labelID, JTextField _tfContID,
-			JLabel _labelCastOff, JLabel _labelCastStatus, JLabel _labelTribe,
-			JComboBox<String> _cbTribe) {
+			JLabel _labelCastOff, JTextField _tfCastDate, JButton _btnCastOff,
+			JLabel _labelTribe, JComboBox<String> _cbTribe) {
 		super();
 
 		setLayout(new BorderLayout(10, 10));
@@ -64,7 +69,9 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		// passed in
 		labelName = _labelName;
 		labelCastOff = _labelCastOff;
-		labelCastStatus = _labelCastStatus;
+		tfCastDate = _tfCastDate;
+		btnCastOff = _btnCastOff;
+		
 		labelTribe = _labelTribe;
 
 		tfFirstName = _tfFirstName;
@@ -134,21 +141,28 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets = new Insets(0, 0, 5, 10);
 		pane.add(labelCastOff, gbc);
-
+		
+		gbc.weightx = 0.5;
 		gbc.gridx = GridBagConstraints.RELATIVE;
-		gbc.gridwidth = GridBagConstraints.REMAINDER; // finish the row
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.insets = new Insets(0, 0, 5, 5);
+		pane.add(tfCastDate, gbc);
+
+		gbc.weightx = 0.5;
 		gbc.anchor = GridBagConstraints.LINE_END;
 		gbc.insets = new Insets(0, 0, 5, 0);
-		pane.add(labelCastStatus, gbc);
+		pane.add(btnCastOff, gbc);
 
 		// row: [Combo Label] [Combo Box]
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.gridwidth = 1;
+		gbc.weightx = 0.25;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets = new Insets(0, 0, 5, 10);
 		pane.add(labelTribe, gbc);
 
+		gbc.weightx = 0.5;
 		gbc.gridx = GridBagConstraints.RELATIVE;
 		gbc.anchor = GridBagConstraints.LINE_END;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -219,7 +233,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 
 			cbTribe.setSelectedIndex(0);
 
-			labelCastStatus.setText("Active");
+			tfCastDate.setText("Active");
 			
 			updateContPicture(DEFAULT_PICTURE);
 			return;
@@ -233,9 +247,9 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		tfContID.setText(c.getID());
 		
 		if (!c.isCastOff()) {
-			labelCastStatus.setText("Active");
+			tfCastDate.setText("Active");
 		} else {
-			labelCastStatus.setText("Week: 1");
+			tfCastDate.setText("" + c.getCastDate());
 		}
 		
 		updateContPicture(c.getPicture());
