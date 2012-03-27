@@ -97,7 +97,7 @@ public class JSONUtils {
 	public static boolean resetSeason() {
 		File f = new File(GameData.pathGame);
 		f.delete();
-		File fB = new File(Bonus.filePath);
+		File fB = new File(Bonus.pathBonus);
 		fB.delete();
 		return (f.exists() && fB.exists());
 	}

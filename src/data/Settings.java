@@ -40,7 +40,6 @@ public class Settings extends Observable {
 	 * @return String: setting stored at this key
 	 */
 	public String getSetting(Field key){
-		System.out.println(settingsMap.get(key));
 		return settingsMap.get(key);
 	}
 	

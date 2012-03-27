@@ -23,7 +23,8 @@ public class Bonus extends Observable {
 	static List<BonusQuestion> questions = new ArrayList<BonusQuestion>();
 
 	private static final String KEY_QUESTIONS = "questions";
-	public static final String filePath = "res/data/bonus.dat";
+	
+	public static final String pathBonus = "res/data/Bonus.dat";
 	
 	static Comparator<BonusQuestion> comp =new Comparator<BonusQuestion>(){
 
@@ -152,18 +153,18 @@ public class Bonus extends Observable {
 	 */
 	public static void initBonus(){
 		try {
-			fromJSONObject(JSONUtils.readFile(filePath));
+			fromJSONObject(JSONUtils.readFile(pathBonus));
 		} catch (FileNotFoundException e) {
-			System.out.println("could not read "+filePath);
+			System.out.println("could not read "+pathBonus);
 		} catch (ParseException	e) {
-			System.out.println("could not convert to json object "+filePath);
+			System.out.println("could not convert to json object "+pathBonus);
 			e.printStackTrace();
 		}
 	}
 	
 	public static void writeData() {
 		try {
-			JSONUtils.writeJSON(filePath, toJSONObject());
+			JSONUtils.writeJSON(pathBonus, toJSONObject());
 		} catch (ParseException p) {
 			p.printStackTrace();
 		}

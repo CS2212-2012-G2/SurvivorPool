@@ -318,7 +318,7 @@ public class MainFrame extends JFrame {
 		if (GameData.getCurrentGame() != null)
 			GameData.getCurrentGame().writeData();
 		
-		if (Bonus.getAllQuestions() != null) 
+		if (!Bonus.getAllQuestions().isEmpty()) 
 			Bonus.writeData();
 		
 		System.exit(0);
