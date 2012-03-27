@@ -268,19 +268,21 @@ public class BonusPanel extends JPanel implements Observer {
 	/**
 	 * initialise the bonus panel if bonus questions already exist
 	 */
-	private void initExistingBonus() {
+	private BonusQuestion initExistingBonus() {
 		currentWeek = GameData.getCurrentGame().getCurrentWeek();
 		currentQuestionNumber = 1;
 		
 		try {
 			bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber);
 		} catch (IndexOutOfBoundsException e) {
-			bq = null;
+			return null;
 		}
 		
 		setWeekSpinner(currentWeek, GameData.getCurrentGame().getCurrentWeek());
 		setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 		addQuestionToListing(bq);
+		
+		return bq;
 	}
 	
 	/**
