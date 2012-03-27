@@ -30,6 +30,8 @@ import admin.panel.person.player.PlayerPanel;
 import admin.panel.season.SeasonCreatePanel;
 
 import data.GameData;
+import data.Settings;
+import data.Settings.Field;
 import data.bonus.Bonus;
 
 public class MainFrame extends JFrame {
@@ -37,7 +39,7 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	static MainFrame m;
-
+	
 	private JTabbedPane tabPane = new JTabbedPane();
 
 	private JLabel lblGeneral = new JLabel(GENERAL_PANEL);
@@ -99,6 +101,8 @@ public class MainFrame extends JFrame {
 
 		GameData g = GameData.initGameData();
 
+		Settings s = Settings.initSettingsData();
+		
 		initMenuBar();
 
 		if (g != null)
@@ -106,7 +110,10 @@ public class MainFrame extends JFrame {
 		else
 			initSeasonCreateGUI();
 
+		if (s == null) s = new Settings("Snow");
+		
 		applyTheme();
+		
 		this.setSize(640, 480);
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
@@ -204,7 +211,7 @@ public class MainFrame extends JFrame {
 		mnuItemTheme1.addActionListener(al);
 		mnuItemTheme3.addActionListener(al);
 		mnuItemTheme2.addActionListener(al);
-
+		
 		this.setJMenuBar(menuBar);
 	}
 
@@ -224,6 +231,7 @@ public class MainFrame extends JFrame {
 	private void changeTheme(String name) {
 		Utils.changeTheme(name);
 		applyTheme();
+		Settings.getCurrentSettings().setSetting(Field.THEME, name);
 	}
 
 	/**

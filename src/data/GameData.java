@@ -70,8 +70,8 @@ public class GameData extends Observable {
 	private static final String KEY_BET_AMOUNT = "bet_amount";
 	private static final String KEY_POOL_TOTAL = "pool_total";
 	
-	public static String pathGame = "res/data/Settings.dat";
-	public static String pathBonus = "res/data/bonus.dat";
+	public static String pathGame = "res/data/GameData.dat";
+	public static String pathBonus = "res/data/Bonus.dat";
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
