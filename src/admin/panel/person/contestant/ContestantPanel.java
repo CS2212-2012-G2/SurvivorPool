@@ -468,11 +468,15 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			
 			btnAddNew.setEnabled(!sStart);
 			
-			if (g.isSeasonEnded()) {
+			if (g.isSeasonEnded()) { // game end
 				btnCastOff.setEnabled(false);
 				btnSave.setEnabled(false);
+			} else if (g.isFinalWeek()) { // final week
+				btnCastOff.setEnabled(false);
+				btnPickWin.setEnabled(true);
 			} else {
 				btnCastOff.setEnabled(sStart);
+				btnPickWin.setEnabled(false);
 			}
 			
 			btnDelete.setEnabled(!sStart);
@@ -481,7 +485,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tfContID.setEnabled(!sStart);
 			
 			tfCastDate.setEditable(false);
-			btnPickWin.setEnabled(false);
+			
 			
 			List<ActionListener> acts = Arrays.asList(imgDisplay
 					.getActionListeners());
