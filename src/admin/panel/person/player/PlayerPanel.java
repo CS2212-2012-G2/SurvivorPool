@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.EnumSet;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -366,10 +367,14 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
-		UpdateTag update = (UpdateTag)arg;
-		GameData g = (GameData)o;
+		EnumSet<UpdateTag> update = (EnumSet<UpdateTag>)arg;
+
+		if (update == null) 
+			return;
 		
-		if (update == UpdateTag.START_SEASON) {
+		GameData g = (GameData)o;
+
+		if (update.contains(UpdateTag.START_SEASON)) {
 			
 			btnAddNew.setEnabled(!g.isSeasonStarted());
 			btnDelete.setEnabled(!g.isSeasonStarted());
@@ -378,15 +383,14 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			tfID.setEnabled(!g.isSeasonStarted());
 		}
 		
-		if (update == UpdateTag.ADD_CONTESTANT || 
-			update == UpdateTag.REMOVE_CONTESTANT ||
-			update == UpdateTag.START_SEASON) {
+		if (update.containsAll(EnumSet.of(UpdateTag.ADD_CONTESTANT, 
+			UpdateTag.REMOVE_CONTESTANT, UpdateTag.START_SEASON))) {
 			refreshContestantCBs();
 				
 			tableModel.fireTableDataChanged();
 		}
 		
-		if (update == UpdateTag.ADVANCE_WEEK) {
+		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
 			tableModel.fireTableDataChanged();
 		}
 	}
