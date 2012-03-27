@@ -7,13 +7,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.EnumSet;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -338,8 +336,10 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			tfID.setEnabled(!g.isSeasonStarted());
 		}
 		
-		if (update.containsAll(EnumSet.of(UpdateTag.ADD_CONTESTANT, 
-			UpdateTag.REMOVE_CONTESTANT, UpdateTag.START_SEASON))) {
+		if (update.contains(UpdateTag.ADD_CONTESTANT) ||
+				update.contains(UpdateTag.REMOVE_CONTESTANT) ||
+				update.contains(UpdateTag.START_SEASON) ||
+				update.contains(UpdateTag.CONTESTANT_CAST_OFF)) {
 			refreshContestantCBs();
 				
 			tableModel.fireTableDataChanged();

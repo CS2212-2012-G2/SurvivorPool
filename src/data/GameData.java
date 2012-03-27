@@ -56,19 +56,15 @@ public class GameData extends Observable {
 	/**
 	 * JSON Keys
 	 */
-	private static final String KEY_CONTESTANTS = "cons";
-	private static final String KEY_NUM_CONTEST = "cons_num";
-
-	private static final String KEY_USERS = "users";
-
-	private static final String KEY_WEEKS_REMAIN = "weeks_rem";
-	private static final String KEY_WEEKS_PASSED = "weeks_pass";
-
-	private static final String KEY_TRIBES = "tribes_arr";
-
-	private static final String KEY_SEASON_STARTED = "season_started";
-	private static final String KEY_BET_AMOUNT = "bet_amount";
-	private static final String KEY_POOL_TOTAL = "pool_total";
+	private static final String KEY_CONTESTANTS = "cons",
+			KEY_NUM_CONTEST = "cons_num",
+			KEY_USERS = "users",
+			KEY_WEEKS_REMAIN = "weeks_rem",
+			KEY_WEEKS_PASSED = "weeks_pass",
+			KEY_TRIBES = "tribes_arr",
+			KEY_SEASON_STARTED = "season_started",
+			KEY_BET_AMOUNT = "bet_amount",
+			KEY_POOL_TOTAL = "pool_total";
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -563,6 +559,9 @@ public class GameData extends Observable {
 		
 		castOff.setCastDate(getCurrentWeek());
 		castOff.setToBeCast(true);
+		
+		setChanged();
+		notifyObservers(EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
 	}
 	
 	/**
@@ -705,10 +704,12 @@ public class GameData extends Observable {
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
 		obj.put(KEY_SEASON_STARTED, seasonStarted);
+		
 		if(seasonStarted){
-		obj.put(KEY_BET_AMOUNT, betAmount);
-		obj.put(KEY_POOL_TOTAL, totalAmount);
+			obj.put(KEY_BET_AMOUNT, betAmount);
+			obj.put(KEY_POOL_TOTAL, totalAmount);
 		}
+		
 		return obj;
 	}
 
@@ -731,10 +732,11 @@ public class GameData extends Observable {
 		weeksPassed = Utils.numToInt(obj.get(KEY_WEEKS_PASSED));
 
 		seasonStarted = (Boolean) obj.get(KEY_SEASON_STARTED);
+		
 		if(seasonStarted){
-		betAmount = Utils.numToInt(obj.get(KEY_BET_AMOUNT));
-		totalAmount = Utils.numToInt(obj.get(KEY_POOL_TOTAL));
-		System.out.println(betAmount + " " + totalAmount);
+			betAmount = Utils.numToInt(obj.get(KEY_BET_AMOUNT));
+			totalAmount = Utils.numToInt(obj.get(KEY_POOL_TOTAL));
+			System.out.println(betAmount + " " + totalAmount);
 		}
 
 		// Contestants must be loaded before users, but after others!

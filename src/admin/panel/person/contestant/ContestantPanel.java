@@ -314,6 +314,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		
 
 		btnCastOff.addActionListener(new ActionListener() {
+			
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String s = ((JButton) e.getSource()).getText();
 
@@ -359,6 +361,32 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				}
 
 				update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
+			}
+		});
+		
+		btnPickWin.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				GameData g = GameData.getCurrentGame();
+				
+				if (!g.isFinalWeek()) // only applicable if the last week. 
+					return;
+			
+				Contestant win = null;
+				try {
+					win = getPerson();
+				} catch (InvalidFieldException e) { return; } // shouldn't happen
+				
+				if (win == null) return;
+				
+				// cast off the other two contestants (always three left)
+				for (Contestant c: g.getActiveContestants()) {
+					if (!c.equals(win))
+						g.castOff(c);
+				}
+				
+				// FIXME: What do here?
 			}
 		});
 		
