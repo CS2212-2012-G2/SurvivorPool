@@ -344,6 +344,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 						return;
 					}
 					
+					
 					// can't cast off someone already off.
 					if (c.isCastOff()) {
 						JOptionPane.showMessageDialog(null,
@@ -351,6 +352,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 						return;
 					}
 					
+					if (g.isFinalWeek()) {
+						JOptionPane.showMessageDialog(null,
+								"In the final week nobody is cast off, " +
+								"instead you must select a winner.");
+						return;
+					}
 					
 					g.castOff(c);
 					tfCastDate.setText("" + c.getCastDate());
