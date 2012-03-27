@@ -2,8 +2,7 @@ package admin.panel.person.contestant;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -13,25 +12,20 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.EnumSet;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.table.TableCellRenderer;
 
 import admin.FileDrop;
 import admin.MainFrame;
-import admin.Utils;
 import admin.panel.person.PersonPanel;
 import data.Contestant;
 import data.GameData;
@@ -59,6 +53,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 
 	private JTextField tfContID;
 	private JLabel labelID;
+	
+	private JButton btnPickWin;
 	
 	// static constants:
 	private static final String CAST_OFF_TEXT = "Cast Off";
@@ -115,6 +111,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			}
 			c.addMouseListener(this);
 		}
+		
+		btnPickWin = new JButton("<html><center>Select<br>Winner</center></html>");
 
 		// check to stop casting off before start
 		if (!GameData.getCurrentGame().isSeasonStarted()) {
@@ -134,6 +132,47 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		assembleAll();
+	}
+	
+	@Override
+	/**
+	 * Builds the top panel including all the editable information
+	 */
+	protected void buildTopPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout(10, 10));
+
+		// this does not need to be referenced else where, only for layout
+		JPanel rightPane = new JPanel();
+		BoxLayout b = new BoxLayout(rightPane, BoxLayout.Y_AXIS);
+		
+		//btnSave.setPreferredSize(btnPickWin.getPreferredSize());
+		Dimension size = btnPickWin.getSize();
+		size = btnPickWin.getPreferredSize();
+		size = btnPickWin.getMaximumSize();
+		
+		btnSave.setPreferredSize(btnPickWin.getPreferredSize());
+		
+		rightPane.setLayout(b);
+		rightPane.add(Box.createVerticalGlue());
+		rightPane.add(btnPickWin);
+		rightPane.add(Box.createVerticalStrut(10));
+		rightPane.add(btnSave);
+		rightPane.add(Box.createVerticalGlue());
+
+		// add all components on top:
+		panel.add((JPanel)personFields, BorderLayout.CENTER);
+		panel.add(rightPane, BorderLayout.LINE_END);
+
+		add(panel, BorderLayout.PAGE_START);
+
+		// add the mouse listener to all components.
+		for (Component c : panel.getComponents()) {
+			c.addMouseListener(this);
+		}
+
+		for (Component c : rightPane.getComponents())
+			c.addMouseListener(this);
 	}
 	
 	/**
@@ -333,7 +372,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 						btnCastOff.setText("Cast Off");
 				}
 
-				update(GameData.getCurrentGame(), UpdateTag.CONTESTANT_CAST_OFF);
+				update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
 			}
 		});
 		
