@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -33,6 +34,7 @@ import admin.Utils;
 import admin.panel.person.PersonPanel;
 import data.Contestant;
 import data.GameData;
+import data.GameData.UpdateTag;
 import data.InvalidFieldException;
 
 public class ContestantPanel extends PersonPanel<Contestant> implements MouseListener, Observer {
@@ -200,6 +202,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		} else {
 			btnCastOff.setToolTipText(TOOL_CASTOFF);
 		}
+		
 		btnSave.setToolTipText(TOOL_SAVE);
 		imgDisplay.setToolTipText(TOOL_IMAGE);
 		
@@ -338,10 +341,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					// someone who isn't fully in the game.. :/
 					return;
 				}
+				
+				GameData g = GameData.getCurrentGame();
 
 				if (s.equals("Cast Off") || s.equals("Select Winner")) {
 					// check if someone is already cast off
-					if (GameData.getCurrentGame().doesElimExist() == true) {
+					if (g.doesElimExist() == true) {
 						JOptionPane.showMessageDialog(
 										null,
 										"You can't cast off more than one " +
@@ -358,22 +363,23 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 								"This person is already out of the game.");
 						return;
 					}
-
-					c.toCastOff();
-					/*if (GameData.getCurrentGame().isFinalWeek())
-						labelCastStatus.setText("Winner");
-					else
-						labelCastStatus.setText("Week " + c.getCastDate());*/
+					
+					if (g.isFinalWeek()) {
+						tfCastDate.setText("Winner");
+					} else {
+						g.castOff(c);
+						tfCastDate.setText("" + c.getCastDate());
+					}
 				} else {
-					c.undoCast();
+					g.undoCastOff(c);
 					tfCastDate.setText("Active");
-					if (GameData.getCurrentGame().isFinalWeek())
+					if (g.isFinalWeek())
 						btnCastOff.setText("Select Winner");
 					else
 						btnCastOff.setText("Cast Off");
 				}
 
-				update(GameData.getCurrentGame(), null);
+				update(GameData.getCurrentGame(), UpdateTag.CONTESTANT_CAST_OFF);
 			}
 		});
 		
@@ -447,46 +453,56 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	public void update(Observable obj, Object arg) {
 		GameData g = (GameData) obj;
 
-		// tribe combobox
-		String[] newTribes = g.getTribeNames();
-		cbTribe.removeAllItems();
-		for (String s : newTribes) {
-			cbTribe.addItem(s);
+		@SuppressWarnings("unchecked")
+		EnumSet<UpdateTag> update = (EnumSet<GameData.UpdateTag>)arg;
+		
+		if (update == null || update.contains(UpdateTag.SET_TRIBE_NAMES) ||
+				update.contains(UpdateTag.CONTESTANT_CAST_OFF)) {
+			// tribe combobox
+			String[] newTribes = g.getTribeNames();
+			cbTribe.removeAllItems();
+			for (String s : newTribes) {
+				cbTribe.addItem(s);
+			}
+
+			// updates the data in the table
+			tableModel.fireTableDataChanged();
 		}
-
-		// updates the data in the table
-		tableModel.fireTableDataChanged();
-
-		// depends on season started:
-		boolean sStart = g.isSeasonStarted();
 		
-		// change text to "select winner" once its the final week
-		if (g.isFinalWeek())
-			btnCastOff.setText("Select Winner");
+		if (update == null) return;
 		
-		
-		
-		btnAddNew.setEnabled(!sStart);
-		
-		if (g.isSeasonEnded()) {
-			btnCastOff.setEnabled(false);
-			btnSave.setEnabled(false);
-		} else
-			btnCastOff.setEnabled(sStart);
-		
-		btnDelete.setEnabled(!sStart);
-		tfLastName.setEnabled(!sStart);
-		tfFirstName.setEnabled(!sStart);
-		tfContID.setEnabled(!sStart);
-
-		
-		List<ActionListener> acts = Arrays.asList(imgDisplay
-				.getActionListeners());
-		boolean actPresent = acts.contains(imgButtonListener);
-		if (actPresent && sStart) {
-			imgDisplay.removeActionListener(imgButtonListener);
-		} else if (!actPresent && !sStart) {
-			imgDisplay.addActionListener(imgButtonListener);
+		if (update.contains(UpdateTag.START_SEASON) ||  
+				update.contains(UpdateTag.ADVANCE_WEEK) || 
+				update.contains(UpdateTag.END_GAME)) {
+			// depends on season started:
+			boolean sStart = g.isSeasonStarted();
+			
+			// change text to "select winner" once its the final week
+			if (g.isFinalWeek())
+				btnCastOff.setText("Select Winner");
+			
+			btnAddNew.setEnabled(!sStart);
+			
+			if (g.isSeasonEnded()) {
+				btnCastOff.setEnabled(false);
+				btnSave.setEnabled(false);
+			} else
+				btnCastOff.setEnabled(sStart);
+			
+			btnDelete.setEnabled(!sStart);
+			tfLastName.setEnabled(!sStart);
+			tfFirstName.setEnabled(!sStart);
+			tfContID.setEnabled(!sStart);
+	
+			
+			List<ActionListener> acts = Arrays.asList(imgDisplay
+					.getActionListeners());
+			boolean actPresent = acts.contains(imgButtonListener);
+			if (actPresent && sStart) {
+				imgDisplay.removeActionListener(imgButtonListener);
+			} else if (!actPresent && !sStart) {
+				imgDisplay.addActionListener(imgButtonListener);
+			}
 		}
 	}
 }

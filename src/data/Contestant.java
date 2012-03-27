@@ -217,10 +217,6 @@ public class Contestant implements Person, Comparable<Contestant> {
 		castDate = date;
 	}
 
-	public void setCastDate(Integer date) {
-		setCastDate(date.intValue());
-	}
-
 	/**
 	 * @return the toBeCast
 	 */
@@ -265,20 +261,8 @@ public class Contestant implements Person, Comparable<Contestant> {
 		}
 
 		if (c.isCastOff()) {
-			castDate = c.getCastDate();
+			setCastDate(c.getCastDate());
 		}
-	}
-
-	/**
-	 * toCastOff sets the player is to be officially cast off when the week
-	 * advances.
-	 */
-	public void toCastOff() {
-		this.setToBeCast(true);
-		GameData g = GameData.getCurrentGame();
-		this.castDate = g.getCurrentWeek();
-		g.setElimCont(this);
-		g.setElimExists(true);
 	}
 
 	/**
@@ -317,17 +301,6 @@ public class Contestant implements Person, Comparable<Contestant> {
 		obj.put(KEY_TRIBE, getTribe());
 		obj.put(KEY_DATE, getCastDate());
 		return obj;
-	}
-
-	/**
-	 * undoCast performs the opposite of every action that toBeCast() takes.
-	 */
-	public void undoCast() {
-		this.setToBeCast(false);
-		this.castDate = -1;
-		GameData g = GameData.getCurrentGame();
-		g.setElimCont(null);
-		g.setElimExists(false);
 	}
 
 	public void fromJSONObject(JSONObject o) {

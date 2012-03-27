@@ -47,9 +47,9 @@ public class GameData extends Observable {
 	
 	public enum UpdateTag {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
-		ADD_CONTESTANT, REMOVE_CONTESTANT, 
+		ADD_CONTESTANT, REMOVE_CONTESTANT, CONTESTANT_CAST_OFF,
 		ADD_USER, REMOVE_USER, 
-		END_GAME, ALLOCATE_POINTS
+		END_GAME, ALLOCATE_POINTS 
 	}
 	
 	/**
@@ -547,6 +547,33 @@ public class GameData extends Observable {
 	 */
 	protected void setElimCont(Contestant elimCont) {
 		this.elimCont = elimCont;
+	}
+	
+	/**
+	 * Casts a contestant from the game.
+	 * @param castOff
+	 */
+	public void castOff(Contestant castOff) {
+		if (castOff.isCastOff()) // can't recast off..
+			return;
+		
+		setElimCont(castOff);
+		setElimExists(true);
+		
+		castOff.setCastDate(getCurrentWeek());
+		castOff.setToBeCast(true);
+	}
+	
+	/**
+	 * Undoes the current contestant that would be cast off.
+	 * @param castOff
+	 */
+	public void undoCastOff(Contestant castOff) {
+		castOff.setToBeCast(false);
+		castOff.setCastDate(-1);
+		
+		setElimCont(null);
+		setElimExists(false);
 	}
 
 	// ----------------- HELPER METHODS ----------------- //
