@@ -145,7 +145,7 @@ public class MainFrame extends JFrame {
 
 	private void initGUI() {
 		mnuItemSave.setEnabled(true);
-		Dimension d = new Dimension(135, 20);
+		Dimension d = new Dimension(132, 20);
 
 		lblGeneral.setPreferredSize(d);
 		lblContestants.setPreferredSize(d);
