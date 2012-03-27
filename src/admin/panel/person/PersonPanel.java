@@ -475,9 +475,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		return;
-	}
+	public abstract void mouseClicked(MouseEvent e);
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
@@ -495,7 +493,9 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 	}
 
 	@Override
-	public abstract void mousePressed(MouseEvent e);
+	public void mousePressed(MouseEvent e) {
+		return;
+	}
 
 	// unused
 	@Override

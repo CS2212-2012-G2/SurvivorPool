@@ -133,21 +133,22 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		gbc.insets = new Insets(0, 0, 5, 0);
 		pane.add(tfContID, gbc);
 
-		// row: [Date Label] [Active Label]
+		// row: [Date Label] [Date TF] [btn Cast off]
 		gbc.gridx = 0;
 		gbc.gridwidth = 1;
 		gbc.gridy++;
+		gbc.weightx = 0.25;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets = new Insets(0, 0, 5, 10);
 		pane.add(labelCastOff, gbc);
 		
-		gbc.weightx = 0.5;
+		gbc.weightx = 0.25;
 		gbc.gridx = GridBagConstraints.RELATIVE;
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.insets = new Insets(0, 0, 5, 5);
 		pane.add(tfCastDate, gbc);
 
-		gbc.weightx = 0.5;
+		//gbc.weightx = 0.25;
 		gbc.anchor = GridBagConstraints.LINE_END;
 		gbc.insets = new Insets(0, 0, 5, 0);
 		pane.add(btnCastOff, gbc);

@@ -303,8 +303,11 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	}
 
 	@Override
-	public void mousePressed(MouseEvent me) {
+	public void mouseClicked(MouseEvent me) {
 		Component c = me.getComponent();
+		
+		if (!c.isEnabled()) return;
+		
 		if (c == tfFirstName || c == tfLastName || c == tfID || c == btnGenID || 
 				c == cbUltPick || c == cbWeeklyPick) {
 			fieldsChanged = true;
@@ -318,6 +321,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		@SuppressWarnings("unchecked")
 		EnumSet<UpdateTag> update = (EnumSet<UpdateTag>)arg;
 
 		if (update == null) 

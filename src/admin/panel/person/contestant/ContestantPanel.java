@@ -61,17 +61,16 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	
 	
 	// tool tip texts:
-	protected static final String TOOL_NAME = "First and Last name must be alphabetic";
-	protected static final String TOOL_ID = "ID must be two characters long and " +
-			"alpha-numeric";
-	protected static final String TOOL_TRIBE = "Select a tribe";
-	protected static final String TOOL_CASTOFF = "Click to cast off contestant.";
-	protected static final String TOOL_SAVE = "Click to save contestant data";
-	protected static final String TOOL_IMAGE = "Click to select image";
-	protected static final String TOOL_ADDNEW = "Click to add new contestant";
-	protected static final String TOOL_DELETE = "Click to remove currently selected " +
-			"Contestant";
-	protected static final String TOOL_WINNER = "Click to choose winner";
+	protected static final String TOOL_NAME = "First and Last name must be alphabetic",
+			TOOL_ID = "ID must be two characters long and alpha-numeric",
+			TOOL_TRIBE = "Select a tribe",
+			TOOL_CASTOFF_BTN = "Click to cast off contestant",
+			TOOL_CASTOFF_FIELD = "Week player was cast off",
+			TOOL_SAVE = "Click to save contestant data",
+			TOOL_IMAGE = "Click to select image",
+			TOOL_ADDNEW = "Click to add new contestant",
+			TOOL_DELETE = "Click to remove currently selected Contestant",
+			TOOL_WINNER = "Click to choose winner";
 	
 	public ContestantPanel() {
 		super(new Contestant());
@@ -174,6 +173,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	 */
 	@Override
 	protected void setToolTips() {
+		imgDisplay.setToolTipText(TOOL_IMAGE);
+		
 		labelName.setToolTipText(ContestantPanel.TOOL_NAME);
 		tfFirstName.setToolTipText(ContestantPanel.TOOL_NAME);
 		tfLastName.setToolTipText(ContestantPanel.TOOL_NAME);
@@ -184,14 +185,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		labelTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		cbTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		
-		if (GameData.getCurrentGame().isFinalWeek()){
-			btnCastOff.setToolTipText(TOOL_WINNER);
-		} else {
-			btnCastOff.setToolTipText(TOOL_CASTOFF);
-		}
+		tfCastDate.setToolTipText(TOOL_CASTOFF_FIELD);
+		btnCastOff.setToolTipText(TOOL_CASTOFF_BTN);
 		
+		btnPickWin.setToolTipText(TOOL_WINNER);
 		btnSave.setToolTipText(TOOL_SAVE);
-		imgDisplay.setToolTipText(TOOL_IMAGE);
 		
 		btnAddNew.setToolTipText(TOOL_ADDNEW);
 		btnDelete.setToolTipText(TOOL_DELETE);
@@ -388,8 +386,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 		Component c = e.getComponent();
+		
+		if (!c.isEnabled()) return;
+		
 		if (c == tfContID || c == tfFirstName || c == tfLastName
 				|| c == cbTribe || c == table || c == btnCastOff) {
 			setFieldsChanged(true);
@@ -452,6 +453,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tfContID.setEnabled(!sStart);
 			
 			tfCastDate.setEditable(false);
+			btnPickWin.setEnabled(false);
 			
 			List<ActionListener> acts = Arrays.asList(imgDisplay
 					.getActionListeners());
