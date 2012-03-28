@@ -320,6 +320,7 @@ public class GameData extends Observable {
 			}
 			
 			u.addPoints(u.getNumBonusAnswer() * 10); // add week's correct bonus questions
+			u.setNumBonusAnswer(0); // clears the number of questions
 		}
 
 		setChanged();
