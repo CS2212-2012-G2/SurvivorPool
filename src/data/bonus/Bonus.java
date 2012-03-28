@@ -85,7 +85,7 @@ public class Bonus extends Observable {
 			int middle = (min+max)/2;
 			BonusQuestion b = questions.get(middle);
 			if(b.getWeek()==week)
-				return middle - 1; 
+				return middle; 
 			else if(b.getWeek()>week)
 				max=middle-1;
 			else
@@ -104,8 +104,8 @@ public class Bonus extends Observable {
 	 */
 	public static BonusQuestion getQuestionByWeekAndNumber(int week, int number) {
 		int loc = getQuestionLoc(week);
-		if (week == 1) loc--;
-		loc +=number;
+		
+		loc += number;
 
 		BonusQuestion b = questions.get(loc);
 		return b;	
