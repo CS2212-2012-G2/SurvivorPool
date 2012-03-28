@@ -268,7 +268,9 @@ public class GeneralPanel extends JPanel implements Observer {
 					String s = JOptionPane.showInputDialog("Enter weekly bet amount!");
 					if (Utils.checkString(s, "^[0-9]+$")) {
 						if (Integer.parseInt(s) >= 0) {
-							g.startSeason(Integer.parseInt(s));
+							g.startSeason(Integer.parseInt(s));	
+							
+							// needs an update, can't figure out what the proper way of calling it.
 						}
 						return;
 					}
