@@ -484,8 +484,6 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 				if (e.getStateChange() == ItemEvent.SELECTED) 
 					return; // we'll only look at selected
 				
-				Object src = e.getSource();
-				
 				// fake mouse event
 				MouseEvent me = new MouseEvent((Component) e.getSource(), 
 						e.getID(), System.currentTimeMillis(), 

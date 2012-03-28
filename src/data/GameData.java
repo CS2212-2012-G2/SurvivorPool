@@ -48,6 +48,9 @@ public class GameData extends Observable {
 	// store contestant who was cast off
 	private Contestant elimCont;
 	
+	// used for asynchronous calls to notifyObservers()
+	private UpdateCall updateExec;
+	
 	public enum UpdateTag {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
 		ADD_CONTESTANT, REMOVE_CONTESTANT, CONTESTANT_CAST_OFF,
@@ -903,8 +906,12 @@ public class GameData extends Observable {
 
 	}
 	
-	private UpdateCall updateExec;
-	
+	/**
+	 * Small class used for removing parallel calls to do the same 
+	 * notification. The update system accounts for multiple modifications
+	 * in one update call, so this means those methods are only called once.
+	 * @author Kevin Brightwell
+	 */
 	private class UpdateCall implements Runnable {
 
 		public EnumSet<UpdateTag> mods = EnumSet.noneOf(UpdateTag.class);
@@ -921,6 +928,12 @@ public class GameData extends Observable {
 		
 	}
 	
+	/**
+	 * Adds a set of {@link GameData.UpdateTag}s to the next update call. This
+	 * method in conjunction with {@link GameData.UpdateCall} works to remove
+	 * excess method executions.
+	 * @param tags Tags to add to the next call.
+	 */
 	public void notifyAdd(UpdateTag... tags) {
 		if (updateExec == null || updateExec.done) {
 			 updateExec = new UpdateCall();
