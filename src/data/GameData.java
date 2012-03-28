@@ -341,6 +341,8 @@ public class GameData extends Observable {
 	public List<Integer> determinePrizePool(){
 		List<Integer> tempList = new ArrayList<Integer>(); 
 		
+		//attempt to be as precise as possible.
+		
 		if (getNumUsers() <= 0){ // no users
 			return null;
 		} else if (getNumUsers() == 1) { // one user, he gets the whole pool
