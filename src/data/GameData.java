@@ -357,9 +357,18 @@ public class GameData extends Observable {
 		}
 		
 		List<User> tempList = new ArrayList<User>(); 
-		tempList.add(first);
-		tempList.add(second);
-		tempList.add(third);
+		
+		// the following removes any temporary user objects from the 
+		// outputted list, in the case of less then three users
+		// participating.
+		
+		if (first.getID() != null)
+			tempList.add(first);
+		if (second.getID() != null)
+			tempList.add(second);
+		if (third.getID() != null)
+			tempList.add(third);
+		
 		return tempList;
 	}
 	
