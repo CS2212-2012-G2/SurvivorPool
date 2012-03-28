@@ -9,6 +9,8 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.EnumSet;
 
+import javax.swing.SwingUtilities;
+
 import json.simple.JSONArray;
 import json.simple.JSONObject;
 import json.simple.parser.ParseException;
@@ -212,8 +214,7 @@ public class GameData extends Observable {
 
 		allContestants.add(c);
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ADD_CONTESTANT));
+		notifyAdd(UpdateTag.ADD_CONTESTANT);
 	}
 
 	/**
@@ -228,8 +229,7 @@ public class GameData extends Observable {
 		allContestants.remove(target);
 		Collections.sort(allContestants);
 		
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.REMOVE_CONTESTANT));
+		notifyAdd(UpdateTag.REMOVE_CONTESTANT);
 	}
 
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -260,8 +260,7 @@ public class GameData extends Observable {
 
 		allUsers.add(u);
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ADD_USER));
+		notifyAdd(UpdateTag.ADD_USER);
 	}
 
 	/**
@@ -273,8 +272,7 @@ public class GameData extends Observable {
 	public void removeUser(User u) {
 		allUsers.remove(u);
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.REMOVE_USER));
+		notifyAdd(UpdateTag.REMOVE_USER);
 	}
 
 	/**
@@ -323,8 +321,7 @@ public class GameData extends Observable {
 			u.setNumBonusAnswer(0); // clears the number of questions
 		}
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ALLOCATE_POINTS));
+		notifyAdd(UpdateTag.ALLOCATE_POINTS);
 	}
 
 	/**
@@ -503,8 +500,7 @@ public class GameData extends Observable {
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ADVANCE_WEEK));
+		notifyAdd(UpdateTag.ADVANCE_WEEK);
 	}
 
 	/**
@@ -516,9 +512,8 @@ public class GameData extends Observable {
 		this.setBetAmount(bet);
 		this.setTotalAmount(bet * allUsers.size());
 		seasonStarted = true;
-	
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.START_SEASON));
+
+		notifyAdd(UpdateTag.START_SEASON);
 	}
 
 	/**
@@ -530,7 +525,7 @@ public class GameData extends Observable {
 	 * @param tribeTwo
 	 *            name of tribe two
 	 */
-	public void setTribeNames(String tribeOne, String tribeTwo){
+	public String[] setTribeNames(String tribeOne, String tribeTwo){
 		// temp tribe vars.
 		String oldT1 = tribeNames[0];
 		String oldT2 = tribeNames[1];
@@ -554,8 +549,9 @@ public class GameData extends Observable {
 			}
 		}
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.SET_TRIBE_NAMES));
+		notifyAdd(UpdateTag.SET_TRIBE_NAMES);
+		
+		return tribeNames;
 	}
 
 	/**
@@ -608,8 +604,7 @@ public class GameData extends Observable {
 		castOff.setCastDate(getCurrentWeek());
 		castOff.setToBeCast(true);
 		
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
+		notifyAdd(UpdateTag.CONTESTANT_CAST_OFF);
 	}
 	
 	/**
@@ -704,8 +699,7 @@ public class GameData extends Observable {
 		GameData.currentGame = null;
 		Bonus.deleteAllQuestions();
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.END_GAME));
+		notifyAdd(UpdateTag.END_GAME);
 
 		JSONUtils.resetSeason();
 	}
@@ -813,8 +807,7 @@ public class GameData extends Observable {
 			}
 		}
 
-		setChanged();
-		notifyObservers();
+		notifyAdd();
 	}
 
 	/**
@@ -908,6 +901,37 @@ public class GameData extends Observable {
 			e1.printStackTrace();
 		}
 
+	}
+	
+	private UpdateCall updateExec;
+	
+	private class UpdateCall implements Runnable {
+
+		public EnumSet<UpdateTag> mods = EnumSet.noneOf(UpdateTag.class);
+		
+		public boolean done = false;
+		
+		@Override
+		public void run() {
+			setChanged();
+			notifyObservers(mods);
+			
+			done = true;
+		}
+		
+	}
+	
+	public void notifyAdd(UpdateTag... tags) {
+		if (updateExec == null || updateExec.done) {
+			 updateExec = new UpdateCall();
+			 
+			 SwingUtilities.invokeLater(updateExec);
+		}
+		
+		for (UpdateTag ut: tags) {
+			if (!updateExec.mods.contains(ut))
+				updateExec.mods.add(ut);
+		}
 	}
 
 
