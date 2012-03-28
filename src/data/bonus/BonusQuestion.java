@@ -69,6 +69,11 @@ public class BonusQuestion {
 	 */
 	public BonusQuestion() {
 	}
+	
+	public BonusQuestion(int week,int number){
+		this.week=week;
+		this.number=number;
+	}
 
 	/**
 	 * Get the type of question.
@@ -234,67 +239,30 @@ public class BonusQuestion {
 	 */
 	public static void main(String[] args) throws ParseException, FileNotFoundException {
 		/*	************to json test*********************/
-		BonusQuestion b = new BonusQuestion("question week 3", "answer", null, 3, 1);
-		String shortActive = b.toJSONObject().toString();
-		System.out.println(shortActive);
-
-		b = new BonusQuestion("question week 2", "answer", null, 2, 1);
-
-		b = new BonusQuestion("question week 2", "answer", null, 2, 1);
-		String shortNotActive = b.toJSONObject().toString();
-		System.out.println(shortNotActive);
-
-		String[] choices = { "one", "two", "three", "answer" };
-
-		b = new BonusQuestion("question week 1", "answer", choices, 1, 1);
-		b = new BonusQuestion("question week 4", "answer", choices, 4, 2);
-		String mcActive = b.toJSONObject().toString();
-		System.out.println(mcActive);
-
-		b = new BonusQuestion("question week 1", "answer", choices, 1, 2);
-		String mcNotActive = b.toJSONObject().toString();
-		System.out.println(mcNotActive);
-		
-		System.out.println(Bonus.toJSONObject().toString());
-		
-		/* **from json test**********************/
-		System.out.println("\n\n\nGenerating fromJSONObject");
-		JSONObject o = (JSONObject)JSONValue.parse(shortActive);
-		BonusQuestion bq = new BonusQuestion();
-		bq.fromJSONObject(o);
-		System.out.println(bq.toJSONObject().toString());
-
-		o = (JSONObject)JSONValue.parse(shortNotActive);
-		bq = new BonusQuestion();
-		bq.fromJSONObject(o);
-		System.out.println(bq.toJSONObject().toString());
-
-		o = (JSONObject)JSONValue.parse(mcActive);
-		bq = new BonusQuestion();
-		bq.fromJSONObject(o);
-		System.out.println(bq.toJSONObject().toString());
-
-		o = (JSONObject)JSONValue.parse(mcNotActive);
-		bq = new BonusQuestion();
-		bq.fromJSONObject(o);
-		System.out.println(bq.toJSONObject().toString());
-		System.out.println(Bonus.toJSONObject().toString());
-		
-		/* ****************TESTING SORT*************************/
-		System.out.println("\n\nTesting sort**************************");
-		List<BonusQuestion> list = Bonus.getAllQuestions();
-		for(BonusQuestion quest: list){
-			System.out.println(quest.getWeek());
+		for(int i =0;i<10;i++){
+			for(int j=0;j<10;j++){
+				BonusQuestion b = new BonusQuestion("question "+Integer.toString(i)+
+						Integer.toString(j),"answer",null,i,j);
+			}	
+		}
+		List<BonusQuestion> l = Bonus.getAllQuestions();
+		for(int i =0;i<l.size();i++){
+			System.out.println(l.get(i).getPrompt());
 		}
 		
-		BonusQuestion byWeek = Bonus.getQuestionByWeek(2);
-		System.out.println(byWeek.getPrompt());
-		System.out.println(byWeek.getBonusType());
-		System.out.println(Bonus.toJSONObject().toJSONString());
-		JSONUtils.writeJSON(JSONUtils.pathBonus, Bonus.toJSONObject());
-		//JSONObject fileO = JSONUtils.readFile(Bonus.filePath+".as");
-		//System.out.println(fileO.toJSONString());
-		//Bonus.fromJSONObject(fileO);
+		for(int i =9;i>=0;i--){
+			for(int j=9;j>=0;j--){
+				BonusQuestion b = Bonus.getQuestion(i, j);
+				System.out.println("i: "+b.getWeek()+" "+Integer.toString(i)+" j:"+
+						b.getNumber()+" "+Integer.toString(j));
+			}	
+		}
 		
+		JSONObject json = Bonus.toJSONObject();
+		System.out.println(json.toJSONString());
+		
+		Bonus.fromJSONObject(json);
+		json = Bonus.toJSONObject();
+		System.out.println(json.toJSONString());
 	}
 }

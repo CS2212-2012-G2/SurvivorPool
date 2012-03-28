@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 
+import admin.Utils;
+
 import json.simple.JSONArray;
 import json.simple.JSONObject;
 import json.simple.parser.ParseException;
@@ -72,43 +74,15 @@ public class Bonus extends Observable {
 	 * Get the question that was asked on a certain week
 	 * 
 	 * @param week
-	 * @return a possible null BonusQuestion
-	 */
-	public static BonusQuestion getQuestionByWeek(int week) {
-		return questions.get(getQuestionLoc(week));
-	}
-	
-	private static int getQuestionLoc(int week){
-		int min = 0;
-		int max = questions.size();
-		while(min<=max){
-			int middle = (min+max)/2;
-			BonusQuestion b = questions.get(middle);
-			if(b.getWeek()==week)
-				return middle; 
-			else if(b.getWeek()>week)
-				max=middle-1;
-			else
-				min=middle+1;
-		}
-		
-		return -1;
-	}
-	
-	/**
-	 * Get the question that was asked on a certain week
-	 * 
-	 * @param week
 	 * @param number The question number in the given week.(Index starts at 0)
 	 * @return a possible null BonusQuestion
 	 */
-	public static BonusQuestion getQuestionByWeekAndNumber(int week, int number) {
-		int loc = getQuestionLoc(week);
-		
-		loc += number;
-
-		BonusQuestion b = questions.get(loc);
-		return b;	
+	public static BonusQuestion getQuestion(int week, int number) {
+		int loc=Collections.binarySearch(questions, new BonusQuestion(week,number), comp);
+				
+		if(loc<0)
+			return null;
+		return questions.get(loc);	
 	}
 
 	/**
