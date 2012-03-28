@@ -88,6 +88,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		pnlCenter.add(pnlHistory);
 		
 		add(pnlCenter, BorderLayout.CENTER);
+		GameData.getCurrentGame().addObserver(this);
 		
 		initListeners();
 	}
