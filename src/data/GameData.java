@@ -385,11 +385,11 @@ public class GameData extends Observable {
 		
 		while (itr.hasNext()) {
 			u = itr.next();
-			if (u.getPoints() > first.getPoints()) {
+			if (u.getPoints() >= first.getPoints()) {
 				first = u;
-			} else if (u.getPoints() > second.getPoints()){
+			} else if (u.getPoints() >= second.getPoints()){
 				second = u;
-			} else if (u.getPoints() > third.getPoints()){
+			} else if (u.getPoints() >= third.getPoints()){
 				third = u;
 			}
 
@@ -403,8 +403,10 @@ public class GameData extends Observable {
 		
 		if (first.getID() != null)
 			tempList.add(first);
+		
 		if (second.getID() != null)
 			tempList.add(second);
+		
 		if (third.getID() != null)
 			tempList.add(third);
 		
