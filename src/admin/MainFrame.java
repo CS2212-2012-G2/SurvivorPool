@@ -118,7 +118,7 @@ public class MainFrame extends JFrame {
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
 		// can resize frame
-		//this.setResizable(false);
+		this.setResizable(false);
 		
 		// center the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

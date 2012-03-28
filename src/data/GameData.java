@@ -318,12 +318,60 @@ public class GameData extends Observable {
 			if (u.getUltimatePick().equals(c) && this.isFinalWeek()){
 				u.addPoints(u.getUltimatePoints());
 			}
+			
+			u.addPoints(u.getNumBonusAnswer() * 10); // add week's correct bonus questions
+			u.setNumBonusAnswer(0); // clears the number of questions
 		}
 
 		setChanged();
 		notifyObservers(EnumSet.of(UpdateTag.ALLOCATE_POINTS));
 	}
 
+	/**
+	 * Iterates through all players on the list, and determines the top three winners.
+	 * 
+	 * @param u
+	 *            Player within the game.
+	 */
+	
+	public List<User> determineWinners() {
+		Iterator<User> itr = allUsers.iterator();
+		User u;
+		User first = new User ();
+		User second = new User ();
+		User third = new User ();
+		first.setPoints(0);
+		second.setPoints(0);
+		third.setPoints(0);
+		
+		while (itr.hasNext()) {
+			u = itr.next();
+			if (u.getPoints() > first.getPoints()) {
+				first = u;
+			} else if (u.getPoints() > second.getPoints()){
+				second = u;
+			} else if (u.getPoints() > third.getPoints()){
+				third = u;
+			}
+
+		}
+		
+		List<User> tempList = new ArrayList<User>(); 
+		
+		// the following removes any temporary user objects from the 
+		// outputted list, in the case of less then three users
+		// participating.
+		
+		if (first.getID() != null)
+			tempList.add(first);
+		if (second.getID() != null)
+			tempList.add(second);
+		if (third.getID() != null)
+			tempList.add(third);
+		
+		return tempList;
+	}
+	
 	/**
 	 * getTribeName returns a String array with two entries: the name of the
 	 * first tribe, and the name of the second tribe.
