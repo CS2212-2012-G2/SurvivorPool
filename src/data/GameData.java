@@ -542,7 +542,12 @@ public class GameData extends Observable {
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
-		notifyAdd(UpdateTag.ADVANCE_WEEK);
+		if (isFinalWeek())
+			notifyAdd(UpdateTag.FINAL_WEEK);
+		else if (isSeasonEnded())
+			notifyAdd(UpdateTag.END_GAME);
+		else 
+			notifyAdd(UpdateTag.ADVANCE_WEEK);
 	}
 
 	/**
