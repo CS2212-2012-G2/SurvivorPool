@@ -373,9 +373,9 @@ public class GameData extends Observable {
 	public List<User> determineWinners() {
 		Iterator<User> itr = allUsers.iterator();
 		User u;
-		User first = null;
-		User second = null;
-		User third = null;
+		User first = new User();
+		User second = new User();
+		User third = new User();
 
 		while (itr.hasNext()) {
 			u = itr.next();
@@ -754,8 +754,6 @@ public class GameData extends Observable {
 	public void endCurrentGame() {
 		GameData.currentGame = null;
 		Bonus.deleteAllQuestions();
-
-		notifyAdd(UpdateTag.END_GAME);
 
 		JSONUtils.resetSeason();
 	}
