@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.EnumSet;
@@ -66,6 +68,8 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 
 	private boolean usingContestants;
 
+	protected ItemListener cbListener;
+	
 	/**
 	 * THIS VARIABLE IS A REFERENCE MAINTAINED INTERNALLY. DO NOT ADJUST UNLESS
 	 * YOU KNOW WHAT YOU ARE DOING.
@@ -472,6 +476,24 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 				 }
 			}
 		});
+		
+		cbListener = new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) 
+					return; // we'll only look at selected
+				
+				Object src = e.getSource();
+				
+				// fake mouse event
+				MouseEvent me = new MouseEvent((Component) e.getSource(), 
+						e.getID(), System.currentTimeMillis(), 
+						WHEN_FOCUSED, 0, 0, 0, false);
+				
+				mouseClicked(me);
+			}
+		};
 	}
 
 	@Override

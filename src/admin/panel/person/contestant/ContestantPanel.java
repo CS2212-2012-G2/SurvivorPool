@@ -417,9 +417,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				updateContPicture(files[0].getAbsolutePath());
 			}
 		});
+		
+		cbTribe.addItemListener(cbListener);
 
 		List<JTextField> tfArr = Arrays.asList(tfContID, tfFirstName,
-				tfLastName);
+				tfLastName, tfCastDate);
 		for (JTextField tf : tfArr) {
 			tf.addFocusListener(editAdapt);
 		}

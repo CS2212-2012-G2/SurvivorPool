@@ -262,26 +262,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			}
 		});
 		
-		ItemListener cbListen = new ItemListener() {
-			
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) 
-					return; // we'll only look at selected
-				
-				Object src = e.getSource();
-				
-				// fake mouse event
-				MouseEvent me = new MouseEvent((Component) e.getSource(), 
-						e.getID(), System.currentTimeMillis(), 
-						WHEN_FOCUSED, 0, 0, 0, false);
-				
-				mouseClicked(me);
-			}
-		};
-		
-		cbUltPick.addItemListener(cbListen);
-		cbWeeklyPick.addItemListener(cbListen);
+		cbUltPick.addItemListener(cbListener);
+		cbWeeklyPick.addItemListener(cbListener);
 
 		List<JTextField> tfArr = Arrays.asList(tfID, tfFirstName, tfLastName);
 		for (JTextField tf : tfArr) {
