@@ -216,6 +216,8 @@ public class GeneralPanel extends JPanel implements Observer {
 						.isSeasonEnded());
 				if (GameData.getCurrentGame().isFinalWeek()){
 					btnAdvanceWeek.setText("Advance Final Week");
+				} else if (GameData.getCurrentGame().isSeasonEnded()){
+					btnAdvanceWeek.setText("End Of Season");
 				}
 				setRemainingContestantsLabel();
 				setCastOffContestantsLabel();
