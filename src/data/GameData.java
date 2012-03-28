@@ -318,6 +318,8 @@ public class GameData extends Observable {
 			if (u.getUltimatePick().equals(c) && this.isFinalWeek()){
 				u.addPoints(u.getUltimatePoints());
 			}
+			
+			u.addPoints(u.getNumBonusAnswer() * 10); // add week's correct bonus questions
 		}
 
 		setChanged();
