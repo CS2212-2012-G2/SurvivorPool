@@ -325,6 +325,42 @@ public class GameData extends Observable {
 	}
 
 	/**
+	 * Iterates through all players on the list, and determines the top three winners.
+	 * 
+	 * @param u
+	 *            Player within the game.
+	 */
+	
+	public List<User> determineWinners() {
+		Iterator<User> itr = allUsers.iterator();
+		User u;
+		User first = new User ();
+		User second = new User ();
+		User third = new User ();
+		first.setPoints(0);
+		second.setPoints(0);
+		third.setPoints(0);
+		
+		while (itr.hasNext()) {
+			u = itr.next();
+			if (u.getPoints() >= first.getPoints()) {
+				first = u;
+			} else if (u.getPoints() >= second.getPoints()){
+				second = u;
+			} else if (u.getPoints() >= third.getPoints()){
+				third = u;
+			}
+
+		}
+		
+		List<User> tempList = new ArrayList<User>(); 
+		tempList.add(first);
+		tempList.add(second);
+		tempList.add(third);
+		return tempList;
+	}
+	
+	/**
 	 * getTribeName returns a String array with two entries: the name of the
 	 * first tribe, and the name of the second tribe.
 	 * 
