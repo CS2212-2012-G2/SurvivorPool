@@ -359,6 +359,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 						return;
 					}
 					
+					if (g.isSeasonEnded()) {
+						JOptionPane.showMessageDialog(null,
+								"The season has ended.");
+						return;
+					}
+					
 					g.castOff(c);
 					tfCastDate.setText("" + c.getCastDate());
 				} else {
