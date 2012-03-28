@@ -303,14 +303,6 @@ public class MainFrame extends JFrame {
 	}
 
 	/**
-	 * Checks all components and force calls refreshGameFields if they implement
-	 * GameDataDependant
-	 */
-	public void forceGameDataRefresh() {
-		GameData.getCurrentGame().notifyObservers();
-	}
-
-	/**
 	 * Saves all data associated with the application
 	 */
 	// FIXME: Theme data etc needs to be saved.
