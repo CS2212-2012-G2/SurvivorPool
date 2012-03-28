@@ -246,6 +246,17 @@ public class GameData extends Observable {
 		return allUsers;
 	}
 
+	
+	/**
+	 * getNumUsers returns an integer of the number of players
+	 * that are in the game.
+	 * 
+	 * @return The current amount of playerss
+	 */
+	public int getNumUsers() {
+		return allUsers.size();
+	}
+	
 	/**
 	 * Adds a user to the list of users.
 	 * 
@@ -327,6 +338,32 @@ public class GameData extends Observable {
 		notifyAdd(UpdateTag.ALLOCATE_POINTS);
 	}
 
+	public List<Integer> determinePrizePool(){
+		List<Integer> tempList = new ArrayList<Integer>(); 
+		
+		if (getNumUsers() <= 0){ // no users
+			return null;
+		} else if (getNumUsers() == 1) { // one user, he gets the whole pool
+			tempList.add(getTotalAmount());
+			return tempList;
+		} else if (getNumUsers() == 2) { // two users, first user gets 65% of the 
+			//winnings, the rest goes to the second
+			tempList.add((int) (getTotalAmount()*0.65)); // first 65
+			tempList.add(getTotalAmount() - tempList.get(0)); // the rest
+		} else { // three or more users
+			// split is 60/30/10
+			tempList.add((int) (getTotalAmount()*0.60)); // first 60
+			// total amount - the first amount, which leaves 40% of the original amount
+			// 30% is now equivalent to 75% of the new amount
+			tempList.add((int) ((getTotalAmount()- tempList.get(0)) * 0.75));
+			// the total minus the first and second place winnings.
+			tempList.add(getTotalAmount() - tempList.get(0) - tempList.get(1));
+		}
+		
+		return tempList;
+	}
+	
+	
 	/**
 	 * Iterates through all players on the list, and determines the top three winners.
 	 * 
@@ -513,7 +550,6 @@ public class GameData extends Observable {
 
 	public void startSeason(int bet) {
 		this.setBetAmount(bet);
-		this.setTotalAmount(bet * allUsers.size());
 		seasonStarted = true;
 
 		notifyAdd(UpdateTag.START_SEASON);
@@ -669,20 +705,32 @@ public class GameData extends Observable {
 		return Utils.BinIDSearchSafe(allUsers, searchID);
 	}
 
+	/**
+	 * set the bet amount.
+	 * 
+	 * @param bet amount
+	 */
 	public void setBetAmount(int betAmount) {
 		this.betAmount = betAmount;
 	}
 
+	/**
+	 * get the bet amount.
+	 * 
+	 * @return bet amount
+	 */
 	public int getBetAmount() {
 		return betAmount;
 	}
 	
-	public void setTotalAmount(int total){
-		this.totalAmount = total;
-	}
 	
+	/**
+	 * get the total bet pool.
+	 * 
+	 * @return the bet amount * the number of users * the number of game weeks
+	 */
 	public int getTotalAmount(){
-		return totalAmount;
+		return betAmount*getNumUsers()*(getCurrentWeek()+weeksLeft());
 	}
 
 	/**
