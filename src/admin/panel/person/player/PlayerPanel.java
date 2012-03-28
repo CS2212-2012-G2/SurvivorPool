@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
@@ -259,6 +261,27 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				tfID.setText(id);
 			}
 		});
+		
+		ItemListener cbListen = new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) 
+					return; // we'll only look at selected
+				
+				Object src = e.getSource();
+				
+				// fake mouse event
+				MouseEvent me = new MouseEvent((Component) e.getSource(), 
+						e.getID(), System.currentTimeMillis(), 
+						WHEN_FOCUSED, 0, 0, 0, false);
+				
+				mouseClicked(me);
+			}
+		};
+		
+		cbUltPick.addItemListener(cbListen);
+		cbWeeklyPick.addItemListener(cbListen);
 
 		List<JTextField> tfArr = Arrays.asList(tfID, tfFirstName, tfLastName);
 		for (JTextField tf : tfArr) {
