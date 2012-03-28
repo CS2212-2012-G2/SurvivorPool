@@ -383,9 +383,16 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			public void actionPerformed(ActionEvent ae) {
 				GameData g = GameData.getCurrentGame();
 				
-				if (!g.isFinalWeek()) // only applicable if the last week. 
+				if (g.isSeasonEnded()) {
+					JOptionPane.showMessageDialog(null,
+							"The season has ended.");
 					return;
-			
+				}
+				
+				if (!g.isFinalWeek()){ // only applicable if the last week. 
+					return;
+				}
+				
 				Contestant win = null;
 				try {
 					win = getPerson();
