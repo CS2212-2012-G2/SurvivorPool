@@ -99,21 +99,24 @@ public class GameData extends Observable {
 	/**
 	 * getActiveContestants returns an array (list) of the contestants that are
 	 * still competing in the game.
+	 * @param active TODO
 	 * 
 	 * @return The contestants active
 	 */
-	public List<Contestant> getActiveContestants() {
+	public List<Contestant> getActiveContestants(boolean active) {
 
-		List<Contestant> active = new ArrayList<Contestant>(
+		List<Contestant> list = new ArrayList<Contestant>(
 				allContestants.size());
 
 		for (Contestant c : allContestants) {
-			if ((c != null) && (!c.isCastOff() || c.isToBeCast())) {
-				active.add(c);
+			if ((c != null) && 
+					((c.isCastOff() == !active) || 
+							(c.isToBeCast() == active))) {
+				list.add(c);
 			}
 		}
 
-		return active;
+		return list;
 	}
 
 	/**
@@ -476,7 +479,7 @@ public class GameData extends Observable {
 	public Contestant randomContestant(boolean isActive) {
 		List<Contestant> list = null;
 		if (isActive) {
-			list = getActiveContestants();
+			list = getActiveContestants(true);
 		} else {
 			list = getAllContestants();
 		}

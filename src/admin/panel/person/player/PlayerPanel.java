@@ -279,7 +279,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			return;
 		}
 
-		List<Contestant> cons = g.getActiveContestants();
+		List<Contestant> cons = g.getActiveContestants(true);
 
 		cbWeeklyPick.removeAllItems();
 		cbUltPick.removeAllItems();

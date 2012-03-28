@@ -235,46 +235,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		setRowSelect(r, false);
 	}
 	
-
-	
 	protected abstract void setComparators(TableRowSorter<PersonTableModel<P>> sort);
-	
-	/**
-	 * 
-	 * TODO:
-	 * 
-	 * @author kevin
-	 * 
-	 */
-	/*public class SortColumnAdapter extends MouseAdapter {
-
-		public void mouseClicked(MouseEvent e) {
-			JTable table = ((JTableHeader) e.getSource()).getTable();
-			TableColumnModel colModel = table.getColumnModel();
-
-			// get the person referenced
-			@SuppressWarnings("unchecked")
-			PersonTableModel<P> model = (PersonTableModel<P>) table.getModel();
-			P p = model.getByRow(table.getSelectedRow());
-
-			// The index of the column whose header was clicked
-			int vIndex = colModel.getColumnIndexAtX(e.getX());
-
-			// Return if not clicked on any column header
-			if (vIndex == -1) {
-				return;
-			}
-
-			int mIndex = table.convertColumnIndexToModel(vIndex);
-
-			// we have the column index, sort the data
-			sortTableBy(mIndex);
-
-			// reset the selection to that row
-			int r = model.getRowByPerson(p);
-			table.setRowSelectionInterval(r, r);
-		}
-	} */
 	
 	private class RowSelector implements Runnable {
 

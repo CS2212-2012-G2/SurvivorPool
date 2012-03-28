@@ -401,7 +401,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				if (win == null) return;
 				
 				// cast off the other two contestants (always three left)
-				for (Contestant c: g.getActiveContestants()) {
+				for (Contestant c: g.getActiveContestants(true)) {
 					if (!c.equals(win))
 						g.castOff(c);
 				}

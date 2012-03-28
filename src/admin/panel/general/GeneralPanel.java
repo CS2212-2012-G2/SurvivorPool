@@ -1,6 +1,7 @@
 package admin.panel.general;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -16,16 +17,23 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import admin.MainFrame;
 import admin.Utils;
@@ -181,7 +189,33 @@ public class GeneralPanel extends JPanel implements Observer {
 		// / panels
 		JPanel pnlCont = new JPanel();
 		pnlCont.setLayout(new GridLayout(1, 2, 10, 5));
-		Border bevB = BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED);
+		
+		buildHistoryTables();
+
+		pnlCont.add(pnlRemCons);
+		pnlCont.add(pnlCastOffs);
+
+		// put all together:
+
+		pane.add(pnlSpin);
+		pane.add(pnlCont);
+
+		// / init:
+		//setRemainingContestantsLabel();
+		//setCastOffContestantsLabel();
+
+		return pane;
+	}
+	
+	private JTable activeTable;
+	private JTable castTable;
+	
+	private void buildHistoryTables() {
+		GameData g = GameData.getCurrentGame();
+
+		// build the encapsulating panels:
+		final Border bevB = BorderFactory
+				.createSoftBevelBorder(BevelBorder.LOWERED);
 		final Dimension displaySize = new Dimension(150, 200);
 
 		pnlRemCons = new JPanel();
@@ -194,25 +228,58 @@ public class GeneralPanel extends JPanel implements Observer {
 				"Cast Offs"));
 		pnlCastOffs.setPreferredSize(displaySize);
 
-		lblRemainingContestants = new JLabel("");
-		lblCastOffs = new JLabel("");
+		// Tables:
+		activeTable = new JTable();
+		TableModel model = new HistoryConModel(activeTable, g.getActiveContestants(true), false);
+		activeTable.setModel(model);
 
-		pnlRemCons.add(lblRemainingContestants);
-		pnlCastOffs.add(lblCastOffs);
+		castTable = new JTable();
+		model = new HistoryConModel(castTable, g.getActiveContestants(false), true);
+		castTable.setModel(model);
 
-		pnlCont.add(pnlRemCons);
-		pnlCont.add(pnlCastOffs);
+		TableCellRenderer renderer = new TableCellRenderer() {
 
-		// put all together:
+			JLabel label = new JLabel();
 
-		pane.add(pnlSpin);
-		pane.add(pnlCont);
+			@Override
+			public JComponent getTableCellRendererComponent(JTable table,
+					Object value, boolean isSelected, boolean hasFocus,
+					int row, int column) {
 
-		// / init:
-		setRemainingContestantsLabel();
-		setCastOffContestantsLabel();
+				if (table.isRowSelected(row)) {
+					label.setBackground(Utils.getThemeTableHighlight());
+					label.setForeground(Utils.getThemeBG());
+				} else {
+					label.setBackground(UIManager.getColor("Table.background"));
+					label.setForeground(UIManager.getColor("Table.foreground"));
+				}
 
-		return pane;
+				label.setOpaque(true);
+				label.setText("" + value);
+
+				return label;
+			}
+
+		};
+
+		List<JTable> tables = Arrays.asList(activeTable, castTable);
+		List<JPanel> panes = Arrays.asList(pnlRemCons, pnlCastOffs);
+		for (int i = 0; i < 2; i++) {
+			JTable table = tables.get(i);
+			JPanel pane = panes.get(i);
+
+			table.getTableHeader().setReorderingAllowed(false); // no moving.
+			table.setColumnSelectionAllowed(true);
+			table.setRowSelectionAllowed(true);
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+			table.setDefaultRenderer(Object.class, renderer);
+
+			JScrollPane scroll = new JScrollPane(table);
+
+			pane.setLayout(new BorderLayout(5, 5));
+			pane.add(scroll, BorderLayout.CENTER);
+		}
 	}
 
 	private void setRemainingContestantsLabel() {
