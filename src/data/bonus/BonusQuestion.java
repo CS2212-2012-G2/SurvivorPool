@@ -196,16 +196,15 @@ public class BonusQuestion {
 		obj.put(KEY_PROMPT, prompt);
 		obj.put(KEY_ANSWER, answer);
 
-		if (choices != null) {
-			JSONArray sChoice = new JSONArray();
+		JSONArray sChoice = new JSONArray();
+		if(choices!=null){
 			for (String c : choices) {
 				if (c != null)
 					sChoice.add(c);
 			}
-			obj.put(KEY_CHOICES, sChoice);
-		} else {
-			obj.put(KEY_CHOICES, null);
 		}
+		obj.put(KEY_CHOICES, sChoice);
+		
 
 		obj.put(KEY_WEEK, week);
 		obj.put(KEY_NUMBER, number);
