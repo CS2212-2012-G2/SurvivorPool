@@ -57,9 +57,6 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JPanel pnlRemCons;
 	private JPanel pnlCastOffs;
 
-	private JLabel lblWinners = new JLabel(
-			"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
 	private JPanel pnlTribes;
 	private JPanel pnlWeekCtrl;
 	private JPanel pnlHistory;
@@ -297,8 +294,8 @@ public class GeneralPanel extends JPanel implements Observer {
 				if (g.isSeasonEnded()) { // if end of game
 					String tempString = "Top SurvivorPool Winners\n";
 					User tempUser;
-					List<User> winners = g.determineWinners();
-					List<Integer> pool = g.determinePrizePool();
+					List winners = g.determineWinners();
+					List pool = g.determinePrizePool();
 					
 					for (int i = 0; i<winners.size(); i++){
 						tempUser = (User) winners.get(i);
