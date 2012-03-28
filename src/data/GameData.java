@@ -377,13 +377,20 @@ public class GameData extends Observable {
 		User second = new User();
 		User third = new User();
 
+		first.setPoints(-1);
+		second.setPoints(-1);
+		third.setPoints(-1);
+		
 		while (itr.hasNext()) {
 			u = itr.next();
-			if (u.getPoints() > first.getPoints() || first == null) {
+			if (u.getPoints() > first.getPoints()) {
+				third = second;
+				second = first;
 				first = u;
-			} else if (u.getPoints() > second.getPoints() || second == null) {
+			} else if (u.getPoints() > second.getPoints()) {
+				third = second;
 				second = u;
-			} else if (u.getPoints() > third.getPoints() || third == null) {
+			} else if (u.getPoints() > third.getPoints()) {
 				third = u;
 			}
 
@@ -395,13 +402,13 @@ public class GameData extends Observable {
 		// outputted list, in the case of less then three users
 		// participating.
 
-		if (first.getID() != null)
+		if (first.getPoints() == -1)
 			tempList.add(first);
 
-		if (second.getID() != null)
+		if (second.getPoints() == -1)
 			tempList.add(second);
 
-		if (third.getID() != null)
+		if (third.getPoints() == -1)
 			tempList.add(third);
 
 		return tempList;
