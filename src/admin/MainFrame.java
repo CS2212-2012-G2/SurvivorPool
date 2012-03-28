@@ -118,7 +118,7 @@ public class MainFrame extends JFrame {
 		this.setVisible(true);
 		this.setTitle("Survivor Pool Admin");
 		// can resize frame
-		//this.setResizable(false);
+		this.setResizable(false);
 		
 		// center the screen
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -145,7 +145,7 @@ public class MainFrame extends JFrame {
 
 	private void initGUI() {
 		mnuItemSave.setEnabled(true);
-		Dimension d = new Dimension(135, 20);
+		Dimension d = new Dimension(132, 20);
 
 		lblGeneral.setPreferredSize(d);
 		lblContestants.setPreferredSize(d);
@@ -300,14 +300,6 @@ public class MainFrame extends JFrame {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	/**
-	 * Checks all components and force calls refreshGameFields if they implement
-	 * GameDataDependant
-	 */
-	public void forceGameDataRefresh() {
-		GameData.getCurrentGame().notifyObservers();
 	}
 
 	/**

@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import data.bonus.Bonus;
-
 import json.simple.JSONObject;
 import json.simple.JSONValue;
 
@@ -18,6 +16,9 @@ import json.simple.JSONValue;
  * needed to read/write to files rather.
  */
 public class JSONUtils {
+	
+	public static final String pathGame = "res/data/GameData.dat",
+							   pathBonus = "res/data/Bonus.dat";
 
 	public static JSONObject readFile(String path) throws FileNotFoundException {
 		File f = new File(path);
@@ -95,9 +96,9 @@ public class JSONUtils {
 	 * @return True if sucessfully reset season.
 	 */
 	public static boolean resetSeason() {
-		File f = new File(GameData.pathGame);
+		File f = new File(pathGame);
 		f.delete();
-		File fB = new File(Bonus.pathBonus);
+		File fB = new File(pathBonus);
 		fB.delete();
 		return (f.exists() && fB.exists());
 	}

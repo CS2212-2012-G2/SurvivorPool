@@ -7,13 +7,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.EnumSet;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -261,6 +259,9 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				tfID.setText(id);
 			}
 		});
+		
+		cbUltPick.addItemListener(cbListener);
+		cbWeeklyPick.addItemListener(cbListener);
 
 		List<JTextField> tfArr = Arrays.asList(tfID, tfFirstName, tfLastName);
 		for (JTextField tf : tfArr) {
@@ -303,8 +304,11 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	}
 
 	@Override
-	public void mousePressed(MouseEvent me) {
+	public void mouseClicked(MouseEvent me) {
 		Component c = me.getComponent();
+		
+		if (!c.isEnabled()) return;
+		
 		if (c == tfFirstName || c == tfLastName || c == tfID || c == btnGenID || 
 				c == cbUltPick || c == cbWeeklyPick) {
 			fieldsChanged = true;
@@ -318,6 +322,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		@SuppressWarnings("unchecked")
 		EnumSet<UpdateTag> update = (EnumSet<UpdateTag>)arg;
 
 		if (update == null) 
@@ -334,8 +339,10 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			tfID.setEnabled(!g.isSeasonStarted());
 		}
 		
-		if (update.containsAll(EnumSet.of(UpdateTag.ADD_CONTESTANT, 
-			UpdateTag.REMOVE_CONTESTANT, UpdateTag.START_SEASON))) {
+		if (update.contains(UpdateTag.ADD_CONTESTANT) ||
+				update.contains(UpdateTag.REMOVE_CONTESTANT) ||
+				update.contains(UpdateTag.START_SEASON) ||
+				update.contains(UpdateTag.CONTESTANT_CAST_OFF)) {
 			refreshContestantCBs();
 				
 			tableModel.fireTableDataChanged();

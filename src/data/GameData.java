@@ -9,6 +9,8 @@ import java.util.Observable;
 import java.util.Random;
 import java.util.EnumSet;
 
+import javax.swing.SwingUtilities;
+
 import json.simple.JSONArray;
 import json.simple.JSONObject;
 import json.simple.parser.ParseException;
@@ -46,32 +48,28 @@ public class GameData extends Observable {
 	// store contestant who was cast off
 	private Contestant elimCont;
 	
+	// used for asynchronous calls to notifyObservers()
+	private UpdateCall updateExec;
+	
 	public enum UpdateTag {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
 		ADD_CONTESTANT, REMOVE_CONTESTANT, CONTESTANT_CAST_OFF,
 		ADD_USER, REMOVE_USER, 
-		END_GAME, ALLOCATE_POINTS 
+		FINAL_WEEK, END_GAME, ALLOCATE_POINTS 
 	}
 	
 	/**
 	 * JSON Keys
 	 */
-	private static final String KEY_CONTESTANTS = "cons";
-	private static final String KEY_NUM_CONTEST = "cons_num";
-
-	private static final String KEY_USERS = "users";
-
-	private static final String KEY_WEEKS_REMAIN = "weeks_rem";
-	private static final String KEY_WEEKS_PASSED = "weeks_pass";
-
-	private static final String KEY_TRIBES = "tribes_arr";
-
-	private static final String KEY_SEASON_STARTED = "season_started";
-	private static final String KEY_BET_AMOUNT = "bet_amount";
-	private static final String KEY_POOL_TOTAL = "pool_total";
-	
-	public static String pathGame = "res/data/GameData.dat";
-	public static String pathBonus = "res/data/Bonus.dat";
+	private static final String KEY_CONTESTANTS = "cons",
+			KEY_NUM_CONTEST = "cons_num",
+			KEY_USERS = "users",
+			KEY_WEEKS_REMAIN = "weeks_rem",
+			KEY_WEEKS_PASSED = "weeks_pass",
+			KEY_TRIBES = "tribes_arr",
+			KEY_SEASON_STARTED = "season_started",
+			KEY_BET_AMOUNT = "bet_amount",
+			KEY_POOL_TOTAL = "pool_total";
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -219,8 +217,7 @@ public class GameData extends Observable {
 
 		allContestants.add(c);
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ADD_CONTESTANT));
+		notifyAdd(UpdateTag.ADD_CONTESTANT);
 	}
 
 	/**
@@ -235,8 +232,7 @@ public class GameData extends Observable {
 		allContestants.remove(target);
 		Collections.sort(allContestants);
 		
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.REMOVE_CONTESTANT));
+		notifyAdd(UpdateTag.REMOVE_CONTESTANT);
 	}
 
 	// ~~~~~~~~~~~~~~~~~~~ USER METHODS ~~~~~~~~~~~~~~~~~~ //
@@ -250,6 +246,17 @@ public class GameData extends Observable {
 		return allUsers;
 	}
 
+	
+	/**
+	 * getNumUsers returns an integer of the number of players
+	 * that are in the game.
+	 * 
+	 * @return The current amount of playerss
+	 */
+	public int getNumUsers() {
+		return allUsers.size();
+	}
+	
 	/**
 	 * Adds a user to the list of users.
 	 * 
@@ -267,8 +274,7 @@ public class GameData extends Observable {
 
 		allUsers.add(u);
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ADD_USER));
+		notifyAdd(UpdateTag.ADD_USER);
 	}
 
 	/**
@@ -280,8 +286,7 @@ public class GameData extends Observable {
 	public void removeUser(User u) {
 		allUsers.remove(u);
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.REMOVE_USER));
+		notifyAdd(UpdateTag.REMOVE_USER);
 	}
 
 	/**
@@ -325,12 +330,87 @@ public class GameData extends Observable {
 			if (u.getUltimatePick().equals(c) && this.isFinalWeek()){
 				u.addPoints(u.getUltimatePoints());
 			}
+			
+			u.addPoints(u.getNumBonusAnswer() * 10); // add week's correct bonus questions
+			u.setNumBonusAnswer(0); // clears the number of questions
 		}
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ALLOCATE_POINTS));
+		notifyAdd(UpdateTag.ALLOCATE_POINTS);
 	}
 
+	public List<Integer> determinePrizePool(){
+		List<Integer> tempList = new ArrayList<Integer>(); 
+		
+		//attempt to be as precise as possible.
+		
+		if (getNumUsers() <= 0){ // no users
+			return null;
+		} else if (getNumUsers() == 1) { // one user, he gets the whole pool
+			tempList.add(getTotalAmount());
+			return tempList;
+		} else if (getNumUsers() == 2) { // two users, first user gets 65% of the 
+			//winnings, the rest goes to the second
+			tempList.add((int) (getTotalAmount()*0.65)); // first 65
+			tempList.add(getTotalAmount() - tempList.get(0)); // the rest
+		} else { // three or more users
+			// split is 60/30/10
+			tempList.add((int) (getTotalAmount()*0.60)); // first 60
+			// total amount - the first amount, which leaves 40% of the original amount
+			// 30% is now equivalent to 75% of the new amount
+			tempList.add((int) ((getTotalAmount()- tempList.get(0)) * 0.75));
+			// the total minus the first and second place winnings.
+			tempList.add(getTotalAmount() - tempList.get(0) - tempList.get(1));
+		}
+		
+		return tempList;
+	}
+	
+	
+	/**
+	 * Iterates through all players on the list, and determines the top three winners.
+	 * 
+	 * @param u
+	 *            Player within the game.
+	 */
+	
+	public List<User> determineWinners() {
+		Iterator<User> itr = allUsers.iterator();
+		User u;
+		User first = new User ();
+		User second = new User ();
+		User third = new User ();
+		first.setPoints(0);
+		second.setPoints(0);
+		third.setPoints(0);
+		
+		while (itr.hasNext()) {
+			u = itr.next();
+			if (u.getPoints() > first.getPoints()) {
+				first = u;
+			} else if (u.getPoints() > second.getPoints()){
+				second = u;
+			} else if (u.getPoints() > third.getPoints()){
+				third = u;
+			}
+
+		}
+		
+		List<User> tempList = new ArrayList<User>(); 
+		
+		// the following removes any temporary user objects from the 
+		// outputted list, in the case of less then three users
+		// participating.
+		
+		if (first.getID() != null)
+			tempList.add(first);
+		if (second.getID() != null)
+			tempList.add(second);
+		if (third.getID() != null)
+			tempList.add(third);
+		
+		return tempList;
+	}
+	
 	/**
 	 * getTribeName returns a String array with two entries: the name of the
 	 * first tribe, and the name of the second tribe.
@@ -462,8 +542,7 @@ public class GameData extends Observable {
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.ADVANCE_WEEK));
+		notifyAdd(UpdateTag.ADVANCE_WEEK);
 	}
 
 	/**
@@ -473,11 +552,9 @@ public class GameData extends Observable {
 
 	public void startSeason(int bet) {
 		this.setBetAmount(bet);
-		this.setTotalAmount(bet * allUsers.size());
 		seasonStarted = true;
-	
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.START_SEASON));
+
+		notifyAdd(UpdateTag.START_SEASON);
 	}
 
 	/**
@@ -489,7 +566,7 @@ public class GameData extends Observable {
 	 * @param tribeTwo
 	 *            name of tribe two
 	 */
-	public void setTribeNames(String tribeOne, String tribeTwo){
+	public String[] setTribeNames(String tribeOne, String tribeTwo){
 		// temp tribe vars.
 		String oldT1 = tribeNames[0];
 		String oldT2 = tribeNames[1];
@@ -513,8 +590,9 @@ public class GameData extends Observable {
 			}
 		}
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.SET_TRIBE_NAMES));
+		notifyAdd(UpdateTag.SET_TRIBE_NAMES);
+		
+		return tribeNames;
 	}
 
 	/**
@@ -566,6 +644,8 @@ public class GameData extends Observable {
 		
 		castOff.setCastDate(getCurrentWeek());
 		castOff.setToBeCast(true);
+		
+		notifyAdd(UpdateTag.CONTESTANT_CAST_OFF);
 	}
 	
 	/**
@@ -627,20 +707,32 @@ public class GameData extends Observable {
 		return Utils.BinIDSearchSafe(allUsers, searchID);
 	}
 
+	/**
+	 * set the bet amount.
+	 * 
+	 * @param bet amount
+	 */
 	public void setBetAmount(int betAmount) {
 		this.betAmount = betAmount;
 	}
 
+	/**
+	 * get the bet amount.
+	 * 
+	 * @return bet amount
+	 */
 	public int getBetAmount() {
 		return betAmount;
 	}
 	
-	public void setTotalAmount(int total){
-		this.totalAmount = total;
-	}
 	
+	/**
+	 * get the total bet pool.
+	 * 
+	 * @return the bet amount * the number of users * the number of game weeks
+	 */
 	public int getTotalAmount(){
-		return totalAmount;
+		return betAmount*getNumUsers()*(getCurrentWeek()+weeksLeft());
 	}
 
 	/**
@@ -660,8 +752,7 @@ public class GameData extends Observable {
 		GameData.currentGame = null;
 		Bonus.deleteAllQuestions();
 
-		setChanged();
-		notifyObservers(EnumSet.of(UpdateTag.END_GAME));
+		notifyAdd(UpdateTag.END_GAME);
 
 		JSONUtils.resetSeason();
 	}
@@ -708,10 +799,12 @@ public class GameData extends Observable {
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
 		obj.put(KEY_SEASON_STARTED, seasonStarted);
+		
 		if(seasonStarted){
-		obj.put(KEY_BET_AMOUNT, betAmount);
-		obj.put(KEY_POOL_TOTAL, totalAmount);
+			obj.put(KEY_BET_AMOUNT, betAmount);
+			obj.put(KEY_POOL_TOTAL, totalAmount);
 		}
+		
 		return obj;
 	}
 
@@ -734,10 +827,11 @@ public class GameData extends Observable {
 		weeksPassed = Utils.numToInt(obj.get(KEY_WEEKS_PASSED));
 
 		seasonStarted = (Boolean) obj.get(KEY_SEASON_STARTED);
+		
 		if(seasonStarted){
-		betAmount = Utils.numToInt(obj.get(KEY_BET_AMOUNT));
-		totalAmount = Utils.numToInt(obj.get(KEY_POOL_TOTAL));
-		System.out.println(betAmount + " " + totalAmount);
+			betAmount = Utils.numToInt(obj.get(KEY_BET_AMOUNT));
+			totalAmount = Utils.numToInt(obj.get(KEY_POOL_TOTAL));
+			System.out.println(betAmount + " " + totalAmount);
 		}
 
 		// Contestants must be loaded before users, but after others!
@@ -766,8 +860,7 @@ public class GameData extends Observable {
 			}
 		}
 
-		setChanged();
-		notifyObservers();
+		notifyAdd();
 	}
 
 	/**
@@ -791,7 +884,7 @@ public class GameData extends Observable {
 	public static GameData initGameData() {
 		JSONObject json;
 		try {
-			json = JSONUtils.readFile(pathGame);
+			json = JSONUtils.readFile(JSONUtils.pathGame);
 		} catch (FileNotFoundException e) {
 			return currentGame;
 		}
@@ -814,7 +907,7 @@ public class GameData extends Observable {
 	public void writeData() {
 
 		try {
-			JSONUtils.writeJSON(pathGame, this.toJSONObject());
+			JSONUtils.writeJSON(JSONUtils.pathGame, this.toJSONObject());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -861,6 +954,47 @@ public class GameData extends Observable {
 			e1.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Small class used for removing parallel calls to do the same 
+	 * notification. The update system accounts for multiple modifications
+	 * in one update call, so this means those methods are only called once.
+	 * @author Kevin Brightwell
+	 */
+	private class UpdateCall implements Runnable {
+
+		public EnumSet<UpdateTag> mods = EnumSet.noneOf(UpdateTag.class);
+		
+		public boolean done = false;
+		
+		@Override
+		public void run() {
+			setChanged();
+			notifyObservers(mods);
+			
+			done = true;
+		}
+		
+	}
+	
+	/**
+	 * Adds a set of {@link GameData.UpdateTag}s to the next update call. This
+	 * method in conjunction with {@link GameData.UpdateCall} works to remove
+	 * excess method executions.
+	 * @param tags Tags to add to the next call.
+	 */
+	public void notifyAdd(UpdateTag... tags) {
+		if (updateExec == null || updateExec.done) {
+			 updateExec = new UpdateCall();
+			 
+			 SwingUtilities.invokeLater(updateExec);
+		}
+		
+		for (UpdateTag ut: tags) {
+			if (!updateExec.mods.contains(ut))
+				updateExec.mods.add(ut);
+		}
 	}
 
 
