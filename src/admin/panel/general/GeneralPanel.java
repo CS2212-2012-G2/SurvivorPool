@@ -299,10 +299,8 @@ public class GeneralPanel extends JPanel implements Observer {
 					User tempUser;
 					List<User> winners = g.determineWinners();
 					List<Integer> pool = g.determinePrizePool();
+					
 					for (int i = 0; i<winners.size(); i++){
-						
-						System.out.println (i);
-						
 						tempUser = (User) winners.get(i);
 						tempString = tempString + "\n" + (i+1) + ". " + 
 						tempUser.toString() + " $" + pool.get(i);
