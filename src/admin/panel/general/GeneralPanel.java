@@ -361,7 +361,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		
 		if (update.contains(UpdateTag.FINAL_WEEK)) {
 			// TODO: now its the final week: 
-			btnAdvWk.setEnabled(false);
+			btnAdvWk.setEnabled(true);
 			btnAdvWk.setText("Advance Final Week");
 		}
 		
