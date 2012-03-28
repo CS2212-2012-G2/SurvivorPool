@@ -124,7 +124,7 @@ public class MainFrame extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	    int sHeight = screenSize.height;
 	    int sWidth = screenSize.width;
-	    setLocation(sWidth / 2 - getWidth(), sHeight / 2 - getHeight());
+	    setLocation(sWidth / 2 - (getWidth() / 2), sHeight / 2 - (getHeight() / 2));
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
