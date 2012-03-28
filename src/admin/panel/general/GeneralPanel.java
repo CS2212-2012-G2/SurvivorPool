@@ -211,6 +211,16 @@ public class GeneralPanel extends JPanel implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if (!GameData.getCurrentGame().doesElimExist()){
+					if (GameData.getCurrentGame().isFinalWeek()) {
+						JOptionPane.showMessageDialog(null,
+						"No Contestant has been selected to be the winner.");
+					} else {
+						JOptionPane.showMessageDialog(null,
+						"No Contestant has been selected to be cast off.");
+					}
+				} 
+				else{
 				GameData.getCurrentGame().advanceWeek();
 				btnAdvanceWeek.setEnabled(!GameData.getCurrentGame()
 						.isSeasonEnded());
@@ -224,6 +234,7 @@ public class GeneralPanel extends JPanel implements Observer {
 				weekModel
 						.setMaximum(GameData.getCurrentGame().getCurrentWeek());
 				weekModel.setValue(GameData.getCurrentGame().getCurrentWeek());
+			}
 			}
 		});
 
