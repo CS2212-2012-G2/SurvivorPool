@@ -23,7 +23,7 @@ public class User implements Person, Comparable<User> {
 
 	private Contestant ultPick, weeklyPick; // users pick of the winner and
 											// their weekly pick
-
+	private int numBonusAnswer = 0;
 	// JSON Keys:
 
 	// TODO: enum
@@ -34,7 +34,7 @@ public class User implements Person, Comparable<User> {
 	protected static final String KEY_WIN_PICK_POINTS = "win_points";
 	protected static final String KEY_ULT_PICK_ID = "ult_pick";
 	protected static final String KEY_WEEKLY_PICK_ID = "week_pick";
-
+	protected static final String KEY_NUM_BONUS_ANSWER = "num_bonus_answer";
 	/**
 	 * Constructor method for the type User sets names, initializes points
 	 * 
@@ -239,6 +239,23 @@ public class User implements Person, Comparable<User> {
 	}
 
 	/**
+	 * Get the number of bonus questions answered this week
+	 * @return num questions answered
+	 */
+	public int getNumBonusAnswer() {
+		return numBonusAnswer;
+	}
+
+	/**
+	 * Set the number of bonus questions answered this week.
+	 * Set this to 0 after week has advanced!
+	 * @param numBonusAnswer The number of bonus questions answered
+	 */
+	public void setNumBonusAnswer(int numBonusAnswer) {
+		this.numBonusAnswer = numBonusAnswer;
+	}
+
+	/**
 	 * toString returns a string of the contestant's information in JSON format.
 	 */
 	public String toString() {
@@ -272,7 +289,7 @@ public class User implements Person, Comparable<User> {
 		obj.put(KEY_ULT_PICK_ID, c.getID());
 
 		obj.put(KEY_WIN_PICK_POINTS, new Integer(getUltimatePoints()));
-
+		obj.put(KEY_NUM_BONUS_ANSWER,getNumBonusAnswer());
 		return obj;
 	}
 
@@ -307,6 +324,7 @@ public class User implements Person, Comparable<User> {
 			setUltimatePick(c);
 
 			setUltimatePoints(Utils.numToInt(o.remove(KEY_WIN_PICK_POINTS)));
+			setNumBonusAnswer(((Number) o.remove(KEY_NUM_BONUS_ANSWER)).intValue());
 		} catch (InvalidFieldException e) {
 			System.out
 					.println("Warning: InvalidFieldException in fromJSONObject");
