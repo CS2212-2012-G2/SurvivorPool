@@ -239,10 +239,18 @@ public class BonusQuestion {
 	 */
 	public static void main(String[] args) throws ParseException, FileNotFoundException {
 		/*	************to json test*********************/
-		for(int i =0;i<10;i++){
+		int weekNum = 3;
+		String[] choices = {"a","b","c","d"};
+		for(int i =0;i<=weekNum;i++){
 			for(int j=0;j<10;j++){
+				String[] s = null;
+				String answer = "answer";
+				if(j%2==0){
+					s = choices;
+					answer = "b";
+				}
 				BonusQuestion b = new BonusQuestion("question "+Integer.toString(i)+
-						Integer.toString(j),"answer",null,i,j);
+						Integer.toString(j),answer,s,i,j);
 			}	
 		}
 		List<BonusQuestion> l = Bonus.getAllQuestions();
@@ -250,7 +258,7 @@ public class BonusQuestion {
 			System.out.println(l.get(i).getPrompt());
 		}
 		
-		for(int i =9;i>=0;i--){
+		for(int i =weekNum;i>=0;i--){
 			for(int j=9;j>=0;j--){
 				BonusQuestion b = Bonus.getQuestion(i, j);
 				System.out.println("i: "+b.getWeek()+" "+Integer.toString(i)+" j:"+
@@ -264,5 +272,6 @@ public class BonusQuestion {
 		Bonus.fromJSONObject(json);
 		json = Bonus.toJSONObject();
 		System.out.println(json.toJSONString());
+		JSONUtils.writeJSON(JSONUtils.pathBonus, json);
 	}
 }
