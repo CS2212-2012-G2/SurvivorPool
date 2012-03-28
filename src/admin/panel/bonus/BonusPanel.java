@@ -286,7 +286,7 @@ public class BonusPanel extends JPanel implements Observer {
 		currentQuestionNumber = 1;
 		
 		try {
-			bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
+			bq = Bonus.getQuestion(currentWeek, currentQuestionNumber - 1);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
@@ -651,7 +651,7 @@ public class BonusPanel extends JPanel implements Observer {
 				setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
 				
 				try {
-					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
+					bq = Bonus.getQuestion(currentWeek, currentQuestionNumber - 1);
 				} catch (IndexOutOfBoundsException e){
 					bq = null;
 				}
@@ -673,7 +673,7 @@ public class BonusPanel extends JPanel implements Observer {
 				currentQuestionNumber = (Integer)spnQuestion.getValue();
 				
 				try {
-					bq = Bonus.getQuestionByWeekAndNumber(currentWeek, currentQuestionNumber - 1);
+					bq = Bonus.getQuestion(currentWeek, currentQuestionNumber - 1);
 				} catch (IndexOutOfBoundsException e) {
 					bq = null;
 				}
