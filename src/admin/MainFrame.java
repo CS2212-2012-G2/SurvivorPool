@@ -22,6 +22,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 
 import admin.Utils;
@@ -106,7 +107,9 @@ public class MainFrame extends JFrame {
 
 		GameData g = GameData.initGameData();
 
-		settings = new Settings(true);
+		settings = Settings.initSettingsData();
+		
+		Bonus.initBonus();
 		
 		initMenuBar();
 
@@ -141,13 +144,21 @@ public class MainFrame extends JFrame {
 		
 		if (settings.containsKey(Settings.HISTORY)) {
 			if (g != null) {
-				g.setHistory((History)settings.get(Settings.HISTORY));
+				History h = new History(0);
+				try {
+					h.fromJSONObject((JSONObject)settings.get(Settings.HISTORY));
+					g.setHistory(h);
+				} catch (ParseException e) {
+					// just don't set the history if its bad.
+					settings.remove(Settings.HISTORY);
+				}
+				
 			}
 		}
 		
 		if (settings.containsKey(Settings.SCREEN_LOC_X)) {
-			int x = (Integer)settings.get(Settings.SCREEN_LOC_X);
-			int y = (Integer)settings.get(Settings.SCREEN_LOC_Y);
+			int x = ((Number)settings.get(Settings.SCREEN_LOC_X)).intValue();
+			int y = ((Number)settings.get(Settings.SCREEN_LOC_Y)).intValue();
 			
 			setLocation(x, y);
 		} else {
@@ -162,8 +173,8 @@ public class MainFrame extends JFrame {
 		}
 		
 		if (settings.containsKey(Settings.SCREEN_SIZE_X)) {
-			int x = (Integer)settings.get(Settings.SCREEN_SIZE_X);
-			int y = (Integer)settings.get(Settings.SCREEN_SIZE_Y);
+			int x = ((Number)settings.get(Settings.SCREEN_SIZE_X)).intValue();
+			int y = ((Number)settings.get(Settings.SCREEN_SIZE_Y)).intValue();
 			
 			setSize(x, y);
 		} else {

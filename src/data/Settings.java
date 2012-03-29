@@ -34,15 +34,15 @@ public class Settings extends HashMap<String, Object> {
 	}
 	
 	public static Settings initSettingsData(){
-		currentSettings = new Settings();
-		
 		JSONObject json;
 		try {
 			json = JSONUtils.readFile(JSONUtils.pathSettings);
 			
+			currentSettings = new Settings(false);
+			
 			currentSettings.fromJSONObject(json);
 		} catch (FileNotFoundException e) {
-			
+			return new Settings(false);
 		}
 		
 		return currentSettings;

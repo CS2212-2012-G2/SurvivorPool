@@ -959,8 +959,8 @@ public class GameData extends Observable {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Bonus.initBonus();
-		return (GameData) currentGame;
+		
+		return currentGame;
 	}
 	/**
 	 960	
