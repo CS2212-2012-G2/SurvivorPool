@@ -381,9 +381,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					 }
 				}
 				}
-					else {
-					g.undoCastOff(g.getCurrentWeek(),c);
-				}
+					else{
+						if(c.getCastDate() == g.getCurrentWeek()){
+				        g.undoCastOff(g.getCurrentWeek(),c);
+				}   else return;
+			}
 
 				update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
 			}
