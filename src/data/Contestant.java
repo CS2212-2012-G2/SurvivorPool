@@ -93,7 +93,52 @@ public class Contestant implements Person, Comparable<Contestant> {
 		return castDate > -1;
 	}
 
+	/**
+	 * Checks if a Contestant is null.
+	 * 
+	 * @return True if isNull is set, and ID is NULL_ID.
+	 */
+	public boolean isNull() {
+		return isNull && getID().equals(NULL_ID);
+	}
+
+
+	/**
+	 * Returns the tribe of the Contestant
+	 * 
+	 * @return Tribe name of the contestant.
+	 */
+	public String getTribe() {
+		return tribe;
+	}
+
+	/**
+	 * Returns the date the contestant was cast off on.
+	 * 
+	 * @return Date cast off, -1 if still active.
+	 */
+	public int getCastDate() {
+		return castDate;
+	}
+
+	/**
+	 * Returns the contestant's unique ID tag
+	 * 
+	 * @return assigned ID tag
+	 */
+	public String getID() {
+		return cID;
+	}
+
 	// ----------------- MUTATOR METHODS -----------------//
+
+	/**
+	 * sets the contestant to null. 
+	 */
+	public void setNull() {
+		cID = NULL_ID;
+		isNull = true;
+	}
 
 	/**
 	 * castOff indicates that a contestant has been removed from the show
@@ -166,33 +211,6 @@ public class Contestant implements Person, Comparable<Contestant> {
 					InvalidFieldException.Field.CONT_LAST, "Invalid Last Name");
 
 		lastName = Utils.strCapitalize(name);
-	}
-
-	/**
-	 * Returns the tribe of the Contestant
-	 * 
-	 * @return Tribe name of the contestant.
-	 */
-	public String getTribe() {
-		return tribe;
-	}
-
-	/**
-	 * Returns the date the contestant was cast off on.
-	 * 
-	 * @return Date cast off, -1 if still active.
-	 */
-	public int getCastDate() {
-		return castDate;
-	}
-
-	/**
-	 * Returns the contestant's unique ID tag
-	 * 
-	 * @return assigned ID tag
-	 */
-	public String getID() {
-		return cID;
 	}
 
 	/**
@@ -285,6 +303,8 @@ public class Contestant implements Person, Comparable<Contestant> {
 			return "None";
 	}
 
+	// ----------------- JSON ----------------- //
+	
 	/**
 	 * Converts Contestant object to a json object
 	 * 
@@ -318,42 +338,6 @@ public class Contestant implements Person, Comparable<Contestant> {
 		}
 	}
 
-	// / Driver for Contestant JSON
-	public static void main(String[] args) throws InvalidFieldException {
-		Contestant c = new data.Contestant("ad", "Jon", "silver", "booby");
-
-		try {
-			System.out.println(c.toJSONObject().toString());
-		} catch (ParseException e1) {
-			e1.printStackTrace();
-		}
-
-		try {
-			Contestant p = new data.Contestant();
-			p.fromJSONObject(c.toJSONObject());
-			System.out.println(p);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Checks if a Contestant is null.
-	 * 
-	 * @return True if isNull is set, and ID is NULL_ID.
-	 */
-	public boolean isNull() {
-		return isNull && getID().equals(NULL_ID);
-	}
-
-	/**
-	 * sets the contestant to null. 
-	 */
-	public void setNull() {
-		cID = NULL_ID;
-		isNull = true;
-	}
-
 	@Override
 	public int compareTo(Contestant otherC) {
 		// ugly, but works. :)
@@ -380,4 +364,25 @@ public class Contestant implements Person, Comparable<Contestant> {
 		
 		return result;
 	}
+	
+	// ------------- Driver for Contestant JSON ------------//
+	
+	public static void main(String[] args) throws InvalidFieldException {
+		Contestant c = new data.Contestant("ad", "Jon", "silver", "booby");
+
+		try {
+			System.out.println(c.toJSONObject().toString());
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			Contestant p = new data.Contestant();
+			p.fromJSONObject(c.toJSONObject());
+			System.out.println(p);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

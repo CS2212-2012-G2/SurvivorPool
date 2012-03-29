@@ -23,6 +23,12 @@ public class Settings extends HashMap<String, Object> {
 		this(false);
 	}
 	
+	/**
+	 * Constructor
+	 * 		initSettingsData if settings were loaded.		
+	 * 
+	 * @param loadSettings
+	 */
 	public Settings(boolean loadSettings) {
 		super();
 		
@@ -33,6 +39,22 @@ public class Settings extends HashMap<String, Object> {
 		currentSettings = this;
 	}
 	
+	// -------------------- ACCESSORS ------------------ //
+	
+	/**
+	 * Returns the currently stored Settings.
+	 * 
+	 * @return Current settings, null if none present.
+	 */
+	public static Settings getCurrentSettings() {
+		return Settings.currentSettings;
+	}
+	
+	/**
+	 * used to initialize settings from persistance data
+	 * 
+	 * @return Settings
+	 */
 	public static Settings initSettingsData(){
 		JSONObject json;
 		try {
@@ -47,6 +69,9 @@ public class Settings extends HashMap<String, Object> {
 		
 		return currentSettings;
 	}
+	
+
+	// ----------------- JSON ----------------- //
 	
 	/**
 	 * Convert Settings to a JSON object
@@ -77,14 +102,5 @@ public class Settings extends HashMap<String, Object> {
 	 */
 	public void writeData() {
 		JSONUtils.writeJSON(JSONUtils.pathSettings, toJSONObject());
-	}
-	
-	/**
-	 * Returns the currently stored Settings.
-	 * 
-	 * @return Current settings, null if none present.
-	 */
-	public static Settings getCurrentSettings() {
-		return Settings.currentSettings;
 	}
 }
