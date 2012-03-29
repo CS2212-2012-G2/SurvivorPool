@@ -59,7 +59,7 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JButton btnAdvWk;
 	private JButton btnChangeTribeName;
 
-	private SpinnerNumberModel weekModel = new SpinnerNumberModel(0, 0, 0, 1); // default,low,min,step
+	private SpinnerNumberModel weekModel; // default,low,min,step
 	private JSpinner spnWeek;
 
 	private JPanel pnlRemCons;
@@ -99,8 +99,6 @@ public class GeneralPanel extends JPanel implements Observer {
 		GameData.getCurrentGame().addObserver(this);
 
 		initListeners();
-		
-		GameData.getCurrentGame().addObserver(this);
 	}
 
 	private JPanel buildTribePanel() {
@@ -166,7 +164,6 @@ public class GeneralPanel extends JPanel implements Observer {
 		GameData g = GameData.getCurrentGame();
 		btnStartSn.setEnabled(!g.isSeasonStarted());
 		btnAdvWk.setEnabled(g.isSeasonStarted() && !g.isSeasonEnded());
-		
 
 		return pane;
 	}
@@ -181,8 +178,10 @@ public class GeneralPanel extends JPanel implements Observer {
 		pnlSpin.setLayout(new BoxLayout(pnlSpin, BoxLayout.LINE_AXIS));
 		lblWeek = new JLabel("View Week:");
 		lblWeek.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+		weekModel = new SpinnerNumberModel();
 		spnWeek = new JSpinner(weekModel);
 		spnWeek.setAlignmentX(JSpinner.LEFT_ALIGNMENT);
+		
 
 		pnlSpin.add(lblWeek);
 		pnlSpin.add(Box.createHorizontalStrut(10));
@@ -204,8 +203,11 @@ public class GeneralPanel extends JPanel implements Observer {
 		pane.add(pnlCont);
 
 		// / init:
-		//setRemainingContestantsLabel();
-		//setCastOffContestantsLabel();
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonStarted()) {
+			updateSpinnerModel(g.getCurrentWeek());
+			spnWeek.setValue(g.getCurrentWeek());
+		}
 
 		return pane;
 	}
@@ -400,6 +402,12 @@ public class GeneralPanel extends JPanel implements Observer {
 		});
 	}
 
+	private void updateSpinnerModel(int w) {
+		weekModel.setMinimum(w > 0 ? 0 : 0);
+		weekModel.setMaximum(w > 0 ? w : 0);
+		weekModel.setStepSize(1);
+	}
+	
 	@Override
 	public void update(Observable obs, Object arg) {
 		@SuppressWarnings("unchecked")
@@ -428,8 +436,7 @@ public class GeneralPanel extends JPanel implements Observer {
 				|| update.contains(UpdateTag.START_SEASON)
 				|| update.contains(UpdateTag.END_GAME)) {
 
-			weekModel.setMaximum(g.getCurrentWeek());
-			weekModel.setValue(g.getCurrentWeek());
+			updateSpinnerModel(g.getCurrentWeek());
 		}
 
 		if (update.contains(UpdateTag.END_GAME)) {
@@ -437,6 +444,11 @@ public class GeneralPanel extends JPanel implements Observer {
 			btnStartSn.setText("End of Season");
 			btnAdvWk.setText("See Player Winners");
 			btnAdvWk.setEnabled(true);
+		}
+		
+		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
+			if ((Integer)spnWeek.getValue() == g.getCurrentWeek() - 1)
+				spnWeek.setValue(g.getCurrentWeek());
 		}
 
 	}
