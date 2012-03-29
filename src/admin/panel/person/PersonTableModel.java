@@ -183,7 +183,7 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		} else if (inGame && idUsed) {
 			// we know the contestant is in the game, AND the ID is in use
 			// try to find if its in the game otherwise, if it is, then we
-			// have a problem, otherwise, no problem.
+			// have a problem, otherwise, no problem (nothing changed!).
 			// JESUS CHRIST THIS LOGIC SUCKED.
 			for (Person t : list) {
 				if (t.getID().equals(person.getID()) && t != person) {

@@ -48,7 +48,7 @@ public class Testing {
 		g.startSeason(TEST_BET_AMOUNT);
 
 		// TEST 1: CAST OFF THE (TEST) CONTESTANT "JESSICA SIMPSON"
-		g.castOff(g.getAllContestants().get(2)); // set the next contestant to
+		g.castOff(g.getCurrentWeek(),g.getAllContestants().get(2)); // set the next contestant to
 													// be cast off
 		g.advanceWeek(); // advance the week, committing the cast off
 
@@ -63,7 +63,7 @@ public class Testing {
 							+ g.getAllContestants().get(2).getCastDate() + "\n");
 
 		// TEST 2: CAST OFF THE (TEST) CONTESTANT "MICHAEL JACKSON"
-		g.castOff(g.getAllContestants().get(0)); // set the next contestant to
+		g.castOff(g.getCurrentWeek(),g.getAllContestants().get(0)); // set the next contestant to
 													// be cast off
 		g.advanceWeek(); // advance the week, committing the cast off
 

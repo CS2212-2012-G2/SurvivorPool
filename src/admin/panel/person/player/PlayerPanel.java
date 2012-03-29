@@ -124,6 +124,16 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	
 
 		refreshContestantCBs();
+		
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded()) { // game end
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
+		} else if (g.isFinalWeek()) { // final week
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.FINAL_WEEK));
+		} else if (g.isSeasonStarted()){
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.START_SEASON));
+		}
+		
 		assembleAll();
 	}
 
@@ -188,8 +198,10 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 		switch (e.getField()) {
 		case USER_ID:
+			if (!GameData.getCurrentGame().isSeasonStarted()){
 			mf.setStatusErrorMsg("Invalid ID (must be between 2 and 7 chars"
 					+ " long, followed by numbers)", tfID);
+			}
 			break;
 		case USER_ID_DUP:
 			mf.setStatusErrorMsg("Invalid ID (in use)", tfID);

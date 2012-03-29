@@ -45,8 +45,8 @@ public class GeneralPanel extends JPanel implements Observer {
 
 	private JLabel lblWeek;
 	
-	private JTextField txtTribe1;
-	private JTextField txtTribe2;
+	private JTextField tfTribe1;
+	private JTextField tfTribe2;
 
 	private JButton btnStartSn;
 	private JButton btnAdvWk;
@@ -68,12 +68,19 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JPanel pnlCenter;
 
 	private JLabel lblTribe1;
-
 	private JLabel lblTribe2;
 	
 	private JTable activeTable;
 	private JTable castTable;
 
+	protected static final String TOOL_START = "Start the Season",
+				TOOL_ADV = "Advance the Season week", 
+				TOOL_FIN_ADV = "Advance the final week",
+				TOOL_TRIBE = "Change the tribe names",
+				TOOL_WKSPINNER = "Scroll through the weeks";
+	
+	
+	
 	public GeneralPanel() {
 		setLayout(new BorderLayout(10, 10));
 
@@ -99,26 +106,56 @@ public class GeneralPanel extends JPanel implements Observer {
 
 		add(pnlCenter, BorderLayout.CENTER);
 		GameData.getCurrentGame().addObserver(this);
-
+		
+		setToolTips();
+		
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded()) { // game end
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
+		} else if (g.isFinalWeek()) { // final week
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.FINAL_WEEK));
+		} else if (g.isSeasonStarted()){
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.START_SEASON));
+		}
+		
 		initListeners();
 	}
 
+	/**
+	 * Sets the tool tips for all the components.
+	 */
+	protected void setToolTips() {
+
+		if (GameData.getCurrentGame().isFinalWeek())
+			btnAdvWk.setToolTipText(TOOL_ADV);
+		else
+			btnAdvWk.setToolTipText(TOOL_FIN_ADV);
+			
+		btnStartSn.setToolTipText(TOOL_START);
+		btnChangeTribeName.setToolTipText(TOOL_TRIBE);
+		spnWeek.setToolTipText(TOOL_WKSPINNER);
+		tfTribe1.setToolTipText(TOOL_TRIBE);
+		tfTribe2.setToolTipText(TOOL_TRIBE);
+		lblTribe1.setToolTipText(TOOL_TRIBE);
+		lblTribe2.setToolTipText(TOOL_TRIBE);
+	}
+	
 	private JPanel buildTribePanel() {
 		GameData g = GameData.getCurrentGame();
 
 		JPanel pane = new JPanel();
-		pane.setBorder(BorderFactory.createTitledBorder("Tribes"));
 		pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
+		
 		lblTribe1 = new JLabel("Tribe 1:");
 		lblTribe2 = new JLabel("Tribe 2:");
 
-		txtTribe1 = new JTextField();
-		txtTribe2 = new JTextField();
+		tfTribe1 = new JTextField();
+		tfTribe2 = new JTextField();
 
 		btnChangeTribeName = new JButton("Save Tribes");
 
 		List<JLabel> lbls = Arrays.asList(lblTribe1, lblTribe2);
-		List<JTextField> tfs = Arrays.asList(txtTribe1, txtTribe2);
+		List<JTextField> tfs = Arrays.asList(tfTribe1, tfTribe2);
 		String[] tribes = g.getTribeNames();
 
 		for (int i = 0; i < 2; i++) {
@@ -128,6 +165,7 @@ public class GeneralPanel extends JPanel implements Observer {
 			tPane.setLayout(new BoxLayout(tPane, BoxLayout.LINE_AXIS));
 
 			tPane.add(lbls.get(i));
+			tPane.add(Box.createHorizontalStrut(5));
 			tPane.add(Box.createHorizontalGlue());
 			tPane.add(tfs.get(i));
 
@@ -143,7 +181,6 @@ public class GeneralPanel extends JPanel implements Observer {
 	
 	protected JPanel buildWinnerPanel() {
 		JPanel pane = new JPanel();
-		pane.setBorder(BorderFactory.createTitledBorder("Winners"));
 		pane.setLayout(new BorderLayout(5, 5));
 		
 		JLabel stubLabel = new JLabel("STUBBB");
@@ -192,7 +229,8 @@ public class GeneralPanel extends JPanel implements Observer {
 		weekModel = new SpinnerNumberModel();
 		spnWeek = new JSpinner(weekModel);
 		spnWeek.setAlignmentX(JSpinner.LEFT_ALIGNMENT);
-
+		spnWeek.setEnabled(false);
+		
 		pnlSpin.add(lblWeek);
 		pnlSpin.add(Box.createHorizontalStrut(10));
 		pnlSpin.add(spnWeek);
@@ -337,23 +375,23 @@ public class GeneralPanel extends JPanel implements Observer {
 			public void actionPerformed(ActionEvent ae) {
 				MainFrame mf = MainFrame.getRunningFrame();
 
-				if (!Utils.checkString(txtTribe1.getText(),
+				if (!Utils.checkString(tfTribe1.getText(),
 						Person.TRIBE_PATTERN)) {
-					mf.setStatusErrorMsg("Tribe 1 name invalid.", txtTribe1);
-				} else if (!Utils.checkString(txtTribe2.getText(),
+					mf.setStatusErrorMsg("Tribe 1 name invalid.", tfTribe1);
+				} else if (!Utils.checkString(tfTribe2.getText(),
 						Person.TRIBE_PATTERN)) {
-					mf.setStatusErrorMsg("Tribe 2 name invalid.", txtTribe2);
-				} else if (txtTribe1.getText().equals(txtTribe2.getText())) {
+					mf.setStatusErrorMsg("Tribe 2 name invalid.", tfTribe2);
+				} else if (tfTribe1.getText().equals(tfTribe2.getText())) {
 					mf.setStatusErrorMsg(
 							"Invalid tribe names, cannot be the same",
-							txtTribe1, txtTribe2);
+							tfTribe1, tfTribe2);
 					return;
 				} else {
 					String[] txts = GameData.getCurrentGame().setTribeNames(
-							txtTribe1.getText(), txtTribe2.getText());
+							tfTribe1.getText(), tfTribe2.getText());
 
-					txtTribe1.setText(txts[0]);
-					txtTribe2.setText(txts[1]);
+					tfTribe1.setText(txts[0]);
+					tfTribe2.setText(txts[1]);
 				}
 			}
 
@@ -373,10 +411,11 @@ public class GeneralPanel extends JPanel implements Observer {
 
 	private void updateSpinnerModel(int w) {
 		weekModel.setMinimum(w > 0 ? 0 : 0);
-		weekModel.setMaximum(w > 0 ? w : 0);
+		weekModel.setMaximum(w-1 > 0 ? w-1 : 0);
 		weekModel.setStepSize(1);
 	}
 	
+
 	@Override
 	public void update(Observable obs, Object arg) {
 		@SuppressWarnings("unchecked")
@@ -387,6 +426,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		if (update.contains(UpdateTag.START_SEASON)) {
 			btnStartSn.setEnabled(false);
 			btnAdvWk.setEnabled(true);
+			spnWeek.setEnabled(true);
 		}
 
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
@@ -416,8 +456,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		}
 		
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
-			if ((Integer)spnWeek.getValue() == g.getCurrentWeek() - 1)
-				spnWeek.setValue(g.getCurrentWeek());
+			spnWeek.setValue(g.getCurrentWeek()-1);
 		}
 		
 		if (update.contains(UpdateTag.END_GAME)) {

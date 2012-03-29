@@ -30,20 +30,21 @@ import data.Contestant;
 import data.GameData;
 import data.GameData.UpdateTag;
 import data.InvalidFieldException;
+import data.history.History;
 
 public class ContestantPanel extends PersonPanel<Contestant> implements MouseListener, Observer {
 
 	private static final long serialVersionUID = 1L;
 
 	// container for top stuff
-	private JButton btnCastOff;
+	private JButton btnSetStatus;
 	
 	private JButton imgDisplay;
 	
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JTextField tfCastDate;
+	private JComboBox<String> cbCastDate;
 	private JLabel labelTribe;
 
 	private JTextField tfFirstName;
@@ -55,6 +56,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	
 	private JButton btnPickWin;
 	
+	// static constants:
+	private static final String SET_STATUS_TEXT = "Set Status";
 	// tool tip texts:
 	protected static final String TOOL_NAME = "First and Last name must be alphabetic",
 			TOOL_ID = "ID must be two characters long and alpha-numeric",
@@ -82,8 +85,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		tfLastName = new JTextField(20);
 
 		labelCastOff = new JLabel("Cast off:");
-		tfCastDate = new JTextField("-");
-		btnCastOff = new JButton("Cast Off");
+		cbCastDate = new JComboBox<String>();
+		btnSetStatus = new JButton("Set Status");
 
 		labelTribe = new JLabel("Tribe:");
 		cbTribe = new JComboBox<String>(GameData.getCurrentGame()
@@ -95,7 +98,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// holds all the fields
 		personFields = new ContestantFieldsPanel(imgDisplay, labelName, 
 				tfFirstName, tfLastName, labelID, tfContID, labelCastOff, 
-				tfCastDate, btnCastOff, labelTribe, cbTribe);
+				cbCastDate, btnSetStatus, labelTribe, cbTribe);
 		// add the mouse listener to all components.
 		for (Component c : ((JPanel)personFields).getComponents()) {
 			if (c instanceof JPanel) {
@@ -109,9 +112,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 
 		// check to stop casting off before start
 		if (!GameData.getCurrentGame().isSeasonStarted()) {
-			btnCastOff.setEnabled(false);
+			btnSetStatus.setEnabled(false);
 		}
 		
+		cbCastDate.addItem("Active");
 		//////////////////////////////
 		// Mid (table!)
 		//////////////////////////////
@@ -123,8 +127,20 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		
 		// build the two panes
 		// setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded()) { // game end
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
+		} else if (g.isFinalWeek()) { // final week
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.FINAL_WEEK));
+		} else if (g.isSeasonStarted()){
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.START_SEASON));
+		}
+		
+		
 		
 		assembleAll();
+		
+		
 	}
 	
 	@Override
@@ -180,8 +196,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		labelTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		cbTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		
-		tfCastDate.setToolTipText(TOOL_CASTOFF_FIELD);
-		btnCastOff.setToolTipText(TOOL_CASTOFF_BTN);
+		cbCastDate.setToolTipText(TOOL_CASTOFF_FIELD);
+		btnSetStatus.setToolTipText(TOOL_CASTOFF_BTN);
 		
 		btnPickWin.setToolTipText(TOOL_WINNER);
 		btnSave.setToolTipText(TOOL_SAVE);
@@ -201,7 +217,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	protected void setPanelPerson(Contestant c, boolean newContestant) {
 		super.setPanelPerson(c, newContestant);
 
-		btnCastOff.setEnabled(GameData.getCurrentGame().isSeasonStarted());
+		btnSetStatus.setEnabled(GameData.getCurrentGame().isSeasonStarted());
 			
 		if (newContestant || c == null) {
 			// we don't want any rows selected
@@ -229,8 +245,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 
 		switch (e.getField()) {
 		case CONT_ID:
+			if (!GameData.getCurrentGame().isSeasonStarted()){
 			mf.setStatusErrorMsg("Invalid ID (must be 2 alphanumeric "
 					+ "characters long)", tfContID);
+			}
 			break;
 		case CONT_ID_DUP:
 			mf.setStatusErrorMsg("Invalid ID (in use)", tfContID);
@@ -308,12 +326,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		
 		
 
-		btnCastOff.addActionListener(new ActionListener() {
+		btnSetStatus.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String s = ((JButton) e.getSource()).getText();
-
+				String s = (String)cbCastDate.getSelectedItem();
+	
 				Contestant c = null;
 				try {
 					c = getPerson();
@@ -325,8 +343,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				}
 				
 				GameData g = GameData.getCurrentGame();
+				History h = g.getHistory();
 
-				if (s.equals("Cast Off")) {
+				if (!s.equals("Active")) {
+					int i = Integer.valueOf(s).intValue();
+					if(i == g.getCurrentWeek()){
 					// check if someone is already cast off
 					if (g.doesElimExist() == true) {
 						JOptionPane.showMessageDialog(
@@ -356,17 +377,32 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					
 					if (g.isSeasonEnded()) {
 						JOptionPane.showMessageDialog(null,
-								"The season has ended.");
+								"The season has ended. Thank you for playing!");
 						return;
 					}
+					g.castOff(i,c);
+					}
 					
-					g.castOff(c);
-					tfCastDate.setText("" + c.getCastDate());
-				} else {
-					g.undoCastOff(c);
-					tfCastDate.setText("Active");
-					btnCastOff.setText("Cast Off");
+				 else{
+					 if(g.getCastOff(i) != null){
+					 if(!h.canCastoff(i,c)){
+						int resp = JOptionPane.showConfirmDialog(null, "Doing this will invalidate your current point standings." +
+								                     " Proceed?", "Redoing cast off", JOptionPane.YES_NO_OPTION);
+					 if(resp == JOptionPane.YES_OPTION){	 
+					 g.castOff(i,c);
+					 g.undoCastOff(i,g.getCastOff(i));
+					 }
+					 else JOptionPane.showMessageDialog(null,"Contestant is ineligible for re-cast off.");
+					 }
+					 else g.castOff(i,c);
+					 }
 				}
+				}
+					else{
+						if(c.getCastDate() == g.getCurrentWeek()){
+				        g.undoCastOff(g.getCurrentWeek(),c);
+				}   else return;
+			}
 
 				update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
 			}
@@ -374,7 +410,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		
 		btnPickWin.addActionListener( new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent ae) {
 				GameData g = GameData.getCurrentGame();
 				
@@ -398,7 +433,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				// cast off the other two contestants (always three left)
 				for (Contestant c: g.getActiveContestants(true)) {
 					if (!c.equals(win))
-						g.castOff(c);
+						g.castOff(g.getCurrentWeek(),c);
 				}
 				
 				// FIXME: What do here?
@@ -414,9 +449,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		});
 		
 		cbTribe.addItemListener(cbListener);
+		cbCastDate.addItemListener(cbListener);
 
 		List<JTextField> tfArr = Arrays.asList(tfContID, tfFirstName,
-				tfLastName, tfCastDate);
+				tfLastName);
 		for (JTextField tf : tfArr) {
 			tf.addFocusListener(editAdapt);
 		}
@@ -437,7 +473,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		if (!c.isEnabled()) return;
 		
 		if (c == tfContID || c == tfFirstName || c == tfLastName
-				|| c == cbTribe || c == table || c == btnCastOff) {
+				|| c == cbTribe || c == table || c == btnSetStatus) {
 			setFieldsChanged(true);
 		}
 	}
@@ -484,15 +520,15 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			// change text to "select winner" once its the final week
 			
 			btnAddNew.setEnabled(!sStart);
-			
+			cbCastDate.setEnabled(sStart);
 			if (g.isSeasonEnded()) { // game end
-				btnCastOff.setEnabled(false);
+				btnSetStatus.setEnabled(false);
 				btnSave.setEnabled(false);
 			} else if (g.isFinalWeek()) { // final week
-				btnCastOff.setEnabled(false);
+				btnSetStatus.setEnabled(false);
 				btnPickWin.setEnabled(true);
 			} else {
-				btnCastOff.setEnabled(sStart);
+				btnSetStatus.setEnabled(sStart);
 				btnPickWin.setEnabled(false);
 			}
 			
@@ -501,8 +537,14 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tfFirstName.setEnabled(!sStart);
 			tfContID.setEnabled(!sStart);
 			
-			tfCastDate.setEditable(false);
+			cbCastDate.removeAllItems();
 			
+			cbCastDate.addItem("Active");
+			for (int i = g.getCurrentWeek(); i >= 1; i--)
+				cbCastDate.addItem("" + i);
+			
+			// defaults to the current date for easier standard "cast offs". 
+			//tfCastDate.setSelectedIndex(tfCastDate.getItemCount() - 1);
 			
 			List<ActionListener> acts = Arrays.asList(imgDisplay
 					.getActionListeners());
@@ -518,9 +560,9 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		 * Final week, so set the cast off disabled, and pick a winner
 		 */
 		if (update.contains(UpdateTag.FINAL_WEEK)) {
-			btnCastOff.setEnabled(false);
+			btnSetStatus.setEnabled(false);
 			btnPickWin.setEnabled(true);
-			tfCastDate.setEditable(false);
+			cbCastDate.setEditable(false);
 		}
 	}
 }

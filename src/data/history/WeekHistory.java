@@ -7,13 +7,12 @@ import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 import data.Contestant;
 import data.GameData;
-import data.InvalidFieldException;
 import data.User;
 
 public class WeekHistory {
 
 	private int weekNum;
-	private ArrayList<Contestant> contestants;
+	private ArrayList<Contestant> contestants = new ArrayList<Contestant>();
 	
 	private final static String KEY_WEEK = "week";
 	private final static String KEY_CONTESTANTS = "contestants";
@@ -70,9 +69,9 @@ public class WeekHistory {
 	 * Adds all the contestants that were chosen to list
 	 */
 	private void generateContestants(){
-		ArrayList<User> users = (ArrayList<User>) GameData.getCurrentGame().getAllUsers();
+		ArrayList<User> users = ((ArrayList<User>) GameData.getCurrentGame().getAllUsers());
 		
-		for(User u:users){
+		for(User u: users){
 			Contestant c = u.getWeeklyPick();
 			if(!contestants.contains(c))
 				contestants.add(u.getWeeklyPick()); //this includes the final pick during last week
@@ -103,4 +102,5 @@ public class WeekHistory {
 			addContestant(c);
 		}
 	}
+	
 }
