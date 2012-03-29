@@ -346,6 +346,9 @@ public class Contestant implements Person, Comparable<Contestant> {
 		return isNull && getID().equals(NULL_ID);
 	}
 
+	/**
+	 * sets the contestant to null. 
+	 */
 	public void setNull() {
 		cID = NULL_ID;
 		isNull = true;
