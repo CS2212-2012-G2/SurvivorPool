@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -16,7 +15,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -34,7 +32,6 @@ import javax.swing.table.TableModel;
 
 import admin.MainFrame;
 import admin.Utils;
-import admin.panel.person.contestant.ContestantPanel;
 import data.GameData;
 import data.GameData.UpdateTag;
 import data.Person;
@@ -48,8 +45,8 @@ public class GeneralPanel extends JPanel implements Observer {
 
 	private JLabel lblWeek;
 	
-	private JTextField txtTribe1;
-	private JTextField txtTribe2;
+	private JTextField tfTribe1;
+	private JTextField tfTribe2;
 
 	private JButton btnStartSn;
 	private JButton btnAdvWk;
@@ -137,8 +134,8 @@ public class GeneralPanel extends JPanel implements Observer {
 		btnStartSn.setToolTipText(TOOL_START);
 		btnChangeTribeName.setToolTipText(TOOL_TRIBE);
 		spnWeek.setToolTipText(TOOL_WKSPINNER);
-		txtTribe1.setToolTipText(TOOL_TRIBE);
-		txtTribe2.setToolTipText(TOOL_TRIBE);
+		tfTribe1.setToolTipText(TOOL_TRIBE);
+		tfTribe2.setToolTipText(TOOL_TRIBE);
 		lblTribe1.setToolTipText(TOOL_TRIBE);
 		lblTribe2.setToolTipText(TOOL_TRIBE);
 	}
@@ -152,13 +149,13 @@ public class GeneralPanel extends JPanel implements Observer {
 		lblTribe1 = new JLabel("Tribe 1:");
 		lblTribe2 = new JLabel("Tribe 2:");
 
-		txtTribe1 = new JTextField();
-		txtTribe2 = new JTextField();
+		tfTribe1 = new JTextField();
+		tfTribe2 = new JTextField();
 
 		btnChangeTribeName = new JButton("Save Tribes");
 
 		List<JLabel> lbls = Arrays.asList(lblTribe1, lblTribe2);
-		List<JTextField> tfs = Arrays.asList(txtTribe1, txtTribe2);
+		List<JTextField> tfs = Arrays.asList(tfTribe1, tfTribe2);
 		String[] tribes = g.getTribeNames();
 
 		for (int i = 0; i < 2; i++) {
@@ -378,23 +375,23 @@ public class GeneralPanel extends JPanel implements Observer {
 			public void actionPerformed(ActionEvent ae) {
 				MainFrame mf = MainFrame.getRunningFrame();
 
-				if (!Utils.checkString(txtTribe1.getText(),
+				if (!Utils.checkString(tfTribe1.getText(),
 						Person.TRIBE_PATTERN)) {
-					mf.setStatusErrorMsg("Tribe 1 name invalid.", txtTribe1);
-				} else if (!Utils.checkString(txtTribe2.getText(),
+					mf.setStatusErrorMsg("Tribe 1 name invalid.", tfTribe1);
+				} else if (!Utils.checkString(tfTribe2.getText(),
 						Person.TRIBE_PATTERN)) {
-					mf.setStatusErrorMsg("Tribe 2 name invalid.", txtTribe2);
-				} else if (txtTribe1.getText().equals(txtTribe2.getText())) {
+					mf.setStatusErrorMsg("Tribe 2 name invalid.", tfTribe2);
+				} else if (tfTribe1.getText().equals(tfTribe2.getText())) {
 					mf.setStatusErrorMsg(
 							"Invalid tribe names, cannot be the same",
-							txtTribe1, txtTribe2);
+							tfTribe1, tfTribe2);
 					return;
 				} else {
 					String[] txts = GameData.getCurrentGame().setTribeNames(
-							txtTribe1.getText(), txtTribe2.getText());
+							tfTribe1.getText(), tfTribe2.getText());
 
-					txtTribe1.setText(txts[0]);
-					txtTribe2.setText(txts[1]);
+					tfTribe1.setText(txts[0]);
+					tfTribe2.setText(txts[1]);
 				}
 			}
 
