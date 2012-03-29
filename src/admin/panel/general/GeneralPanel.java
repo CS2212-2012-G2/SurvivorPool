@@ -15,7 +15,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -25,12 +24,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import admin.MainFrame;
@@ -249,31 +246,6 @@ public class GeneralPanel extends JPanel implements Observer {
 		model = new HistoryConModel(castTable, true);
 		castTable.setModel(model);
 
-		TableCellRenderer renderer = new TableCellRenderer() {
-
-			JLabel label = new JLabel();
-
-			@Override
-			public JComponent getTableCellRendererComponent(JTable table,
-					Object value, boolean isSelected, boolean hasFocus,
-					int row, int column) {
-
-				if (table.isRowSelected(row)) {
-					label.setBackground(Utils.getThemeTableHighlight());
-					label.setForeground(Utils.getThemeBG());
-				} else {
-					label.setBackground(UIManager.getColor("Table.background"));
-					label.setForeground(UIManager.getColor("Table.foreground"));
-				}
-
-				label.setOpaque(true);
-				label.setText("" + value);
-
-				return label;
-			}
-
-		};
-
 		List<JTable> tables = Arrays.asList(activeTable, castTable);
 		List<JPanel> panes = Arrays.asList(pnlRemCons, pnlCastOffs);
 		for (int i = 0; i < 2; i++) {
@@ -285,7 +257,7 @@ public class GeneralPanel extends JPanel implements Observer {
 			table.setRowSelectionAllowed(true);
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-			table.setDefaultRenderer(Object.class, renderer);
+			table.setDefaultRenderer(Object.class, Utils.buildDefaultRenderer());
 
 			JScrollPane scroll = new JScrollPane(table);
 

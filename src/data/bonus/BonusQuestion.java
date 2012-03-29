@@ -3,12 +3,10 @@ package data.bonus;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import data.JSONUtils;
-
 import json.simple.JSONArray;
 import json.simple.JSONObject;
-import json.simple.JSONValue;
 import json.simple.parser.ParseException;
+import data.JSONUtils;
 
 /**
  * BonusQuestion is the class that will deal with the numerous bonus questions
@@ -248,7 +246,7 @@ public class BonusQuestion {
 					s = choices;
 					answer = "b";
 				}
-				BonusQuestion b = new BonusQuestion("question "+Integer.toString(i)+
+				new BonusQuestion("question "+Integer.toString(i)+
 						Integer.toString(j),answer,s,i,j);
 			}	
 		}

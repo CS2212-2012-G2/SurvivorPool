@@ -8,6 +8,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.table.TableCellRenderer;
+
 import data.Contestant;
 import data.Person;
 import data.User;
@@ -40,6 +46,39 @@ public class Utils {
 			return table;
 		}
 	};
+	
+	/**
+	 * Generates the default table renderer for tables inside the client.
+	 * @return
+	 */
+	public static TableCellRenderer buildDefaultRenderer() {
+		TableCellRenderer renderer = new TableCellRenderer() {
+
+			JLabel label = new JLabel();
+	
+			@Override
+			public JComponent getTableCellRendererComponent(JTable table,
+					Object value, boolean isSelected, boolean hasFocus,
+					int row, int column) {
+	
+				if (table.isRowSelected(row)) {
+					label.setBackground(Utils.getThemeTableHighlight());
+					label.setForeground(Utils.getThemeBG());
+				} else {
+					label.setBackground(UIManager.getColor("Table.background"));
+					label.setForeground(UIManager.getColor("Table.foreground"));
+				}
+	
+				label.setOpaque(true);
+				label.setText("" + value);
+	
+				return label;
+			}
+	
+		};
+		
+		return renderer;
+	}
 
 	public enum CompType {
 		// Contestants:

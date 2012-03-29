@@ -55,11 +55,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	
 	private JButton btnPickWin;
 	
-	// static constants:
-	private static final String CAST_OFF_TEXT = "Cast Off";
-	private static final String UNDO_CAST_TEXT = "Undo Cast Off";
-	
-	
 	// tool tip texts:
 	protected static final String TOOL_NAME = "First and Last name must be alphabetic",
 			TOOL_ID = "ID must be two characters long and alpha-numeric",

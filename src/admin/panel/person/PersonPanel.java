@@ -20,7 +20,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,11 +27,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import admin.MainFrame;
@@ -183,33 +180,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		// header.addMouseListener(tableModel.new SortColumnAdapter());
-
-		TableCellRenderer renderer = new TableCellRenderer() {
-
-			JLabel label = new JLabel();
-
-			@Override
-			public JComponent getTableCellRendererComponent(JTable table,
-					Object value, boolean isSelected, boolean hasFocus,
-					int row, int column) {
-
-				if (table.isRowSelected(row)) {
-					label.setBackground(Utils.getThemeTableHighlight());
-					label.setForeground(Utils.getThemeBG());
-				} else {
-					label.setBackground(UIManager.getColor("Table.background"));
-					label.setForeground(UIManager.getColor("Table.foreground"));
-				}
-
-				label.setOpaque(true);
-				label.setText("" + value);
-
-				return label;
-			}
-
-		};
-		table.setDefaultRenderer(Object.class, renderer);
+		table.setDefaultRenderer(Object.class, Utils.buildDefaultRenderer());
 
 		JScrollPane scroll = new JScrollPane(table);
 
