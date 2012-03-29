@@ -3,6 +3,7 @@ package admin;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import json.simple.parser.ParseException;
+
 import admin.Utils;
 import admin.StatusPanel;
 import admin.panel.bonus.BonusPanel;
@@ -31,8 +34,8 @@ import admin.panel.season.SeasonCreatePanel;
 
 import data.GameData;
 import data.Settings;
-import data.Settings.Field;
 import data.bonus.Bonus;
+import data.history.History;
 
 public class MainFrame extends JFrame {
 
@@ -68,6 +71,8 @@ public class MainFrame extends JFrame {
 	private ContestantPanel conPanel;
 	private PlayerPanel playerPanel;
 	private BonusPanel bonusPanel;
+	
+	private Settings settings;
 
 	ActionListener al = new ActionListener() {
 		@Override
@@ -101,7 +106,7 @@ public class MainFrame extends JFrame {
 
 		GameData g = GameData.initGameData();
 
-		Settings s = Settings.initSettingsData();
+		settings = new Settings(true);
 		
 		initMenuBar();
 
@@ -109,29 +114,83 @@ public class MainFrame extends JFrame {
 			initGUI();
 		else
 			initSeasonCreateGUI();
-
-		if (s == null) s = new Settings("Snow");
 		
-		applyTheme();
-		
-		this.setSize(640, 480);
-		this.setVisible(true);
-		this.setTitle("Survivor Pool Admin");
+		setVisible(true);
+		setTitle("Survivor Pool Admin");
 		// can resize frame
-		this.setResizable(false);
-		
-		// center the screen
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	    int sHeight = screenSize.height;
-	    int sWidth = screenSize.width;
-	    setLocation(sWidth / 2 - (getWidth() / 2), sHeight / 2 - (getHeight() / 2));
-		
+		setResizable(true);
+			
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent we) {
 				windowClose();
 			}
 		});
+		
+		loadSettings();
+	}
+	
+	private void loadSettings() {
+		GameData g = GameData.getCurrentGame();
+		
+		if (settings.containsKey(Settings.THEME)) {
+			changeTheme((String)settings.get(Settings.THEME));
+		} else {
+			changeTheme(Utils.GUITHEME.Snow.name());
+		}
+		
+		if (settings.containsKey(Settings.HISTORY)) {
+			if (g != null) {
+				g.setHistory((History)settings.get(Settings.HISTORY));
+			}
+		}
+		
+		if (settings.containsKey(Settings.SCREEN_LOC_X)) {
+			int x = (Integer)settings.get(Settings.SCREEN_LOC_X);
+			int y = (Integer)settings.get(Settings.SCREEN_LOC_Y);
+			
+			setLocation(x, y);
+		} else {
+			// default to center:
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		    int sHeight = screenSize.height;
+		    int sWidth = screenSize.width;
+		    
+		    Point loc = new Point(sWidth / 2 - (getWidth() / 2), sHeight / 2 - (getHeight() / 2));
+		    
+		    setLocation(loc);
+		}
+		
+		if (settings.containsKey(Settings.SCREEN_SIZE_X)) {
+			int x = (Integer)settings.get(Settings.SCREEN_SIZE_X);
+			int y = (Integer)settings.get(Settings.SCREEN_SIZE_Y);
+			
+			setSize(x, y);
+		} else {
+			setSize(640, 480);
+		}
+	}
+	
+	private void saveSettings() {
+		GameData g = GameData.getCurrentGame();
+		
+		settings.put(Settings.THEME, Utils.getTheme().name());
+		
+		Dimension d = getSize();
+		settings.put(Settings.SCREEN_SIZE_X, d.width);
+		settings.put(Settings.SCREEN_SIZE_Y, d.height);
+		
+		Point l = getLocation();
+		settings.put(Settings.SCREEN_LOC_X, l.x);
+		settings.put(Settings.SCREEN_LOC_Y, l.y);
+		
+		if (g != null)
+			try {
+				settings.put(Settings.HISTORY, g.getHistory().toJSONObject());
+			} catch (ParseException e) {
+			}
+		
+		settings.writeData();
 	}
 
 	private void initSeasonCreateGUI() {
@@ -231,7 +290,8 @@ public class MainFrame extends JFrame {
 	private void changeTheme(String name) {
 		Utils.changeTheme(name);
 		applyTheme();
-		Settings.getCurrentSettings().setSetting(Field.THEME, name);
+		
+		settings.put(Settings.THEME, name);
 	}
 
 	/**
@@ -311,6 +371,9 @@ public class MainFrame extends JFrame {
 		
 		if (!Bonus.getAllQuestions().isEmpty()) 
 			Bonus.writeData();
+		
+		if (settings != null)
+			saveSettings();
 		
 		System.exit(0);
 	}

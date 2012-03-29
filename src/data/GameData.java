@@ -437,6 +437,15 @@ public class GameData extends Observable {
 	public History getHistory(){
 		return selections;
 	}
+	
+	/**
+	 * TODO
+	 * @param newH
+	 */
+	public void setHistory(History newH) {
+		selections = newH;
+	}
+	
 	/**
 	 * Checks if a season has been started
 	 * 
@@ -999,7 +1008,7 @@ public class GameData extends Observable {
 	public void writeData() {
 
 		try {
-			JSONUtils.writeJSON(JSONUtils.pathGame, this.toJSONObject());
+			JSONUtils.writeJSON(JSONUtils.pathGame, toJSONObject());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

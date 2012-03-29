@@ -21,14 +21,14 @@ import data.User;
 public class Utils {
 
 	// A clean way to handle themes with minimal code.
-	enum THEMES {
+	enum GUITHEME {
 		// ThemeName(Foreground Color,Background Color);
-		Western(new Color(255, 255, 255), new Color(79, 38, 100), Color.WHITE), Snow(
-				new Color(0, 0, 255), new Color(255, 255, 255), Color.BLUE), BandW(
-				new Color(255, 255, 255), new Color(0, 0, 0), Color.GRAY);
+		Western(new Color(255, 255, 255), new Color(79, 38, 100), Color.WHITE), 
+		Snow(new Color(0, 0, 255), new Color(255, 255, 255), Color.BLUE), 
+		BandW(new Color(255, 255, 255), new Color(0, 0, 0), Color.GRAY);
 		Color fore, back, table;
 
-		THEMES(Color f, Color b, Color t) {
+		GUITHEME(Color f, Color b, Color t) {
 			fore = f;
 			back = b;
 			table = t;
@@ -87,8 +87,12 @@ public class Utils {
 		USER_FIRST_NAME, USER_LAST_NAME, USER_ID, USER_POINTS, USER_ULT_PICK, USER_WEEKLY_PICK
 	}
 
-	private static THEMES theme = THEMES.Snow;
+	private static GUITHEME theme;
 
+	public static GUITHEME getTheme() {
+		return theme;
+	}
+	
 	/**
 	 * The background colour of current theme
 	 * 
@@ -124,7 +128,7 @@ public class Utils {
 	 *            The theme's name to change to
 	 */
 	public static void changeTheme(String name) {
-		THEMES[] t = THEMES.values();
+		GUITHEME[] t = GUITHEME.values();
 		for (int i = 0; i < t.length; i++) {
 			if (t[i].name().equalsIgnoreCase(name))
 				theme = t[i];
@@ -137,7 +141,7 @@ public class Utils {
 	 * @return String array with the themes names
 	 */
 	public static String[] getThemes() {
-		THEMES[] t = THEMES.values();
+		GUITHEME[] t = GUITHEME.values();
 		String[] themeString = new String[t.length];
 		for (int i = 0; i < t.length; i++) {
 			themeString[i] = t[i].name();
