@@ -1,14 +1,12 @@
 package admin.panel.general;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -38,9 +36,9 @@ import javax.swing.table.TableModel;
 import admin.MainFrame;
 import admin.Utils;
 import data.GameData;
-import data.User;
 import data.GameData.UpdateTag;
 import data.Person;
+import data.User;
 
 public class GeneralPanel extends JPanel implements Observer {
 
@@ -49,9 +47,7 @@ public class GeneralPanel extends JPanel implements Observer {
 	Integer viewWeek = 0;
 
 	private JLabel lblWeek;
-	private JLabel lblRemainingContestants;
-	private JLabel lblCastOffs;
-
+	
 	private JTextField txtTribe1;
 	private JTextField txtTribe2;
 
@@ -229,8 +225,6 @@ public class GeneralPanel extends JPanel implements Observer {
 	}
 	
 	private void buildHistoryTables() {
-		GameData g = GameData.getCurrentGame();
-
 		// build the encapsulating panels:
 		final Border bevB = BorderFactory
 				.createSoftBevelBorder(BevelBorder.LOWERED);
@@ -469,6 +463,9 @@ public class GeneralPanel extends JPanel implements Observer {
 			}
 			
 			pnlWinners.add(new JLabel(tempString));
+			
+			// show the winning panel 
+			contTribeWin.showWinners();
 		}
 
 	}

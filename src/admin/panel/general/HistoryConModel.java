@@ -9,11 +9,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import admin.Utils;
-
 import data.Contestant;
 import data.GameData;
 import data.GameData.UpdateTag;
