@@ -233,8 +233,10 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 
 		switch (e.getField()) {
 		case CONT_ID:
+			if (!GameData.getCurrentGame().isSeasonStarted()){
 			mf.setStatusErrorMsg("Invalid ID (must be 2 alphanumeric "
 					+ "characters long)", tfContID);
+			}
 			break;
 		case CONT_ID_DUP:
 			mf.setStatusErrorMsg("Invalid ID (in use)", tfContID);
