@@ -528,6 +528,9 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			i++;
 			}
 			
+			// defaults to the current date for easier standard "cast offs". 
+			tfCastDate.setSelectedIndex(tfCastDate.getItemCount() - 1);
+			
 			List<ActionListener> acts = Arrays.asList(imgDisplay
 					.getActionListeners());
 			boolean actPresent = acts.contains(imgButtonListener);
