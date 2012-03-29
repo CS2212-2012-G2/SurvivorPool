@@ -119,12 +119,12 @@ public class GameData extends Observable {
 				allContestants.size());
 
 		for (Contestant c : allContestants) {
-			if (c != null){
-				  if(active && !c.isCastOff()){
-				  list.add(c);
-			}else if(!active && c.isCastOff()){
-				  list.add(c);
-			}
+			if (c != null) {
+				if (active && !c.isCastOff()) {
+					list.add(c);
+				} else if (!active && c.isCastOff()) {
+					list.add(c);
+				}
 			}
 		}
 

@@ -7,7 +7,6 @@ import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 import data.Contestant;
 import data.GameData;
-import data.InvalidFieldException;
 import data.User;
 
 public class WeekHistory {
