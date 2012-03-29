@@ -44,7 +44,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JComboBox<String> tfCastDate;
+	private JComboBox<String> cbCastDate;
 	private JLabel labelTribe;
 
 	private JTextField tfFirstName;
@@ -85,7 +85,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		tfLastName = new JTextField(20);
 
 		labelCastOff = new JLabel("Cast off:");
-		tfCastDate = new JComboBox<String>();
+		cbCastDate = new JComboBox<String>();
 		btnSetStatus = new JButton("Set Status");
 
 		labelTribe = new JLabel("Tribe:");
@@ -98,7 +98,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// holds all the fields
 		personFields = new ContestantFieldsPanel(imgDisplay, labelName, 
 				tfFirstName, tfLastName, labelID, tfContID, labelCastOff, 
-				tfCastDate, btnSetStatus, labelTribe, cbTribe);
+				cbCastDate, btnSetStatus, labelTribe, cbTribe);
 		// add the mouse listener to all components.
 		for (Component c : ((JPanel)personFields).getComponents()) {
 			if (c instanceof JPanel) {
@@ -115,7 +115,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			btnSetStatus.setEnabled(false);
 		}
 		
-		tfCastDate.addItem("Active");
+		cbCastDate.addItem("Active");
 		//////////////////////////////
 		// Mid (table!)
 		//////////////////////////////
@@ -196,7 +196,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		labelTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		cbTribe.setToolTipText(ContestantPanel.TOOL_TRIBE);
 		
-		tfCastDate.setToolTipText(TOOL_CASTOFF_FIELD);
+		cbCastDate.setToolTipText(TOOL_CASTOFF_FIELD);
 		btnSetStatus.setToolTipText(TOOL_CASTOFF_BTN);
 		
 		btnPickWin.setToolTipText(TOOL_WINNER);
@@ -330,7 +330,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String s = (String)tfCastDate.getSelectedItem();
+				String s = (String)cbCastDate.getSelectedItem();
 	
 				Contestant c = null;
 				try {
@@ -447,6 +447,9 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				updateContPicture(files[0].getAbsolutePath());
 			}
 		});
+		
+		cbTribe.addItemListener(cbListener);
+		cbCastDate.addItemListener(cbListener);
 
 		List<JTextField> tfArr = Arrays.asList(tfContID, tfFirstName,
 				tfLastName);
@@ -517,7 +520,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			// change text to "select winner" once its the final week
 			
 			btnAddNew.setEnabled(!sStart);
-			tfCastDate.setEnabled(sStart);
+			cbCastDate.setEnabled(sStart);
 			if (g.isSeasonEnded()) { // game end
 				btnSetStatus.setEnabled(false);
 				btnSave.setEnabled(false);
@@ -534,11 +537,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tfFirstName.setEnabled(!sStart);
 			tfContID.setEnabled(!sStart);
 			
-			tfCastDate.removeAllItems();
+			cbCastDate.removeAllItems();
 			
-			tfCastDate.addItem("Active");
+			cbCastDate.addItem("Active");
 			for (int i = g.getCurrentWeek(); i >= 1; i--)
-				tfCastDate.addItem("" + i);
+				cbCastDate.addItem("" + i);
 			
 			// defaults to the current date for easier standard "cast offs". 
 			//tfCastDate.setSelectedIndex(tfCastDate.getItemCount() - 1);
@@ -559,7 +562,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		if (update.contains(UpdateTag.FINAL_WEEK)) {
 			btnSetStatus.setEnabled(false);
 			btnPickWin.setEnabled(true);
-			tfCastDate.setEditable(false);
+			cbCastDate.setEditable(false);
 		}
 	}
 }
