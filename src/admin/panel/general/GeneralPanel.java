@@ -192,7 +192,8 @@ public class GeneralPanel extends JPanel implements Observer {
 		weekModel = new SpinnerNumberModel();
 		spnWeek = new JSpinner(weekModel);
 		spnWeek.setAlignmentX(JSpinner.LEFT_ALIGNMENT);
-
+		spnWeek.setEnabled(false);
+		
 		pnlSpin.add(lblWeek);
 		pnlSpin.add(Box.createHorizontalStrut(10));
 		pnlSpin.add(spnWeek);
@@ -387,6 +388,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		if (update.contains(UpdateTag.START_SEASON)) {
 			btnStartSn.setEnabled(false);
 			btnAdvWk.setEnabled(true);
+			spnWeek.setEnabled(true);
 		}
 
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
@@ -416,8 +418,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		}
 		
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
-			if ((Integer)spnWeek.getValue() == g.getCurrentWeek() - 1)
-				spnWeek.setValue(g.getCurrentWeek());
+			spnWeek.setValue(g.getCurrentWeek()-1);
 		}
 		
 		if (update.contains(UpdateTag.END_GAME)) {
