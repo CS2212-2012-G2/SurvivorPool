@@ -51,6 +51,10 @@ public class BonusPanel extends JPanel implements Observer {
 	JPanel pnlListWeeks = new JPanel();
 	JPanel pnlMultA = new JPanel();
 	
+	JPanel pnlActionButtons = new JPanel();
+	
+	JButton btnNewQuestion = new JButton("New Question");
+	
 	JButton btnNext = new JButton("Next");
 	
 	JLabel lblViewWeek = new JLabel("View Week:");
@@ -114,6 +118,7 @@ public class BonusPanel extends JPanel implements Observer {
 		currentQuestion = "";
 		initPnlAddQuestion();
 		initPnlQuestionListing();
+		initPnlAddButton();
 		
 		//check if bonus questions already exist
 		if (Bonus.getAllQuestions().isEmpty()){
@@ -123,6 +128,8 @@ public class BonusPanel extends JPanel implements Observer {
 			initExistingBonus();
 		}
 
+		setQuestionAddingPanelEditable(false);
+		
 		initListeners();
 		GameData.getCurrentGame().addObserver(this);
 	}
@@ -175,6 +182,7 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlNewQ.setLayout(new GridLayout(1, 4, 50, 20));
 		pnlTypeQ.setLayout(new BorderLayout());
 		
+		txtQuestion.setText("");
 		txtQuestion.setBorder(BorderFactory.createTitledBorder("Question"));
 		txtQuestion.setPreferredSize(new Dimension(300, 100));
 		
@@ -199,7 +207,6 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlTypeQ.removeAll();
 		
 		this.validate();
-		Utils.style(this);
 		
 		pnlNewQ.setLayout(new GridLayout(1, 2, 50, 20));
 		
@@ -215,6 +222,7 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlNewQ.add(pnlTypeQ);
 
 		this.add(pnlNewQ, BorderLayout.NORTH);
+		Utils.style(this);
 	}
 	
 	/**
@@ -226,7 +234,6 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlMultA.removeAll();
 
 		this.validate();
-		Utils.style(this);
 		
 		pnlNewQ.setLayout(new GridLayout(1, 2, 50, 20));
 		
@@ -246,6 +253,7 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlNewQ.add(pnlTypeQ);
 
 		this.add(pnlNewQ, BorderLayout.NORTH);
+		Utils.style(this);
 	}
 	
 	/**
@@ -275,7 +283,15 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlListQ.add(pnlViewWeek, BorderLayout.NORTH);
 		pnlListQ.add(pnlListWeeks, BorderLayout.CENTER);
 		
-		this.add(pnlListQ, BorderLayout.SOUTH);
+		this.add(pnlListQ, BorderLayout.CENTER);
+	}
+	
+	private void initPnlAddButton(){
+		pnlActionButtons.setLayout(new BorderLayout());
+		
+		pnlActionButtons.add(btnNewQuestion, BorderLayout.EAST);
+		
+		this.add(pnlActionButtons, BorderLayout.SOUTH);
 	}
 	
 	/**
@@ -513,6 +529,14 @@ public class BonusPanel extends JPanel implements Observer {
 	 */
 	private void initListeners(){
 		
+		btnNewQuestion.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				setQuestionAddingPanelEditable(true);
+			}
+		});
+		
 		btnNext.addActionListener(new ActionListener() {
 
 			@Override
@@ -595,6 +619,7 @@ public class BonusPanel extends JPanel implements Observer {
 					if (getValidQuestionOrAnswer(txtAnswer)){
 						
 						addNewShortAnswer();
+						setQuestionAddingPanelEditable(false);
 						
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
@@ -610,6 +635,7 @@ public class BonusPanel extends JPanel implements Observer {
 						
 						if (a != null){
 							addNewMultipleChoice(a, answers);
+							setQuestionAddingPanelEditable(false);
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
 									"You must select one correct answer."
@@ -617,7 +643,7 @@ public class BonusPanel extends JPanel implements Observer {
 						}
 					} else {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
-								"Your must write atleast one answer. Answers must be 1-200 characters."
+								"Your must write four answers. Answers must be 1-200 characters."
 										+ " (invalid answers)", pnlMultA);
 					}
 				}				
