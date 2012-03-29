@@ -135,6 +135,7 @@ public class BonusPanel extends JPanel implements Observer {
 		
 		// TODO: replace
 		initPnlQuestionListing();
+		initPnlAddButton();
 		
 		
 		add(pnlQuestionEdit);
@@ -148,6 +149,8 @@ public class BonusPanel extends JPanel implements Observer {
 			initExistingBonus();
 		}
 
+		setQuestionAddingPanelEditable(false);
+		
 		initListeners();
 		GameData.getCurrentGame().addObserver(this);
 	}
@@ -359,7 +362,7 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlListWeeks.setPreferredSize(new Dimension(640, 200));
 
 		this.validate();
-		Utils.style(this);
+		//Utils.style(this);
 		
 		pnlListQ.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		

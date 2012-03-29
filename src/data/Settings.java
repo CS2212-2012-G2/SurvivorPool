@@ -2,74 +2,47 @@ package data;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.Observable;
-
-import admin.Utils;
 
 import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 
-public class Settings extends Observable {
+public class Settings extends HashMap<String, Object> {
+
+	private static final long serialVersionUID = 1L;
 
 	private static Settings currentSettings = null;
 	
-	private HashMap<Object, String> settingsMap;
+	public static final String THEME = "theme",
+			HISTORY = "history",
+			SCREEN_LOC_X = "screen_locX",
+			SCREEN_LOC_Y = "screen_locY",
+			SCREEN_SIZE_X = "screen_sizeX",
+			SCREEN_SIZE_Y = "screen_sizeY";
 	
-	private static final String THEME = "theme";
-	
-	public static String pathSettings = "res/data/Settings.dat";
-	
-	public enum Field {
-		THEME
+	public Settings() {
+		this(false);
 	}
 	
-	public Settings(String theme) {
-		settingsMap = new HashMap<Object, String>();
-		settingsMap.put(Field.THEME, theme);
+	public Settings(boolean loadSettings) {
+		super();
 		
-		Utils.changeTheme(theme);
-		
-		writeData();
+		if (loadSettings) {
+			initSettingsData();
+		}
 		
 		currentSettings = this;
-	}
-	
-	/**
-	 * returns the settings value stored at a specific key
-	 * @param key
-	 * @return String: setting stored at this key
-	 */
-	public String getSetting(Field key){
-		return settingsMap.get(key);
-	}
-	
-	/**
-	 * set the settings at a particular key
-	 * @param key
-	 * @param newValue: new setting at this key
-	 */
-	public void setSetting(Field key, String newValue){
-		settingsMap.put(key, newValue);
-		writeData();
-		
-//		setChanged();
-//		notifyObservers();
 	}
 	
 	public static Settings initSettingsData(){
 		JSONObject json;
 		try {
-			json = JSONUtils.readFile(pathSettings);
+			json = JSONUtils.readFile(JSONUtils.pathSettings);
+			
+			currentSettings = new Settings(false);
+			
+			currentSettings.fromJSONObject(json);
 		} catch (FileNotFoundException e) {
-			return currentSettings;
-		}
-		
-		currentSettings = new Settings((String)json.get(THEME));
-		
-		try {
-			Settings.getCurrentSettings().fromJSONObject(json);
-		} catch (ParseException e) {
-			e.printStackTrace();
+			return new Settings(false);
 		}
 		
 		return currentSettings;
@@ -81,12 +54,8 @@ public class Settings extends Observable {
 	 * @return a JSONObject with all the relevant data
 	 * @throws JSONException
 	 */
-	public JSONObject toJSONObject() throws ParseException {
-		JSONObject obj = new JSONObject();
-
-		obj.put(THEME, getSetting(Field.THEME));
-		
-		return obj;
+	public JSONObject toJSONObject() {
+		return new JSONObject(this);
 	}
 	
 	/**
@@ -95,23 +64,19 @@ public class Settings extends Observable {
 	 * @param obj: JSON object containing settings
 	 * @throws ParseException
 	 */
-	public void fromJSONObject(JSONObject obj) throws ParseException {
-		setSetting(Field.THEME, (String)obj.get(THEME));
+	public void fromJSONObject(JSONObject obj) {
+		clear();
 		
-		setChanged();
-		notifyObservers();
+		for (String key: obj.keySet()) {
+			put(key, obj.get(key));
+		}
 	}
 	
 	/**
-	 * Write settings to data file.
+	 * Write all DATA into file
 	 */
-	public void writeData(){
-		
-		try{
-			JSONUtils.writeJSON(pathSettings, this.toJSONObject());
-		} catch (ParseException e){
-			e.printStackTrace();
-		}
+	public void writeData() {
+		JSONUtils.writeJSON(JSONUtils.pathSettings, toJSONObject());
 	}
 	
 	/**

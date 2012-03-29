@@ -365,6 +365,22 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		return (usingContestants ? "Contestant" : "Player");
 	}
 	
+	private void clickSaveButton() {
+		if (!getFieldsChanged()) 
+			return;
+		
+		try { 
+			savePerson(); 
+			
+			P p = getPerson(); // this wont cause exception
+			
+			tableModel.setRowSelect(p);
+		} catch (InvalidFieldException ex) {
+			setExceptionError(ex);
+			return;
+		}	
+	}
+	
 	protected void buildActions() {
 		btnDelete.addActionListener(new ActionListener(){
 
@@ -402,7 +418,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 						row %= table.getRowCount();
 						tableModel.setRowSelect(row, false);
 					} else {
-						btnAddNew.doClick();
+						clickSaveButton();
 					}
 				}
 			}
@@ -412,19 +428,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {		
-				if (!getFieldsChanged()) 
-					return;
-				
-				try { 
-					savePerson(); 
-					
-					P p = getPerson(); // this wont cause exception
-					
-					tableModel.setRowSelect(p);
-				} catch (InvalidFieldException ex) {
-					setExceptionError(ex);
-					return;
-				}				
+				clickSaveButton();			
 			}
 
 		});
@@ -440,8 +444,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 				 P p = tableModel.getByRow(row);
 			     
 				 if (p != null){
-					 if (getFieldsChanged())
-						 btnSave.doClick();
+					 clickSaveButton();
 					 
 					 setPanelPerson(p, false); 
 				 }

@@ -437,6 +437,15 @@ public class GameData extends Observable {
 	public History getHistory(){
 		return selections;
 	}
+	
+	/**
+	 * TODO
+	 * @param newH
+	 */
+	public void setHistory(History newH) {
+		selections = newH;
+	}
+	
 	/**
 	 * Checks if a season has been started
 	 * 
@@ -818,12 +827,12 @@ public class GameData extends Observable {
 			if (o != null)
 				users.add(((User) o).toJSONObject());
 		}
-		/*
+		
 		JSONArray coffs = new JSONArray();
-		for(Object o : castOffs){
-			if(o != null)
-				coffs.add(((Contestant)o).toJSONObject());
-		}*/
+		for(Contestant c : castOffs){
+			if(c != null)
+				coffs.add(c.toJSONObject());
+		}
 		
 		JSONArray ts = new JSONArray();
 		ts.add(tribeNames[0]);
@@ -831,7 +840,7 @@ public class GameData extends Observable {
 
 		obj.put(KEY_CONTESTANTS, cons);
 		obj.put(KEY_USERS, users);
-		//obj.put(KEY_CAST_OFFS, coffs);
+		obj.put(KEY_CAST_OFFS, coffs);
 		obj.put(KEY_TRIBES, ts);
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
@@ -840,6 +849,7 @@ public class GameData extends Observable {
 		if(seasonStarted){
 			obj.put(KEY_BET_AMOUNT, betAmount);
 			obj.put(KEY_POOL_TOTAL, totalAmount);
+			selections.toJSONObject();
 		}
 		
 		return obj;
@@ -885,16 +895,18 @@ public class GameData extends Observable {
 			}
 		}
 		
-	/*	// load the cast offs
+		// load the cast offs
 		JSONArray coffs = (JSONArray) obj.get(KEY_CAST_OFFS);
-		for(int i = 0; i < coffs.size(); i++){
-			Contestant c = new Contestant();
-			c.fromJSONObject((JSONObject)coffs.get(i));
-			   try{
-				   setCastOff(i,c);
-			   }catch(NullPointerException ie){   
-			   }
-		}*/
+		if(getCurrentWeek() != 1 && seasonStarted){
+			for(int i = 0; i < coffs.size(); i++){
+				Contestant c = new Contestant();
+				c.fromJSONObject((JSONObject)coffs.get(i));
+				   try{
+					   setCastOff(i,c);
+				   }catch(NullPointerException ie){   
+				   }
+			}
+		}
 
 		// users:
 		JSONArray users = (JSONArray) obj.get(KEY_USERS);
@@ -906,6 +918,8 @@ public class GameData extends Observable {
 				addUser(u);
 			} catch (InvalidFieldException ie) {
 			}
+			if(getCurrentWeek() >= 2)
+			selections.fromJSONObject(obj);
 		}
 
 		notifyAdd();
@@ -945,19 +959,14 @@ public class GameData extends Observable {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Bonus.initBonus();
-		return (GameData) currentGame;
+		
+		return currentGame;
 	}
 	/**
-	 960	
    * Small class used for removing parallel calls to do the same 
-	 961	
-   * notification. The update system accounts for multiple modifications
-	 962	
+   * notification. The update system accounts for multiple modifications	
    * in one update call, so this means those methods are only called once.
-	 963	
-   * @author Kevin Brightwell
-	 964	
+   * @author Kevin Brightwell	
    */
 	
   private class UpdateCall implements Runnable {	
@@ -994,7 +1003,7 @@ public class GameData extends Observable {
 	public void writeData() {
 
 		try {
-			JSONUtils.writeJSON(JSONUtils.pathGame, this.toJSONObject());
+			JSONUtils.writeJSON(JSONUtils.pathGame, toJSONObject());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

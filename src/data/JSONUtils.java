@@ -18,7 +18,8 @@ import json.simple.JSONValue;
 public class JSONUtils {
 	
 	public static final String pathGame = "res/data/GameData.dat",
-							   pathBonus = "res/data/Bonus.dat";
+							   pathBonus = "res/data/Bonus.dat",
+							   pathSettings = "res/data/Settings.dat";
 
 	public static JSONObject readFile(String path) throws FileNotFoundException {
 		File f = new File(path);

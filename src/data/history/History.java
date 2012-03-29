@@ -29,10 +29,20 @@ public class History {
 		weekList[weekNum] = new WeekHistory(weekNum);
 	}
 	
+	/**
+	 * TODO
+	 * @param w
+	 * @param weekH
+	 */
 	public void setWeek(int w, WeekHistory weekH) {
 		weekList[w] = weekH;
 	}
 	
+	/**
+	 * TODO
+	 * @param weekNum
+	 * @return
+	 */
 	public WeekHistory getWeek(int weekNum){
 		return weekList[weekNum];
 	}
@@ -66,7 +76,8 @@ public class History {
 		
 		JSONArray weeks = new JSONArray();
 		for (WeekHistory w : weekList) {
-			weeks.add(w.toJSONObject());
+			if (w != null)
+				weeks.add(w.toJSONObject());
 		}
 		
 		obj.put(WEEK_LIST, weeks);

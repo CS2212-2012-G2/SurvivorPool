@@ -3,11 +3,15 @@ package admin;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -21,6 +25,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import json.simple.JSONObject;
+import json.simple.parser.ParseException;
+
 import admin.Utils;
 import admin.StatusPanel;
 import admin.panel.bonus.BonusPanel;
@@ -31,8 +38,8 @@ import admin.panel.season.SeasonCreatePanel;
 
 import data.GameData;
 import data.Settings;
-import data.Settings.Field;
 import data.bonus.Bonus;
+import data.history.History;
 
 public class MainFrame extends JFrame {
 
@@ -55,9 +62,9 @@ public class MainFrame extends JFrame {
 	private JMenuItem mnuItemSave;
 	private JMenuItem mnuItemExit;
 	
-	private JRadioButtonMenuItem mnuItemTheme1;
-	private JRadioButtonMenuItem mnuItemTheme2;
-	private JRadioButtonMenuItem mnuItemTheme3;
+	private List<JRadioButtonMenuItem> radioMenuItems;
+	
+	private HashMap<String, JRadioButtonMenuItem> themeToItem;
 
 	public static final String GENERAL_PANEL = "General",
 			CONTESTANT_PANEL = "Contestants", PLAYER_PANEL = "Players",
@@ -68,8 +75,41 @@ public class MainFrame extends JFrame {
 	private ContestantPanel conPanel;
 	private PlayerPanel playerPanel;
 	private BonusPanel bonusPanel;
+	
+	private Settings settings;
 
-	ActionListener al = new ActionListener() {
+	public MainFrame() {
+
+		GameData g = GameData.initGameData();
+
+		settings = Settings.initSettingsData();
+		
+		Bonus.initBonus();
+		
+		initMenuBar();
+
+		if (g != null)
+			initGUI();
+		else
+			initSeasonCreateGUI();
+		
+		setVisible(true);
+		setTitle("Survivor Pool Admin");
+		setMinimumSize(new Dimension(640, 480));
+		// can resize frame
+		setResizable(true);
+			
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we) {
+				windowClose();
+			}
+		});
+		
+		loadSettings();
+	}
+	
+	private ActionListener al = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			if (ae.getSource() == mnuItemExit) {
@@ -78,17 +118,13 @@ public class MainFrame extends JFrame {
 				resetSeason();
 			} else if (ae.getSource() == mnuItemSave){
 				GameData.getCurrentGame().writeData();
-			} else if (ae.getSource() == mnuItemTheme1) {
-				changeTheme(ae.getActionCommand());
-			} else if (ae.getSource() == mnuItemTheme3) {
-				changeTheme(ae.getActionCommand());
-			} else if (ae.getSource() == mnuItemTheme2) {
+			} else if (ae.getSource() instanceof JRadioButtonMenuItem) {
 				changeTheme(ae.getActionCommand());
 			}
 		}
 	};
 
-	ChangeListener cl = new ChangeListener() {
+	private ChangeListener cl = new ChangeListener() {
 		@Override
 		public void stateChanged(ChangeEvent ce) {
 			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
@@ -96,44 +132,87 @@ public class MainFrame extends JFrame {
 			statusBar.setTabLabel(tab);
 		}
 	};
-
-	public MainFrame() {
-
-		GameData g = GameData.initGameData();
-
-		Settings s = Settings.initSettingsData();
+	
+	/**
+	 * Loads the settings value into the GUI from the file
+	 */
+	private void loadSettings() {
+		GameData g = GameData.getCurrentGame();
 		
-		initMenuBar();
-
-		if (g != null)
-			initGUI();
-		else
-			initSeasonCreateGUI();
-
-		if (s == null) s = new Settings("Snow");
+		if (settings.containsKey(Settings.THEME)) {
+			changeTheme((String)settings.get(Settings.THEME));
+		} else {
+			changeTheme(Utils.GUITHEME.Snow.name());
+		}
 		
-		applyTheme();
-		
-		this.setSize(640, 480);
-		this.setVisible(true);
-		this.setTitle("Survivor Pool Admin");
-		// can resize frame
-		this.setResizable(false);
-		
-		// center the screen
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	    int sHeight = screenSize.height;
-	    int sWidth = screenSize.width;
-	    setLocation(sWidth / 2 - (getWidth() / 2), sHeight / 2 - (getHeight() / 2));
-		
-		this.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent we) {
-				windowClose();
+		if (settings.containsKey(Settings.HISTORY)) {
+			if (g != null) {
+				History h = new History(0);
+				try {
+					h.fromJSONObject((JSONObject)settings.get(Settings.HISTORY));
+					g.setHistory(h);
+				} catch (ParseException e) {
+					// just don't set the history if its bad.
+					settings.remove(Settings.HISTORY);
+				}
+				
 			}
-		});
+		}
+		
+		if (settings.containsKey(Settings.SCREEN_LOC_X)) {
+			int x = ((Number)settings.get(Settings.SCREEN_LOC_X)).intValue();
+			int y = ((Number)settings.get(Settings.SCREEN_LOC_Y)).intValue();
+			
+			setLocation(x, y);
+		} else {
+			// default to center:
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		    int sHeight = screenSize.height;
+		    int sWidth = screenSize.width;
+		    
+		    Point loc = new Point(sWidth / 2 - (getWidth() / 2), sHeight / 2 - (getHeight() / 2));
+		    
+		    setLocation(loc);
+		}
+		
+		if (settings.containsKey(Settings.SCREEN_SIZE_X)) {
+			int x = ((Number)settings.get(Settings.SCREEN_SIZE_X)).intValue();
+			int y = ((Number)settings.get(Settings.SCREEN_SIZE_Y)).intValue();
+			
+			setSize(x, y);
+		} else {
+			setSize(640, 480);
+		}
+	}
+	
+	/**
+	 * Pulls the settings' values from the GUI into the file.
+	 */
+	private void saveSettings() {
+		GameData g = GameData.getCurrentGame();
+		
+		settings.put(Settings.THEME, Utils.getTheme().name());
+		
+		Dimension d = getSize();
+		settings.put(Settings.SCREEN_SIZE_X, d.width);
+		settings.put(Settings.SCREEN_SIZE_Y, d.height);
+		
+		Point l = getLocation();
+		settings.put(Settings.SCREEN_LOC_X, l.x);
+		settings.put(Settings.SCREEN_LOC_Y, l.y);
+		
+		if (g != null)
+			try {
+				settings.put(Settings.HISTORY, g.getHistory().toJSONObject());
+			} catch (ParseException e) {
+			}
+		
+		settings.writeData();
 	}
 
+	/**
+	 * Creates the seasonCreateGUI
+	 */
 	private void initSeasonCreateGUI() {
 		mnuItemSave.setEnabled(false);
 		this.setLayout(new BorderLayout());
@@ -143,6 +222,9 @@ public class MainFrame extends JFrame {
 		statusBar.setTabLabel("SEASON CREATE");
 	}
 
+	/**
+	 * Loads the initial GUI
+	 */
 	private void initGUI() {
 		mnuItemSave.setEnabled(true);
 		Dimension d = new Dimension(132, 20);
@@ -179,24 +261,34 @@ public class MainFrame extends JFrame {
 		this.add(statusBar, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Loads the menu bar
+	 */
 	private void initMenuBar() {
 		mnuItemReset = new JMenuItem("Reset Season");
 		mnuItemSave = new JMenuItem("Save");
 		mnuItemExit = new JMenuItem("Exit");
+		
+		// init the theme menu:
+		radioMenuItems = new LinkedList<JRadioButtonMenuItem>();
 		String[] themeName = Utils.getThemes();
-		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
-		mnuItemTheme3 = new JRadioButtonMenuItem(themeName[1]);
-		mnuItemTheme2 = new JRadioButtonMenuItem(themeName[2]);
+		themeToItem = 
+				new HashMap<String, JRadioButtonMenuItem>(themeName.length);
+		
+		ButtonGroup g = new ButtonGroup();
+		for (int i = 0; i < themeName.length; i++) {
+			JRadioButtonMenuItem item = new JRadioButtonMenuItem(themeName[i]);
+			radioMenuItems.add(i, item);
+			themeToItem.put(themeName[i], item);
+			
+			g.add(item);
+			item.addActionListener(al);
+			
+			mnuTheme.add(item);
+		}
+		// end init theme menu
 
 		statusBar = new StatusPanel();
-
-		ButtonGroup g = new ButtonGroup();
-		mnuTheme.add(mnuItemTheme1);
-		g.add(mnuItemTheme1);
-		mnuTheme.add(mnuItemTheme3);
-		g.add(mnuItemTheme3);
-		mnuTheme.add(mnuItemTheme2);
-		g.add(mnuItemTheme2);
 
 		mnuFile.add(mnuItemSave);
 		mnuFile.add(mnuItemReset);
@@ -208,9 +300,6 @@ public class MainFrame extends JFrame {
 		mnuItemReset.addActionListener(al);
 		mnuItemSave.addActionListener(al);
 		mnuItemExit.addActionListener(al);
-		mnuItemTheme1.addActionListener(al);
-		mnuItemTheme3.addActionListener(al);
-		mnuItemTheme2.addActionListener(al);
 		
 		this.setJMenuBar(menuBar);
 	}
@@ -231,7 +320,10 @@ public class MainFrame extends JFrame {
 	private void changeTheme(String name) {
 		Utils.changeTheme(name);
 		applyTheme();
-		Settings.getCurrentSettings().setSetting(Field.THEME, name);
+		
+		settings.put(Settings.THEME, name);
+		JRadioButtonMenuItem rb = themeToItem.get(name);
+		rb.setSelected(true);
 	}
 
 	/**
@@ -304,13 +396,15 @@ public class MainFrame extends JFrame {
 	/**
 	 * Saves all data associated with the application
 	 */
-	// FIXME: Theme data etc needs to be saved.
 	private void windowClose() {
 		if (GameData.getCurrentGame() != null)
 			GameData.getCurrentGame().writeData();
 		
 		if (!Bonus.getAllQuestions().isEmpty()) 
 			Bonus.writeData();
+		
+		if (settings != null)
+			saveSettings();
 		
 		System.exit(0);
 	}
