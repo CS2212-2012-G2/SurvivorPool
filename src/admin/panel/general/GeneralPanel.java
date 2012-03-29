@@ -99,6 +99,8 @@ public class GeneralPanel extends JPanel implements Observer {
 		GameData.getCurrentGame().addObserver(this);
 
 		initListeners();
+		
+		GameData.getCurrentGame().addObserver(this);
 	}
 
 	private JPanel buildTribePanel() {
@@ -164,6 +166,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		GameData g = GameData.getCurrentGame();
 		btnStartSn.setEnabled(!g.isSeasonStarted());
 		btnAdvWk.setEnabled(g.isSeasonStarted() && !g.isSeasonEnded());
+		
 
 		return pane;
 	}
@@ -230,11 +233,11 @@ public class GeneralPanel extends JPanel implements Observer {
 
 		// Tables:
 		activeTable = new JTable();
-		TableModel model = new HistoryConModel(activeTable, g.getActiveContestants(true), false);
+		TableModel model = new HistoryConModel(activeTable, false);
 		activeTable.setModel(model);
 
 		castTable = new JTable();
-		model = new HistoryConModel(castTable, g.getActiveContestants(false), true);
+		model = new HistoryConModel(castTable, true);
 		castTable.setModel(model);
 
 		TableCellRenderer renderer = new TableCellRenderer() {
@@ -280,39 +283,6 @@ public class GeneralPanel extends JPanel implements Observer {
 			pane.setLayout(new BorderLayout(5, 5));
 			pane.add(scroll, BorderLayout.CENTER);
 		}
-	}
-
-	private void setRemainingContestantsLabel() {
-		String s = "<HTML>";
-		for (int i = 0; i < GameData.getCurrentGame().getAllContestants()
-				.size(); i++) {
-			if (GameData.getCurrentGame().getAllContestants().get(i)
-					.getCastDate() >= (Integer) spnWeek.getValue()
-					|| GameData.getCurrentGame().getAllContestants().get(i)
-							.getCastDate() == -1)
-				s += GameData.getCurrentGame().getAllContestants().get(i)
-						+ "<BR>";
-		}
-		s += "</HTML>";
-		lblRemainingContestants.setText(s);
-	}
-
-	private void setCastOffContestantsLabel() {
-		String s = "<HTML>";
-		for (int i = 0; i < GameData.getCurrentGame().getAllContestants()
-				.size(); i++) {
-			if (GameData.getCurrentGame().getAllContestants().get(i)
-					.getCastDate() < (Integer) spnWeek.getValue()
-					&& GameData.getCurrentGame().getAllContestants().get(i)
-							.getCastDate() != -1)
-				s += GameData.getCurrentGame().getAllContestants().get(i)
-						.toString()
-						+ ": Cast-Off Week "
-						+ GameData.getCurrentGame().getAllContestants().get(i)
-								.getCastDate() + "<BR>";
-		}
-		s += "</HTML>";
-		lblCastOffs.setText(s);
 	}
 
 	private void initListeners() {
@@ -422,8 +392,9 @@ public class GeneralPanel extends JPanel implements Observer {
 
 			@Override
 			public void stateChanged(ChangeEvent ce) {
-				setRemainingContestantsLabel();
-				setCastOffContestantsLabel();
+				int w = (Integer)spnWeek.getValue();
+				((HistoryConModel)activeTable.getModel()).loadContestantByWeek(w);
+				((HistoryConModel)castTable.getModel()).loadContestantByWeek(w);
 			}
 
 		});
@@ -456,8 +427,6 @@ public class GeneralPanel extends JPanel implements Observer {
 				|| update.contains(UpdateTag.FINAL_WEEK)
 				|| update.contains(UpdateTag.START_SEASON)
 				|| update.contains(UpdateTag.END_GAME)) {
-			setRemainingContestantsLabel();
-			setCastOffContestantsLabel();
 
 			weekModel.setMaximum(g.getCurrentWeek());
 			weekModel.setValue(g.getCurrentWeek());
