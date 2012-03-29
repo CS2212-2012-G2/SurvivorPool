@@ -87,9 +87,9 @@ public class GeneralPanel extends JPanel implements Observer {
 
 		JPanel subFrame = new JPanel();
 		subFrame.setLayout(new GridLayout(1, 2, 10, 5));
-		subFrame.add(pnlTribes);
-		// subFrame.add(Box.createHorizontalGlue());
+		
 		subFrame.add(pnlWeekCtrl);
+		subFrame.add(pnlTribes);
 
 		pnlCenter.add(subFrame);
 		pnlCenter.add(Box.createVerticalStrut(10));
