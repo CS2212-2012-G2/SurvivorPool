@@ -57,5 +57,6 @@ public class History {
 	}
 	
 	public void fromJSONObject(JSONObject obj) throws ParseException {}
+
 	
 }

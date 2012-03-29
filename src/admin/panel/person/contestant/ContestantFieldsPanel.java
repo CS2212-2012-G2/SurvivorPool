@@ -33,7 +33,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JTextField tfCastDate;
+	private JComboBox tfCastDate;
 	private JButton btnCastOff;
 	
 	private JLabel labelTribe;
@@ -57,7 +57,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 
 	public ContestantFieldsPanel(JButton _imgButton, JLabel _labelName, JTextField _tfFirstName,
 			JTextField _tfLastName, JLabel _labelID, JTextField _tfContID,
-			JLabel _labelCastOff, JTextField _tfCastDate, JButton _btnCastOff,
+			JLabel _labelCastOff, JComboBox tfCastDate2, JButton _btnCastOff,
 			JLabel _labelTribe, JComboBox<String> _cbTribe) {
 		super();
 
@@ -68,7 +68,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		// passed in
 		labelName = _labelName;
 		labelCastOff = _labelCastOff;
-		tfCastDate = _tfCastDate;
+		tfCastDate = tfCastDate2;
 		btnCastOff = _btnCastOff;
 		
 		labelTribe = _labelTribe;
@@ -232,8 +232,6 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 			tfLastName.setText("Last Name");
 
 			cbTribe.setSelectedIndex(0);
-
-			tfCastDate.setText("Active");
 			
 			updateContPicture(DEFAULT_PICTURE);
 			return;
@@ -245,12 +243,6 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		cbTribe.setSelectedItem(c.getTribe());
 
 		tfContID.setText(c.getID());
-		
-		if (!c.isCastOff()) {
-			tfCastDate.setText("Active");
-		} else {
-			tfCastDate.setText("" + c.getCastDate());
-		}
 		
 		updateContPicture(c.getPicture());
 	}

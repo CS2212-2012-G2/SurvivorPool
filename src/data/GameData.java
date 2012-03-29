@@ -16,6 +16,7 @@ import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 import admin.Utils;
 import data.bonus.Bonus;
+import data.history.History;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -30,14 +31,13 @@ public class GameData extends Observable {
 
 	private int weeksRem, weeksPassed; // keep track of weeks remaining/weeks
 										// passed
-	private int numInitialContestants;
-	private int betAmount, totalAmount;
+	private int numInitialContestants, betAmount, totalAmount;
 
-	private boolean seasonStarted = false;
-	private boolean elimExists = false;
+	private boolean seasonStarted = false, elimExists = false;
 
 	private String[] tribeNames = new String[2]; // string array storing both
 													// tribe names
+	private Contestant[] castOffs;
 
 	private List<Contestant> allContestants;
 
@@ -47,22 +47,30 @@ public class GameData extends Observable {
 	private static GameData currentGame = null;
 	// store contestant who was cast off
 	private Contestant elimCont;
-
 	// used for asynchronous calls to notifyObservers()
-	private UpdateCall updateExec;
-
+    private UpdateCall updateExec;
+	
+	private History selections;
+	
 	public enum UpdateTag {
-		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, ADD_CONTESTANT, REMOVE_CONTESTANT, CONTESTANT_CAST_OFF, ADD_USER, REMOVE_USER, FINAL_WEEK, END_GAME, ALLOCATE_POINTS
+		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
+		ADD_CONTESTANT, REMOVE_CONTESTANT, CONTESTANT_CAST_OFF,
+		ADD_USER, REMOVE_USER, 
+		FINAL_WEEK, END_GAME, ALLOCATE_POINTS 
 	}
-
+	
 	/**
 	 * JSON Keys
 	 */
 	private static final String KEY_CONTESTANTS = "cons",
-			KEY_NUM_CONTEST = "cons_num", KEY_USERS = "users",
-			KEY_WEEKS_REMAIN = "weeks_rem", KEY_WEEKS_PASSED = "weeks_pass",
-			KEY_TRIBES = "tribes_arr", KEY_SEASON_STARTED = "season_started",
-			KEY_BET_AMOUNT = "bet_amount", KEY_POOL_TOTAL = "pool_total";
+			KEY_NUM_CONTEST = "cons_num",
+			KEY_USERS = "users",
+			KEY_WEEKS_REMAIN = "weeks_rem",
+			KEY_WEEKS_PASSED = "weeks_pass",
+			KEY_TRIBES = "tribes_arr",
+			KEY_SEASON_STARTED = "season_started",
+			KEY_BET_AMOUNT = "bet_amount",
+			KEY_POOL_TOTAL = "pool_total";
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -82,12 +90,14 @@ public class GameData extends Observable {
 
 		weeksRem = numInitialContestants - 2;
 		weeksPassed = 0;
+		selections = new History(weeksRem);
 		setBetAmount(0);
 		this.numInitialContestants = numInitialContestants;
-
+		
 		// containers for contestants and users
 		allContestants = new ArrayList<Contestant>(numInitialContestants);
 		allUsers = new ArrayList<User>(5);
+		castOffs = new Contestant[numInitialContestants -2];
 
 		currentGame = this;
 	}
@@ -99,7 +109,6 @@ public class GameData extends Observable {
 	/**
 	 * getActiveContestants returns an array (list) of the contestants that are
 	 * still competing in the game.
-	 * @param active TODO
 	 * 
 	 * @return The contestants active
 	 */
@@ -109,12 +118,12 @@ public class GameData extends Observable {
 				allContestants.size());
 
 		for (Contestant c : allContestants) {
-			if (c != null) {
-				if (active && !c.isCastOff()) {
-					list.add(c);
-				} else if (!active && c.isCastOff()) {
-					list.add(c);
-				}
+			if (c != null){
+				  if(active && !c.isCastOff()){
+				  list.add(c);
+			}else if(!active && c.isCastOff()){
+				  list.add(c);
+			}
 			}
 		}
 
@@ -229,7 +238,7 @@ public class GameData extends Observable {
 		// is the contestant there?
 		allContestants.remove(target);
 		Collections.sort(allContestants);
-
+		
 		notifyAdd(UpdateTag.REMOVE_CONTESTANT);
 	}
 
@@ -242,16 +251,6 @@ public class GameData extends Observable {
 	 */
 	public List<User> getAllUsers() {
 		return allUsers;
-	}
-
-	/**
-	 * getNumUsers returns an integer of the number of players that are in the
-	 * game.
-	 * 
-	 * @return The current amount of playerss
-	 */
-	public int getNumUsers() {
-		return allUsers.size();
 	}
 
 	/**
@@ -271,7 +270,7 @@ public class GameData extends Observable {
 
 		allUsers.add(u);
 
-		notifyAdd(UpdateTag.ADD_USER);
+		notifyAdd(UpdateTag.REMOVE_USER);
 	}
 
 	/**
@@ -319,106 +318,87 @@ public class GameData extends Observable {
 			if (u.getWeeklyPick().equals(c)) {
 				if (this.isFinalWeek()) // final week
 					u.addPoints(40);
-				else
-					// normal week
+				else  // normal week
 					u.addPoints(20);
-
+				
 			}
-			// if the end of the game and the person gets the right ultimate
-			// pick
-			if (u.getUltimatePick().equals(c) && this.isFinalWeek()) {
+			// if the end of the game and the person gets the right ultimate pick
+			if (u.getUltimatePick().equals(c) && this.isFinalWeek()){
 				u.addPoints(u.getUltimatePoints());
 			}
-
-			u.addPoints(u.getNumBonusAnswer() * 10); // add week's correct bonus
-														// questions
-			u.setNumBonusAnswer(0); // clears the number of questions
+			
+		 u.addPoints(u.getNumBonusAnswer() * 10); // add week's correct bonus questions		
+	     u.setNumBonusAnswer(0); // clears the number of questions
 		}
 
 		notifyAdd(UpdateTag.ALLOCATE_POINTS);
 	}
-
-	public List<Integer> determinePrizePool() {
-		List<Integer> tempList = new ArrayList<Integer>();
-
-		// attempt to be as precise as possible.
-
-		if (getNumUsers() <= 0) { // no users
-			return null;
-		} else if (getNumUsers() == 1) { // one user, he gets the whole pool
-			tempList.add(getTotalAmount());
-			return tempList;
-		} else if (getNumUsers() == 2) { // two users, first user gets 65% of
-											// the
-			// winnings, the rest goes to the second
-			tempList.add((int) (getTotalAmount() * 0.65)); // first 65
-			tempList.add(getTotalAmount() - tempList.get(0)); // the rest
-		} else { // three or more users
-			// split is 60/30/10
-			tempList.add((int) (getTotalAmount() * 0.60)); // first 60
-			// total amount - the first amount, which leaves 40% of the original
-			// amount
-			// 30% is now equivalent to 75% of the new amount
-			tempList.add((int) ((getTotalAmount() - tempList.get(0)) * 0.75));
-			// the total minus the first and second place winnings.
-			tempList.add(getTotalAmount() - tempList.get(0) - tempList.get(1));
-		}
-
-		return tempList;
-	}
-
-	/**
-	 * Iterates through all players on the list, and determines the top three
-	 * winners.
-	 * 
-	 * @param u
-	 *            Player within the game.
-	 */
-
-	public List<User> determineWinners() {
-		Iterator<User> itr = allUsers.iterator();
-		User u;
-		User first = new User();
-		User second = new User();
-		User third = new User();
-
-		first.setPoints(-1);
-		second.setPoints(-1);
-		third.setPoints(-1);
+	
+	public List<Integer> determinePrizePool(){
+	   List<Integer> tempList = new ArrayList<Integer>(); 
+	   int i = getAllUsers().size();
+	    if (i <= 0){ // no users	
+	      return null;	
+	    } else if (i == 1) { // one user, he gets the whole pool	
+	      tempList.add(getTotalAmount());	
+	      return tempList;	
+	    } else if (i == 2) { // two users, first user gets 65% of the 
+	      //winnings, the rest goes to the second	
+	      tempList.add((int) (getTotalAmount()*0.65)); // first 65	
+	      tempList.add(getTotalAmount() - tempList.get(0)); // the rest	
+	    } else { // three or more users	
+	      // split is 60/30/10	
+	      tempList.add((int) (getTotalAmount()*0.60)); // first 60
+	
+	      // total amount - the first amount, which leaves 40% of the original amount
+	      // 30% is now equivalent to 75% of the new amount	
+	      tempList.add((int) ((getTotalAmount()- tempList.get(0)) * 0.75));
+	      // the total minus the first and second place winnings
+	      tempList.add(getTotalAmount() - tempList.get(0) - tempList.get(1));	
+	    }	
+	    return tempList;	
+	  }
+	
+/**
+* Iterates through all players on the list, and determines the top three winners. 	
+*  @param  	 Player within the game.
+*/
+		 	
+  public List<User> determineWinners() {
 		
-		while (itr.hasNext()) {
-			u = itr.next();
-			if (u.getPoints() > first.getPoints()) {
-				third = second;
-				second = first;
-				first = u;
-			} else if (u.getPoints() > second.getPoints()) {
-				third = second;
-				second = u;
-			} else if (u.getPoints() > third.getPoints()) {
-				third = u;
-			}
-
-		}
-
-		List<User> tempList = new ArrayList<User>();
-
-		// the following removes any temporary user objects from the
-		// outputted list, in the case of less then three users
-		// participating.
-
-		if (first.getPoints() == -1)
-			tempList.add(first);
-
-		if (second.getPoints() == -1)
-			tempList.add(second);
-
-		if (third.getPoints() == -1)
-			tempList.add(third);
-
-		return tempList;
-	}
-
+    Iterator<User> itr = allUsers.iterator();
+    User u;	
+    User first = new User ();	
+    User second = new User ();
+	User third = new User ();
+    first.setPoints(-1);
+    second.setPoints(-1);
+    third.setPoints(-1);	
+    while (itr.hasNext()) {
+		
+      u = itr.next();
+		
+      if (u.getPoints() > first.getPoints()) {
+       third = second;
+       second = first;
+       first = u;
+      } else if (u.getPoints() > second.getPoints()){
+    	third = second;  
+        second = u;
+      } else if (u.getPoints() > third.getPoints()){
+       third = u;	
+     }	
+ }
+   List<User> tempList = new ArrayList<User>(); 
+   if (first.getPoints() == -1)
+   tempList.add(first);	
+   if (second.getPoints() == -1)
+   tempList.add(second);	
+   if (third.getPoints() == -1)
+   tempList.add(third);	
+   return tempList;	
+ }
+	
 	/**
 	 * getTribeName returns a String array with two entries: the name of the
 	 * first tribe, and the name of the second tribe.
@@ -449,6 +429,14 @@ public class GameData extends Observable {
 	}
 
 	/**
+	 * Returns a history item for the current game.
+	 * 
+	 * @return selections   history object
+	 */
+	public History getHistory(){
+		return selections;
+	}
+	/**
 	 * Checks if a season has been started
 	 * 
 	 * @see startGame to set to true.
@@ -476,7 +464,7 @@ public class GameData extends Observable {
 	public boolean isFinalWeek() {
 		return weeksRem == 1;
 	}
-
+	
 	// ----------------- MUTATOR METHODS ------------------//
 
 	/**
@@ -503,6 +491,8 @@ public class GameData extends Observable {
 	public void advanceWeek() {
 		if (elimExists == false)
 			return;
+		
+		
 
 		/* Fill weekly NULLs */
 		for (User u : allUsers) {
@@ -512,6 +502,8 @@ public class GameData extends Observable {
 				} catch (InvalidFieldException e) {
 				} // wont happen
 			}
+			
+			selections.setWeek(getCurrentWeek());
 
 			/* Fill ultimate NULLs */
 			if (u.getUltimatePick().isNull()) {
@@ -523,33 +515,33 @@ public class GameData extends Observable {
 		}
 
 		allocatePoints(getElimCont());
-
+		
 		Contestant nullC = new Contestant();
 		nullC.setNull();
-
+		
 		/* clear all weekly picks */
 		for (User u : allUsers) {
-
+			
 			try {
-				u.setWeeklyPick(nullC);
+				u.setWeeklyPick(nullC);				
 			} catch (InvalidFieldException e) {
 			} // wont happen
 
 			/* clear defunct ult picks */
 			if (u.getUltimatePick().getID().equals(getElimCont().getID())) {
 				try {
-					u.setUltimatePick(nullC);
+					u.setUltimatePick(nullC);			
 				} catch (InvalidFieldException e) {
 				} // wont happen
 			}
-
+			
+			
 		}
-
-		getElimCont().castOff();
 
 		weeksRem -= 1; // reduce num of weeks remaining
 		weeksPassed += 1; // increment number of weeks passed
-
+		elimExists = false;
+		elimCont = null;
 		if (isFinalWeek())
 			notifyAdd(UpdateTag.FINAL_WEEK);
 		else if (isSeasonEnded())
@@ -565,8 +557,9 @@ public class GameData extends Observable {
 
 	public void startSeason(int bet) {
 		this.setBetAmount(bet);
+		this.setTotalAmount(bet * allUsers.size());
 		seasonStarted = true;
-
+	
 		notifyAdd(UpdateTag.START_SEASON);
 	}
 
@@ -579,7 +572,7 @@ public class GameData extends Observable {
 	 * @param tribeTwo
 	 *            name of tribe two
 	 */
-	public String[] setTribeNames(String tribeOne, String tribeTwo) {
+	public String[] setTribeNames(String tribeOne, String tribeTwo){
 		// temp tribe vars.
 		String oldT1 = tribeNames[0];
 		String oldT2 = tribeNames[1];
@@ -604,75 +597,84 @@ public class GameData extends Observable {
 		}
 
 		notifyAdd(UpdateTag.SET_TRIBE_NAMES);
-
 		return tribeNames;
 	}
 
 	/**
-	 * TODO:
+	 * Returns whether or not a contestant has been selected to be cast off.
 	 * 
-	 * @return
+	 * @return elimExists
 	 */
 	public boolean doesElimExist() {
 		return elimExists;
 	}
 
 	/**
-	 * TODO:
+	 * Returns the contestant who was cast off on a specified week.
+	 * @param week
+	 * @return  castOffs[week]
+	 */
+	public Contestant getCastOff(int week){
+		return castOffs[week];
+	}
+	/**
+	 * Sets the elimExists variable
 	 * 
-	 * @param elimExists
+	 * @param elimExists  true or false
 	 */
 	protected void setElimExists(boolean elimExists) {
 		this.elimExists = elimExists;
 	}
 
 	/**
-	 * TODO:
+	 * Returns the contestant who is to be eliminated.
 	 * 
-	 * @return
+	 * @return elimCont
 	 */
 	protected Contestant getElimCont() {
 		return elimCont;
 	}
 
 	/**
-	 * TODO:
+	 * Sets the contestant who is to be eliminated.
 	 * 
-	 * @param elimCont
+	 * @param elimCont 
 	 */
 	protected void setElimCont(Contestant elimCont) {
 		this.elimCont = elimCont;
 	}
-
+	
 	/**
 	 * Casts a contestant from the game.
-	 * 
 	 * @param castOff
 	 */
-	public void castOff(Contestant castOff) {
+	public void castOff(int week, Contestant castOff) {
 		if (castOff.isCastOff()) // can't recast off..
 			return;
-
+		
 		setElimCont(castOff);
 		setElimExists(true);
-
-		castOff.setCastDate(getCurrentWeek());
+		castOffs[week] = castOff;
+		
+		castOff.setCastDate(week);
 		castOff.setToBeCast(true);
-
+		
 		notifyAdd(UpdateTag.CONTESTANT_CAST_OFF);
 	}
-
+	
 	/**
 	 * Undoes the current contestant that would be cast off.
-	 * 
 	 * @param castOff
 	 */
 	public void undoCastOff(Contestant castOff) {
 		castOff.setToBeCast(false);
-		castOff.setCastDate(-1);
-
+	
 		setElimCont(null);
 		setElimExists(false);
+		
+		castOff.setCastDate(-1);
+		
+		
 	}
 
 	// ----------------- HELPER METHODS ----------------- //
@@ -721,33 +723,38 @@ public class GameData extends Observable {
 	protected int getUserIndexID(String searchID) {
 		return Utils.BinIDSearchSafe(allUsers, searchID);
 	}
-
+	
 	/**
-	 * set the bet amount.
-	 * 
-	 * @param bet
-	 *            amount
+	 * Sets the initial bet amount.
+	 * @param betAmount
 	 */
+
 	public void setBetAmount(int betAmount) {
 		this.betAmount = betAmount;
 	}
 
 	/**
-	 * get the bet amount.
-	 * 
-	 * @return bet amount
+	 * Returns the initial bet amount.
+	 * @return
 	 */
 	public int getBetAmount() {
 		return betAmount;
 	}
-
+	
 	/**
-	 * get the total bet pool.
-	 * 
-	 * @return the bet amount * the number of users * the number of game weeks
+	 * Sets the overall prize pool.
+	 * @param total  
 	 */
-	public int getTotalAmount() {
-		return betAmount * getNumUsers() * (getCurrentWeek() + weeksLeft());
+	public void setTotalAmount(int total){
+		this.totalAmount = total;
+	}
+	
+	/**
+	 * Returns the overall prize pool.
+	 * @return totalAmount
+	 */
+	public int getTotalAmount(){
+		return totalAmount;
 	}
 
 	/**
@@ -766,6 +773,8 @@ public class GameData extends Observable {
 	public void endCurrentGame() {
 		GameData.currentGame = null;
 		Bonus.deleteAllQuestions();
+
+		notifyAdd(UpdateTag.END_GAME);
 
 		JSONUtils.resetSeason();
 	}
@@ -812,12 +821,12 @@ public class GameData extends Observable {
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
 		obj.put(KEY_SEASON_STARTED, seasonStarted);
-
-		if (seasonStarted) {
+		
+		if(seasonStarted){
 			obj.put(KEY_BET_AMOUNT, betAmount);
 			obj.put(KEY_POOL_TOTAL, totalAmount);
 		}
-
+		
 		return obj;
 	}
 
@@ -840,8 +849,8 @@ public class GameData extends Observable {
 		weeksPassed = Utils.numToInt(obj.get(KEY_WEEKS_PASSED));
 
 		seasonStarted = (Boolean) obj.get(KEY_SEASON_STARTED);
-
-		if (seasonStarted) {
+		
+		if(seasonStarted){
 			betAmount = Utils.numToInt(obj.get(KEY_BET_AMOUNT));
 			totalAmount = Utils.numToInt(obj.get(KEY_POOL_TOTAL));
 			System.out.println(betAmount + " " + totalAmount);
@@ -854,7 +863,7 @@ public class GameData extends Observable {
 		JSONArray cons = (JSONArray) obj.get(KEY_CONTESTANTS);
 		for (int i = 0; i < cons.size(); i++) {
 			Contestant c = new Contestant();
-			c.fromJSONObject((JSONObject) cons.get(i));
+			c.fromJSONObject((JSONObject)cons.get(i));
 			try {
 				addContestant(c);
 			} catch (InvalidFieldException ie) {
@@ -866,7 +875,7 @@ public class GameData extends Observable {
 		allUsers = new ArrayList<User>(users.size());
 		for (int i = 0; i < users.size(); i++) {
 			User u = new User();
-			u.fromJSONObject((JSONObject) users.get(i));
+			u.fromJSONObject((JSONObject)users.get(i));
 			try {
 				addUser(u);
 			} catch (InvalidFieldException ie) {
@@ -902,7 +911,8 @@ public class GameData extends Observable {
 			return currentGame;
 		}
 
-		currentGame = new GameData(Utils.numToInt(json.get(KEY_NUM_CONTEST)));
+		currentGame = new GameData(
+				Utils.numToInt(json.get(KEY_NUM_CONTEST)));
 		// TODO: Combine?
 		try {
 			GameData.getCurrentGame().fromJSONObject(json);
@@ -912,6 +922,45 @@ public class GameData extends Observable {
 		Bonus.initBonus();
 		return (GameData) currentGame;
 	}
+	/**
+	 960	
+   * Small class used for removing parallel calls to do the same 
+	 961	
+   * notification. The update system accounts for multiple modifications
+	 962	
+   * in one update call, so this means those methods are only called once.
+	 963	
+   * @author Kevin Brightwell
+	 964	
+   */
+	
+  private class UpdateCall implements Runnable {	
+    public EnumSet<UpdateTag> mods = EnumSet.noneOf(UpdateTag.class);
+	
+    public boolean done = false;
+    public void run() {	
+      setChanged();
+      notifyObservers(mods);
+      done = true;	
+    }	
+  }
+	
+  /**	
+   * Adds a set of {@link GameData.UpdateTag}s to the next update call. This	
+   * method in conjunction with {@link GameData.UpdateCall} works to remove	
+   * excess method executions.	
+   * @param tags Tags to add to the next call.
+   */
+  public void notifyAdd(UpdateTag... tags) {
+    if (updateExec == null || updateExec.done){ 
+       updateExec = new UpdateCall();	
+       SwingUtilities.invokeLater(updateExec);	
+    }	
+    for (UpdateTag ut: tags) {
+      if (!updateExec.mods.contains(ut))	
+        updateExec.mods.add(ut);	
+    }
+  }
 
 	/**
 	 * Write all DATA into file
@@ -968,60 +1017,16 @@ public class GameData extends Observable {
 
 	}
 
-	/**
-	 * Small class used for removing parallel calls to do the same notification.
-	 * The update system accounts for multiple modifications in one update call,
-	 * so this means those methods are only called once.
-	 * 
-	 * @author Kevin Brightwell
-	 */
-	private class UpdateCall implements Runnable {
-
-		public EnumSet<UpdateTag> mods = EnumSet.noneOf(UpdateTag.class);
-
-		public boolean done = false;
-
-		@Override
-		public void run() {
-			setChanged();
-			notifyObservers(mods);
-
-			done = true;
-		}
-
-	}
 
 	/**
-	 * Adds a set of {@link GameData.UpdateTag}s to the next update call. This
-	 * method in conjunction with {@link GameData.UpdateCall} works to remove
-	 * excess method executions.
-	 * 
-	 * @param tags
-	 *            Tags to add to the next call.
-	 */
-	public void notifyAdd(UpdateTag... tags) {
-		if (updateExec == null || updateExec.done) {
-			updateExec = new UpdateCall();
-
-			SwingUtilities.invokeLater(updateExec);
-		}
-
-		for (UpdateTag ut : tags) {
-			if (!updateExec.mods.contains(ut))
-				updateExec.mods.add(ut);
-		}
-	}
-
-	/**
-	 * Creates a EnumSet of the tags passed, allowing for flexible notions of
-	 * multiple tags sent.
-	 * 
-	 * @param tags
-	 *            Sets the flags of the set.
+	 * Creates a EnumSet of the tags passed, allowing for flexible notions
+	 * of multiple tags sent.
+	 * @param tags Sets the flags of the set.
 	 * @return EnumSet containing the tags passed.
 	 */
-	/*
-	 * private EnumSet updateTagSet(UpdateTag... tags) { EnumSet set = new
-	 * EnumSet(UpdateTag.class); return set.of(tags); }
-	 */
+	/*private EnumSet updateTagSet(UpdateTag... tags) {
+		EnumSet set = 
+		    new EnumSet(UpdateTag.class);
+		    return set.of(tags);
+	}*/
 }
