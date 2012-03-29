@@ -8,7 +8,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -31,7 +32,6 @@ import javax.swing.event.ChangeListener;
 
 import admin.MainFrame;
 import admin.Utils;
-
 import data.GameData;
 import data.GameData.UpdateTag;
 import data.bonus.Bonus;
@@ -47,19 +47,10 @@ public class BonusPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
-	JPanel pnlNewQInput = new JPanel();
 	JPanel pnlListQ = new JPanel();
-	JPanel pnlTypeQ = new JPanel();
 	JPanel pnlViewWeek = new JPanel();
 	JPanel pnlListWeeks = new JPanel();
-	JPanel pnlMultA = new JPanel();
-	
-	JPanel pnlActionButtons = new JPanel();
-	
-	JButton btnNewQuestion = new JButton("New Question");
-	
-	JButton btnNext = new JButton("Next");
-	
+
 	JLabel lblViewWeek = new JLabel("View Week:");
 	
 	SpinnerNumberModel weekModel = new SpinnerNumberModel(1, 1, 1, 1); // default,low,min,step
@@ -70,26 +61,15 @@ public class BonusPanel extends JPanel implements Observer {
 	SpinnerNumberModel snmQuestion = new SpinnerNumberModel(1, 1, 1, 1); // default,low,min,step
 	JSpinner spnQuestion = new JSpinner(snmQuestion);
 	
-	JButton btnBack = new JButton("Back");
-	JButton btnSubmit = new JButton("Submit");
-	
 	JButton btnModify = new JButton("Modify");
 	
 	private JTextArea txtQuestionList;
 
 	private String question;
 	private String answer;
-	
-	private JTextField txtAnswerA;
-	private JTextField txtAnswerB;
-	private JTextField txtAnswerC;
-	private JTextField txtAnswerD;
+
 	private List<JTextField> txtAnsList;
 	
-	private JRadioButton rbAnswerA;
-	private JRadioButton rbAnswerB;
-	private JRadioButton rbAnswerC;
-	private JRadioButton rbAnswerD;
 	private List<JRadioButton> rbAnsList;
 	
 	private boolean shortAns;
@@ -114,7 +94,7 @@ public class BonusPanel extends JPanel implements Observer {
 	private JPanel pnlNewQ1;
 	
 	private JLabel lblPrompt;
-	private JTextField tfPromptInput;
+	private JTextArea tfPromptInput;
 	
 	private JRadioButton rbMultChoice;
 	private JRadioButton rbShortAnswer;
@@ -134,7 +114,7 @@ public class BonusPanel extends JPanel implements Observer {
 	
 	private JPanel pnlShortAns;
 	private JLabel lblQAnswer;
-	private JTextField tfQAnswer;
+	private JTextArea tfQAnswer;
 	
 	private JButton btnNewQBack;
 	private JButton btnNewQSubmit;
@@ -160,20 +140,13 @@ public class BonusPanel extends JPanel implements Observer {
 		add(pnlQuestionEdit);
 		add(pnlListQ);
 		
-		
-		/*this.setLayout(new BorderLayout());
-		currentQuestion = "";
-		initPnlAddQuestion();
-		initPnlQuestionListing();
-		initPnlAddButton();
-		
 		//check if bonus questions already exist
 		if (Bonus.getAllQuestions().isEmpty()){
 			setQuestionAddingPanelEditable(false);
 			btnModify.setEnabled(false);
 		} else {
 			initExistingBonus();
-		}*/
+		}
 
 		setQuestionAddingPanelEditable(false);
 		
@@ -184,16 +157,20 @@ public class BonusPanel extends JPanel implements Observer {
 	private void buildQuestionPanelP1() {
 		// starting card:
 		pnlNewQ1 = new JPanel();
-		pnlNewQ1.setLayout(new GridLayout(4, 1, 0, 5));
+		pnlNewQ1.setLayout(new BoxLayout(pnlNewQ1, BoxLayout.X_AXIS));
 		
 		lblPrompt = new JLabel("Prompt:");
 		lblPrompt.setAlignmentX(JLabel.LEFT_ALIGNMENT);
 		
-		tfPromptInput = new JTextField();
+		tfPromptInput = new JTextArea("");
+		JScrollPane scroll = new JScrollPane(tfPromptInput);
+		tfPromptInput.setBorder(scroll.getBorder());
+		scroll.setAlignmentX(JScrollPane.LEFT_ALIGNMENT);
 		
 		// build the radio buttons for type:
 		JPanel rbPane = new JPanel();
-		rbPane.setLayout(new BoxLayout(rbPane, BoxLayout.X_AXIS));
+		rbPane.setLayout(new BoxLayout(rbPane, BoxLayout.Y_AXIS));
+		rbPane.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
 		
 		ButtonGroup bg = new ButtonGroup();
 		rbMultChoice = new JRadioButton("Multiple Choice");
@@ -203,16 +180,40 @@ public class BonusPanel extends JPanel implements Observer {
 		rbMultChoice.setSelected(true);
 		
 		rbPane.add(rbMultChoice);
-		rbPane.add(Box.createHorizontalStrut(10));
+		rbPane.add(Box.createVerticalStrut(10));
 		rbPane.add(rbShortAnswer);
 		
 		btnNextPart = new JButton("Next");
 		btnNextPart.setAlignmentX(JButton.RIGHT_ALIGNMENT);
 		
-		pnlNewQ1.add(lblPrompt);
-		pnlNewQ1.add(tfPromptInput);
-		pnlNewQ1.add(rbPane);
-		pnlNewQ1.add(btnNextPart);
+		// left pane
+		JPanel left = new JPanel();
+		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+		
+		left.add(lblPrompt);
+		left.add(Box.createVerticalStrut(10));
+		left.add(scroll);
+		
+		left.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+		left.setAlignmentY(JPanel.BOTTOM_ALIGNMENT);
+		
+		// right:
+		JPanel right = new JPanel();
+		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
+		
+		right.add(Box.createVerticalGlue());
+		right.add(rbPane);
+		right.add(Box.createVerticalStrut(10));
+		right.add(Box.createVerticalGlue());
+		right.add(btnNextPart);
+		
+		right.setAlignmentX(JPanel.RIGHT_ALIGNMENT);
+		right.setAlignmentY(JPanel.BOTTOM_ALIGNMENT);
+		
+		pnlNewQ1.add(left);
+		pnlNewQ1.add(Box.createHorizontalStrut(20));
+		pnlNewQ1.add(Box.createHorizontalGlue());
+		pnlNewQ1.add(right);
 		
 	}
 	
@@ -230,38 +231,29 @@ public class BonusPanel extends JPanel implements Observer {
 		
 		
 		/* Multiple choice: */
-		// TODO: replace with array
 		ButtonGroup bg = new ButtonGroup();
-		rbAnswerA = new JRadioButton("A");
-		rbAnswerB = new JRadioButton("B");
-		rbAnswerC = new JRadioButton("C");
-		rbAnswerD = new JRadioButton("D");
-		rbAnsList = Arrays.asList(rbAnswerA, rbAnswerB, rbAnswerC, rbAnswerD);
-		
-		rbAnswerA.setSelected(true);
-		
-		for (JRadioButton rb: rbAnsList) 
-			bg.add(rb);
+		rbAnsList = new ArrayList<JRadioButton>(4);
 		
 		// multiple choice text fields:
-		txtAnswerA = new JTextField("");
-		txtAnswerB = new JTextField("");
-		txtAnswerC = new JTextField("");
-		txtAnswerD = new JTextField("");
-		txtAnsList = Arrays.asList(txtAnswerA, txtAnswerB, txtAnswerC, txtAnswerD);
+		txtAnsList = new ArrayList<JTextField>(4);
 		
 		pnlMultiAns = new JPanel();
 		pnlMultiAns.setLayout(new GridLayout(4, 0, 0, 5));
 		
+		// build the table:
+		String[] labels = { "A", "B", "C", "D" };
 		for (int i = 0; i < 4; i++) {
-			JRadioButton rb = rbAnsList.get(i);
+			JRadioButton rb = new JRadioButton(labels[i]);
 		//	rb.setPreferredSize(new Dimension((int)(rb.getWidth()*1.5d), rb.getHeight()));
-			JTextField ans = txtAnsList.get(i);
+			JTextField ans = new JTextField("");
 			
-			rb.setAlignmentX(JTextField.LEFT_ALIGNMENT);
-			
+			rbAnsList.add(rb);
+			txtAnsList.add(ans);
 			// add to button group
 			bg.add(rb);
+			
+			// layout the row:
+			rb.setAlignmentX(JTextField.LEFT_ALIGNMENT);
 			
 			JPanel subPane = new JPanel();
 			subPane.setLayout(new BoxLayout(subPane, BoxLayout.X_AXIS));
@@ -273,23 +265,33 @@ public class BonusPanel extends JPanel implements Observer {
 			pnlMultiAns.add(subPane);
 		}
 		
+		rbAnsList.get(0).setSelected(true);
+		
 		/* end multi choice */
 		
 		/* short answer: */
 		
 		pnlShortAns = new JPanel();
-		pnlShortAns.setLayout(new GridLayout(2, 1, 0, 5));
+		pnlShortAns.setLayout(new BoxLayout(pnlShortAns, BoxLayout.Y_AXIS));
 		
 		lblQAnswer = new JLabel("Answer:");
-		tfQAnswer = new JTextField();
+		tfQAnswer = new JTextArea();
+		JScrollPane scroll = new JScrollPane(tfQAnswer);
+		tfQAnswer.setBorder(scroll.getBorder());
+		
+		lblQAnswer.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+		scroll.setAlignmentX(JScrollPane.LEFT_ALIGNMENT);
 		
 		pnlShortAns.add(lblQAnswer);
-		pnlShortAns.add(tfQAnswer);
+		pnlShortAns.add(Box.createVerticalStrut(10));
+		pnlShortAns.add(scroll);
 		
 		/* end short */
 		
 		pnlQTypeSwap.add(pnlMultiAns, TYPE_MULTI);
 		pnlQTypeSwap.add(pnlShortAns, TYPE_SHORT);
+		pnlQTypeSwap.setAlignmentX(JPanel.LEFT_ALIGNMENT);
+		//pnlQTypeSwap.setAlignmentY(JPanel.BOTTOM_ALIGNMENT);
 		
 		/* buttons: */
 		
@@ -299,20 +301,28 @@ public class BonusPanel extends JPanel implements Observer {
 		btnNewQBack.setAlignmentX(JButton.RIGHT_ALIGNMENT);
 		btnNewQSubmit.setAlignmentX(JButton.RIGHT_ALIGNMENT);
 		
-		btnNewQBack.setSize(btnNewQSubmit.getPreferredSize());
+		//btnNewQBack.setAlignmentY(JButton.BOTTOM_ALIGNMENT);
+		btnNewQSubmit.setAlignmentY(JButton.BOTTOM_ALIGNMENT);
+		
+		btnNewQBack.setPreferredSize(btnNewQSubmit.getPreferredSize());
 		
 		JPanel sub = new JPanel();
 		sub.setLayout(new BoxLayout(sub, BoxLayout.Y_AXIS));
 		
+		sub.add(Box.createVerticalGlue());
 		sub.add(btnNewQBack);
 		sub.add(Box.createVerticalStrut(5));
 		sub.add(btnNewQSubmit);
+		//sub.add(Box.createVerticalStrut(5));
+		
+		sub.setAlignmentY(JPanel.CENTER_ALIGNMENT);
 		
 		/* end buttons */
 		
 		
 		pnlNewQ2.add(pnlQTypeSwap);
-		pnlNewQ2.add(Box.createHorizontalStrut(10));
+		pnlNewQ2.add(Box.createHorizontalStrut(20));
+		pnlNewQ2.add(Box.createHorizontalGlue());
 		pnlNewQ2.add(sub);
 		
 		if (rbMultChoice.isSelected()) {
@@ -330,7 +340,7 @@ public class BonusPanel extends JPanel implements Observer {
 	private void buildQuestionPaneAll() {
 		pnlQuestionEdit = new JPanel();
 		pnlQuestionEdit.setBorder(BorderFactory.createTitledBorder("Question"));
-		cardsQPanel = new CardLayout();
+		cardsQPanel = new CardLayout(5, 5);
 		
 		pnlQuestionEdit.setLayout(cardsQPanel);
 		
@@ -443,7 +453,7 @@ public class BonusPanel extends JPanel implements Observer {
 		tfPromptInput.setEnabled(edit);
 		rbMultChoice.setEnabled(edit);
 		rbShortAnswer.setEnabled(edit);
-		btnNext.setEnabled(edit);
+		btnNextPart.setEnabled(edit);
 	}
 	
 	/**
@@ -662,7 +672,7 @@ public class BonusPanel extends JPanel implements Observer {
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
 									"Your must write atleast one answer. Answers must be 1-200 characters."
-											+ " (invalid answers)", pnlMultA);
+											+ " (invalid answers)", pnlMultiAns);
 							return;
 						}
 					}
@@ -694,14 +704,12 @@ public class BonusPanel extends JPanel implements Observer {
 								MainFrame.getRunningFrame().setStatusErrorMsg(
 										"You must select one correct answer."
 												+ " (correct answer unselected)", 
-												rbAnswerA, rbAnswerB, rbAnswerC, 
-												rbAnswerD);
+												rbAnsList.toArray(new JRadioButton[0]));
 							}
->>>>>>> Reorganized the top half of the panel, now holds themes correctly, much cleaner. Does not continue to allow to add more q's after first one. Fix tomorrow.
 						} else {
 							MainFrame.getRunningFrame().setStatusErrorMsg(
 									"Your must write atleast one answer. Answers must be 1-200 characters."
-											+ " (invalid answers)", pnlMultA);
+											+ " (invalid answers)", pnlMultiAns);
 						}
 					}
 				}				
@@ -784,6 +792,7 @@ public class BonusPanel extends JPanel implements Observer {
 		spnQuestion.addChangeListener(clQuestion);
 	}
 
+	// TODO: clean
 	@Override
 	public void update(Observable observ, Object obj) {
 		GameData g = (GameData)observ;
