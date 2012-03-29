@@ -66,7 +66,8 @@ public class History {
 		
 		JSONArray weeks = new JSONArray();
 		for (WeekHistory w : weekList) {
-			weeks.add(w.toJSONObject());
+			if (w != null)
+				weeks.add(w.toJSONObject());
 		}
 		
 		obj.put(WEEK_LIST, weeks);

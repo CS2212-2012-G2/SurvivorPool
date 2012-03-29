@@ -831,7 +831,7 @@ public class GameData extends Observable {
 
 		obj.put(KEY_CONTESTANTS, cons);
 		obj.put(KEY_USERS, users);
-		//obj.put(KEY_CAST_OFFS, coffs);
+		obj.put(KEY_CAST_OFFS, coffs);
 		obj.put(KEY_TRIBES, ts);
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
@@ -889,14 +889,14 @@ public class GameData extends Observable {
 		// load the cast offs
 		JSONArray coffs = (JSONArray) obj.get(KEY_CAST_OFFS);
 		if(getCurrentWeek() != 1 && seasonStarted){
-		for(int i = 0; i < coffs.size(); i++){
-			Contestant c = new Contestant();
-			c.fromJSONObject((JSONObject)coffs.get(i));
-			   try{
-				   setCastOff(i,c);
-			   }catch(NullPointerException ie){   
-			   }
-		}
+			for(int i = 0; i < coffs.size(); i++){
+				Contestant c = new Contestant();
+				c.fromJSONObject((JSONObject)coffs.get(i));
+				   try{
+					   setCastOff(i,c);
+				   }catch(NullPointerException ie){   
+				   }
+			}
 		}
 
 		// users:

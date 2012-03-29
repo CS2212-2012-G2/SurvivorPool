@@ -245,7 +245,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		tfContID.setText(c.getID());
 		
 		if (c.isCastOff())
-			cbCastDate.setSelectedIndex(c.getCastDate());
+			cbCastDate.setSelectedIndex(g.getCurrentWeek()-c.getCastDate()+1);
 		else
 			cbCastDate.setSelectedIndex(0);
 		
