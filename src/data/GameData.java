@@ -782,10 +782,8 @@ public class GameData extends Observable {
 	 */
 	public void endCurrentGame() {
 		GameData.currentGame = null;
-		Bonus.deleteAllQuestions();
-
-		notifyAdd(UpdateTag.END_GAME);
-
+		Bonus.deleteAllQuestions(); 
+		// removed tag, as there's a different between END_GAME and a reset. 
 		JSONUtils.resetSeason();
 	}
 
