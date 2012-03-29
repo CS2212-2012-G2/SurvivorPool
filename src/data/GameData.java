@@ -70,7 +70,8 @@ public class GameData extends Observable {
 			KEY_TRIBES = "tribes_arr",
 			KEY_SEASON_STARTED = "season_started",
 			KEY_BET_AMOUNT = "bet_amount",
-			KEY_POOL_TOTAL = "pool_total";
+			KEY_POOL_TOTAL = "pool_total",
+			KEY_CAST_OFFS = "cast_offs";
 
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
@@ -615,8 +616,17 @@ public class GameData extends Observable {
 	 * @return  castOffs[week]
 	 */
 	public Contestant getCastOff(int week){
-		return castOffs[week];
+		return castOffs[week-1];
 	}
+	/**
+	 * Sets who was cast off on a certain week
+	 * @param week
+	 */
+	
+	public void setCastOff(int week, Contestant c){
+		castOffs[week-1] = c;
+	}
+	
 	/**
 	 * Sets the elimExists variable
 	 * 
@@ -811,12 +821,19 @@ public class GameData extends Observable {
 				users.add(((User) o).toJSONObject());
 		}
 
+		JSONArray coffs = new JSONArray();
+		for(Object o : castOffs){
+			if(o != null)
+				coffs.add(((Contestant)o).toJSONObject());
+		}
+		
 		JSONArray ts = new JSONArray();
 		ts.add(tribeNames[0]);
 		ts.add(tribeNames[1]);
 
 		obj.put(KEY_CONTESTANTS, cons);
 		obj.put(KEY_USERS, users);
+		obj.put(KEY_CAST_OFFS, coffs);
 		obj.put(KEY_TRIBES, ts);
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
@@ -869,6 +886,17 @@ public class GameData extends Observable {
 			} catch (InvalidFieldException ie) {
 			}
 		}
+		
+	/*	// load the cast offs
+		JSONArray coffs = (JSONArray) obj.get(KEY_CAST_OFFS);
+		for(int i = 0; i < coffs.size(); i++){
+			Contestant c = new Contestant();
+			c.fromJSONObject((JSONObject)coffs.get(i));
+			   try{
+				   setCastOff(i,c);
+			   }catch(NullPointerException ie){   
+			   }
+		}*/
 
 		// users:
 		JSONArray users = (JSONArray) obj.get(KEY_USERS);
