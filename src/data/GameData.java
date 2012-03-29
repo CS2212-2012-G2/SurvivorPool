@@ -666,7 +666,7 @@ public class GameData extends Observable {
 	 * Undoes the current contestant that would be cast off.
 	 * @param castOff
 	 */
-	public void undoCastOff(Contestant castOff) {
+	public void undoCastOff(int week, Contestant castOff) {
 		castOff.setToBeCast(false);
 	
 		setElimCont(null);
