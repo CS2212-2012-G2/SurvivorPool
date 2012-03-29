@@ -370,6 +370,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					}
 					
 				 else{
+					 if(g.getCastOff(i) != null){
 					 if(!h.canCastoff(i,c)){
 						int resp = JOptionPane.showConfirmDialog(null, "Doing this will invalidate your current point standings." +
 								                     " Proceed?", "Redoing cast off", JOptionPane.YES_NO_OPTION);
@@ -377,7 +378,9 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					 g.castOff(i,c);
 					 g.undoCastOff(i,g.getCastOff(i));
 					 }
-					 else return;
+					 else JOptionPane.showMessageDialog(null,"Contestant is ineligible for re-cast off.");
+					 }
+					 else g.castOff(i,c);
 					 }
 				}
 				}
