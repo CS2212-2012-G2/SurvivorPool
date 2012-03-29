@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,6 +34,7 @@ import javax.swing.table.TableModel;
 
 import admin.MainFrame;
 import admin.Utils;
+import admin.panel.person.contestant.ContestantPanel;
 import data.GameData;
 import data.GameData.UpdateTag;
 import data.Person;
@@ -68,12 +71,19 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JPanel pnlCenter;
 
 	private JLabel lblTribe1;
-
 	private JLabel lblTribe2;
 	
 	private JTable activeTable;
 	private JTable castTable;
 
+	protected static final String TOOL_START = "Start the Season",
+				TOOL_ADV = "Advance the Season week", 
+				TOOL_FIN_ADV = "Advance the final week",
+				TOOL_TRIBE = "Change the tribe names",
+				TOOL_WKSPINNER = "Scroll through the weeks";
+	
+	
+	
 	public GeneralPanel() {
 		setLayout(new BorderLayout(10, 10));
 
@@ -99,10 +109,31 @@ public class GeneralPanel extends JPanel implements Observer {
 
 		add(pnlCenter, BorderLayout.CENTER);
 		GameData.getCurrentGame().addObserver(this);
-
+		
+		setToolTips();
+		
 		initListeners();
 	}
 
+	/**
+	 * Sets the tool tips for all the components.
+	 */
+	protected void setToolTips() {
+
+		if (GameData.getCurrentGame().isFinalWeek())
+			btnAdvWk.setToolTipText(TOOL_ADV);
+		else
+			btnAdvWk.setToolTipText(TOOL_FIN_ADV);
+			
+		btnStartSn.setToolTipText(TOOL_START);
+		btnChangeTribeName.setToolTipText(TOOL_TRIBE);
+		spnWeek.setToolTipText(TOOL_WKSPINNER);
+		txtTribe1.setToolTipText(TOOL_TRIBE);
+		txtTribe2.setToolTipText(TOOL_TRIBE);
+		lblTribe1.setToolTipText(TOOL_TRIBE);
+		lblTribe2.setToolTipText(TOOL_TRIBE);
+	}
+	
 	private JPanel buildTribePanel() {
 		GameData g = GameData.getCurrentGame();
 
@@ -378,6 +409,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		weekModel.setStepSize(1);
 	}
 	
+
 	@Override
 	public void update(Observable obs, Object arg) {
 		@SuppressWarnings("unchecked")
