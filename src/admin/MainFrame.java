@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -59,9 +62,9 @@ public class MainFrame extends JFrame {
 	private JMenuItem mnuItemSave;
 	private JMenuItem mnuItemExit;
 	
-	private JRadioButtonMenuItem mnuItemTheme1;
-	private JRadioButtonMenuItem mnuItemTheme2;
-	private JRadioButtonMenuItem mnuItemTheme3;
+	private List<JRadioButtonMenuItem> radioMenuItems;
+	
+	private HashMap<String, JRadioButtonMenuItem> themeToItem;
 
 	public static final String GENERAL_PANEL = "General",
 			CONTESTANT_PANEL = "Contestants", PLAYER_PANEL = "Players",
@@ -74,34 +77,6 @@ public class MainFrame extends JFrame {
 	private BonusPanel bonusPanel;
 	
 	private Settings settings;
-
-	ActionListener al = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent ae) {
-			if (ae.getSource() == mnuItemExit) {
-				windowClose();
-			} else if (ae.getSource() == mnuItemReset) {
-				resetSeason();
-			} else if (ae.getSource() == mnuItemSave){
-				GameData.getCurrentGame().writeData();
-			} else if (ae.getSource() == mnuItemTheme1) {
-				changeTheme(ae.getActionCommand());
-			} else if (ae.getSource() == mnuItemTheme3) {
-				changeTheme(ae.getActionCommand());
-			} else if (ae.getSource() == mnuItemTheme2) {
-				changeTheme(ae.getActionCommand());
-			}
-		}
-	};
-
-	ChangeListener cl = new ChangeListener() {
-		@Override
-		public void stateChanged(ChangeEvent ce) {
-			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
-			String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
-			statusBar.setTabLabel(tab);
-		}
-	};
 
 	public MainFrame() {
 
@@ -120,6 +95,7 @@ public class MainFrame extends JFrame {
 		
 		setVisible(true);
 		setTitle("Survivor Pool Admin");
+		setMinimumSize(new Dimension(640, 480));
 		// can resize frame
 		setResizable(true);
 			
@@ -133,6 +109,33 @@ public class MainFrame extends JFrame {
 		loadSettings();
 	}
 	
+	private ActionListener al = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			if (ae.getSource() == mnuItemExit) {
+				windowClose();
+			} else if (ae.getSource() == mnuItemReset) {
+				resetSeason();
+			} else if (ae.getSource() == mnuItemSave){
+				GameData.getCurrentGame().writeData();
+			} else if (ae.getSource() instanceof JRadioButtonMenuItem) {
+				changeTheme(ae.getActionCommand());
+			}
+		}
+	};
+
+	private ChangeListener cl = new ChangeListener() {
+		@Override
+		public void stateChanged(ChangeEvent ce) {
+			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
+			String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
+			statusBar.setTabLabel(tab);
+		}
+	};
+	
+	/**
+	 * Loads the settings value into the GUI from the file
+	 */
 	private void loadSettings() {
 		GameData g = GameData.getCurrentGame();
 		
@@ -182,6 +185,9 @@ public class MainFrame extends JFrame {
 		}
 	}
 	
+	/**
+	 * Pulls the settings' values from the GUI into the file.
+	 */
 	private void saveSettings() {
 		GameData g = GameData.getCurrentGame();
 		
@@ -204,6 +210,9 @@ public class MainFrame extends JFrame {
 		settings.writeData();
 	}
 
+	/**
+	 * Creates the seasonCreateGUI
+	 */
 	private void initSeasonCreateGUI() {
 		mnuItemSave.setEnabled(false);
 		this.setLayout(new BorderLayout());
@@ -213,6 +222,9 @@ public class MainFrame extends JFrame {
 		statusBar.setTabLabel("SEASON CREATE");
 	}
 
+	/**
+	 * Loads the initial GUI
+	 */
 	private void initGUI() {
 		mnuItemSave.setEnabled(true);
 		Dimension d = new Dimension(132, 20);
@@ -249,24 +261,34 @@ public class MainFrame extends JFrame {
 		this.add(statusBar, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Loads the menu bar
+	 */
 	private void initMenuBar() {
 		mnuItemReset = new JMenuItem("Reset Season");
 		mnuItemSave = new JMenuItem("Save");
 		mnuItemExit = new JMenuItem("Exit");
+		
+		// init the theme menu:
+		radioMenuItems = new LinkedList<JRadioButtonMenuItem>();
 		String[] themeName = Utils.getThemes();
-		mnuItemTheme1 = new JRadioButtonMenuItem(themeName[0]);
-		mnuItemTheme3 = new JRadioButtonMenuItem(themeName[1]);
-		mnuItemTheme2 = new JRadioButtonMenuItem(themeName[2]);
+		themeToItem = 
+				new HashMap<String, JRadioButtonMenuItem>(themeName.length);
+		
+		ButtonGroup g = new ButtonGroup();
+		for (int i = 0; i < themeName.length; i++) {
+			JRadioButtonMenuItem item = new JRadioButtonMenuItem(themeName[i]);
+			radioMenuItems.add(i, item);
+			themeToItem.put(themeName[i], item);
+			
+			g.add(item);
+			item.addActionListener(al);
+			
+			mnuTheme.add(item);
+		}
+		// end init theme menu
 
 		statusBar = new StatusPanel();
-
-		ButtonGroup g = new ButtonGroup();
-		mnuTheme.add(mnuItemTheme1);
-		g.add(mnuItemTheme1);
-		mnuTheme.add(mnuItemTheme3);
-		g.add(mnuItemTheme3);
-		mnuTheme.add(mnuItemTheme2);
-		g.add(mnuItemTheme2);
 
 		mnuFile.add(mnuItemSave);
 		mnuFile.add(mnuItemReset);
@@ -278,9 +300,6 @@ public class MainFrame extends JFrame {
 		mnuItemReset.addActionListener(al);
 		mnuItemSave.addActionListener(al);
 		mnuItemExit.addActionListener(al);
-		mnuItemTheme1.addActionListener(al);
-		mnuItemTheme3.addActionListener(al);
-		mnuItemTheme2.addActionListener(al);
 		
 		this.setJMenuBar(menuBar);
 	}
@@ -303,6 +322,8 @@ public class MainFrame extends JFrame {
 		applyTheme();
 		
 		settings.put(Settings.THEME, name);
+		JRadioButtonMenuItem rb = themeToItem.get(name);
+		rb.setSelected(true);
 	}
 
 	/**
@@ -375,7 +396,6 @@ public class MainFrame extends JFrame {
 	/**
 	 * Saves all data associated with the application
 	 */
-	// FIXME: Theme data etc needs to be saved.
 	private void windowClose() {
 		if (GameData.getCurrentGame() != null)
 			GameData.getCurrentGame().writeData();

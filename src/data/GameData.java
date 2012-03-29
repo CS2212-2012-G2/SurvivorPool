@@ -963,15 +963,10 @@ public class GameData extends Observable {
 		return currentGame;
 	}
 	/**
-	 960	
    * Small class used for removing parallel calls to do the same 
-	 961	
-   * notification. The update system accounts for multiple modifications
-	 962	
+   * notification. The update system accounts for multiple modifications	
    * in one update call, so this means those methods are only called once.
-	 963	
-   * @author Kevin Brightwell
-	 964	
+   * @author Kevin Brightwell	
    */
 	
   private class UpdateCall implements Runnable {	
