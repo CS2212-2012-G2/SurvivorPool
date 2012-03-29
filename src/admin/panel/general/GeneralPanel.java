@@ -405,7 +405,7 @@ public class GeneralPanel extends JPanel implements Observer {
 
 	private void updateSpinnerModel(int w) {
 		weekModel.setMinimum(w > 0 ? 0 : 0);
-		weekModel.setMaximum(w > 0 ? w : 0);
+		weekModel.setMaximum(w-1 > 0 ? w-1 : 0);
 		weekModel.setStepSize(1);
 	}
 	
