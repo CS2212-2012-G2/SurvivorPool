@@ -820,12 +820,12 @@ public class GameData extends Observable {
 			if (o != null)
 				users.add(((User) o).toJSONObject());
 		}
-
+		/*
 		JSONArray coffs = new JSONArray();
 		for(Object o : castOffs){
 			if(o != null)
 				coffs.add(((Contestant)o).toJSONObject());
-		}
+		}*/
 		
 		JSONArray ts = new JSONArray();
 		ts.add(tribeNames[0]);
@@ -833,7 +833,7 @@ public class GameData extends Observable {
 
 		obj.put(KEY_CONTESTANTS, cons);
 		obj.put(KEY_USERS, users);
-		obj.put(KEY_CAST_OFFS, coffs);
+		//obj.put(KEY_CAST_OFFS, coffs);
 		obj.put(KEY_TRIBES, ts);
 		obj.put(KEY_WEEKS_REMAIN, weeksRem);
 		obj.put(KEY_WEEKS_PASSED, weeksPassed);
