@@ -144,8 +144,8 @@ public class GeneralPanel extends JPanel implements Observer {
 		GameData g = GameData.getCurrentGame();
 
 		JPanel pane = new JPanel();
-		pane.setBorder(BorderFactory.createTitledBorder("Tribes"));
 		pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
+		
 		lblTribe1 = new JLabel("Tribe 1:");
 		lblTribe2 = new JLabel("Tribe 2:");
 
@@ -165,6 +165,7 @@ public class GeneralPanel extends JPanel implements Observer {
 			tPane.setLayout(new BoxLayout(tPane, BoxLayout.LINE_AXIS));
 
 			tPane.add(lbls.get(i));
+			tPane.add(Box.createHorizontalStrut(5));
 			tPane.add(Box.createHorizontalGlue());
 			tPane.add(tfs.get(i));
 
@@ -180,7 +181,6 @@ public class GeneralPanel extends JPanel implements Observer {
 	
 	protected JPanel buildWinnerPanel() {
 		JPanel pane = new JPanel();
-		pane.setBorder(BorderFactory.createTitledBorder("Winners"));
 		pane.setLayout(new BorderLayout(5, 5));
 		
 		JLabel stubLabel = new JLabel("STUBBB");
