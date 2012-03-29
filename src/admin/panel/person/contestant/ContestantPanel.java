@@ -127,8 +127,20 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		
 		// build the two panes
 		// setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded()) { // game end
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
+		} else if (g.isFinalWeek()) { // final week
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.FINAL_WEEK));
+		} else if (g.isSeasonStarted()){
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.START_SEASON));
+		}
+		
+		
 		
 		assembleAll();
+		
+		
 	}
 	
 	@Override
