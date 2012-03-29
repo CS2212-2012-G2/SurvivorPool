@@ -537,7 +537,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tfCastDate.removeAllItems();
 			
 			tfCastDate.addItem("Active");
-			for (int i = g.getCurrentWeek(); i >= 1; i--)
+			int i;
+			for (i = 1; i <= g.getCurrentWeek(); i++)
 				tfCastDate.addItem("" + i);
 			
 			// defaults to the current date for easier standard "cast offs". 

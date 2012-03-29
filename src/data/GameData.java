@@ -818,12 +818,12 @@ public class GameData extends Observable {
 			if (o != null)
 				users.add(((User) o).toJSONObject());
 		}
-		/*
+		
 		JSONArray coffs = new JSONArray();
-		for(Object o : castOffs){
-			if(o != null)
-				coffs.add(((Contestant)o).toJSONObject());
-		}*/
+		for(Contestant c : castOffs){
+			if(c != null)
+				coffs.add(c.toJSONObject());
+		}
 		
 		JSONArray ts = new JSONArray();
 		ts.add(tribeNames[0]);
@@ -840,6 +840,7 @@ public class GameData extends Observable {
 		if(seasonStarted){
 			obj.put(KEY_BET_AMOUNT, betAmount);
 			obj.put(KEY_POOL_TOTAL, totalAmount);
+			selections.toJSONObject();
 		}
 		
 		return obj;
@@ -885,8 +886,9 @@ public class GameData extends Observable {
 			}
 		}
 		
-	/*	// load the cast offs
+		// load the cast offs
 		JSONArray coffs = (JSONArray) obj.get(KEY_CAST_OFFS);
+		if(getCurrentWeek() != 1 && seasonStarted){
 		for(int i = 0; i < coffs.size(); i++){
 			Contestant c = new Contestant();
 			c.fromJSONObject((JSONObject)coffs.get(i));
@@ -894,7 +896,8 @@ public class GameData extends Observable {
 				   setCastOff(i,c);
 			   }catch(NullPointerException ie){   
 			   }
-		}*/
+		}
+		}
 
 		// users:
 		JSONArray users = (JSONArray) obj.get(KEY_USERS);
@@ -906,6 +909,8 @@ public class GameData extends Observable {
 				addUser(u);
 			} catch (InvalidFieldException ie) {
 			}
+			if(getCurrentWeek() >= 2)
+			selections.fromJSONObject(obj);
 		}
 
 		notifyAdd();
