@@ -66,6 +66,9 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JPanel pnlCastOffs;
 
 	private JPanel pnlTribes;
+	private JPanel pnlWinners;
+	private TribeWinnerCont contTribeWin;
+	
 	private JPanel pnlWeekCtrl;
 	private JPanel pnlHistory;
 
@@ -74,11 +77,17 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JLabel lblTribe1;
 
 	private JLabel lblTribe2;
+	
+	private JTable activeTable;
+	private JTable castTable;
 
 	public GeneralPanel() {
 		setLayout(new BorderLayout(10, 10));
 
 		pnlTribes = buildTribePanel();
+		pnlWinners = buildWinnerPanel();
+		contTribeWin = new TribeWinnerCont(pnlTribes, pnlWinners, true);
+		
 		pnlWeekCtrl = buildCtrlPanel();
 		pnlHistory = buildHistory();
 
@@ -89,7 +98,7 @@ public class GeneralPanel extends JPanel implements Observer {
 		subFrame.setLayout(new GridLayout(1, 2, 10, 5));
 		
 		subFrame.add(pnlWeekCtrl);
-		subFrame.add(pnlTribes);
+		subFrame.add(contTribeWin);
 
 		pnlCenter.add(subFrame);
 		pnlCenter.add(Box.createVerticalStrut(10));
@@ -136,15 +145,24 @@ public class GeneralPanel extends JPanel implements Observer {
 		btnChangeTribeName.setAlignmentX(JButton.RIGHT_ALIGNMENT);
 		pane.add(btnChangeTribeName);
 
-		// pane.setPreferredSize(new Dimension(200, 200));
-
 		return pane;
 	}
-
+	
+	protected JPanel buildWinnerPanel() {
+		JPanel pane = new JPanel();
+		pane.setBorder(BorderFactory.createTitledBorder("Winners"));
+		pane.setLayout(new BorderLayout(5, 5));
+		
+		JLabel stubLabel = new JLabel("STUBBB");
+		pane.add(stubLabel, BorderLayout.CENTER);
+		
+		return pane;
+	}
+	
 	private JPanel buildCtrlPanel() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
-		pane.setBorder(BorderFactory.createTitledBorder("Time:"));
+		pane.setBorder(BorderFactory.createTitledBorder("Time"));
 
 		btnStartSn = new JButton("Start Season");
 		btnStartSn.setAlignmentX(JButton.CENTER_ALIGNMENT);
@@ -171,7 +189,7 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JPanel buildHistory() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
-		pane.setBorder(BorderFactory.createTitledBorder("History:"));
+		pane.setBorder(BorderFactory.createTitledBorder("History"));
 
 		// / spinnner stuff
 		JPanel pnlSpin = new JPanel();
@@ -181,7 +199,6 @@ public class GeneralPanel extends JPanel implements Observer {
 		weekModel = new SpinnerNumberModel();
 		spnWeek = new JSpinner(weekModel);
 		spnWeek.setAlignmentX(JSpinner.LEFT_ALIGNMENT);
-		
 
 		pnlSpin.add(lblWeek);
 		pnlSpin.add(Box.createHorizontalStrut(10));
@@ -198,11 +215,10 @@ public class GeneralPanel extends JPanel implements Observer {
 		pnlCont.add(pnlCastOffs);
 
 		// put all together:
-
 		pane.add(pnlSpin);
 		pane.add(pnlCont);
 
-		// / init:
+		/// init:
 		GameData g = GameData.getCurrentGame();
 		if (g.isSeasonStarted()) {
 			updateSpinnerModel(g.getCurrentWeek());
@@ -211,9 +227,6 @@ public class GeneralPanel extends JPanel implements Observer {
 
 		return pane;
 	}
-	
-	private JTable activeTable;
-	private JTable castTable;
 	
 	private void buildHistoryTables() {
 		GameData g = GameData.getCurrentGame();
@@ -306,18 +319,20 @@ public class GeneralPanel extends JPanel implements Observer {
 							"You need to have " + g.getInitialContestants()
 									+ " contestants to start.");
 					return;
+					
 				} else if (!g.isSeasonStarted()) {
-					String s = JOptionPane
-							.showInputDialog("Enter weekly bet amount!");
+					
+					String s = JOptionPane.showInputDialog("Enter weekly bet" +
+							" amount!");
+					
 					if (Utils.checkString(s, "^[0-9]+$")) {
-						if (Integer.parseInt(s) >= 0) {
-							g.startSeason(Integer.parseInt(s));
-
-							// needs an update, can't figure out what the proper
-							// way of calling it.
+						int t = Integer.parseInt(s);
+						if (t >= 0) {
+							g.startSeason(t);
 						}
 						return;
 					}
+					
 					JOptionPane.showMessageDialog(null,
 							"Invalid amount entered.");
 				}
@@ -331,33 +346,21 @@ public class GeneralPanel extends JPanel implements Observer {
 				GameData g = GameData.getCurrentGame();
 
 				if (g.isSeasonEnded()) { // if end of game
-					String tempString = "Top SurvivorPool Winners\n";
-					User tempUser;
-					List winners = g.determineWinners();
-					List pool = g.determinePrizePool();
-					
-					for (int i = 0; i<winners.size(); i++){
-						tempUser = (User) winners.get(i);
-						tempString = tempString + "\n" + (i+1) + ". " + 
-						tempUser.toString() + " $" + pool.get(i);
-					}
-					
-					JOptionPane.showMessageDialog(null, tempString);
-
-				} else { // not end of game
-					if (!g.doesElimExist()) {
-						if (g.isFinalWeek()) {
-							JOptionPane
-									.showMessageDialog(null,
-											"No Contestant has been selected to be the winner.");
-						} else {
-							JOptionPane
-									.showMessageDialog(null,
-											"No Contestant has been selected to be cast off.");
-						}
+					return;
+				} 
+				
+				if (!g.doesElimExist()) {
+					if (g.isFinalWeek()) {
+						JOptionPane
+								.showMessageDialog(null,
+										"No Contestant has been selected to be the winner.");
 					} else {
-						g.advanceWeek();
+						JOptionPane
+								.showMessageDialog(null,
+										"No Contestant has been selected to be cast off.");
 					}
+				} else {
+					g.advanceWeek();
 				}
 			}
 		});
@@ -449,6 +452,23 @@ public class GeneralPanel extends JPanel implements Observer {
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
 			if ((Integer)spnWeek.getValue() == g.getCurrentWeek() - 1)
 				spnWeek.setValue(g.getCurrentWeek());
+		}
+		
+		if (update.contains(UpdateTag.END_GAME)) {
+			// TODO: FIX, this is ugly. :P
+			
+			String tempString = "Top SurvivorPool Winners\n";
+			User tempUser;
+			List<User> winners = g.determineWinners();
+			List<Integer> pool = g.determinePrizePool();
+			
+			for (int i = 0; i<winners.size(); i++){
+				tempUser = (User) winners.get(i);
+				tempString = tempString + "\n" + (i+1) + ". " + 
+				tempUser.toString() + " $" + pool.get(i);
+			}
+			
+			pnlWinners.add(new JLabel(tempString));
 		}
 
 	}
