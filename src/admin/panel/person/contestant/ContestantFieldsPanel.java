@@ -33,7 +33,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JComboBox tfCastDate;
+	private JComboBox<String> cbCastDate;
 	private JButton btnCastOff;
 	
 	private JLabel labelTribe;
@@ -57,7 +57,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 
 	public ContestantFieldsPanel(JButton _imgButton, JLabel _labelName, JTextField _tfFirstName,
 			JTextField _tfLastName, JLabel _labelID, JTextField _tfContID,
-			JLabel _labelCastOff, JComboBox tfCastDate2, JButton _btnCastOff,
+			JLabel _labelCastOff, JComboBox<String> _cbCastDate, JButton _btnCastOff,
 			JLabel _labelTribe, JComboBox<String> _cbTribe) {
 		super();
 
@@ -68,7 +68,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		// passed in
 		labelName = _labelName;
 		labelCastOff = _labelCastOff;
-		tfCastDate = tfCastDate2;
+		cbCastDate = _cbCastDate;
 		btnCastOff = _btnCastOff;
 		
 		labelTribe = _labelTribe;
@@ -146,7 +146,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		gbc.gridx = GridBagConstraints.RELATIVE;
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.insets = new Insets(0, 0, 5, 5);
-		pane.add(tfCastDate, gbc);
+		pane.add(cbCastDate, gbc);
 
 		//gbc.weightx = 0.25;
 		gbc.anchor = GridBagConstraints.LINE_END;
@@ -243,6 +243,11 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		cbTribe.setSelectedItem(c.getTribe());
 
 		tfContID.setText(c.getID());
+		
+		if (c.isCastOff())
+			cbCastDate.setSelectedIndex(c.getCastDate());
+		else
+			cbCastDate.setSelectedIndex(0);
 		
 		updateContPicture(c.getPicture());
 	}
