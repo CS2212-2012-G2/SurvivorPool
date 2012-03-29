@@ -44,7 +44,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JComboBox tfCastDate;
+	private JComboBox<String> tfCastDate;
 	private JLabel labelTribe;
 
 	private JTextField tfFirstName;
@@ -535,15 +535,14 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			tfContID.setEnabled(!sStart);
 			
 			tfCastDate.removeAllItems();
+			
 			tfCastDate.addItem("Active");
-			int i = 1;
-			while(i <= g.getCurrentWeek()){
-			tfCastDate.addItem("" + i);
-			i++;
-			}
+			int i;
+			for (i = 1; i <= g.getCurrentWeek(); i++)
+				tfCastDate.addItem("" + i);
 			
 			// defaults to the current date for easier standard "cast offs". 
-			tfCastDate.setSelectedIndex(tfCastDate.getItemCount() - 1);
+			//tfCastDate.setSelectedIndex(tfCastDate.getItemCount() - 1);
 			
 			List<ActionListener> acts = Arrays.asList(imgDisplay
 					.getActionListeners());
