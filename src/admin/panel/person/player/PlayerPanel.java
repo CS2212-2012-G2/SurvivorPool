@@ -188,8 +188,10 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 		switch (e.getField()) {
 		case USER_ID:
+			if (!GameData.getCurrentGame().isSeasonStarted()){
 			mf.setStatusErrorMsg("Invalid ID (must be between 2 and 7 chars"
 					+ " long, followed by numbers)", tfID);
+			}
 			break;
 		case USER_ID_DUP:
 			mf.setStatusErrorMsg("Invalid ID (in use)", tfID);
