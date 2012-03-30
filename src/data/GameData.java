@@ -192,7 +192,7 @@ public class GameData extends Observable {
 				}
 			}
 		}
-
+		
 		return list;
 	}
 	
@@ -766,6 +766,7 @@ public class GameData extends Observable {
 		List<Contestant> list = null;
 		if (isActive) {
 			list = getActiveContestants(true);
+			list.add(getElimCont()); // elim contestant still active
 		} else {
 			list = getAllContestants();
 		}
