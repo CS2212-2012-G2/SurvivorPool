@@ -68,9 +68,6 @@ public class BonusPanel extends JPanel {
 	
 	private List<JRadioButton> rbAnsList;
 	
-	private int currentWeek;
-	private int currentQuestionNumber;
-	
 	private ChangeListener clWeek;
 	private ChangeListener clQuestion;
 	
@@ -134,13 +131,11 @@ public class BonusPanel extends JPanel {
 		add(pnlListQ);
 		
 		//check if bonus questions already exist
-		if (Bonus.getAllQuestions().isEmpty()){
-			btnModify.setEnabled(false);
-		} else {
-			initExistingBonus();
-		}
+	//	Bonus.initBonus();
+		initExistingBonus();
 		
 		initListeners();
+		
 	}
 	
 	private void buildQuestionPanelP1() {
@@ -417,6 +412,14 @@ public class BonusPanel extends JPanel {
 		spnQuestion.addChangeListener(clQuestion);
 	}
 	
+	private void setEnableNewQPanel(boolean enabled) {
+		tfPromptInput.setEnabled(enabled);
+		btnNextPart.setEnabled(enabled);
+		
+		rbMultChoice.setEnabled(enabled);
+		rbShortAnswer.setEnabled(enabled);
+	}
+	
 	/**
 	 * checks if all multiple choice answers are 1-200 characters 
 	 * 		AND if at least one answer exists
@@ -464,6 +467,8 @@ public class BonusPanel extends JPanel {
 		tfShortAnswer.setText("");
 		
 		cardsQPanel.show(pnlQuestionEdit, STEP_1);
+		
+		setEnableNewQPanel(true);
 	}
 	
 	/**
@@ -492,6 +497,8 @@ public class BonusPanel extends JPanel {
 		}
 		
 		cardsQPanel.show(pnlQuestionEdit, STEP_1);
+		
+		setEnableNewQPanel(true);
 	}
 	
 	private BonusQuestion loadFromPanel() {
@@ -592,6 +599,8 @@ public class BonusPanel extends JPanel {
 				setupNewQuestion();
 			
 				System.out.println(Bonus.getAllQuestions());
+				
+				setEnableNewQPanel(false);
 			}		
 		});
 		
