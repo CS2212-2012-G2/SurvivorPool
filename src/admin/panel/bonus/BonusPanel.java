@@ -409,7 +409,7 @@ public class BonusPanel extends JPanel implements Observer {
 			s = "";
 		}
 		txtQuestionList.setText(s);*/
-		pnlQuestion.setQuestionView(q);
+		pnlQuestion.updateLabels(q);
 		
 	}
 	
