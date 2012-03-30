@@ -475,8 +475,95 @@ public class GameData extends Observable {
 		return weeksRem == 1;
 	}
 	
+	/**
+	 * Returns the initial bet amount.
+	 * @return
+	 */
+	public int getBetAmount() {
+		return betAmount;
+	}
+	
+	/**
+	 * Gets a Users index in the stored list by ID. Uses a binary search for
+	 * speed.
+	 * 
+	 * @param searchID
+	 * @return Index in the list, index <0 if not found.
+	 */
+	protected int getUserIndexID(String searchID) {
+		return Utils.BinIDSearchSafe(allUsers, searchID);
+	}
+
+	/**
+	 * Tells whether a Contestant ID is in use.
+	 * 
+	 * @param id
+	 *            The Contestant ID is in use.
+	 * @return True if in use.
+	 */
+	public boolean isContestantIDInUse(String id) {
+		return (getContestantIndexID(id) >= 0);
+	}
+
+	/**
+	 * Tells whether a User ID is in use.
+	 * 
+	 * @param id
+	 *            The Contestant ID is in use.
+	 * @return True if in use.
+	 */
+	public boolean isUserIDInUse(String id) {
+		return (getUserIndexID(id) >= 0);
+	}
+
+	/**
+	 * Returns the overall prize pool.
+	 * @return totalAmount
+	 */
+	public int getTotalAmount(){
+		return totalAmount;
+	}
+
+	/**
+	 * Returns the currently stored Game, this removed need to reference the
+	 * game data all the time. But also allows objects to read data, cleanly.
+	 * 
+	 * @return Currently started game, null if none present.
+	 */
+	public static GameData getCurrentGame() {
+		return GameData.currentGame;
+	}
+
+	
 	// ----------------- MUTATOR METHODS ------------------//
 
+	/**
+	 * Sets the overall prize pool.
+	 * @param total  
+	 */
+	public void setTotalAmount(int total){
+		this.totalAmount = total;
+	}
+	
+	/**
+	 * Nulls the current game stored, allows a new game to start.
+	 */
+	public void endCurrentGame() {
+		GameData.currentGame = null;
+		Bonus.deleteAllQuestions(); 
+		// removed tag, as there's a different between END_GAME and a reset. 
+		JSONUtils.resetSeason();
+	}
+
+	/**
+	 * Sets the initial bet amount.
+	 * @param betAmount
+	 */
+
+	public void setBetAmount(int betAmount) {
+		this.betAmount = betAmount;
+	}
+	
 	/**
 	 * TOOD:
 	 * 
@@ -710,102 +797,8 @@ public class GameData extends Observable {
 		return Utils.BinIDSearchSafe(allContestants, searchID);
 	}
 
-	/**
-	 * Tells whether a Contestant ID is in use.
-	 * 
-	 * @param id
-	 *            The Contestant ID is in use.
-	 * @return True if in use.
-	 */
-	public boolean isContestantIDInUse(String id) {
-		return (getContestantIndexID(id) >= 0);
-	}
-
-	/**
-	 * Tells whether a User ID is in use.
-	 * 
-	 * @param id
-	 *            The Contestant ID is in use.
-	 * @return True if in use.
-	 */
-	public boolean isUserIDInUse(String id) {
-		return (getUserIndexID(id) >= 0);
-	}
-
-	/**
-	 * Gets a Users index in the stored list by ID. Uses a binary search for
-	 * speed.
-	 * 
-	 * @param searchID
-	 * @return Index in the list, index <0 if not found.
-	 */
-	protected int getUserIndexID(String searchID) {
-		return Utils.BinIDSearchSafe(allUsers, searchID);
-	}
+	// ----------------- JSON ----------------- //
 	
-	/**
-	 * Sets the initial bet amount.
-	 * @param betAmount
-	 */
-
-	public void setBetAmount(int betAmount) {
-		this.betAmount = betAmount;
-	}
-
-	/**
-	 * Returns the initial bet amount.
-	 * @return
-	 */
-	public int getBetAmount() {
-		return betAmount;
-	}
-	
-	/**
-	 * Sets the overall prize pool.
-	 * @param total  
-	 */
-	public void setTotalAmount(int total){
-		this.totalAmount = total;
-	}
-	
-	/**
-	 * Returns the overall prize pool.
-	 * @return totalAmount
-	 */
-	public int getTotalAmount(){
-		return totalAmount;
-	}
-
-	/**
-	 * Returns the currently stored Game, this removed need to reference the
-	 * game data all the time. But also allows objects to read data, cleanly.
-	 * 
-	 * @return Currently started game, null if none present.
-	 */
-	public static GameData getCurrentGame() {
-		return GameData.currentGame;
-	}
-
-	/**
-	 * Nulls the current game stored, allows a new game to start.
-	 */
-	public void endCurrentGame() {
-		GameData.currentGame = null;
-		Bonus.deleteAllQuestions(); 
-		// removed tag, as there's a different between END_GAME and a reset. 
-		JSONUtils.resetSeason();
-	}
-
-	/**
-	 * toString returns a string of the contestant's information in JSON format.
-	 */
-	public String toString() {
-		return new String("GameData<WR:\"" + weeksRem + "\"" + ", WP:\""
-				+ weeksPassed + "\"" + ", #C:\"" + numInitialContestants + "\""
-				+ ", SS: " + "\"" + seasonStarted + "\"" + ", TN: {" + "\""
-				+ tribeNames[0] + "\", \"" + tribeNames[1] + "\"}>");
-	}
-
 	/**
 	 * Convert GameData to a JSON object
 	 * 
@@ -925,6 +918,21 @@ public class GameData extends Observable {
 		notifyAdd();
 	}
 
+
+	/**
+	 * Write all DATA into file
+	 */
+	public void writeData() {
+
+		try {
+			JSONUtils.writeJSON(JSONUtils.pathGame, toJSONObject());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// ---------------- INITIATION METHODS --------------- //
+	
 	/**
 	 * Used by SeasonCreate to create a new season.
 	 * 
@@ -962,6 +970,20 @@ public class GameData extends Observable {
 		
 		return currentGame;
 	}
+	
+	// ---------------- MISC --------------- //
+
+
+	/**
+	 * toString returns a string of the contestant's information in JSON format.
+	 */
+	public String toString() {
+		return new String("GameData<WR:\"" + weeksRem + "\"" + ", WP:\""
+				+ weeksPassed + "\"" + ", #C:\"" + numInitialContestants + "\""
+				+ ", SS: " + "\"" + seasonStarted + "\"" + ", TN: {" + "\""
+				+ tribeNames[0] + "\", \"" + tribeNames[1] + "\"}>");
+	}
+
 	/**
    * Small class used for removing parallel calls to do the same 
    * notification. The update system accounts for multiple modifications	
@@ -997,18 +1019,8 @@ public class GameData extends Observable {
     }
   }
 
-	/**
-	 * Write all DATA into file
-	 */
-	public void writeData() {
-
-		try {
-			JSONUtils.writeJSON(JSONUtils.pathGame, toJSONObject());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-
+  // ----------------- TEST DRIVER ------------------//
+  
 	public static void main(String[] args) {
 		GameData g = new GameData(6);
 

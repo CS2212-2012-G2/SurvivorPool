@@ -124,6 +124,23 @@ public class User implements Person, Comparable<User> {
 		return ultPick;
 	}
 
+	/**
+	 * Get the ultimate points based on ultimate pick
+	 * 
+	 * @return the ultimate points
+	 */
+	public int getUltimatePoints() {
+		return ultPoints;
+	}
+
+	/**
+	 * Get the number of bonus questions answered this week
+	 * @return num questions answered
+	 */
+	public int getNumBonusAnswer() {
+		return numBonusAnswer;
+	}
+
 	// ---------------- MUTATOR METHODS ----------------- //
 
 	/**
@@ -215,14 +232,10 @@ public class User implements Person, Comparable<User> {
 	}
 
 	/**
-	 * Get the ultimate points based on ultimate pick
+	 * sets the ultimate points.
 	 * 
-	 * @return the ultimate points
+	 * @param pts
 	 */
-	public int getUltimatePoints() {
-		return ultPoints;
-	}
-
 	public void setUltimatePoints(int pts) {
 		ultPoints = pts;
 	}
@@ -236,14 +249,6 @@ public class User implements Person, Comparable<User> {
 			throw new InvalidFieldException(Field.USER_ID, "Invalid Player ID");
 
 		unID = id;
-	}
-
-	/**
-	 * Get the number of bonus questions answered this week
-	 * @return num questions answered
-	 */
-	public int getNumBonusAnswer() {
-		return numBonusAnswer;
 	}
 
 	/**
