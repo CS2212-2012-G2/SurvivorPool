@@ -33,7 +33,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JComboBox cbCastDate;
+	private JComboBox<String> cbCastDate;
 	private JButton btnCastOff;
 	
 	private JLabel labelTribe;
@@ -43,7 +43,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
-	private JComboBox cbTribe;
+	private JComboBox<String> cbTribe;
 
 	// store internal
 	private GridBagLayout gbFields;
@@ -57,8 +57,8 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 
 	public ContestantFieldsPanel(JButton _imgButton, JLabel _labelName, JTextField _tfFirstName,
 			JTextField _tfLastName, JLabel _labelID, JTextField _tfContID,
-			JLabel _labelCastOff, JComboBox _cbCastDate, JButton _btnCastOff,
-			JLabel _labelTribe, JComboBox _cbTribe) {
+			JLabel _labelCastOff, JComboBox<String> _cbCastDate, JButton _btnCastOff,
+			JLabel _labelTribe, JComboBox<String> _cbTribe) {
 		super();
 
 		setLayout(new BorderLayout(10, 10));

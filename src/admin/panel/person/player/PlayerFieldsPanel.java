@@ -30,10 +30,10 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 	private JButton btnGenID;
 
 	private JLabel labelWeekly;
-	private JComboBox cbWeeklyPick;
+	private JComboBox<Contestant> cbWeeklyPick;
 
 	private JLabel labelUltimate;
-	private JComboBox cbUltPick;
+	private JComboBox<Contestant> cbUltPick;
 	
 	private JLabel labelPts;
 	private JLabel labelPtsValue;
@@ -45,8 +45,8 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 	public PlayerFieldsPanel(JLabel _labelName, JTextField _tfFirstName,
 			JTextField _tfLastName, JLabel _labelID, JTextField _tfID,
 			JButton _btnGenID, JLabel _labelWeekly,
-			JComboBox _cbWeeklyPick, JLabel _labelUltimate,
-			JComboBox _cbUltPick, JLabel ptsLabel, JLabel ptsValue) {
+			JComboBox<Contestant> _cbWeeklyPick, JLabel _labelUltimate,
+			JComboBox<Contestant> _cbUltPick, JLabel ptsLabel, JLabel ptsValue) {
 		super();
 		
 		/// name
@@ -207,7 +207,7 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		for (int i = 0; i < cbUltPick.getItemCount(); i++) {
 
 			// get the contestant to compare with, both store same values
-			Contestant cbCon = new Contestant();//cbUltPick.getItemAt(i);
+			Contestant cbCon = cbUltPick.getItemAt(i);
 			if (!ultSet && ultPick.getID().equals(cbCon.getID())) {
 				cbUltPick.setSelectedIndex(i);
 				ultSet = true;
@@ -234,11 +234,11 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		//u.setPoints(Integer.parseInt(labelPtsValue.getText()));
 
 		int item = cbUltPick.getSelectedIndex();
-		Contestant c = new Contestant();//cbUltPick.getItemAt(item);
+		Contestant c = cbUltPick.getItemAt(item);
 		u.setUltimatePick(c);
 
 		item = cbWeeklyPick.getSelectedIndex();
-		//c = cbWeeklyPick.getItemAt(item);
+		c = cbWeeklyPick.getItemAt(item);
 		u.setWeeklyPick(c);
 	}
 }

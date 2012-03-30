@@ -54,9 +54,9 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	private JButton btnGenID;
 
 	private JLabel labelWeekly;
-	private JComboBox cbWeeklyPick;
+	private JComboBox<Contestant> cbWeeklyPick;
 	private JLabel labelUltimate;
-	private JComboBox cbUltPick;
+	private JComboBox<Contestant> cbUltPick;
 
 	/*
 	 * FIXME: Break into two labels one with "Points:" other with actual value
@@ -93,10 +93,10 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		btnGenID = new JButton("Generate ID");
 
 		labelWeekly = new JLabel("Weekly Pick:");
-		cbWeeklyPick = new JComboBox();
+		cbWeeklyPick = new JComboBox<Contestant>();
 
 		labelUltimate = new JLabel("Ultimate Pick:");
-		cbUltPick = new JComboBox();
+		cbUltPick = new JComboBox<Contestant>();
 		
 		labelPts = new JLabel("Current Points:");
 		labelPtsValue = new JLabel("0");
