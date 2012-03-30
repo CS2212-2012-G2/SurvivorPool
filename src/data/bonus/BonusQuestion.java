@@ -69,8 +69,10 @@ public class BonusQuestion {
 	}
 	
 	public BonusQuestion(int week,int number){
-		this.week=week;
-		this.number=number;
+		setWeek(week);
+		setNumber(number);
+		
+		setBonusType(BONUS_TYPE.SHORT);
 	}
 
 	/**
@@ -184,6 +186,21 @@ public class BonusQuestion {
 	}
 	
 	/**
+	 * copys all fields from parameter into current object.
+	 * @param bq
+	 */
+	public void copy(BonusQuestion bq) {
+		setNumber(bq.getNumber());
+		setWeek(bq.getWeek());
+		
+		setBonusType(bq.getBonusType());
+		
+		setAnswer(bq.getAnswer());
+		setChoices(bq.getChoices());
+		setPrompt(bq.getPrompt());
+	}
+	
+	/**
 	 * Converts Contestant object to a json object
 	 * 
 	 * @return a JSON object containing all the data needed
@@ -226,6 +243,13 @@ public class BonusQuestion {
 		}
 		setWeek(((Number)o.get(KEY_WEEK)).intValue());
 		setNumber(((Number)o.get(KEY_NUMBER)).intValue());
+	}
+	
+	public String toString() {
+		String out = 
+				String.format("BonusQuestion<T: %s, W: %d. N: %d>", 
+						bonusType, getWeek(), getNumber());
+		return out;
 	}
 	
 	/** 
