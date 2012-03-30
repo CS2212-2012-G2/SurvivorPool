@@ -47,7 +47,8 @@ public class BonusPanel extends JPanel implements Observer {
 	
 	private JPanel pnlListQ = new JPanel();
 	private JPanel pnlViewWeek = new JPanel();
-	private JPanel pnlListWeeks = new JPanel();
+	private ViewQPanel pnlQuestion = new ViewQPanel();
+
 	
 	private JLabel lblViewWeek = new JLabel("View Week:");
 	
@@ -347,8 +348,7 @@ public class BonusPanel extends JPanel implements Observer {
 	 */
 	private void initPnlQuestionListing() {		
 		pnlListQ.setLayout(new BorderLayout());
-		pnlListWeeks.setPreferredSize(new Dimension(640, 200));
-
+		
 		btnNewQ = new JButton("New");
 		
 		//this.validate();
@@ -367,12 +367,10 @@ public class BonusPanel extends JPanel implements Observer {
 		pnlViewWeek.add(btnNewQ);
 		pnlViewWeek.add(btnModify);
 		
-		pnlListWeeks.add(txtQuestionList);
-		
 		pnlListQ.add(pnlViewWeek, BorderLayout.NORTH);
-		pnlListQ.add(pnlListWeeks, BorderLayout.CENTER);
+		pnlListQ.add(pnlQuestion, BorderLayout.CENTER);
 	}
-	
+
 	/**
 	 * initialise the bonus panel if bonus questions already exist
 	 */
@@ -400,7 +398,7 @@ public class BonusPanel extends JPanel implements Observer {
 	 * @param q
 	 */
 	private void setQuestionView(BonusQuestion q) {
-		String s;
+	/*	String s;
 		if (q != null){
 			s = "Week: " + "\t\t" + q.getWeek() + "\n" + 
 				"Question #: " + "\t\t" + (q.getNumber() + 1) + "\n" +
@@ -410,8 +408,9 @@ public class BonusPanel extends JPanel implements Observer {
 		} else {
 			s = "";
 		}
+		txtQuestionList.setText(s);*/
+		pnlQuestion.setQuestionView(q);
 		
-		txtQuestionList.setText(s);
 	}
 	
 	/**
