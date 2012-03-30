@@ -704,12 +704,13 @@ public class GameData extends Observable {
 	  /**
 		 * Nulls the current game stored, allows a new game to start.
 		 */
-		public void endCurrentGame() {
-			GameData.currentGame = null;
-			Bonus.deleteAllQuestions(); 
-			// removed tag, as there's a different between END_GAME and a reset. 
-			JSONUtils.resetSeason();
-		}
+	public void endCurrentGame() {
+		
+		Bonus.deleteAllQuestions(); 
+		// removed tag, as there's a different between END_GAME and a reset. 
+		JSONUtils.resetSeason();
+		GameData.currentGame = null;
+	}
 		
 	/**
 	 * Helper method to get the index of a contestant ID in the
