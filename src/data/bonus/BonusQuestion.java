@@ -184,6 +184,21 @@ public class BonusQuestion {
 	}
 	
 	/**
+	 * copys all fields from parameter into current object.
+	 * @param bq
+	 */
+	public void copy(BonusQuestion bq) {
+		setNumber(bq.getNumber());
+		setWeek(bq.getWeek());
+		
+		setBonusType(bq.getBonusType());
+		
+		setAnswer(bq.getAnswer());
+		setChoices(bq.getChoices());
+		setPrompt(bq.getPrompt());
+	}
+	
+	/**
 	 * Converts Contestant object to a json object
 	 * 
 	 * @return a JSON object containing all the data needed
