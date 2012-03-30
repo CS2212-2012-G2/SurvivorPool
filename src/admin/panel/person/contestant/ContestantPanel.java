@@ -310,14 +310,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					return;
 				}
 				
-				if (getFieldsChanged()) {
-					try {
-						savePerson();
-					} catch (InvalidFieldException ex) {
-						setExceptionError(ex);
-						return;
-					}
-				}
+				clickSaveButton();
 
 				setPanelPerson(null, true);
 			}
