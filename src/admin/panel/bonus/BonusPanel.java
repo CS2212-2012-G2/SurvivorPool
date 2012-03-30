@@ -3,7 +3,6 @@ package admin.panel.bonus;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -46,32 +45,27 @@ public class BonusPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
-	JPanel pnlListQ = new JPanel();
-	JPanel pnlViewWeek = new JPanel();
-	JPanel pnlListWeeks = new JPanel();
+	private JPanel pnlListQ = new JPanel();
+	private JPanel pnlViewWeek = new JPanel();
+	private JPanel pnlListWeeks = new JPanel();
 	
-	JLabel lblViewWeek = new JLabel("View Week:");
+	private JLabel lblViewWeek = new JLabel("View Week:");
 	
-	SpinnerNumberModel weekModel = new SpinnerNumberModel(1, 1, 1, 1); // default,low,min,step
-	JSpinner spnWeek = new JSpinner(weekModel);
+	private SpinnerNumberModel weekModel = new SpinnerNumberModel(1, 1, 1, 1); // default,low,min,step
+	private JSpinner spnWeek = new JSpinner(weekModel);
 	
-	JLabel lblViewQuestion = new JLabel("View Question:");
+	private JLabel lblViewQuestion = new JLabel("View Question:");
 	
-	SpinnerNumberModel snmQuestion = new SpinnerNumberModel(1, 1, 1, 1); // default,low,min,step
-	JSpinner spnQuestion = new JSpinner(snmQuestion);
+	private SpinnerNumberModel snmQuestion = new SpinnerNumberModel(1, 1, 1, 1); // default,low,min,step
+	private JSpinner spnQuestion = new JSpinner(snmQuestion);
 	
-	JButton btnModify = new JButton("Modify");
+	private JButton btnModify = new JButton("Modify");
 	
 	private JTextArea txtQuestionList;
-
-	private String question;
-	private String answer;
 
 	private List<JTextField> tfMultiList;
 	
 	private List<JRadioButton> rbAnsList;
-	
-	private boolean shortAns;
 	
 	private int currentWeek;
 	private int currentQuestionNumber;
@@ -478,8 +472,8 @@ public class BonusPanel extends JPanel implements Observer {
 		return (Integer)spnQuestion.getValue();
 	}
 	
-	private int getNewQValue() {
-		return (Integer)snmQuestion.getMaximum() + 1;
+	private int getNewQNumber() {
+		return Bonus.getNumQuestionsInWeek(getCurrentWeek())+1;
 	}
 	
 	private void setupNewQuestion() {
@@ -537,6 +531,8 @@ public class BonusPanel extends JPanel implements Observer {
 					bq.setAnswer(answers[i]);
 				}
 			}
+			
+			bq.setChoices(answers);
 		} else { // its a short answer
 			bq.setBonusType(BONUS_TYPE.SHORT);
 			
@@ -560,6 +556,13 @@ public class BonusPanel extends JPanel implements Observer {
 			public void actionPerformed(ActionEvent ae) {
 				cardsQPanel.show(pnlQuestionEdit, STEP_2);
 			}		
+		});
+		
+		btnNewQBack.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				cardsQPanel.show(pnlQuestionEdit, STEP_1);
+			}
 		});
 		
 		/**
@@ -587,6 +590,10 @@ public class BonusPanel extends JPanel implements Observer {
 				
 				// no errors in input at this point:
 				BonusQuestion temp = loadFromPanel();
+				
+				if (currentQ == null) // started without hitting new!
+					currentQ = new BonusQuestion(getCurrentWeek(), getNewQNumber());
+				
 				temp.setWeek(currentQ.getWeek());
 				temp.setNumber(currentQ.getNumber());
 				
@@ -594,19 +601,20 @@ public class BonusPanel extends JPanel implements Observer {
 				 * since currentQ is already in the bonus array, just update the value
 				 */
 				currentQ.copy(temp);
+				Bonus.addNewQuestion(currentQ);
+				
 				
 				setQuestionView(currentQ);
 				setWeekSpinner(currentQ.getWeek(), Bonus.getMaxWeek());
 				int w = currentQ.getNumber();
 				setQuestionSpinner(w, Bonus.getNumQuestionsInWeek(w));
+				
+				currentQ = new BonusQuestion(getCurrentWeek(), getNewQNumber());
+				setupNewQuestion();
+				
+				List<BonusQuestion> d = Bonus.getAllQuestions();
+				System.out.println(d);
 			}		
-		});
-		
-		btnNewQBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent ae) {
-				cardsQPanel.show(pnlQuestionEdit, STEP_1);
-			}
 		});
 		
 		/*
@@ -616,7 +624,7 @@ public class BonusPanel extends JPanel implements Observer {
 
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				currentQ = new BonusQuestion(getCurrentWeek(), getNewQValue());
+				currentQ = new BonusQuestion(getCurrentWeek(), getNewQNumber());
 				
 				setupNewQuestion();
 			}

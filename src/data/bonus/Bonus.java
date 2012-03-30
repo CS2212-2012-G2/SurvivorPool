@@ -38,10 +38,10 @@ public class Bonus extends Observable {
 	};;
 	
 	/**
-	 * DO NOT CALL THIS FUNCTION! Only used fromJSONObject or when a
-	 * bonusquestion is created
+	 * Adds a new question into the array. Be careful, this does NOT check if
+	 * an option is already present.
 	 * 
-	 * @param b
+	 * @param b Question to add in.
 	 */
 	public static void addNewQuestion(BonusQuestion b) {
 		questions.add(b);
