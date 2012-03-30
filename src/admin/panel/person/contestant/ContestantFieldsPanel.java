@@ -21,6 +21,7 @@ import admin.panel.person.PersonFields;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.GameData.UpdateTag;
 
 public class ContestantFieldsPanel extends JPanel implements PersonFields<Contestant> {
 
@@ -250,6 +251,10 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 			cbCastDate.setSelectedIndex(0);
 		
 		updateContPicture(c.getPicture());
+		
+		if (g.isSeasonEnded()){
+			g.notifyAdd(UpdateTag.END_GAME);
+		} 
 	}
 	
 	/**

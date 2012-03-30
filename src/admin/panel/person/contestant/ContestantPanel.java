@@ -551,5 +551,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			btnPickWin.setEnabled(true);
 			cbCastDate.setEditable(false);
 		}
+		
+		if (update.contains(UpdateTag.END_GAME)) {
+			btnSetStatus.setEnabled(false);
+			btnPickWin.setEnabled(false);
+			cbCastDate.setEnabled(false);
+			cbTribe.setEnabled(false);
+		}
 	}
 }
