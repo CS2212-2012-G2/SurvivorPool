@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 import json.simple.JSONObject;
@@ -19,7 +20,8 @@ public class JSONUtils {
 	
 	public static final String pathGame = "res/data/GameData.dat",
 							   pathBonus = "res/data/Bonus.dat",
-							   pathSettings = "res/data/Settings.dat";
+							   pathSettings = "res/data/Settings.dat",
+							   pathUserAnswer = "res/data/UserAnswer";
 
 	public static JSONObject readFile(String path) throws FileNotFoundException {
 		File f = new File(path);
@@ -101,6 +103,14 @@ public class JSONUtils {
 		f.delete();
 		File fB = new File(pathBonus);
 		fB.delete();
+		
+		List<User> users=GameData.getCurrentGame().getAllUsers();
+		File fUser; //remove all of users previous answers
+		for(User u:users){
+			fUser = new File(pathUserAnswer+u.getID()+".dat");
+			fUser.delete();
+		}
+		
 		return (f.exists() && fB.exists());
 	}
 
