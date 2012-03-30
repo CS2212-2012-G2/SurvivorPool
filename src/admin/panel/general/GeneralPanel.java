@@ -1,6 +1,7 @@
 package admin.panel.general;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
@@ -456,7 +458,9 @@ public class GeneralPanel extends JPanel implements Observer {
 			User tempUser;
 			List<User> winners = g.determineWinners();
 			List<Integer> pool = g.determinePrizePool();
-			JLabel winner = new JLabel("");
+			JTextArea winnerText = new JTextArea("");
+			winnerText.setEditable(false);
+			
 			String tempString = "";
 			for (int i = 0; i<winners.size(); i++){
 				tempUser = (User) winners.get(i); // grab user
@@ -466,15 +470,11 @@ public class GeneralPanel extends JPanel implements Observer {
 				+ " " + tempUser.getLastName() + " - " 
 				+ tempUser.getPoints() + "pts - $" + pool.get(i) + "\n";	
 			}
-			
-			// html formatting for multi line
-			tempString = "<html>" + tempString;
-			tempString.replaceAll("\n", "<br>");
-			
-			// place user's line in the jlabel
-			winner.setText(tempString);
-			// place the jlabel into the panel
-			pnlWinners.add(winner);
+				
+			// place user's line in the jtext area
+			winnerText.setText(tempString);
+			// place the textarea into the panel
+			pnlWinners.add(winnerText);
 			// show the winning panel 
 			contTribeWin.showWinners();
 			
