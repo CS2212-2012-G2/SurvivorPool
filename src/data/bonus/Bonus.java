@@ -65,6 +65,7 @@ public class Bonus extends Observable {
 	 * @return
 	 */
 	public static List<BonusQuestion> getAllQuestions() {
+		System.out.println(questions);
 		return questions;
 	}
 
@@ -129,11 +130,15 @@ public class Bonus extends Observable {
 	public static void fromJSONObject(JSONObject o) throws ParseException {
 		if(o==null)
 		    return;
+		
 		JSONArray qA = (JSONArray)o.get(KEY_QUESTIONS);
 		for (int i = 0; i < qA.size(); i++) {
 			BonusQuestion b = new BonusQuestion();
 			b.fromJSONObject((JSONObject)qA.get(i));
+
+			questions.add(b);
 		}
+		
 	}
 	
 	/**

@@ -31,7 +31,7 @@ public class ViewQPanel extends JPanel {
 	}
 	
 	public void updateLabels(BonusQuestion q) {
-		System.out.println("yeah");
+		//System.out.println("yeah");
 		lblWeek.setText(""+q.getWeek());
 		lblNum.setText(""+q.getNumber());
 		lblType.setText(""+q.getBonusType());
