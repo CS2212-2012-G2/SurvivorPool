@@ -29,6 +29,7 @@ public class Contestant implements Person, Comparable<Contestant> {
 	protected final static String KEY_PICTURE = "picture";
 	protected final static String KEY_TRIBE = "tribe";
 	protected final static String KEY_DATE = "date";
+	protected final static String KEY_CHOSEN = "selected";
 
 	/**
 	 * Constructor method for type contestant sets player info
@@ -338,6 +339,7 @@ public class Contestant implements Person, Comparable<Contestant> {
 		obj.put(KEY_PICTURE, getPicture());
 		obj.put(KEY_TRIBE, getTribe());
 		obj.put(KEY_DATE, getCastDate());
+		obj.put(KEY_CHOSEN, beenPicked());
 		return obj;
 	}
 
@@ -349,6 +351,9 @@ public class Contestant implements Person, Comparable<Contestant> {
 			setTribe((String) o.remove(KEY_TRIBE));
 			setPicture((String) o.remove(KEY_PICTURE));
 			setCastDate(Utils.numToInt(o.remove(KEY_DATE)).intValue());
+		    if((Boolean)o.remove(KEY_CHOSEN) == true){
+		    	selected();
+		    }
 		} catch (InvalidFieldException e) {
 			System.out
 					.println("Warning: InvalidFieldException in fromJSONObject");
