@@ -92,9 +92,27 @@ public class Bonus extends Observable {
 		int t = 0;
 		for (int i = 0; i < questions.size(); i++) {
 			BonusQuestion b = questions.get(i);
-			if (b.getWeek() == week) t++;
+			if (b.getWeek() == week) 
+				t++;
 		}
 		return t;
+	}
+	
+	/**
+	 * counts the number of weeks in the question list
+	 * @return
+	 */
+	public static int getMaxWeek() {
+		int w = 0;
+		for (int i = 0; i < questions.size(); i++) {
+			BonusQuestion b = questions.get(i);
+			
+			if (b.week > w) {
+				w = b.week;
+			}
+		}
+		
+		return w;
 	}
 	
 	public static JSONObject toJSONObject() throws ParseException {
@@ -115,7 +133,6 @@ public class Bonus extends Observable {
 		for (int i = 0; i < qA.size(); i++) {
 			BonusQuestion b = new BonusQuestion();
 			b.fromJSONObject((JSONObject)qA.get(i));
-			addNewQuestion(b);
 		}
 	}
 	
