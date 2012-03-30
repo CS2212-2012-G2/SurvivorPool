@@ -30,7 +30,6 @@ import data.Contestant;
 import data.GameData;
 import data.GameData.UpdateTag;
 import data.InvalidFieldException;
-import data.history.History;
 
 public class ContestantPanel extends PersonPanel<Contestant> implements MouseListener, Observer {
 
@@ -343,7 +342,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				}
 				
 				GameData g = GameData.getCurrentGame();
-				History h = g.getHistory();
 
 				if (!s.equals("Active")) {
 					int i = Integer.valueOf(s).intValue();
@@ -385,7 +383,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					
 				 else{
 					 if(g.getCastOff(i) != null){
-					 if(!h.canCastoff(i,c)){
+					    
 						int resp = JOptionPane.showConfirmDialog(null, "Doing this will invalidate your current point standings." +
 								                     " Proceed?", "Redoing cast off", JOptionPane.YES_NO_OPTION);
 					 if(resp == JOptionPane.YES_OPTION){	 
@@ -395,7 +393,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					 else JOptionPane.showMessageDialog(null,"Contestant is ineligible for re-cast off.");
 					 }
 					 else g.castOff(i,c);
-					 }
+					 
 				}
 				}
 					else{

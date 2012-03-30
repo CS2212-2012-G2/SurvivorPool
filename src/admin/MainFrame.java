@@ -39,7 +39,6 @@ import admin.panel.season.SeasonCreatePanel;
 import data.GameData;
 import data.Settings;
 import data.bonus.Bonus;
-import data.history.History;
 
 public class MainFrame extends JFrame {
 
@@ -145,19 +144,8 @@ public class MainFrame extends JFrame {
 			changeTheme(Utils.GUITHEME.Snow.name());
 		}
 		
-		if (settings.containsKey(Settings.HISTORY)) {
-			if (g != null) {
-				History h = new History(0);
-				try {
-					h.fromJSONObject((JSONObject)settings.get(Settings.HISTORY));
-					g.setHistory(h);
-				} catch (ParseException e) {
-					// just don't set the history if its bad.
-					settings.remove(Settings.HISTORY);
-				}
-				
-			}
-		}
+	
+		
 		
 		if (settings.containsKey(Settings.SCREEN_LOC_X)) {
 			int x = ((Number)settings.get(Settings.SCREEN_LOC_X)).intValue();
@@ -200,12 +188,6 @@ public class MainFrame extends JFrame {
 		Point l = getLocation();
 		settings.put(Settings.SCREEN_LOC_X, l.x);
 		settings.put(Settings.SCREEN_LOC_Y, l.y);
-		
-		if (g != null)
-			try {
-				settings.put(Settings.HISTORY, g.getHistory().toJSONObject());
-			} catch (ParseException e) {
-			}
 		
 		settings.writeData();
 	}

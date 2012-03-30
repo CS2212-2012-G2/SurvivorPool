@@ -16,7 +16,6 @@ import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 import admin.Utils;
 import data.bonus.Bonus;
-import data.history.History;
 
 /**
  * GameData is the class that will be used to keep track of the important game
@@ -42,7 +41,6 @@ public class GameData extends Observable {
 	private Contestant elimCont;
 	// used for asynchronous calls to notifyObservers()
     private UpdateCall updateExec;
-	private History selections; // history of who has been selected 
 	
 	public enum UpdateTag {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
@@ -83,7 +81,6 @@ public class GameData extends Observable {
 
 		weeksRem = numInitialContestants - 2;
 		weeksPassed = 0;
-		selections = new History(weeksRem);
 		setBetAmount(0);
 		this.numInitialContestants = numInitialContestants;
 		
@@ -393,14 +390,6 @@ public class GameData extends Observable {
 	
 	
 	
-	/**
-	 * Returns a history item for the current game.
-	 * 
-	 * @return selections   history object
-	 */
-	public History getHistory(){
-		return selections;
-	}
 	
 	/**
 	 * Returns the overall prize pool.
@@ -461,13 +450,6 @@ public class GameData extends Observable {
 	
 						// MUTATOR METHODS //
 
-	/**
-	 * Sets the list of contestant selections.
-	 * @param newH   new set of history
-	 */
-	public void setHistory(History newH) {
-		selections = newH;
-	}
 	
 	/**
 	 * Sets the initial bet amount.
@@ -539,8 +521,6 @@ public class GameData extends Observable {
 				} // wont happen
 			}
 			
-			selections.setWeek(getCurrentWeek());
-
 			/* Fill ultimate NULLs */
 			if (u.getUltimatePick().isNull()) {
 				try {
@@ -843,7 +823,6 @@ public class GameData extends Observable {
 		if(seasonStarted){
 			obj.put(KEY_BET_AMOUNT, betAmount);
 			obj.put(KEY_POOL_TOTAL, totalAmount);
-			selections.toJSONObject();
 		}
 		
 		return obj;
@@ -912,8 +891,7 @@ public class GameData extends Observable {
 				addUser(u);
 			} catch (InvalidFieldException ie) {
 			}
-			if(getCurrentWeek() >= 2)
-			selections.fromJSONObject(obj);
+			if(getCurrentWeek() >= 2);
 		}
 
 		notifyAdd();
