@@ -2,6 +2,139 @@ GROUP2README
 
 SECTIONS TO BE MARKED
 
+Final Acceptance Test Additions
+
+12. The administrative user must be able to start the game (at this point no 
+new players or contestants can be added). At this point the administrative 
+user should also enter the amount of money that each player is going to pitch 
+in (for example each player might be pitching in 5 dollars or 1 dollar).
+
+-
+
+15. The administrative user must be able to add/modify/delete bonus questions 
+for each round/week. Each bonus question must be 1 to 200 characters long, 
+the question can be either multiple choice or short answer. The answer must 
+be 1 to 200 characters. The administrative user must be able to list all the 
+bonus questions in order by round/week.
+
+-
+
+16. The administrative user must be able to change which contestant was 
+eliminated each week, incase he/she made a mistake. However the player can 
+NOT change who he/she picked to eliminated one the round has passed. If the 
+admin user change the contestant that was eliminated for a previous week, then 
+the standings will have to be updated.
+
+-
+
+17. If a player forgets to pick who will be eliminated in a week, then he/she 
+will be given a random contestant as his/her pick for that week (thus some weeks 
+the player might get points even though he/she didn't pick anyone, if the random 
+pick is the contestant who was eliminated). This also means that a player who 
+drops out (stops picking altogether) might end up winning the pool.
+
+- 
+
+18. Players pick which of the 3 remaining contestants will win. If they pick 
+correctly they get 40 points
+
+-
+
+19. Every week players will say who they think will be eliminated. If the player pick 
+the correct contestant who will be eliminated, they get 20 points
+
+- 
+
+20. A player can change who they think will win the whole game at any point, then they 
+get 2 points * the number of remaining contestants
+
+-
+
+21. Stage 2, during the last week, when there are only 3 contestants left Players pick 
+which of the 3 remaining contestants will win. If they pick correctly they get 40 points
+
+-
+
+22. Stage 2, during the last week, when there are only 3 contestants leftPlayers get the 
+points for the overall winner if they picked correctly in an early round
+
+-
+
+23. Stage 2, during the last week, when there are only 3 contestants leftPlayers get the 
+points from each round for picking who would be eliminated
+
+-
+
+24. All Stages, at any point during the game: At any point during the game, players may 
+answer additional bonus questions for bonus marks, for example "Who wins immunity this 
+week?", or "How many people received votes during tribal counsel this week?". Each 
+correct answer to each bonus question is awarded 10 points.
+
+-
+
+25. Assign a first place player, a second place player and third place player. The 
+first place player gets 60% of the amount of money, the second place player gets 30% 
+of the amount of money and the third place person gets 10% of the amount of money.
+
+-
+
+26. At any time the admin user should be able to get all the players picks for a given 
+week/round. This would normally be done by writing to the internet but because of 
+issues with FTP, you can read and write to the C: drive (both parts of the project will 
+be tested on the same machine with the same c: drive).
+
+-
+
+29. This system must allow the player to: pick which contestant will be the ultimate 
+winner. The player can change this at anytime but the points awarded go down.
+
+-
+
+30. This system must allow the player to: see which contestants are still remaining, 
+which have been eliminated
+
+-
+
+32. This system must allow the player to: see the bonus questions
+
+-
+
+33. This system must allow the player to: answer the bonus questions
+
+-
+
+34. This system must allow the player to: during the final week, pick from 
+the remaining 3 contestants, which contestants will win the whole game. 
+
+-
+
+35. The system should allow the player to: Upload his/her picks to the internet 
+(you might choose to do this by writing to the C drive instead of uploading to 
+the internet), the very first week, do NOT allow the user to upload his/her pick 
+unless the user picks an overall winner.
+
+-
+
+36. When all the players (users) have been added by the administrative user and 
+the game is about to start, the blackberry side must download all the userids to
+allow the player to logon and somehow store those userids on the blackberry. There 
+must also be a reset that wipes clean all the userids so that it could be reloaded 
+again. This must be persistent (the user should only have to load the players once).
+
+-
+
+37. A user must be able to choose between three skins on the standalone portion of 
+the application only (not the blackberry side). A skin is a look and feel and/or a 
+theme for the interface. For example all the buttons/text/menus would have the same 
+colour scheme in a particular skin. 3% of your final mark for acceptance testing 
+will be based on the aesthetic appeal/creativity/originality of your skins. HINT: 
+Java swing has a look and feel class to help. If you want to do some cool stuff, 
+do a search on Java, "Look and Feel" for sample code. BUT LEAVE THIS TO THE END, 
+make sure all the other stuff works first :-) The look and feel needs to be 
+implemented for the Admin Setup part of the system (not the Blackberry part) ONLY.
+
+-
+
 Assignment 3
 
 5. Up until the point that the game starts the administrative user should 
@@ -72,7 +205,8 @@ the contestant.
 FOR BLACKBERRY SD CARD:
 IN the simulator, click on simulate->change sd card
 
-In the folder where the swing part was executed, a 'res' folder should exist. Click 'Add Directory' and add the folder that contains the 'res' folder.
+In the folder where the swing part was executed, a 'res' folder should exist. Click 
+'Add Directory' and add the folder that contains the 'res' folder.
 
 Hit the +harddrive button(mount selected).
 
