@@ -42,7 +42,7 @@ public class GeneralPanel extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
 
 	Integer viewWeek = 0;
-
+	String winnerString = "";
 	private JLabel lblWeek;
 	
 	private JTextField tfTribe1;
@@ -182,8 +182,8 @@ public class GeneralPanel extends JPanel implements Observer {
 	protected JPanel buildWinnerPanel() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BorderLayout(5, 5));
-		
-		JLabel stubLabel = new JLabel("STUBBB");
+
+		JLabel stubLabel = new JLabel(winnerString);
 		pane.add(stubLabel, BorderLayout.CENTER);
 		
 		return pane;
@@ -451,32 +451,26 @@ public class GeneralPanel extends JPanel implements Observer {
 		if (update.contains(UpdateTag.END_GAME)) {
 			// TODO: is this really necessary?
 			btnStartSn.setText("End of Season");
-			btnAdvWk.setText("See Player Winners");
-			btnAdvWk.setEnabled(true);
+			btnAdvWk.setEnabled(false);		
+
+			User tempUser;
+			List<User> winners = g.determineWinners();
+			List<Integer> pool = g.determinePrizePool();
+			winnerString = "Winners";
+			for (int i = 0; i<winners.size(); i++){
+				tempUser = (User) winners.get(i);
+				winnerString = winnerString + "\n" + (i+1) + ". " + 
+				tempUser.toString() + " $" + pool.get(i);
+			}
+
+			// show the winning panel 
+			contTribeWin.showWinners();
+			pnlWinners.add(new JLabel(winnerString));
+			
 		}
 		
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
 			spnWeek.setValue(g.getCurrentWeek()-1);
-		}
-		
-		if (update.contains(UpdateTag.END_GAME)) {
-			// TODO: FIX, this is ugly. :P
-			
-			String tempString = "Top SurvivorPool Winners\n";
-			User tempUser;
-			List<User> winners = g.determineWinners();
-			List<Integer> pool = g.determinePrizePool();
-			
-			for (int i = 0; i<winners.size(); i++){
-				tempUser = (User) winners.get(i);
-				tempString = tempString + "\n" + (i+1) + ". " + 
-				tempUser.toString() + " $" + pool.get(i);
-			}
-			
-			pnlWinners.add(new JLabel(tempString));
-			
-			// show the winning panel 
-			contTribeWin.showWinners();
 		}
 
 	}
