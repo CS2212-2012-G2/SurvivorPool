@@ -375,16 +375,17 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					}
 					
 				 else{
-						if (g.getCastOff((i-1)) != null) {
-							if (c.beenPicked() || g.getCastOff(i-1).beenPicked()) {
+						if (g.getCastOff(i) != null) {
+							Contestant con2 = g.getCastOff(i);
+							if (c.beenPicked() || con2.beenPicked()) {
 								int resp = JOptionPane.showConfirmDialog(null,
 										"Doing this will invalidate your current point standings."
 												+ " Proceed?",
 										"Redoing cast off",
 										JOptionPane.YES_NO_OPTION);
 								if (resp == JOptionPane.YES_OPTION) {
-									g.castOff((i - 1), c);
-									g.undoCastOff((i - 1), g.getCastOff((i-1)));
+									g.castOff(i, c);
+									g.undoCastOff(i, con2);
 								} else
 									return;
 							}

@@ -317,11 +317,15 @@ public class GameData extends Observable {
 	 */
 	
 	public void setCastOff(int week, Contestant c){
-		if(week ==0 || castOffs[0] != null)
-			castOffs[week] = c;
-		else{	
-		castOffs[week-1] = c;
+		castOffs[week] = c;
 		}
+	
+	/**
+	 * setCastOff method specifically for JSON.
+	 */
+	
+	public void setCastOffJSON(int week, Contestant c){
+		castOffs[week] = c;
 	}
 
 	                        // USER //
@@ -604,7 +608,7 @@ public class GameData extends Observable {
 		
 		setElimCont(castOff);
 		setElimExists(true);
-		castOffs[week] = castOff;
+		setCastOff(week,castOff);
 		
 		castOff.setCastDate(week);
 		castOff.setToBeCast(true);
@@ -897,7 +901,7 @@ public class GameData extends Observable {
 				Contestant c = new Contestant();
 				c.fromJSONObject((JSONObject)coffs.get(i));
 				   try{
-					   setCastOff(i,c);
+					   setCastOffJSON(i,c);
 				   }catch(NullPointerException ie){   
 				   }
 			}
