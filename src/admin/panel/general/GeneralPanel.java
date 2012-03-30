@@ -449,23 +449,34 @@ public class GeneralPanel extends JPanel implements Observer {
 		}
 
 		if (update.contains(UpdateTag.END_GAME)) {
-			// TODO: is this really necessary?
+
 			btnStartSn.setText("End of Season");
 			btnAdvWk.setEnabled(false);		
 
 			User tempUser;
 			List<User> winners = g.determineWinners();
 			List<Integer> pool = g.determinePrizePool();
-			winnerString = "Winners";
+			JLabel winner = new JLabel("");
+			String tempString = "";
 			for (int i = 0; i<winners.size(); i++){
-				tempUser = (User) winners.get(i);
-				winnerString = winnerString + "\n" + (i+1) + ". " + 
-				tempUser.toString() + " $" + pool.get(i);
+				tempUser = (User) winners.get(i); // grab user
+				
+				// build user's line
+				tempString = tempString + (i+1) + ". " + tempUser.getFirstName() 
+				+ " " + tempUser.getLastName() + " - " 
+				+ tempUser.getPoints() + "pts - $" + pool.get(i) + "\n";	
 			}
-
+			
+			// html formatting for multi line
+			tempString = "<html>" + tempString;
+			tempString.replaceAll("\n", "<br>");
+			
+			// place user's line in the jlabel
+			winner.setText(tempString);
+			// place the jlabel into the panel
+			pnlWinners.add(winner);
 			// show the winning panel 
 			contTribeWin.showWinners();
-			pnlWinners.add(new JLabel(winnerString));
 			
 		}
 		

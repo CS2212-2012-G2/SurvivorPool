@@ -675,6 +675,7 @@ public class GameData extends Observable {
 	    first.setPoints(-1);
 	    second.setPoints(-1);
 	    third.setPoints(-1);	
+	    
 	    while (itr.hasNext()) {
 			
 	      u = itr.next();
@@ -691,12 +692,12 @@ public class GameData extends Observable {
 	     }	
 	 }
 	   List<User> tempList = new ArrayList<User>(); 
-	   if (first.getPoints() == -1)
-	   tempList.add(first);	
-	   if (second.getPoints() == -1)
-	   tempList.add(second);	
-	   if (third.getPoints() == -1)
-	   tempList.add(third);	
+	   if (first.getPoints() != -1)
+		   tempList.add(first);	
+	   if (second.getPoints() != -1)
+		   tempList.add(second);	
+	   if (third.getPoints() != -1)
+		   tempList.add(third);	
 	   return tempList;	
 	 }
 	
