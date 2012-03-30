@@ -880,7 +880,6 @@ public class GameData extends Observable {
 		if(seasonStarted){
 			betAmount = Utils.numToInt(obj.get(KEY_BET_AMOUNT));
 			totalAmount = Utils.numToInt(obj.get(KEY_POOL_TOTAL));
-			System.out.println(betAmount + " " + totalAmount);
 		}
 
 		// Contestants must be loaded before users, but after others!
