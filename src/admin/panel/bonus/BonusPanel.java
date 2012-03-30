@@ -3,15 +3,11 @@ package admin.panel.bonus;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -31,7 +27,6 @@ import javax.swing.event.ChangeListener;
 
 import admin.MainFrame;
 import data.GameData;
-import data.GameData.UpdateTag;
 import data.bonus.Bonus;
 import data.bonus.BonusQuestion;
 import data.bonus.BonusQuestion.BONUS_TYPE;
@@ -45,10 +40,6 @@ public class BonusPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private JPanel pnlListQ = new JPanel();
-	private JPanel pnlViewWeek = new JPanel();
-	private ViewQPanel pnlQuestion = new ViewQPanel();
-
 	private JPanel pnlListQ = new JPanel();
 	private JPanel pnlViewWeek = new JPanel();
 	private ViewQPanel pnlQuestion = new ViewQPanel();
