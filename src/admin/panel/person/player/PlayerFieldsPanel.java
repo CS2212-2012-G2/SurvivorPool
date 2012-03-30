@@ -13,8 +13,10 @@ import javax.swing.JTextField;
 
 import admin.panel.person.PersonFields;
 import data.Contestant;
+import data.GameData;
 import data.InvalidFieldException;
 import data.User;
+import data.GameData.UpdateTag;
 
 public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
@@ -240,5 +242,12 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		item = cbWeeklyPick.getSelectedIndex();
 		c = cbWeeklyPick.getItemAt(item);
 		u.setWeeklyPick(c);
+		
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded()){
+			g.notifyAdd(UpdateTag.END_GAME);
+		} else if (g.isSeasonStarted()){
+			g.notifyAdd(UpdateTag.END_GAME);
+		}
 	}
 }

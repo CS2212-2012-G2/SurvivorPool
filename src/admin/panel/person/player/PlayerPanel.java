@@ -355,6 +355,17 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
 			tableModel.fireTableDataChanged();
 		}
+		
+		if (update.contains(UpdateTag.END_GAME)) {
+			btnGenID.setEnabled(false);
+			tfFirstName.setEnabled(false);
+			tfLastName.setEnabled(false);
+			tfID.setEnabled(false);
+			
+			cbUltPick.setEnabled(!g.isSeasonEnded());
+			btnSave.setEnabled(!g.isSeasonEnded());
+			cbWeeklyPick.setEnabled(!g.isSeasonEnded());
+		}
 	}
 
 	@Override
