@@ -348,51 +348,48 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					if(i == g.getCurrentWeek()){
 					// check if someone is already cast off
 					if (g.doesElimExist() == true) {
-						JOptionPane.showMessageDialog(
-										null,
-										"You can't cast off more than one " +
-										"person per week. If you accidently" +
-										" casted the wrong person, you can " +
-										"undo the incorrect cast first, and " +
-										"then cast off the correct one.");
+						JOptionPane.showMessageDialog(null,"You can't cast off more than one " +
+										"person per week. If you accidently casted the wrong person, you can " +
+										"undo the incorrect cast first, and then cast off the correct one.");
 						return;
 					}
 					
 					
 					// can't cast off someone already off.
 					if (c.isCastOff()) {
-						JOptionPane.showMessageDialog(null,
-								"This person is already out of the game.");
+						JOptionPane.showMessageDialog(null,"This person is already out of the game.");
 						return;
 					}
 					
 					if (g.isFinalWeek()) {
-						JOptionPane.showMessageDialog(null,
-								"In the final week nobody is cast off, " +
+						JOptionPane.showMessageDialog(null,"In the final week nobody is cast off, " +
 								"instead you must select a winner.");
 						return;
 					}
 					
 					if (g.isSeasonEnded()) {
-						JOptionPane.showMessageDialog(null,
-								"The season has ended. Thank you for playing!");
+						JOptionPane.showMessageDialog(null,"The season has ended. Thank you for playing!");
 						return;
 					}
 					g.castOff(i,c);
 					}
 					
 				 else{
-					 if(g.getCastOff(i) != null){
-					    
-						int resp = JOptionPane.showConfirmDialog(null, "Doing this will invalidate your current point standings." +
-								                     " Proceed?", "Redoing cast off", JOptionPane.YES_NO_OPTION);
-					 if(resp == JOptionPane.YES_OPTION){	 
-					 g.castOff(i,c);
-					 g.undoCastOff(i,g.getCastOff(i));
-					 }
-					 else JOptionPane.showMessageDialog(null,"Contestant is ineligible for re-cast off.");
-					 }
-					 else g.castOff(i,c);
+						if (g.getCastOff((i-1)) != null) {
+							if (c.beenPicked() || g.getCastOff(i-1).beenPicked()) {
+								int resp = JOptionPane.showConfirmDialog(null,
+										"Doing this will invalidate your current point standings."
+												+ " Proceed?",
+										"Redoing cast off",
+										JOptionPane.YES_NO_OPTION);
+								if (resp == JOptionPane.YES_OPTION) {
+									g.castOff((i - 1), c);
+									g.undoCastOff((i - 1), g.getCastOff((i-1)));
+								} else
+									return;
+							}
+						} else
+							g.castOff((i - 1), c);
 					 
 				}
 				}
@@ -401,8 +398,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 				        g.undoCastOff(g.getCurrentWeek(),c);
 				}   else return;
 			}
-
-				update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.CONTESTANT_CAST_OFF));
 			}
 		});
 		

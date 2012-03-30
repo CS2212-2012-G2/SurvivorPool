@@ -29,7 +29,7 @@ public class Contestant implements Person, Comparable<Contestant> {
 	protected final static String KEY_PICTURE = "picture";
 	protected final static String KEY_TRIBE = "tribe";
 	protected final static String KEY_DATE = "date";
-	protected final static String KEY_CHOSEN = "selected";
+	protected final static String KEY_CHOSEN = "chosen";
 
 	/**
 	 * Constructor method for type contestant sets player info

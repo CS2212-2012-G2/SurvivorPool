@@ -121,7 +121,7 @@ public class GameData extends Observable {
 	 * @return  castOffs[week]
 	 */
 	public Contestant getCastOff(int week){
-		return castOffs[week-1];
+		return castOffs[week];
 	}
 	
 	/**
@@ -796,6 +796,8 @@ public class GameData extends Observable {
 		setElimExists(false);
 		
 		castOff.setCastDate(-1);	
+		
+		notifyAdd(UpdateTag.CONTESTANT_CAST_OFF);
 	}
 
 	// ----------------- JSON ----------------- //
