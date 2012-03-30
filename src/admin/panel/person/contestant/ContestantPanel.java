@@ -43,12 +43,12 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	private JLabel labelName;
 	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
-	private JComboBox<String> cbCastDate;
+	private JComboBox cbCastDate;
 	private JLabel labelTribe;
 
 	private JTextField tfFirstName;
 	private JTextField tfLastName;
-	private JComboBox<String> cbTribe;
+	private JComboBox cbTribe;
 
 	private JTextField tfContID;
 	private JLabel labelID;
@@ -84,11 +84,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		tfLastName = new JTextField(20);
 
 		labelCastOff = new JLabel("Cast off:");
-		cbCastDate = new JComboBox<String>();
+		cbCastDate = new JComboBox();
 		btnSetStatus = new JButton("Set Status");
 
 		labelTribe = new JLabel("Tribe:");
-		cbTribe = new JComboBox<String>(GameData.getCurrentGame()
+		cbTribe = new JComboBox(GameData.getCurrentGame()
 				.getTribeNames());
 
 		labelID = new JLabel("ID:");

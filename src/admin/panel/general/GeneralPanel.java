@@ -261,18 +261,18 @@ public class GeneralPanel extends JPanel implements Observer {
 	
 	private void buildHistoryTables() {
 		// build the encapsulating panels:
-		final Border bevB = BorderFactory
-				.createSoftBevelBorder(BevelBorder.LOWERED);
+		//final Border bevB = BorderFactory
+		//		.createSoftBevelBorder(BevelBorder.LOWERED);
 		final Dimension displaySize = new Dimension(150, 200);
 
 		pnlRemCons = new JPanel();
-		pnlRemCons.setBorder(BorderFactory.createTitledBorder(bevB,
-				"Contestants"));
+		//pnlRemCons.setBorder(BorderFactory.createTitledBorder(bevB,
+		//		"Contestants"));
 		pnlRemCons.setPreferredSize(displaySize);
 
 		pnlCastOffs = new JPanel();
-		pnlCastOffs.setBorder(BorderFactory.createTitledBorder(bevB,
-				"Cast Offs"));
+		//pnlCastOffs.setBorder(BorderFactory.createTitledBorder(bevB,
+		//		"Cast Offs"));
 		pnlCastOffs.setPreferredSize(displaySize);
 
 		// Tables:
