@@ -250,6 +250,10 @@ public class BonusQuestion {
 						Integer.toString(j),answer,s,i,j);
 			}	
 		}
+		JSONObject json = Bonus.toJSONObject();
+		System.out.println(json.toJSONString());
+		JSONUtils.writeJSON(JSONUtils.pathBonus, json);
+		
 		List<BonusQuestion> l = Bonus.getAllQuestions();
 		for(int i =0;i<l.size();i++){
 			System.out.println(l.get(i).getPrompt());
@@ -262,13 +266,12 @@ public class BonusQuestion {
 						b.getNumber()+" "+Integer.toString(j));
 			}	
 		}
-		
-		JSONObject json = Bonus.toJSONObject();
-		System.out.println(json.toJSONString());
+	
 		
 		Bonus.fromJSONObject(json);
 		json = Bonus.toJSONObject();
+		System.out.println("This has duplicate values at this point. Do not use for FILE IO!");
 		System.out.println(json.toJSONString());
-		JSONUtils.writeJSON(JSONUtils.pathBonus, json);
+		
 	}
 }
