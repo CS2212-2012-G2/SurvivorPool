@@ -18,8 +18,7 @@ public class Contestant implements Person, Comparable<Contestant> {
 	protected String firstName, lastName, tribe, picture;
 	protected int castDate = -1; // week that player was cast off
 	protected String cID;
-	private boolean toBeCast;
-	private boolean isNull = false;
+	private boolean toBeCast, isNull = false, picked;
 
 	public final static String NULL_ID = "??";
 
@@ -49,10 +48,12 @@ public class Contestant implements Person, Comparable<Contestant> {
 		setFirstName(first);
 		setLastName(last);
 		setTribe(_tribe);
+		picked = false;
 	}
 
 	public Contestant() {
 		castDate = -1;
+		picked = false;
 	}
 
 	// ------------------ ACCESSOR METHODS -----------------//
@@ -82,6 +83,16 @@ public class Contestant implements Person, Comparable<Contestant> {
 	 */
 	public String getPicture() {
 		return picture;
+	}
+	
+	/**
+	 * Returns whether or not a contestant has been chosen as a weekly or ultimate pick.
+	 * 
+	 * @return this.picked
+	 */
+	
+	public boolean beenPicked(){
+		return picked;
 	}
 
 	/**
@@ -158,7 +169,14 @@ public class Contestant implements Person, Comparable<Contestant> {
 	public void setPicture(String pic) {
 		picture = pic;
 	}
-
+	
+	/**
+	 * Sets the contestants picked status to true.
+	 */
+	public void selected(){
+		this.picked = true;
+	}
+	
 	/**
 	 * setTribe sets the contestant's current tribe
 	 * 

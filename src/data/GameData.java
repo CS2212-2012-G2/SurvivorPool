@@ -529,6 +529,7 @@ public class GameData extends Observable {
 				} // wont happen
 			}
 		}
+		checkPicks();
 		allocatePoints(getElimCont());
 		Contestant nullC = new Contestant();
 		nullC.setNull();
@@ -610,6 +611,25 @@ public class GameData extends Observable {
 		
 		notifyAdd(UpdateTag.CONTESTANT_CAST_OFF);
 	}
+	
+	/**
+	 * Checks who was chosen as a weekly or ultimate pick. Sets the contestant's picked status to
+	 * true if selected.
+	 */
+	
+	public void checkPicks(){
+		List<User> choices = getCurrentGame().getAllUsers();
+		for(User u : choices){
+			u.getWeeklyPick().selected();
+			u.getUltimatePick().selected();
+		}
+	}
+	
+	/**
+	 * Returns the prize pool split. Accounts for one winner, two winners, and three winners.
+	 * 
+	 * @return list of int values to give each user.
+	 */
 	
 	public List<Integer> determinePrizePool(){
 		   List<Integer> tempList = new ArrayList<Integer>(); 
