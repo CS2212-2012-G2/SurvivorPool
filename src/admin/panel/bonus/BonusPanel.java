@@ -401,7 +401,7 @@ public class BonusPanel extends JPanel implements Observer {
 	/*	String s;
 		if (q != null){
 			s = "Week: " + "\t\t" + q.getWeek() + "\n" + 
-				"Question #: " + "\t\t" + (q.getNumber() + 1) + "\n" +
+				"Question #: " + "\t\t" + q.getNumber() + "\n" +
 				"Question Type: " + "\t\t" + q.getBonusType() + "\n" + 
 				"Question: " + "\t\t" + q.getPrompt() + "\n" + 
 				"Answer: " + "\t\t" + q.getAnswer() + "\n\n";
@@ -605,14 +605,13 @@ public class BonusPanel extends JPanel implements Observer {
 				
 				setQuestionView(currentQ);
 				setWeekSpinner(currentQ.getWeek(), Bonus.getMaxWeek());
-				int w = currentQ.getNumber();
+				int w = currentQ.getWeek();
 				setQuestionSpinner(w, Bonus.getNumQuestionsInWeek(w));
 				
 				currentQ = new BonusQuestion(getCurrentWeek(), getNewQNumber());
 				setupNewQuestion();
-				
-				List<BonusQuestion> d = Bonus.getAllQuestions();
-				System.out.println(d);
+			
+				System.out.println(Bonus.getAllQuestions());
 			}		
 		});
 		
