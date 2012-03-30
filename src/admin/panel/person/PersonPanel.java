@@ -365,7 +365,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		return (usingContestants ? "Contestant" : "Player");
 	}
 	
-	private void clickSaveButton() {
+	protected void clickSaveButton() {
 		if (!getFieldsChanged()) 
 			return;
 		

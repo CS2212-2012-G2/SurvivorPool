@@ -235,16 +235,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (fieldsChanged) {
-					try {
-						savePerson();
-					} catch (InvalidFieldException ex) {
-						// can't add new.. :/
-						setExceptionError(ex);
-						return;
-					}
-				}
-
+				clickSaveButton();	
+			
 				setPanelPerson(null, true);
 			}
 
