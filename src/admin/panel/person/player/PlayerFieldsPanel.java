@@ -245,9 +245,9 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		
 		GameData g = GameData.getCurrentGame();
 		if (g.isSeasonEnded()){
-			g.notifyAdd(UpdateTag.END_GAME);
+			g.notifyAdd(UpdateTag.SAVE);
 		} else if (g.isSeasonStarted()){
-			g.notifyAdd(UpdateTag.END_GAME);
+			g.notifyAdd(UpdateTag.SAVE);
 		}
 	}
 }

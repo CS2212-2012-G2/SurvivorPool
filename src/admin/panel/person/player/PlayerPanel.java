@@ -356,7 +356,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			tableModel.fireTableDataChanged();
 		}
 		
-		if (update.contains(UpdateTag.END_GAME)) {
+		if (update.contains(UpdateTag.SAVE)) {
 			btnGenID.setEnabled(false);
 			tfFirstName.setEnabled(false);
 			tfLastName.setEnabled(false);

@@ -253,7 +253,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		updateContPicture(c.getPicture());
 		
 		if (g.isSeasonEnded()){
-			g.notifyAdd(UpdateTag.END_GAME);
+			g.notifyAdd(UpdateTag.SAVE);
 		} 
 	}
 	
