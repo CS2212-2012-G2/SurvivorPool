@@ -399,6 +399,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			
 			public void actionPerformed(ActionEvent ae) {
 				GameData g = GameData.getCurrentGame();
+						
 				
 				if (g.isSeasonEnded()) {
 					JOptionPane.showMessageDialog(null,
@@ -410,12 +411,20 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					return;
 				}
 				
+				
+				
 				Contestant win = null;
 				try {
 					win = getPerson();
 				} catch (InvalidFieldException e) { return; } // shouldn't happen
 				
 				if (win == null) return;
+				
+				if (win.isCastOff()) {
+					JOptionPane.showMessageDialog(null,
+					"You cannot pick a cast off person to win");
+					return;
+				}
 				
 				// cast off the other two contestants (always three left)
 				for (Contestant c: g.getActiveContestants(true)) {
@@ -558,6 +567,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			
 			if (GameData.getCurrentGame().isSeasonEnded())
 				cbCastDate.setEnabled(false);
+			
 			
 			cbTribe.setEnabled(false);
 		}
