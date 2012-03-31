@@ -309,7 +309,7 @@ public class GeneralPanel extends JPanel implements Observer {
 	private String getAdvWkString(){
 		GameData g = GameData.getCurrentGame();
 				
-		String s = "Advance to Week";
+		String s = "Advance Week";
 		if(g!=null){
 			if(g.isSeasonEnded())
 				s="Advance Week";
