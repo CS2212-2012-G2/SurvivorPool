@@ -208,6 +208,9 @@ public class BonusQuestion {
 	 */
 	public JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
+		
+		obj.put(KEY_TYPE, bonusType.toString());
+		
 		obj.put(KEY_PROMPT, prompt);
 		obj.put(KEY_ANSWER, answer);
 
@@ -230,6 +233,8 @@ public class BonusQuestion {
 
 		setPrompt((String)o.get(KEY_PROMPT));
 		setAnswer((String)o.get(KEY_ANSWER));
+		
+		setBonusType(BONUS_TYPE.valueOf((String)o.get(KEY_TYPE)));
 
 		JSONArray jChoices = (JSONArray)o.get(KEY_CHOICES);
 		if (jChoices == null) {

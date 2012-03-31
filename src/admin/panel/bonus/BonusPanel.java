@@ -369,6 +369,8 @@ public class BonusPanel extends JPanel {
 		
 		setWeekSpinner(1, Bonus.getMaxWeek());
 		setQuestionSpinner(1, Bonus.getNumQuestionsInWeek(1));
+		
+		setQuestionView(Bonus.getQuestion(getCurrentWeek(), getCurrentQNum()));
 	}
 	
 	/**
@@ -644,7 +646,7 @@ public class BonusPanel extends JPanel {
 				int cw = getCurrentWeek();
 				setQuestionSpinner(1, Bonus.getNumQuestionsInWeek(cw));
 				
-				setQuestionView(Bonus.getQuestion(getCurrentWeek(), getCurrentQNum()));
+				setQuestionView(Bonus.getQuestion(cw, getCurrentQNum()));
 				
 				int gameWeek = GameData.getCurrentGame().getCurrentWeek();
 				btnModify.setEnabled(cw == gameWeek);
@@ -663,24 +665,4 @@ public class BonusPanel extends JPanel {
 		
 		spnQuestion.addChangeListener(clQuestion);
 	}
-
-	// TODO: clean
-	/*@Override
-	public void update(Observable observ, Object obj) {
-		GameData g = (GameData)observ;
-		
-		if (obj.equals(EnumSet.of(UpdateTag.START_SEASON))){
-			currentWeek = g.getCurrentWeek();
-			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, g.getCurrentWeek());
-			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
-		}
-		if (obj.equals(EnumSet.of(UpdateTag.ADVANCE_WEEK))){
-			currentWeek = g.getCurrentWeek();
-			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, g.getCurrentWeek());
-			setQuestionSpinner(1, 1);
-			txtQuestionList.setText("");
-		}
-	}*/
 }
