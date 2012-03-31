@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,18 +26,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import json.simple.JSONObject;
-import json.simple.parser.ParseException;
-
-import admin.Utils;
-import admin.StatusPanel;
 import admin.panel.bonus.BonusPanel;
-import admin.panel.person.contestant.ContestantPanel;
 import admin.panel.general.GeneralPanel;
+import admin.panel.person.contestant.ContestantPanel;
 import admin.panel.person.player.PlayerPanel;
 import admin.panel.season.SeasonCreatePanel;
-
 import data.GameData;
+import data.GameData.UpdateTag;
 import data.Settings;
 import data.bonus.Bonus;
 
@@ -116,7 +112,7 @@ public class MainFrame extends JFrame {
 			} else if (ae.getSource() == mnuItemReset) {
 				resetSeason();
 			} else if (ae.getSource() == mnuItemSave){
-				GameData.getCurrentGame().writeData();
+				saveAllData();
 			} else if (ae.getSource() instanceof JRadioButtonMenuItem) {
 				changeTheme(ae.getActionCommand());
 			}
@@ -127,25 +123,36 @@ public class MainFrame extends JFrame {
 		@Override
 		public void stateChanged(ChangeEvent ce) {
 			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
+			
+			GameData g = GameData.getCurrentGame();
+			if (g != null)
+				g.notifyAdd(UpdateTag.FORCE_SAVE);
+			
 			String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
 			statusBar.setTabLabel(tab);
 		}
 	};
 	
+	private void saveAllData() {
+		if (GameData.getCurrentGame() != null)
+			GameData.getCurrentGame().writeData();
+		
+		if (!Bonus.getAllQuestions().isEmpty()) 
+			Bonus.writeData();
+		
+		if (settings != null)
+			saveSettings();
+	}
+	
 	/**
 	 * Loads the settings value into the GUI from the file
 	 */
 	private void loadSettings() {
-		GameData g = GameData.getCurrentGame();
-		
 		if (settings.containsKey(Settings.THEME)) {
 			changeTheme((String)settings.get(Settings.THEME));
 		} else {
 			changeTheme(Utils.GUITHEME.Snow.name());
 		}
-		
-	
-		
 		
 		if (settings.containsKey(Settings.SCREEN_LOC_X)) {
 			int x = ((Number)settings.get(Settings.SCREEN_LOC_X)).intValue();
@@ -177,8 +184,6 @@ public class MainFrame extends JFrame {
 	 * Pulls the settings' values from the GUI into the file.
 	 */
 	private void saveSettings() {
-		GameData g = GameData.getCurrentGame();
-		
 		settings.put(Settings.THEME, Utils.getTheme().name());
 		
 		Dimension d = getSize();
@@ -379,14 +384,7 @@ public class MainFrame extends JFrame {
 	 * Saves all data associated with the application
 	 */
 	private void windowClose() {
-		if (GameData.getCurrentGame() != null)
-			GameData.getCurrentGame().writeData();
-		
-		if (!Bonus.getAllQuestions().isEmpty()) 
-			Bonus.writeData();
-		
-		if (settings != null)
-			saveSettings();
+		saveAllData();
 		
 		System.exit(0);
 	}
