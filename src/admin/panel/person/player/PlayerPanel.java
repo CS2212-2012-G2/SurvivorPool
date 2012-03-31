@@ -144,7 +144,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		// used to maintain state... :/
 		// HACK AND A HALF.
 		addComponentListener(new ComponentAdapter() {
-			int ultIndex, weekIndex;
 			Contestant ult,week;
 			@Override
 			public void componentShown(ComponentEvent e){
