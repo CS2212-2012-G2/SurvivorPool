@@ -11,7 +11,7 @@ new players or contestants can be added). At this point the administrative
 user should also enter the amount of money that each player is going to pitch 
 in (for example each player might be pitching in 5 dollars or 1 dollar).
 
-- Upon a RESET (through the file menu bar) you will be prompted for the bet amount
+- Upon clicking Start Season (in the General Panel) you will be prompted for the bet amount
 
 15. The administrative user must be able to add/modify/delete bonus questions 
 for each round/week. Each bonus question must be 1 to 200 characters long, 
