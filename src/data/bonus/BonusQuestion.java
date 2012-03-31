@@ -1,6 +1,7 @@
 package data.bonus;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 import json.simple.JSONArray;
@@ -52,14 +53,19 @@ public class BonusQuestion {
 	 *            for MC)
 	 */
 	public BonusQuestion(String prompt, String answer, String[] choices, int week, int number) {
+		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
+		
+		if (bonusType == BONUS_TYPE.MULTI && !Arrays.asList(choices).contains(answer)) {
+			throw new RuntimeException("Error, answer not present in choices.");
+		}
+		
 		this.prompt = prompt;
 		this.answer = answer;
 		this.choices = choices;
-		bonusType = choices == null ? BONUS_TYPE.SHORT : BONUS_TYPE.MULTI;
+		
 		this.week = week;
 		this.number = number;
 		Bonus.addNewQuestion(this);
-		// TODO: do we need to check if answer is in choices?
 	}
 
 	/**
@@ -139,14 +145,12 @@ public class BonusQuestion {
 	}
 
 	/**
-	 * Set choices. CHANGES TYPE TO MULTIPLE CHOICE!
+	 * Set choices
 	 * 
 	 * @param choices
 	 */
 	public void setChoices(String[] choices) {
 		this.choices = choices;
-		if(choices!=null)
-			bonusType = BONUS_TYPE.MULTI;
 	}
 
 	/**
@@ -234,7 +238,8 @@ public class BonusQuestion {
 		setPrompt((String)o.get(KEY_PROMPT));
 		setAnswer((String)o.get(KEY_ANSWER));
 		
-		setBonusType(BONUS_TYPE.valueOf((String)o.get(KEY_TYPE)));
+		String type = (String)o.get(KEY_TYPE);
+		setBonusType(BONUS_TYPE.valueOf(type));
 
 		JSONArray jChoices = (JSONArray)o.get(KEY_CHOICES);
 		if (jChoices == null) {
@@ -281,7 +286,7 @@ public class BonusQuestion {
 		}
 		JSONObject json = Bonus.toJSONObject();
 		System.out.println(json.toJSONString());
-		JSONUtils.writeJSON(JSONUtils.pathBonus, json);
+		// DON'T WRITE THIS FILE.
 		
 		List<BonusQuestion> l = Bonus.getAllQuestions();
 		for(int i =0;i<l.size();i++){

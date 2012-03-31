@@ -65,7 +65,6 @@ public class Bonus extends Observable {
 	 * @return
 	 */
 	public static List<BonusQuestion> getAllQuestions() {
-		System.out.println(questions);
 		return questions;
 	}
 

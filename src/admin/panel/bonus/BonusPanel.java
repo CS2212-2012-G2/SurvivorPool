@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -347,9 +346,6 @@ public class BonusPanel extends JPanel implements Observer{
 		
 		btnNewQ = new JButton("New");
 		
-		//this.validate();
-		//Utils.style(this);
-		
 		pnlListQ.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		txtQuestionList = new JTextArea("");
@@ -587,24 +583,30 @@ public class BonusPanel extends JPanel implements Observer{
 				temp.setWeek(currentQ.getWeek());
 				temp.setNumber(currentQ.getNumber());
 				
-				/* 
-				 * since currentQ is already in the bonus array, just update the value
-				 */
+				//since currentQ is already in the bonus array, just 
+				//update the value
 				currentQ.copy(temp);
-				Bonus.addNewQuestion(currentQ);
 				
+				// check if it's present first
+				if (!Bonus.getAllQuestions().contains(currentQ)) 
+					Bonus.addNewQuestion(currentQ);
 				
+				// update the spinners and models. 
 				setQuestionView(currentQ);
 				setWeekSpinner(currentQ.getWeek(), Bonus.getMaxWeek());
 				int w = currentQ.getWeek();
 				setQuestionSpinner(w, Bonus.getNumQuestionsInWeek(w));
 				
-				currentQ = new BonusQuestion(getCurrentWeek(), getNewQNumber());
+				// show the question we just made
+				spnWeek.setValue(w);
+				spnQuestion.setValue(currentQ.getNumber());
+				
+				// create a new question for the next one. 
 				setupNewQuestion();
-			
-				System.out.println(Bonus.getAllQuestions());
 
 				setEnableNewQPanel(false);
+				
+				System.out.println(Bonus.getAllQuestions());
 			}		
 		});
 		
@@ -657,6 +659,8 @@ public class BonusPanel extends JPanel implements Observer{
 				
 				setQuestionView(Bonus.getQuestion(cw, getCurrentQNum()));
 				
+				spnQuestion.setValue(getCurrentQNum());
+				
 				int gameWeek = GameData.getCurrentGame().getCurrentWeek();
 				btnModify.setEnabled(cw == gameWeek);
 			}			
@@ -668,7 +672,13 @@ public class BonusPanel extends JPanel implements Observer{
 
 			@Override
 			public void stateChanged(ChangeEvent ce) {
+				int cq = getCurrentQNum(); 
+				int max = (Integer)snmQuestion.getMaximum();
+				
+				if (cq > max)
+					return;
 				setQuestionView(Bonus.getQuestion(getCurrentWeek(), getCurrentQNum()));
+				currentQ = Bonus.getQuestion(getCurrentWeek(), getCurrentQNum());
 			}
 		};
 		
