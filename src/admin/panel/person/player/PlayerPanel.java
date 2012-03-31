@@ -9,6 +9,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Observable;
@@ -311,6 +312,15 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		}
 
 		List<Contestant> cons = g.getActiveContestants(true);
+		if (g.doesElimExist()) {
+			Contestant t = g.getElimCont();
+			if (!cons.contains(t)) {
+				cons.add(t);
+				
+				Collections.sort(cons, 
+						Utils.getContComparator(Utils.CompType.CONTNT_ID));
+			}
+		}
 
 		cbWeeklyPick.removeAllItems();
 		cbUltPick.removeAllItems();
@@ -331,6 +341,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				cbUltPick.addItem(c);
 			}
 		}
+		
+		
 
 	}
 

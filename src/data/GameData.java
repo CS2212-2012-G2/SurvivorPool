@@ -146,7 +146,7 @@ public class GameData extends Observable {
 	 * 
 	 * @return elimCont
 	 */
-	protected Contestant getElimCont() {
+	public Contestant getElimCont() {
 		return elimCont;
 	}
 	
