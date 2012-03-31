@@ -323,15 +323,7 @@ public class GameData extends Observable {
 		castOffs[week] = c;
 		}
 	
-	/**
-	 * setCastOff method specifically for JSON.
-	 */
-	
-	public void setCastOffJSON(int week, Contestant c){
-		castOffs[week] = c;
-	}
-
-	                        // USER //
+	                    // USER //
 	
 	/**
 	 * Adds a user to the list of users.
@@ -897,9 +889,9 @@ public class GameData extends Observable {
 					this.setElimCont(c);
 					this.setElimExists(true);
 				}
-				if(c.isCastOff()){
-					setCastOffJSON(i,c);
-				}
+				if(c.isCastOff())
+					castOffs[i] = c;
+		
 			} catch (InvalidFieldException ie) {
 			}
 		}
