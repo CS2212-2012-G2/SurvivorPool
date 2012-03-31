@@ -706,9 +706,8 @@ public class BonusPanel extends JPanel implements Observer{
 		
 		
 		if (update.contains(UpdateTag.START_SEASON)){
-			
-			btnModify.setEnabled(!GameData.getCurrentGame().isSeasonStarted());
-			btnNewQ.setEnabled(!GameData.getCurrentGame().isSeasonStarted());
+			btnModify.setEnabled(GameData.getCurrentGame().isSeasonStarted());
+			btnNewQ.setEnabled(GameData.getCurrentGame().isSeasonStarted());
 			
 		}
 		
