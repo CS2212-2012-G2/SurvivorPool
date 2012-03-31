@@ -130,15 +130,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 		refreshContestantCBs();
 		
-		GameData g = GameData.getCurrentGame();
-		if (g.isSeasonEnded()) { // game end
-			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
-		} else if (g.isFinalWeek()) { // final week
-			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.FINAL_WEEK));
-		} else if (g.isSeasonStarted()){
-			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.START_SEASON));
-		}
-		
 		assembleAll();
 		
 		// used to maintain state... :/
@@ -376,21 +367,18 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		GameData g = (GameData)o;
 		boolean sStart = g.isSeasonStarted();
 		
-		if (update.contains(UpdateTag.START_SEASON)) {
-			
-			btnAddNew.setEnabled(!g.isSeasonStarted());
-			btnDelete.setEnabled(!g.isSeasonStarted());
-			
-			btnGenID.setEnabled(!g.isSeasonStarted());
-			tfID.setEnabled(!g.isSeasonStarted());
-		}
+		btnAddNew.setEnabled(!sStart);
+		btnDelete.setEnabled(!sStart);
+		
+		btnGenID.setEnabled(!sStart);
+		tfID.setEnabled(!sStart);
 		
 		if (update.contains(UpdateTag.ADD_CONTESTANT) ||
 				update.contains(UpdateTag.REMOVE_CONTESTANT) ||
 				update.contains(UpdateTag.START_SEASON) ||
 				update.contains(UpdateTag.CONTESTANT_CAST_OFF)) {
 			refreshContestantCBs();
-			btnDelete.setEnabled(!sStart);
+
 			tableModel.fireTableDataChanged();
 		}
 		

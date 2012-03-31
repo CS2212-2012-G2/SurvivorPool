@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,7 @@ import admin.panel.person.player.PlayerPanel;
 import admin.panel.season.SeasonCreatePanel;
 import data.GameData;
 import data.Settings;
+import data.GameData.UpdateTag;
 import data.bonus.Bonus;
 
 public class MainFrame extends JFrame {
@@ -242,6 +244,16 @@ public class MainFrame extends JFrame {
 
 		this.add(tabPane);
 		this.add(statusBar, BorderLayout.SOUTH);
+		
+		// totally wrong to do this, but it'll do. 
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded()) { // game end
+			g.notifyAdd(UpdateTag.END_GAME);
+		} else if (g.isFinalWeek()) { // final week
+			g.notifyAdd(UpdateTag.FINAL_WEEK);
+		} else if (g.isSeasonStarted()){
+			g.notifyAdd(UpdateTag.START_SEASON);
+		}
 	}
 
 	/**

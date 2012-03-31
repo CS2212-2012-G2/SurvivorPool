@@ -43,7 +43,7 @@ public class GeneralPanel extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
 
 	Integer viewWeek = 0;
-	String winnerString = "";
+
 	private JLabel lblWeek;
 	
 	private JTextField tfTribe1;
@@ -62,6 +62,7 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JPanel pnlTribes;
 	private JPanel pnlWinners;
 	private TribeWinnerCont contTribeWin;
+	private JTextArea winnerText;
 	
 	private JPanel pnlWeekCtrl;
 	private JPanel pnlHistory;
@@ -109,15 +110,6 @@ public class GeneralPanel extends JPanel implements Observer {
 		GameData.getCurrentGame().addObserver(this);
 		
 		setToolTips();
-		
-		GameData g = GameData.getCurrentGame();
-		if (g.isSeasonEnded()) { // game end
-			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
-		} else if (g.isFinalWeek()) { // final week
-			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.FINAL_WEEK));
-		} else if (g.isSeasonStarted()){
-			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.START_SEASON));
-		}
 		
 		initListeners();
 	}
@@ -180,12 +172,13 @@ public class GeneralPanel extends JPanel implements Observer {
 		return pane;
 	}
 	
-	protected JPanel buildWinnerPanel() {
+	private JPanel buildWinnerPanel() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BorderLayout(5, 5));
 
-		JLabel stubLabel = new JLabel(winnerString);
-		pane.add(stubLabel, BorderLayout.CENTER);
+		winnerText = new JTextArea("");
+		pane.add(winnerText, BorderLayout.CENTER);
+		
 		
 		return pane;
 	}
@@ -305,6 +298,10 @@ public class GeneralPanel extends JPanel implements Observer {
 		}
 	}
 	
+	/**
+	 * Gets the String for the advance week button.
+	 * @return
+	 */
 	private String getAdvWkString(){
 		GameData g = GameData.getCurrentGame();
 				
@@ -345,7 +342,6 @@ public class GeneralPanel extends JPanel implements Observer {
 						int t = Integer.parseInt(s);
 						if (t >= 0) {
 							g.startSeason(t);
-							btnStartSn.setText("Season started. Bet amount is $"+t);
 						}
 						return;
 					}
@@ -378,7 +374,6 @@ public class GeneralPanel extends JPanel implements Observer {
 					}
 				} else {
 					g.advanceWeek();
-					btnAdvWk.setText(getAdvWkString());
 				}
 			}
 		});
@@ -424,11 +419,31 @@ public class GeneralPanel extends JPanel implements Observer {
 	}
 
 	private void updateSpinnerModel(int w) {
-		weekModel.setMinimum(w > 0 ? 0 : 0);
-		weekModel.setMaximum(w-1 > 0 ? w-1 : 0);
+		weekModel.setMinimum(1);
+		weekModel.setMaximum(w-1 > 0 ? w-1 : 1);
 		weekModel.setStepSize(1);
 	}
 	
+	private String getWinnersString() {
+		GameData g = GameData.getCurrentGame();
+		
+		List<User> winners = g.determineWinners();
+		List<Integer> pool = g.determinePrizePool();
+		
+		// use string builder for the buffer
+		StringBuilder sb = new StringBuilder(200);
+		String t = "%2d.  %s %s\t%4dpts   $%.2f\n";
+		
+		for (int i = 0; i<winners.size(); i++){
+			User tempUser = (User) winners.get(i); // grab user
+			
+			// build user's line
+			sb.append(String.format(t, (i+1), tempUser.getFirstName(),
+					tempUser.getLastName(), tempUser.getPoints(),
+					(float)pool.get(i)));
+		}
+		return sb.toString();
+	}
 
 	@Override
 	public void update(Observable obs, Object arg) {
@@ -441,15 +456,20 @@ public class GeneralPanel extends JPanel implements Observer {
 			btnStartSn.setEnabled(false);
 			btnAdvWk.setEnabled(true);
 			spnWeek.setEnabled(true);
+			
+			String t = String.format("Season started. Pot Size: $%.2f", 
+					(float)(g.getBetAmount() * g.getAllUsers().size()));
+			btnStartSn.setText(t);
 		}
 
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
-			// TODO: What should happen here?
+			// What should happen here?
 			btnAdvWk.setEnabled(true);
+			btnAdvWk.setText(getAdvWkString());
 		}
 
 		if (update.contains(UpdateTag.FINAL_WEEK)) {
-			// TODO: now its the final week:
+			// now its the final week:
 			btnAdvWk.setEnabled(true);
 			btnAdvWk.setText("Advance Final Week");
 		}
@@ -464,32 +484,21 @@ public class GeneralPanel extends JPanel implements Observer {
 
 		if (update.contains(UpdateTag.END_GAME)) {
 
-			btnStartSn.setText("End of Season");
-			btnAdvWk.setEnabled(false);		
-
-			User tempUser;
-			List<User> winners = g.determineWinners();
-			List<Integer> pool = g.determinePrizePool();
-			JTextArea winnerText = new JTextArea("");
-			winnerText.setEditable(false);
+			String t = String.format("End of Season. Pot Size: $%.2f", 
+					(float)(g.getBetAmount() * g.getAllUsers().size()));
+			btnStartSn.setText(t);
 			
-			String tempString = "";
-			for (int i = 0; i<winners.size(); i++){
-				tempUser = (User) winners.get(i); // grab user
-				
-				// build user's line
-				tempString = tempString + (i+1) + ". " + tempUser.getFirstName() 
-				+ " " + tempUser.getLastName() + " - " 
-				+ tempUser.getPoints() + "pts - $" + pool.get(i) + "\n";	
-			}
+			btnAdvWk.setEnabled(false);	
+			spnWeek.setEnabled(true);	
+
+
+			winnerText.setEditable(false);
 				
 			// place user's line in the jtext area
-			winnerText.setText(tempString);
-			// place the textarea into the panel
-			pnlWinners.add(winnerText);
+			winnerText.setText(getWinnersString());
+			
 			// show the winning panel 
 			contTribeWin.showWinners();
-			
 		}
 		
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {

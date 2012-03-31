@@ -3,11 +3,11 @@ package data;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Random;
-import java.util.EnumSet;
 
 import javax.swing.SwingUtilities;
 
@@ -62,9 +62,8 @@ public class GameData extends Observable {
 			KEY_TRIBES = "tribes_arr",
 			KEY_SEASON_STARTED = "season_started",
 			KEY_BET_AMOUNT = "bet_amount",
-			KEY_POOL_TOTAL = "pool_total",
-			KEY_CAST_OFFS = "cast_offs";
-
+			KEY_POOL_TOTAL = "pool_total";
+	
 	/**
 	 * Constructor method that takes a set number of contestants. Will not
 	 * proceed if numInitialContestants is NOT between 6 and 15, inclusive. Sets
@@ -630,76 +629,80 @@ public class GameData extends Observable {
 	}
 	
 	/**
-	 * Returns the prize pool split. Accounts for one winner, two winners, and three winners.
+	 * Returns the prize pool split. Accounts for one winner, two winners, and
+	 * three winners.
 	 * 
 	 * @return list of int values to give each user.
 	 */
-	
-	public List<Integer> determinePrizePool(){
-		   List<Integer> tempList = new ArrayList<Integer>(); 
-		   int i = getAllUsers().size();
-		    if (i <= 0){ // no users	
-		      return null;	
-		    } else if (i == 1) { // one user, he gets the whole pool	
-		      tempList.add(getTotalAmount());	
-		      return tempList;	
-		    } else if (i == 2) { // two users, first user gets 65% of the 
-		      //winnings, the rest goes to the second	
-		      tempList.add((int) (getTotalAmount()*0.65)); // first 65	
-		      tempList.add(getTotalAmount() - tempList.get(0)); // the rest	
-		    } else { // three or more users	
-		      // split is 60/30/10	
-		      tempList.add((int) (getTotalAmount()*0.60)); // first 60
+
+	public List<Integer> determinePrizePool() {
+		List<Integer> tempList = new ArrayList<Integer>();
 		
-		      // total amount - the first amount, which leaves 40% of the original amount
-		      // 30% is now equivalent to 75% of the new amount	
-		      tempList.add((int) ((getTotalAmount()- tempList.get(0)) * 0.75));
-		      // the total minus the first and second place winnings
-		      tempList.add(getTotalAmount() - tempList.get(0) - tempList.get(1));	
-		    }	
-		    return tempList;	
-		  }
-	
+		int numu = getAllUsers().size();
+		if (numu <= 0) { // no users
+			return null;
+		} else if (numu == 1) { 
+			// one user, he gets the whole pool
+			tempList.add(getTotalAmount());
+		} else if (numu == 2) { 
+			// two users, first user gets 65% of the
+			// winnings, the rest goes to the second
+			tempList.add((int) (getTotalAmount() * 0.65));   // first 65
+			tempList.add(getTotalAmount() - tempList.get(0)); // the rest
+		
+		} else { 
+			// three or more users
+			// split is 60/30/10
+			tempList.add((int) (getTotalAmount() * 0.60)); // first 60
+
+			// total amount - the first amount, which leaves 40% of the original
+			// amount
+			// 30% is now equivalent to 75% of the new amount
+			tempList.add((int) ((getTotalAmount() - tempList.get(0)) * 0.75));
+			// the total minus the first and second place winnings
+			tempList.add(getTotalAmount() - tempList.get(0) - tempList.get(1));
+		}
+		return tempList;
+	}
+
 	/**
-	* Iterates through all players on the list, and determines the top three winners. 	
-	*  @param  	 Player within the game.
-	*/
-			 	
-	  public List<User> determineWinners() {
+	 * Iterates through all players on the list, and determines the top three
+	 * winners.
+	 * 
+	 * @param Player
+	 *            within the game.
+	 */
+
+	public List<User> determineWinners() {
+		User first = new User();
+		User second = new User();
+		User third = new User();
+		first.setPoints(-1);
+		second.setPoints(-1);
+		third.setPoints(-1);
+
+		for (User u: allUsers) {
 			
-	    Iterator<User> itr = allUsers.iterator();
-	    User u;	
-	    User first = new User ();	
-	    User second = new User ();
-		User third = new User ();
-	    first.setPoints(-1);
-	    second.setPoints(-1);
-	    third.setPoints(-1);	
-	    
-	    while (itr.hasNext()) {
-			
-	      u = itr.next();
-			
-	      if (u.getPoints() > first.getPoints()) {
-	       third = second;
-	       second = first;
-	       first = u;
-	      } else if (u.getPoints() > second.getPoints()){
-	    	third = second;  
-	        second = u;
-	      } else if (u.getPoints() > third.getPoints()){
-	       third = u;	
-	     }	
-	 }
-	   List<User> tempList = new ArrayList<User>(); 
-	   if (first.getPoints() != -1)
-		   tempList.add(first);	
-	   if (second.getPoints() != -1)
-		   tempList.add(second);	
-	   if (third.getPoints() != -1)
-		   tempList.add(third);	
-	   return tempList;	
-	 }
+			if (u.getPoints() > first.getPoints()) {
+				third = second;
+				second = first;
+				first = u;
+			} else if (u.getPoints() > second.getPoints()) {
+				third = second;
+				second = u;
+			} else if (u.getPoints() > third.getPoints()) {
+				third = u;
+			}
+		}
+		List<User> tempList = new ArrayList<User>();
+		if (first.getPoints() != -1)
+			tempList.add(first);
+		if (second.getPoints() != -1)
+			tempList.add(second);
+		if (third.getPoints() != -1)
+			tempList.add(third);
+		return tempList;
+	}
 	
 	  /**
 		 * Nulls the current game stored, allows a new game to start.
@@ -1008,7 +1011,7 @@ public class GameData extends Observable {
 	 * @param tags
 	 *            Tags to add to the next call.
 	 */
-	protected void notifyAdd(UpdateTag... tags) {
+	public void notifyAdd(UpdateTag... tags) {
 		if (updateExec == null || updateExec.done) {
 			updateExec = new UpdateCall();
 			SwingUtilities.invokeLater(updateExec);
