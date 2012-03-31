@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -100,6 +101,7 @@ public class MainFrame extends JFrame {
 		});
 		
 		loadSettings();
+		this.setIconImage(new ImageIcon("res/img/icon.png").getImage());
 	}
 	
 	private ActionListener al = new ActionListener() {
