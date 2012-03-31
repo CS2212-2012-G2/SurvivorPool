@@ -929,6 +929,9 @@ public class GameData extends Observable {
 			}
 			if(getCurrentWeek() >= 2);
 		}
+		
+		Collections.sort(allContestants, Utils.getComparator(Utils.CompType.ID, Contestant.class));
+		Collections.sort(allUsers, Utils.getComparator(Utils.CompType.ID, User.class));
 
 		notifyAdd();
 	}

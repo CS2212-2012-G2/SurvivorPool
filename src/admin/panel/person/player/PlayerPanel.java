@@ -318,7 +318,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				cons.add(t);
 				
 				Collections.sort(cons, 
-						Utils.getContComparator(Utils.CompType.CONTNT_ID));
+						Utils.getComparator(Utils.CompType.ID, Contestant.class));
 			}
 		}
 

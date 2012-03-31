@@ -332,9 +332,8 @@ public class User implements Person, Comparable<User> {
 			setUltimatePoints(Utils.numToInt(o.remove(KEY_WIN_PICK_POINTS)));
 			setNumBonusAnswer(((Number) o.remove(KEY_NUM_BONUS_ANSWER)).intValue());
 		} catch (InvalidFieldException e) {
-			System.out
-					.println("Warning: InvalidFieldException in fromJSONObject");
-			System.out.println(e.getMessage());
+			System.out.println("Warning: InvalidFieldException in fromJSONObject");
+			e.printStackTrace();
 		}
 
 	}

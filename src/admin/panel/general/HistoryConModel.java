@@ -99,7 +99,7 @@ public class HistoryConModel extends AbstractTableModel implements Observer {
 		List<Contestant> temp = new ArrayList<Contestant>(g.getAllContestants());
 		data = new ArrayList<Contestant>(temp.size());
 		
-		Collections.sort(temp, Utils.getContComparator(Utils.CompType.CONTNT_DATE));
+		Collections.sort(temp, Utils.getComparator(Utils.CompType.CONTNT_DATE, Contestant.class));
 		
 		//if (!active) // count backwards. :)
 		//	Collections.reverse(temp);
