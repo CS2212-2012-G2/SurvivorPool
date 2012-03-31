@@ -121,12 +121,15 @@ public class BonusPanel extends JPanel implements Observer{
 	
 		buildQuestionPaneAll();
 		
+		GameData g = GameData.getCurrentGame();
+		
 		// TODO: replace
 		initPnlQuestionListing();
 		
 		add(pnlQuestionEdit);
 		add(Box.createVerticalStrut(5));
 		add(pnlListQ);
+		
 		
 		//check if bonus questions already exist
 		initExistingBonus();
@@ -135,7 +138,10 @@ public class BonusPanel extends JPanel implements Observer{
 		
 		setEnableNewQPanel(false);
 		
-		GameData.getCurrentGame().addObserver(this);
+		btnModify.setEnabled(GameData.getCurrentGame().isSeasonStarted());
+		btnNewQ.setEnabled(GameData.getCurrentGame().isSeasonStarted());
+		
+		g.addObserver(this);
 	}
 	
 	private void buildQuestionPanelP1() {
@@ -357,6 +363,7 @@ public class BonusPanel extends JPanel implements Observer{
 		pnlViewWeek.add(spnQuestion);
 		pnlViewWeek.add(btnNewQ);
 		pnlViewWeek.add(btnModify);
+
 		
 		pnlListQ.add(pnlViewWeek, BorderLayout.NORTH);
 		pnlListQ.add(pnlQuestion, BorderLayout.CENTER);
@@ -692,9 +699,17 @@ public class BonusPanel extends JPanel implements Observer{
 		
 		if (update.contains(UpdateTag.END_GAME)){
 			setEnableNewQPanel(false);	
-	
+			
 			btnModify.setEnabled(false);
 			btnNewQ.setEnabled(false);
+		}
+		
+		
+		if (update.contains(UpdateTag.START_SEASON)){
+			
+			btnModify.setEnabled(!GameData.getCurrentGame().isSeasonStarted());
+			btnNewQ.setEnabled(!GameData.getCurrentGame().isSeasonStarted());
+			
 		}
 		
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
