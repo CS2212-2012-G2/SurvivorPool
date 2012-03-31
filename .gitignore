@@ -10,3 +10,4 @@ doc/*
 BlackBerry_App_Descriptor.xml
 res/img/icon.png
 res/data/*.dat
+*.jar

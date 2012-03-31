@@ -20,13 +20,19 @@
   </target>
 
   <target name="clean-run" depends="build">
-    <delete file="res/data/*.dat"/>
+    <antcall target="clean-conf" />
     <java classname="admin.MainFrame" classpath="${bin-dir}" fork="true"/>
+  </target>
+
+  <target name="clean-conf">
+    <delete>
+      <fileset dir="./res/data" includes="*.dat" />
+    </delete>
   </target>
 
   <target name="jar-sub">
 
-    <delete file="res/data/Settings.dat"/>
+    <antcall target="clean-conf" />
     <delete file="${jar-out}"/>
     <jar destfile="${jar-out}"
          basedir="./"
@@ -71,7 +77,6 @@
   </target>
 
   <target name="all">
-    <antcall target="clean"/>
     <antcall target="build"/>
     <antcall target="doc"/>
     <antcall target="jar-sub"/>
