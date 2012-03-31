@@ -149,27 +149,17 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			public void componentShown(ComponentEvent e)
 	        {
 	            super.componentShown(e);
-	         
-	           // JPanel p = (JPanel)e.getSource();
 	            
 	            cbUltPick.setSelectedIndex(ultIndex);
 	            cbWeeklyPick.setSelectedIndex(weekIndex);
-	            
-	           // System.out.println("componentShown " + p.getName()); 
-	           // System.out.println("Index: " + cbUltPick.getSelectedIndex());
 	        }
 			
 			@Override
 			public void componentHidden(ComponentEvent e) {
 				super.componentShown(e);
-		         
-	           // JPanel p = (JPanel)e.getSource();
 	            
 	            ultIndex = cbUltPick.getSelectedIndex();
 	            weekIndex = cbWeeklyPick.getSelectedIndex();
-	            
-	           // System.out.println("componentHidden " + p.getName()); 
-	            //System.out.println("Index: " + cbUltPick.getSelectedIndex());
 			}
 		});
 	}

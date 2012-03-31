@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
@@ -41,7 +43,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	private JButton imgDisplay;
 	
 	private JLabel labelName;
-	// TODO: Refactor to something more obvious?
 	private JLabel labelCastOff;
 	private JComboBox<String> cbCastDate;
 	private JLabel labelTribe;
@@ -56,7 +57,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	private JButton btnPickWin;
 	
 	// static constants:
-	private static final String SET_STATUS_TEXT = "Set Status";
 	// tool tip texts:
 	protected static final String TOOL_NAME = "First and Last name must be alphabetic",
 			TOOL_ID = "ID must be two characters long and alpha-numeric",
@@ -137,11 +137,29 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.START_SEASON));
 		}
 		
-		
+		// used to maintain state... :/
+		// HACK AND A HALF.
+		addComponentListener(new ComponentAdapter() {
+			int castIndex, tribeIndex;
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				super.componentShown(e);
+
+				cbCastDate.setSelectedIndex(castIndex);
+				cbTribe.setSelectedIndex(tribeIndex);
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				super.componentShown(e);
+
+				castIndex = cbCastDate.getSelectedIndex();
+				tribeIndex = cbTribe.getSelectedIndex();
+			}
+		});
 		
 		assembleAll();
-		
-		
 	}
 	
 	@Override
