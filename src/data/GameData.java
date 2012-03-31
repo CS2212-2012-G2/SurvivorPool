@@ -893,6 +893,10 @@ public class GameData extends Observable {
 			c.fromJSONObject((JSONObject)cons.get(i));
 			try {
 				addContestant(c);
+				if(c.getCastDate() == getCurrentWeek()){
+					this.setElimCont(c);
+					this.setElimExists(true);
+				}
 			} catch (InvalidFieldException ie) {
 			}
 		}
