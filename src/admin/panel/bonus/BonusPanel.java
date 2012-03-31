@@ -133,10 +133,9 @@ public class BonusPanel extends JPanel implements Observer{
 		
 		initListeners();
 		
-		GameData g = GameData.getCurrentGame();
-		if (g.isSeasonEnded() || !g.isSeasonStarted()) { // game end
-			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
-		}
+		setEnableNewQPanel(false);
+		
+		GameData.getCurrentGame().addObserver(this);
 	}
 	
 	private void buildQuestionPanelP1() {
@@ -368,11 +367,14 @@ public class BonusPanel extends JPanel implements Observer{
 	 */
 	private void initExistingBonus() {
 		List<BonusQuestion> list = Bonus.getAllQuestions();
+		GameData g = GameData.getCurrentGame();
+		
+		setWeekSpinner(Bonus.getMaxWeek(), g.getCurrentWeek());
 		if (list == null || list.size() == 0) {
 			return; // nothing to load
 		}
 		
-		setWeekSpinner(1, Bonus.getMaxWeek());
+		
 		setQuestionSpinner(1, Bonus.getNumQuestionsInWeek(1));
 		
 		setQuestionView(Bonus.getQuestion(getCurrentWeek(), getCurrentQNum()));
@@ -384,8 +386,7 @@ public class BonusPanel extends JPanel implements Observer{
 	 * @param q
 	 */
 	private void setQuestionView(BonusQuestion q) {
-		pnlQuestion.updateLabels(q);
-		
+		pnlQuestion.updateLabels(q);	
 	}
 	
 	/**
@@ -398,6 +399,10 @@ public class BonusPanel extends JPanel implements Observer{
 		weekModel.setValue(wValue);
 		weekModel.setMaximum(wMax);
 		spnWeek.addChangeListener(clWeek);
+		
+		// update the state of the enable button
+		int gw =  GameData.getCurrentGame().getCurrentWeek();
+		btnModify.setEnabled(wValue == gw);
 	}
 	
 	/**
@@ -452,10 +457,6 @@ public class BonusPanel extends JPanel implements Observer{
 	
 	private int getCurrentQNum() {
 		return (Integer)spnQuestion.getValue();
-	}
-	
-	private int getNewQNumber() {
-		return Bonus.getNumQuestionsInWeek(getCurrentWeek())+1;
 	}
 	
 	private void setupNewQuestion() {
@@ -577,9 +578,6 @@ public class BonusPanel extends JPanel implements Observer{
 				// no errors in input at this point:
 				BonusQuestion temp = loadFromPanel();
 				
-				if (currentQ == null) // started without hitting new!
-					currentQ = new BonusQuestion(getCurrentWeek(), getNewQNumber());
-				
 				temp.setWeek(currentQ.getWeek());
 				temp.setNumber(currentQ.getNumber());
 				
@@ -617,7 +615,9 @@ public class BonusPanel extends JPanel implements Observer{
 
 			@Override
 			public void actionPerformed(ActionEvent ae) {
-				currentQ = new BonusQuestion(getCurrentWeek(), getNewQNumber());
+				GameData g = GameData.getCurrentGame();
+				int w = g.getCurrentWeek();
+				currentQ = new BonusQuestion(w, Bonus.getNumQuestionsInWeek(w) + 1);
 				
 				setupNewQuestion();
 			}
@@ -688,15 +688,17 @@ public class BonusPanel extends JPanel implements Observer{
 	public void update(Observable observ, Object obj) {
 		GameData g = (GameData)observ;
 		
-		if (obj.equals(EnumSet.of(UpdateTag.END_GAME))){
-				tfPromptInput.setEnabled(false);
-				pnlQuestion.setEnabled(false);
-				btnModify.setEnabled(false);
-				btnNextPart.setEnabled(false);
-				btnNewQ.setEnabled(false);
-				rbMultChoice.setEnabled(false);
-				rbShortAnswer.setEnabled(false);
-			
+		EnumSet<UpdateTag> update = (EnumSet<UpdateTag>)obj;
+		
+		if (update.contains(UpdateTag.END_GAME)){
+			setEnableNewQPanel(false);	
+	
+			btnModify.setEnabled(false);
+			btnNewQ.setEnabled(false);
+		}
+		
+		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
+			weekModel.setMaximum(g.getCurrentWeek());
 		}
 
 	}

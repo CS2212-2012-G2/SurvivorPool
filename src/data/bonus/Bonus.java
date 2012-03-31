@@ -103,7 +103,7 @@ public class Bonus extends Observable {
 	 * @return
 	 */
 	public static int getMaxWeek() {
-		int w = 0;
+		int w = 1;
 		for (int i = 0; i < questions.size(); i++) {
 			BonusQuestion b = questions.get(i);
 			

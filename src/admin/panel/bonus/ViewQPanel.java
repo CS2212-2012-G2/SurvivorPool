@@ -37,7 +37,22 @@ public class ViewQPanel extends JPanel {
 		this.add(lblChoices);
 	}
 	
+	private void setLabelsNull() {
+		lblWeek.setText("Not Set");
+		lblNum.setText("Not Set");
+		lblType.setText("Not Set");
+		lblQuestion.setText("Not Set");
+		lblAnswer.setText("Not Set");
+		lblChoicesStr.setText("");
+		lblChoices.setText("");
+	}
+	
 	public void updateLabels(BonusQuestion q) {
+		if (q == null) {
+			setLabelsNull();
+			return;
+		}
+		
 		lblWeek.setText(""+q.getWeek());
 		lblNum.setText(""+q.getNumber());
 		lblType.setText(""+q.getBonusType());
@@ -46,11 +61,20 @@ public class ViewQPanel extends JPanel {
 		if(q.getBonusType()==BonusQuestion.BONUS_TYPE.MULTI){
 			lblChoicesStr.setText("Choices: ");
 			String[] choices = q.getChoices();
-			String s = "";
+			
+			// build the string label
+			StringBuilder sb = new StringBuilder(800);
+			sb.append("<html>");
 			for(String c: choices){
-				s+=c+", ";
+				if (c.equalsIgnoreCase(q.getAnswer()))
+					sb.append("<i>" + c + "</i>, ");
+				else
+					sb.append(c + ", ");
 			}
-			lblChoices.setText(s);
+			sb.deleteCharAt(sb.lastIndexOf(","));
+		//	sb.append("</html>");
+			
+			lblChoices.setText(sb.toString());
 		}else{
 			lblChoicesStr.setText("");
 			lblChoices.setText("");
