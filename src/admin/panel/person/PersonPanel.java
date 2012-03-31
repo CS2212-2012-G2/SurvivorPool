@@ -278,8 +278,10 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		// let the edit pane handle most
 		personFields.setEditPane(p, newPerson);
 
+		boolean t = GameData.getCurrentGame().isSeasonStarted();
+		
 		// delete button activation
-		btnDelete.setEnabled(table.getRowCount() > 0);
+		btnDelete.setEnabled(!t && table.getRowCount() > 0);
 
 		if (newPerson || p == null) {
 			// we don't want any rows selected

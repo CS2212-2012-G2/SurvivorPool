@@ -328,9 +328,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				cbUltPick.addItem(c);
 			}
 		}
-		
-		
-
 	}
 
 	@Override
