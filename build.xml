@@ -53,12 +53,6 @@
     </jar>
   </target>
 
-  <target name="jar-sub-clean" depends="build">
-    <delete file="res/data/Settings.dat"/>
-
-    <antcall target="jar-sub"/>
-   </target> 
-
   <target name="doc">
     <delete dir="${javadoc-dir}"/>
     <mkdir dir="${javadoc-dir}"/>
