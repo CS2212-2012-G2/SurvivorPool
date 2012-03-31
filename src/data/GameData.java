@@ -46,7 +46,7 @@ public class GameData extends Observable {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
 		ADD_CONTESTANT, REMOVE_CONTESTANT, CONTESTANT_CAST_OFF,
 		ADD_USER, REMOVE_USER, 
-		FINAL_WEEK, END_GAME, ALLOCATE_POINTS 
+		FINAL_WEEK, END_GAME, ALLOCATE_POINTS, SAVE; 
 	}
 	
 	/**
@@ -892,6 +892,10 @@ public class GameData extends Observable {
 			c.fromJSONObject((JSONObject)cons.get(i));
 			try {
 				addContestant(c);
+				if(c.getCastDate() == getCurrentWeek()){
+					this.setElimCont(c);
+					this.setElimExists(true);
+				}
 			} catch (InvalidFieldException ie) {
 			}
 		}

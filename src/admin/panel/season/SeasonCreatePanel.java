@@ -141,18 +141,14 @@ public class SeasonCreatePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					// clears the error status messages
-					MainFrame.getRunningFrame().setStatusErrorMsg(null);
 					
 					if (checkValidTribeName(txtTribe1.getText())) {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"Invalid tribe name", txtTribe1);
-						// lblAlert.setText("Invalid tribe names!");
 						return;
 					} else if (checkValidTribeName(txtTribe2.getText())) {
 						MainFrame.getRunningFrame().setStatusErrorMsg(
 								"Invalid tribe name", txtTribe2);
-						// lblAlert.setText("Invalid tribe names!");
 						return;
 					} else if (txtTribe1.getText().equalsIgnoreCase(txtTribe2.getText())) {
 						MainFrame.getRunningFrame().setStatusErrorMsg(

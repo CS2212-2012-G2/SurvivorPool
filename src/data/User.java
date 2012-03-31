@@ -212,7 +212,8 @@ public class User implements Person, Comparable<User> {
 	 */
 	public void setUltimatePick(Contestant winner) throws InvalidFieldException {
 		setUltimatePickNoSetPts(winner);
-		ultPoints = 2 * GameData.getCurrentGame().weeksLeft();
+		if (!winner.isNull())
+			ultPoints = 2 * GameData.getCurrentGame().weeksLeft();
 	}
 
 	/**

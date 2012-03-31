@@ -108,7 +108,8 @@ public class JSONUtils {
 		File fUser; //remove all of users previous answers
 		for(User u:users){
 			fUser = new File(pathUserAnswer+u.getID()+".dat");
-			fUser.delete();
+			if(fUser.exists())
+				fUser.delete();
 		}
 		
 		return (f.exists() && fB.exists());

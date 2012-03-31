@@ -198,7 +198,7 @@ public class GeneralPanel extends JPanel implements Observer {
 
 		btnStartSn = new JButton("Start Season");
 		btnStartSn.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		btnAdvWk = new JButton("Advance Week");
+		btnAdvWk = new JButton(getAdvWkString());
 		btnAdvWk.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
 		btnStartSn.setPreferredSize(btnAdvWk.getPreferredSize());
@@ -305,6 +305,17 @@ public class GeneralPanel extends JPanel implements Observer {
 			pane.add(scroll, BorderLayout.CENTER);
 		}
 	}
+	
+	private String getAdvWkString(){
+		GameData g = GameData.getCurrentGame();
+				
+		String s = "Advance Week";
+		if(g!=null){
+			if(!g.isSeasonEnded())
+				s += " "+g.getCurrentWeek();
+		}
+		return s;
+	}
 
 	private void initListeners() {
 		btnStartSn.addActionListener(new ActionListener() {
@@ -335,6 +346,7 @@ public class GeneralPanel extends JPanel implements Observer {
 						int t = Integer.parseInt(s);
 						if (t >= 0) {
 							g.startSeason(t);
+							btnStartSn.setText("Season started. Bet amount is $"+t);
 						}
 						return;
 					}
@@ -367,6 +379,7 @@ public class GeneralPanel extends JPanel implements Observer {
 					}
 				} else {
 					g.advanceWeek();
+					btnAdvWk.setText(getAdvWkString());
 				}
 			}
 		});

@@ -333,7 +333,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			return;
 		
 		GameData g = (GameData)o;
-
+		boolean sStart = g.isSeasonStarted();
+		
 		if (update.contains(UpdateTag.START_SEASON)) {
 			
 			btnAddNew.setEnabled(!g.isSeasonStarted());
@@ -348,12 +349,32 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				update.contains(UpdateTag.START_SEASON) ||
 				update.contains(UpdateTag.CONTESTANT_CAST_OFF)) {
 			refreshContestantCBs();
-				
+			btnDelete.setEnabled(!sStart);
 			tableModel.fireTableDataChanged();
 		}
 		
 		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
 			tableModel.fireTableDataChanged();
+		}
+		
+		if (update.contains(UpdateTag.SAVE)) {		
+			
+			if (g.isSeasonStarted()) {
+				btnDelete.setEnabled(false);
+				btnGenID.setEnabled(false);
+				tfFirstName.setEnabled(false);
+				tfLastName.setEnabled(false);
+				tfID.setEnabled(false);
+			}
+			
+			if (g.isSeasonEnded()) {
+				cbUltPick.setEnabled(false);
+				btnSave.setEnabled(false);
+				cbWeeklyPick.setEnabled(false);
+			} 
+			
+			
+			
 		}
 	}
 
