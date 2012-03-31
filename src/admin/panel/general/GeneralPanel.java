@@ -311,9 +311,7 @@ public class GeneralPanel extends JPanel implements Observer {
 				
 		String s = "Advance Week";
 		if(g!=null){
-			if(g.isSeasonEnded())
-				s="Advance Week";
-			else
+			if(!g.isSeasonEnded())
 				s += " "+g.getCurrentWeek();
 		}
 		return s;
