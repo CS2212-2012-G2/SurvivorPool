@@ -121,6 +121,7 @@ public class StatusPanel extends JPanel {
 				c.setBackground(Utils.getThemeBG());
 
 		msgLabel.setForeground(Utils.getThemeFG());
+		msgLabel.setText("");
 		this.setBackground(Utils.getThemeBG());
 	}
 	
