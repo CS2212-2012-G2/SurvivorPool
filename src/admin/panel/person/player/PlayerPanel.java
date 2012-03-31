@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
@@ -78,6 +80,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 
 	public PlayerPanel() {
 		super(new User());
+		
+		setName("Player_Panel");
 
 		setLayout(new BorderLayout(5, 5));
 
@@ -135,6 +139,39 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		}
 		
 		assembleAll();
+		
+		// used to maintain state... :/
+		// HACK AND A HALF.
+		addComponentListener(new ComponentAdapter() {
+			int ultIndex, weekIndex;
+			
+			@Override
+			public void componentShown(ComponentEvent e)
+	        {
+	            super.componentShown(e);
+	         
+	           // JPanel p = (JPanel)e.getSource();
+	            
+	            cbUltPick.setSelectedIndex(ultIndex);
+	            cbWeeklyPick.setSelectedIndex(weekIndex);
+	            
+	           // System.out.println("componentShown " + p.getName()); 
+	           // System.out.println("Index: " + cbUltPick.getSelectedIndex());
+	        }
+			
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				super.componentShown(e);
+		         
+	           // JPanel p = (JPanel)e.getSource();
+	            
+	            ultIndex = cbUltPick.getSelectedIndex();
+	            weekIndex = cbWeeklyPick.getSelectedIndex();
+	            
+	           // System.out.println("componentHidden " + p.getName()); 
+	            //System.out.println("Index: " + cbUltPick.getSelectedIndex());
+			}
+		});
 	}
 
 	/**
@@ -315,8 +352,8 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		
 		if (c == tfFirstName || c == tfLastName || c == tfID || c == btnGenID || 
 				c == cbUltPick || c == cbWeeklyPick) {
-			fieldsChanged = true;
-			btnSave.setEnabled(c.isEnabled());
+			setFieldsChanged(true);
+			btnSave.setEnabled(true);
 		}
 	}
 
@@ -326,9 +363,11 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
+		super.update(o, arg);
+		
 		@SuppressWarnings("unchecked")
 		EnumSet<UpdateTag> update = (EnumSet<UpdateTag>)arg;
-
+		
 		if (update == null) 
 			return;
 		
@@ -353,11 +392,25 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 			tableModel.fireTableDataChanged();
 		}
 		
-		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
+		if (update.contains(UpdateTag.ADD_USER)) {
+			btnDelete.setEnabled(true);
+			
 			tableModel.fireTableDataChanged();
 		}
 		
-		if (update.contains(UpdateTag.SAVE)) {		
+		if (update.contains(UpdateTag.REMOVE_USER)) {
+			btnDelete.setEnabled(g.getAllUsers().size() > 0);
+			
+			tableModel.fireTableDataChanged();
+		}
+		
+		if (update.contains(UpdateTag.ADVANCE_WEEK)) {
+			tableModel.fireTableDataChanged();
+			
+			personFields.setEditPane(loadedPerson, false);
+		}
+		
+		if (update.contains(UpdateTag.FORCE_SAVE)) {		
 			
 			if (g.isSeasonStarted()) {
 				btnDelete.setEnabled(false);
@@ -372,9 +425,6 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				btnSave.setEnabled(false);
 				cbWeeklyPick.setEnabled(false);
 			} 
-			
-			
-			
 		}
 	}
 

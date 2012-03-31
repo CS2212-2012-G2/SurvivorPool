@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +31,6 @@ import admin.panel.person.contestant.ContestantPanel;
 import admin.panel.person.player.PlayerPanel;
 import admin.panel.season.SeasonCreatePanel;
 import data.GameData;
-import data.GameData.UpdateTag;
 import data.Settings;
 import data.bonus.Bonus;
 
@@ -123,10 +121,6 @@ public class MainFrame extends JFrame {
 		@Override
 		public void stateChanged(ChangeEvent ce) {
 			JTabbedPane tabSource = (JTabbedPane) ce.getSource();
-			
-			GameData g = GameData.getCurrentGame();
-			if (g != null)
-				g.notifyAdd(UpdateTag.FORCE_SAVE);
 			
 			String tab = tabSource.getTitleAt(tabSource.getSelectedIndex());
 			statusBar.setTabLabel(tab);

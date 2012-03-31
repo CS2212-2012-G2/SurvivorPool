@@ -9,6 +9,9 @@ import javax.swing.JPanel;
 import data.bonus.BonusQuestion;
 
 public class ViewQPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
+	
 	private JLabel lblWeek = new JLabel("not");
 	private JLabel lblNum = new JLabel("initialized");
 	private JLabel lblType = new JLabel("at ");

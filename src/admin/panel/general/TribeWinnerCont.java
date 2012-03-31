@@ -13,17 +13,12 @@ public class TribeWinnerCont extends JPanel {
 	private static final String TRIBE = "Tribes",
 			WINNERS = "Winners";
 	
-	private JPanel pnlWin, pnlTribe;
-	
 	private boolean showTribes;
 	
 	public TribeWinnerCont(JPanel tribePane, JPanel winPane, boolean showTribes) {
 		super(new CardLayout(5, 5));
 		//setBorder(BorderFactory.createTitledBorder(TRIBE));
 		setBorder(BorderFactory.createTitledBorder(""));
-		
-		pnlWin = winPane;
-		pnlTribe = tribePane;
 		
 		add(tribePane, TRIBE);
 		add(winPane, WINNERS);
