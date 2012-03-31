@@ -52,7 +52,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	
 	
 	// constants:
-	private static final String DEFAULT_PICTURE = "res/test/defaultpic.png";
+	private static final String DEFAULT_PICTURE = "res/img/defaultpic.png";
 	private static final int IMAGE_MAX_DIM = 75;
 
 	public ContestantFieldsPanel(JButton _imgButton, JLabel _labelName, JTextField _tfFirstName,
@@ -209,6 +209,7 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 					+ "picture [" + path + "]");
 			imgDisplay.setIcon(null);
 			MainFrame.getRunningFrame().setStatusErrorMsg("Could not load: "+path,imgDisplay );
+			e.printStackTrace();
 		}
 
 	}
