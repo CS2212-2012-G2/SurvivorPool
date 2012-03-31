@@ -135,23 +135,19 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		// used to maintain state... :/
 		// HACK AND A HALF.
 		addComponentListener(new ComponentAdapter() {
-			int ultIndex, weekIndex;
-			
+			Contestant ult,week;
 			@Override
-			public void componentShown(ComponentEvent e)
-	        {
+			public void componentShown(ComponentEvent e){
 	            super.componentShown(e);
-	            
-	            cbUltPick.setSelectedIndex(ultIndex);
-	            cbWeeklyPick.setSelectedIndex(weekIndex);
+	            cbUltPick.setSelectedItem(ult);
+	            cbWeeklyPick.setSelectedItem(week);
 	        }
 			
 			@Override
 			public void componentHidden(ComponentEvent e) {
 				super.componentShown(e);
-	            
-	            ultIndex = cbUltPick.getSelectedIndex();
-	            weekIndex = cbWeeklyPick.getSelectedIndex();
+	            ult = (Contestant) cbUltPick.getSelectedItem();
+	            week = (Contestant) cbWeeklyPick.getSelectedItem();
 			}
 		});
 	}
