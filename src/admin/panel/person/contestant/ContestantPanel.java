@@ -561,15 +561,28 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			cbCastDate.setEditable(false);
 		}
 		
-		if (update.contains(UpdateTag.SAVE)) {
+		if (update.contains(UpdateTag.END_GAME)) {
+			cbCastDate.setEnabled(false);
 			btnSetStatus.setEnabled(false);
-			btnPickWin.setEnabled(false);
-			
-			if (GameData.getCurrentGame().isSeasonEnded())
-				cbCastDate.setEnabled(false);
-			
-			
 			cbTribe.setEnabled(false);
+			
+		}
+		
+		if (update.contains(UpdateTag.SAVE)) {
+			if (!g.isFinalWeek())
+				btnPickWin.setEnabled(false);
+			
+			if (g.isSeasonStarted())
+				btnDelete.setEnabled(false);
+			
+			if (g.isSeasonEnded()) {
+				cbCastDate.setEnabled(false);
+				btnSetStatus.setEnabled(false);
+				cbTribe.setEnabled(false);
+			} 
+			
+			
+			
 		}
 	}
 }

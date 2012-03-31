@@ -254,7 +254,9 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		
 		if (g.isSeasonEnded()){
 			g.notifyAdd(UpdateTag.SAVE);
-		} 
+		} else if (g.isSeasonStarted()){
+			g.notifyAdd(UpdateTag.SAVE);
+		}
 	}
 	
 	/**

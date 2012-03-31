@@ -222,7 +222,16 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
 			if (ultSet && weekSet)
 				break; // break if both are set
+			
+	
 		}
+		
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded()){
+			g.notifyAdd(UpdateTag.SAVE);
+		} else if (g.isSeasonStarted()){
+			g.notifyAdd(UpdateTag.SAVE);
+		}	
 	}
 
 	@Override
@@ -243,11 +252,6 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		c = cbWeeklyPick.getItemAt(item);
 		u.setWeeklyPick(c);
 		
-		GameData g = GameData.getCurrentGame();
-		if (g.isSeasonEnded()){
-			g.notifyAdd(UpdateTag.SAVE);
-		} else if (g.isSeasonStarted()){
-			g.notifyAdd(UpdateTag.SAVE);
-		}
+
 	}
 }
