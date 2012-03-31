@@ -677,6 +677,7 @@ public void update(Observable observ, Object obj) {
 		GameData g = (GameData)observ;
 		
 		if (obj.equals(EnumSet.of(UpdateTag.END_GAME))){
+				tfPromptInput.setEnabled(false);
 				pnlQuestion.setEnabled(false);
 				btnModify.setEnabled(false);
 				btnNextPart.setEnabled(false);
