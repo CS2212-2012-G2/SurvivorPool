@@ -15,6 +15,7 @@ import json.simple.JSONArray;
 import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 import admin.Utils;
+import admin.Utils.CompType;
 import data.bonus.Bonus;
 
 /**
@@ -272,6 +273,7 @@ public class GameData extends Observable {
 		}
 
 		allContestants.add(c);
+		Collections.sort(allContestants, Utils.getComparator(CompType.ID, Contestant.class));
 
 		notifyAdd(UpdateTag.ADD_CONTESTANT);
 	}
@@ -347,6 +349,7 @@ public class GameData extends Observable {
 		}
 
 		allUsers.add(u);
+		Collections.sort(allUsers, Utils.getComparator(CompType.ID, User.class));
 
 		notifyAdd(UpdateTag.REMOVE_USER);
 	}
@@ -359,6 +362,7 @@ public class GameData extends Observable {
 	 */
 	public void removeUser(User u) {
 		allUsers.remove(u);
+		Collections.sort(allUsers, Utils.getComparator(CompType.ID, User.class));
 
 		notifyAdd(UpdateTag.REMOVE_USER);
 	}
