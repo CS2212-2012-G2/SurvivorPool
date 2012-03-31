@@ -171,6 +171,8 @@ public abstract class PersonTableModel<P extends Person> extends AbstractTableMo
 		if (!valid)
 			throw ie;
 
+		addPerson(p);
+		
 		//sortTable();
 		fireTableDataChanged();
 	}
