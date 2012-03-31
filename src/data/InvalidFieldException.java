@@ -9,7 +9,7 @@ package data;
  * Exception class to show when an invalid type is attempted to be used.
  * 
  */
-public class InvalidFieldException extends Exception {
+public class InvalidFieldException extends RuntimeException {
 
 	public enum Field {
 		UNKNOWN_FIELD,

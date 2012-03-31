@@ -5,8 +5,11 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -223,7 +226,9 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 	 *             Thrown on any bad fields passed
 	 */
 	protected P getPerson() throws InvalidFieldException {
-		personFields.getFromPane(loadedPerson);
+		if (isShowing())
+			personFields.getFromPane(loadedPerson);
+		
 		return loadedPerson;
 	}
 
@@ -290,11 +295,9 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		tableModel.setRowSelect(p);
 	}
 
-	protected void savePerson() throws InvalidFieldException {
+	protected void savePerson() {
 		P p = null;
 
-		// when a contestant is added, delete becomes active
-		btnDelete.setEnabled(true);
 		try {
 			p = getPerson();
 
@@ -365,14 +368,14 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		return (usingContestants ? "Contestant" : "Player");
 	}
 	
-	protected void clickSaveButton() {
+	public void clickSaveButton() {
 		if (!getFieldsChanged()) 
 			return;
 		
 		try { 
 			savePerson(); 
 			
-			P p = getPerson(); // this wont cause exception
+			P p = loadedPerson; // this wont cause exception
 			
 			tableModel.setRowSelect(p);
 		} catch (InvalidFieldException ex) {
@@ -395,12 +398,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 				if (response == JOptionPane.YES_OPTION) {
 					// user said they want to delete Person
 	
-					P p = null;
-					try {
-						p = getPerson();
-					} catch (InvalidFieldException ex) {
-						System.out.println("Delete contestant, exception");
-					}
+					P p = loadedPerson;
 					
 					if (p == null) {
 						System.out.println("We goofed really badly.");
@@ -499,11 +497,15 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 
 	/**
 	 * Refreshes all values associated with GameData reference. <br>
-	 * Currently: - Tribe combobox - Table - Sets buttons enabled/disabled as
-	 * appropriate.
-	 * 
-	 * @see GameDataDependant.refreshGameFields
 	 */
 	@Override
-	public abstract void update(Observable obj, Object arg);
+	public void update(Observable obj, Object arg) {
+		@SuppressWarnings("unchecked")
+		EnumSet<UpdateTag> update = (EnumSet<UpdateTag>)arg;
+		
+		if (update.contains(UpdateTag.FORCE_SAVE)) {
+			setFieldsChanged(true);
+			clickSaveButton();
+		}
+	}
 }

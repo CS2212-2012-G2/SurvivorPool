@@ -71,6 +71,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	
 	public ContestantPanel() {
 		super(new Contestant());
+		
+		setName("Contestant_Panel");
 
 		// ////////////////////////////
 		// Top Panel:
@@ -475,6 +477,8 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	// TODO: Make this use the EnumSet notion of what's passed in. 
 	@Override
 	public void update(Observable obj, Object arg) {
+		super.update(obj, arg);
+		
 		GameData g = (GameData) obj;
 
 		@SuppressWarnings("unchecked")

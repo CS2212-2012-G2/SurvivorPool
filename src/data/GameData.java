@@ -46,7 +46,8 @@ public class GameData extends Observable {
 		START_SEASON, ADVANCE_WEEK, SET_TRIBE_NAMES, 
 		ADD_CONTESTANT, REMOVE_CONTESTANT, CONTESTANT_CAST_OFF,
 		ADD_USER, REMOVE_USER, 
-		FINAL_WEEK, END_GAME, ALLOCATE_POINTS 
+		FINAL_WEEK, END_GAME, ALLOCATE_POINTS,
+		FORCE_SAVE
 	}
 	
 	/**
@@ -514,8 +515,9 @@ public class GameData extends Observable {
 	 * advanceWeek sets the number of weeksPassed to weeksPassed + 1.
 	 */
 	public void advanceWeek() {
-		if (elimExists == false)
+		if (!elimExists)
 			return;
+		
 		/* Fill weekly NULLs */
 		for (User u : allUsers) {
 			if (u.getWeeklyPick().isNull() || u.getWeeklyPick() == null) {
@@ -526,13 +528,14 @@ public class GameData extends Observable {
 			}
 			
 			/* Fill ultimate NULLs */
-			if (u.getUltimatePick().isNull()) {
+			if (u.getUltimatePick().isNull() || u.getUltimatePick() == null) {
 				try {
 					u.setUltimatePick(randomContestant(true));
 				} catch (InvalidFieldException e) {
 				} // wont happen
 			}
 		}
+		
 		checkPicks();
 		allocatePoints(getElimCont());
 		Contestant nullC = new Contestant();
@@ -557,6 +560,7 @@ public class GameData extends Observable {
 		weeksPassed += 1; // increment number of weeks passed
 		elimExists = false;
 		elimCont = null;
+		
 		if (isFinalWeek())
 			notifyAdd(UpdateTag.FINAL_WEEK);
 		else if (isSeasonEnded())
@@ -992,22 +996,23 @@ public class GameData extends Observable {
 	}
 
 	/**
-   * Small class used for removing parallel calls to do the same 
-   * notification. The update system accounts for multiple modifications	
-   * in one update call, so this means those methods are only called once.
-   * @author Kevin Brightwell	
-   */
-	
-  private class UpdateCall implements Runnable {	
-    public EnumSet<UpdateTag> mods = EnumSet.noneOf(UpdateTag.class);
-	
-    public boolean done = false;
-    public void run() {	
-      setChanged();
-      notifyObservers(mods);
-      done = true;	
-    }	
-  }
+	 * Small class used for removing parallel calls to do the same notification.
+	 * The update system accounts for multiple modifications in one update call,
+	 * so this means those methods are only called once.
+	 * 
+	 * @author Kevin Brightwell
+	 */
+	private class UpdateCall implements Runnable {
+		public EnumSet<UpdateTag> mods = EnumSet.noneOf(UpdateTag.class);
+
+		public boolean done = false;
+
+		public void run() {
+			setChanged();
+			notifyObservers(mods);
+			done = true;
+		}
+	}
 	
   /**	
    * Adds a set of {@link GameData.UpdateTag}s to the next update call. This	
