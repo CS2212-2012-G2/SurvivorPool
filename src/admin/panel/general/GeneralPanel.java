@@ -348,6 +348,7 @@ public class GeneralPanel extends JPanel implements Observer {
 						int t = Integer.parseInt(s);
 						if (t >= 0) {
 							g.startSeason(t);
+							btnStartSn.setText("Season started. Bet amount is $"+t);
 						}
 						return;
 					}
