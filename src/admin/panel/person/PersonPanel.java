@@ -267,12 +267,13 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 			loadedPerson = newPerson();
 			btnSave.setText("Add");
 		} else {
+			btnSave.setText("Save");
+			
 			if (loadedPerson == p) {
 				return; // don't need to set it then..
 			}
 			
 			loadedPerson = p;
-			btnSave.setText("Save");
 		}
 
 		// let the edit pane handle most
