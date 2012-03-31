@@ -245,7 +245,8 @@ public class User implements Person, Comparable<User> {
 	 * Sets the user ID.
 	 */
 	public void setID(String id) throws InvalidFieldException {
-		id = id.toLowerCase().trim();
+		if (id != null)
+			id = id.toLowerCase().trim();
 		if (!Utils.checkString(id, REGEX_PLAYER_ID))
 			throw new InvalidFieldException(Field.USER_ID, "Invalid Player ID");
 

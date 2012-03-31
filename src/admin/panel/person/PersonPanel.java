@@ -375,7 +375,7 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		try { 
 			savePerson(); 
 			
-			P p = loadedPerson; // this wont cause exception
+			P p = getPerson(); // this wont cause exception
 			
 			tableModel.setRowSelect(p);
 		} catch (InvalidFieldException ex) {

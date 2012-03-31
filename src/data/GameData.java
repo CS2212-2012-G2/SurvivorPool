@@ -16,6 +16,7 @@ import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 import admin.Utils;
 import admin.Utils.CompType;
+import data.InvalidFieldException.Field;
 import data.bonus.Bonus;
 
 /**
@@ -619,7 +620,6 @@ public class GameData extends Observable {
 	 * Checks who was chosen as a weekly or ultimate pick. Sets the contestant's picked status to
 	 * true if selected.
 	 */
-	
 	public void checkPicks(){
 		List<User> choices = getCurrentGame().getAllUsers();
 		for(User u : choices){
@@ -628,13 +628,53 @@ public class GameData extends Observable {
 		}
 	}
 	
+	/** 
+	 * Checks an 
+	 * @param p
+	 * @param type 
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends Person> boolean checkID(T p, Class<T> type) {
+		List<T> list;
+		
+		boolean idUsed;
+		
+		if (type == Contestant.class) {
+			list = (List<T>) getAllContestants();
+			idUsed = isContestantIDInUse(p.getID());
+		} else {
+			list = (List<T>) getAllUsers();
+			idUsed = isUserIDInUse(p.getID());
+		}
+		
+		boolean inGame = list.contains(p);
+
+		if (!inGame && !idUsed) {
+			return true;
+		} else if (!inGame && idUsed) {
+			return false;
+		} else if (inGame && idUsed) {
+			// we know the contestant is in the game, AND the ID is in use
+			// try to find if its in the game otherwise, if it is, then we
+			// have a problem, otherwise, no problem (nothing changed!).
+			// JESUS CHRIST THIS LOGIC SUCKED.
+			for (T t : list) {
+				if (t.getID().equals(p.getID()) && t != p) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Returns the prize pool split. Accounts for one winner, two winners, and
 	 * three winners.
 	 * 
 	 * @return list of int values to give each user.
 	 */
-
 	public List<Integer> determinePrizePool() {
 		List<Integer> tempList = new ArrayList<Integer>();
 		

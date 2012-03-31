@@ -3,7 +3,6 @@ package admin;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.io.InvalidClassException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,7 +23,7 @@ public class Utils {
 	// A clean way to handle themes with minimal code.
 	enum GUITHEME {
 		// ThemeName(Foreground Color,Background Color);
-		Western(new Color(255, 255, 255), new Color(79, 38, 100), Color.WHITE), 
+		Western(new Color(255, 255, 255), new Color(79, 33, 112), Color.WHITE), 
 		Snow(new Color(0, 0, 255), new Color(255, 255, 255), Color.BLUE), 
 		BandW(new Color(255, 255, 255), new Color(0, 0, 0), Color.GRAY);
 		Color fore, back, table;

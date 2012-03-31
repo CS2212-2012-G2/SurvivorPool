@@ -21,6 +21,8 @@ import admin.panel.person.PersonFields;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
+import data.User;
+import data.InvalidFieldException.Field;
 
 public class ContestantFieldsPanel extends JPanel implements PersonFields<Contestant> {
 
@@ -263,7 +265,17 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	 */
 	@Override
 	public void getFromPane(Contestant c) throws InvalidFieldException {
+		String oID = c.getID();
 		c.setID(tfContID.getText());
+		
+		GameData g = GameData.getCurrentGame();
+		
+		if (!g.checkID(c, Contestant.class)) {
+			if (oID != null)
+				c.setID(oID);
+			throw new InvalidFieldException(Field.CONT_ID_DUP, "Duplicate ID, User (changing manually)");
+		}
+		
 		c.setFirstName(tfFirstName.getText().trim());
 		c.setLastName(tfLastName.getText().trim());
 		c.setTribe((String) cbTribe.getSelectedItem());

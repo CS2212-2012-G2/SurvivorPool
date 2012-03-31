@@ -22,7 +22,7 @@ import data.User;
  * @author kevin
  * 
  */
-public abstract class PersonTableModel<P> extends AbstractTableModel {
+public abstract class PersonTableModel<P extends Person> extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 
 	protected String[] columnNames;
@@ -155,42 +155,21 @@ public abstract class PersonTableModel<P> extends AbstractTableModel {
 		// is the ID in use in the game data?
 		GameData g = GameData.getCurrentGame();
 
-		Person person = (Person) p;
-
-		List<Person> list;
-		boolean idUsed;
+		
+		boolean valid;
 		InvalidFieldException ie;
-
-		if (person instanceof Contestant) {
-			list = Utils.castListElem(g.getAllContestants(),
-					(Person) (new User()));
-			idUsed = g.isContestantIDInUse(person.getID());
+		if (p instanceof Contestant) {
+			valid = g.checkID((Contestant)p, Contestant.class);
 			ie = new InvalidFieldException(Field.CONT_ID_DUP,
 					"Invalid ID (in use)");
 		} else {
-			list = Utils.castListElem(g.getAllUsers(), (Person) (new User()));
-			idUsed = g.isUserIDInUse(person.getID());
+			valid = g.checkID((User)p, User.class);
 			ie = new InvalidFieldException(Field.USER_ID_DUP,
 					"Invalid ID (in use)");
 		}
-
-		boolean inGame = list.contains(person);
-
-		if (!inGame && !idUsed) {
-			addPerson(p);
-		} else if (!inGame && idUsed) {
+		
+		if (!valid)
 			throw ie;
-		} else if (inGame && idUsed) {
-			// we know the contestant is in the game, AND the ID is in use
-			// try to find if its in the game otherwise, if it is, then we
-			// have a problem, otherwise, no problem (nothing changed!).
-			// JESUS CHRIST THIS LOGIC SUCKED.
-			for (Person t : list) {
-				if (t.getID().equals(person.getID()) && t != person) {
-					throw ie;
-				}
-			}
-		}
 
 		//sortTable();
 		fireTableDataChanged();

@@ -13,7 +13,9 @@ import javax.swing.JTextField;
 
 import admin.panel.person.PersonFields;
 import data.Contestant;
+import data.GameData;
 import data.InvalidFieldException;
+import data.InvalidFieldException.Field;
 import data.User;
 
 public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
@@ -227,6 +229,18 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
 	@Override
 	public void getFromPane(User u) throws InvalidFieldException {
+		
+		String oID = u.getID();
+		u.setID(tfID.getText());
+		
+		GameData g = GameData.getCurrentGame();
+		
+		if (!g.checkID(u, User.class)) {
+			if (oID != null)
+				u.setID(oID);
+			throw new InvalidFieldException(Field.USER_ID_DUP, "Duplicate ID, User (changing manually)");
+		}
+		
 		u.setID(tfID.getText());
 
 		u.setFirstName(tfFirstName.getText().trim());
