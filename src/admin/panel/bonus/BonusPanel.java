@@ -6,8 +6,12 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -27,6 +31,7 @@ import javax.swing.event.ChangeListener;
 
 import admin.MainFrame;
 import data.GameData;
+import data.GameData.UpdateTag;
 import data.bonus.Bonus;
 import data.bonus.BonusQuestion;
 import data.bonus.BonusQuestion.BONUS_TYPE;
@@ -36,7 +41,7 @@ import data.bonus.BonusQuestion.BONUS_TYPE;
  * @author Kevin Brightwell, Justin MacDonald, Ramesh Raj
  *
  */
-public class BonusPanel extends JPanel {
+public class BonusPanel extends JPanel implements Observer{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -129,6 +134,10 @@ public class BonusPanel extends JPanel {
 		
 		initListeners();
 		
+		GameData g = GameData.getCurrentGame();
+		if (g.isSeasonEnded() || !g.isSeasonStarted()) { // game end
+			update(GameData.getCurrentGame(), EnumSet.of(UpdateTag.END_GAME));
+		}
 	}
 	
 	private void buildQuestionPanelP1() {
@@ -664,23 +673,18 @@ public class BonusPanel extends JPanel {
 		spnQuestion.addChangeListener(clQuestion);
 	}
 
-	// TODO: clean
-	/*@Override
-	public void update(Observable observ, Object obj) {
+public void update(Observable observ, Object obj) {
 		GameData g = (GameData)observ;
 		
-		if (obj.equals(EnumSet.of(UpdateTag.START_SEASON))){
-			currentWeek = g.getCurrentWeek();
-			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, g.getCurrentWeek());
-			setQuestionSpinner(currentQuestionNumber, Bonus.getNumQuestionsInWeek(currentWeek));
+		if (obj.equals(EnumSet.of(UpdateTag.END_GAME))){
+				pnlQuestion.setEnabled(false);
+				btnModify.setEnabled(false);
+				btnNextPart.setEnabled(false);
+				btnNewQ.setEnabled(false);
+				rbMultChoice.setEnabled(false);
+				rbShortAnswer.setEnabled(false);
+			
 		}
-		if (obj.equals(EnumSet.of(UpdateTag.ADVANCE_WEEK))){
-			currentWeek = g.getCurrentWeek();
-			currentQuestionNumber = 1;
-			setWeekSpinner(currentWeek, g.getCurrentWeek());
-			setQuestionSpinner(1, 1);
-			txtQuestionList.setText("");
-		}
-	}*/
+
+	}
 }
