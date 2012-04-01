@@ -1,10 +1,10 @@
 <project name="SurvivorPool-Admin" default="all">
 
   <property name="jar-out" value="Group2Standalone.jar"/>
-  <property name="src-dir" value="src/"/>
-  <property name="bin-dir" value="bin/"/>
-  <property name="javadoc-dir" value="doc/"/>
-  <property name="res-dir" value="res/"/>
+  <property name="src-dir" value="./src/"/>
+  <property name="bin-dir" value="./bin/"/>
+  <property name="javadoc-dir" value="./doc/"/>
+  <property name="res-dir" value="./res/"/>
 
   <target name="clean">
     <delete dir="${bin-dir}" />
@@ -33,9 +33,10 @@
   <target name="jar-sub">
 
     <antcall target="clean-conf" />
-    <delete file="${jar-out}"/>
+    <delete file="${jar-out}" />
+
     <jar destfile="${jar-out}"
-         basedir="./"
+	 basedir="./"
 	 defaultexcludes="yes">
       <exclude name="**.jar" />
       <exclude name="**/.classpath" />
@@ -60,6 +61,7 @@
 	     author="true"
 	     version="true"
 	     use="true"
+	     private="true"
 	     windowtitle="CS2212 Group 2 2012 - Javadoc">
       
       <fileset dir="src" defaultexcludes="yes">

@@ -23,7 +23,7 @@ public class Utils {
 	// A clean way to handle themes with minimal code.
 	enum GUITHEME {
 		// ThemeName(Foreground Color,Background Color);
-		Western(new Color(255, 255, 255), new Color(79, 33, 112), Color.WHITE), 
+		Western(Color.WHITE, new Color(79, 33, 112), new Color(79, 33, 112)), 
 		Snow(new Color(0, 0, 255), new Color(255, 255, 255), Color.BLUE), 
 		BandW(new Color(255, 255, 255), new Color(0, 0, 0), Color.GRAY);
 		Color fore, back, table;

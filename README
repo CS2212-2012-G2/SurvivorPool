@@ -8,6 +8,9 @@ Setup
 
 2) On first run, there will be no data and it will initialize to empty
 
+**Note:**
+  This _requires_ `Java 7 <http://www.oracle.com/technetwork/java/javase/downloads/jdk-7u3-download-1501626.html>`_.
+
 Specification Testing
 =====================
 
