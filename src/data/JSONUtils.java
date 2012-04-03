@@ -15,6 +15,8 @@ import json.simple.JSONValue;
  * differs from justing using the JSON classes directly as we keep references to
  * the object centralized. We can take care of any additional code that is
  * needed to read/write to files rather.
+ * 
+ * @author Ramesh Raj
  */
 public class JSONUtils {
 	
