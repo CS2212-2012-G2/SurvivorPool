@@ -59,10 +59,8 @@ public class JSONUtils {
 	/**
 	 * Writes to file using a json object
 	 * 
-	 * @param filePath
-	 *            The file path to write to
-	 * @param json
-	 *            A json object that has the keys and teh values
+	 * @param filePath           The file path to write to
+	 * @param json               A json object that has the keys and the values
 	 */
 	public static void writeJSON(String filePath, JSONObject json) {
 		try {

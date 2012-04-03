@@ -9,43 +9,32 @@ import data.InvalidFieldException.Field;
  * The user class will be used to create an individual who will be participating
  * in the survivor pool.
  * 
- * @author Graem Littleton, Kevin Brightwell, Jonathan Demelo, Ramesh Raj,
- *         Justin McDonald
+ * @author Graem Littleton, Kevin Brightwell, Jonathan Demelo, Ramesh Raj
  */
 
 public class User implements Person, Comparable<User> {
 
-	private String firstName, lastName, unID; // first and last names and unique
-												// ID (UWO ID format)
-	private int points; // point total, points user receives if that
-						// pick wins
+	private String firstName, lastName, unID; // first and last names and unique ID (UWO ID format)
+	private int points; // point total, points user receives if that pick wins
 	protected int ultPoints;
-
-	private Contestant ultPick, weeklyPick; // users pick of the winner and
-											// their weekly pick
+	private Contestant ultPick, weeklyPick; // users pick of the winner and their weekly pick
 	private int numBonusAnswer = 0;
-	// JSON Keys:
-
-	// TODO: enum
-	protected static final String KEY_ID = "id";
-	protected static final String KEY_FIRST_NAME = "first";
-	protected static final String KEY_LAST_NAME = "last";
-	protected static final String KEY_POINTS = "curr_points";
-	protected static final String KEY_WIN_PICK_POINTS = "win_points";
-	protected static final String KEY_ULT_PICK_ID = "ult_pick";
-	protected static final String KEY_WEEKLY_PICK_ID = "week_pick";
-	protected static final String KEY_NUM_BONUS_ANSWER = "num_bonus_answer";
+	
+	protected static final String KEY_ID = "id",
+								  KEY_FIRST_NAME = "first",
+								  KEY_LAST_NAME = "last",
+								  KEY_POINTS = "curr_points",
+								  KEY_WIN_PICK_POINTS = "win_points",
+								  KEY_ULT_PICK_ID = "ult_pick",
+								  KEY_WEEKLY_PICK_ID = "week_pick",
+								  KEY_NUM_BONUS_ANSWER = "num_bonus_answer";
 	/**
 	 * Constructor method for the type User sets names, initializes points
 	 * 
-	 * @param first
-	 *            first name
-	 * @param last
-	 *            last name
-	 * @param id
-	 *            unique ID
-	 * @throws InvalidFieldException
-	 *             Thrown if any of the parameters passed are invalid
+	 * @param first      first name
+	 * @param last       last name
+	 * @param id         unique ID
+	 * @throws InvalidFieldException       Thrown if any of the parameters passed are invalid
 	 */
 	public User(String first, String last, String id)
 			throws InvalidFieldException {
@@ -56,7 +45,10 @@ public class User implements Person, Comparable<User> {
 
 	}
 
-	// FIXME: Do something intelligent?
+	/**
+	 * Constructor for User with no information given.  Just sets points
+	 * to 0, all other information is null.
+	 */
 	public User() {
 		setPoints(0);
 	}
@@ -73,15 +65,6 @@ public class User implements Person, Comparable<User> {
 	}
 
 	/**
-	 * getLastName returns the users last name
-	 * 
-	 * @return this.lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
-
-	/**
 	 * getID returns the users unique ID
 	 * 
 	 * @return this.unID
@@ -89,29 +72,30 @@ public class User implements Person, Comparable<User> {
 	public String getID() {
 		return unID;
 	}
-
+	
 	/**
-	 * getWeeklyPick returns the users pick for which contestant will be
-	 * eliminated @ return this.weeklyPick
+	 * getLastName returns the users last name
+	 * 
+	 * @return this.lastName
 	 */
-	public Contestant getWeeklyPick() {
-		return weeklyPick;
+	public String getLastName() {
+		return lastName;
 	}
-
+	
+	/**
+	 * Get the number of bonus questions answered this week
+	 * @return num questions answered
+	 */
+	public int getNumBonusAnswer() {
+		return numBonusAnswer;
+	}
+	
 	/**
 	 * Returns the users current score
 	 * @return
 	 */
 	public int getPoints() {
 		return points;
-	}
-
-	/**
-	 * Sets the users current score
-	 * @param points
-	 */
-	public void setPoints(int points) {
-		this.points = points;
 	}
 
 	/**
@@ -123,7 +107,7 @@ public class User implements Person, Comparable<User> {
 	public Contestant getUltimatePick() {
 		return ultPick;
 	}
-
+	
 	/**
 	 * Get the ultimate points based on ultimate pick
 	 * 
@@ -132,14 +116,16 @@ public class User implements Person, Comparable<User> {
 	public int getUltimatePoints() {
 		return ultPoints;
 	}
-
+	
 	/**
-	 * Get the number of bonus questions answered this week
-	 * @return num questions answered
+	 * getWeeklyPick returns the users pick for which contestant will be
+	 * eliminated @ return this.weeklyPick
 	 */
-	public int getNumBonusAnswer() {
-		return numBonusAnswer;
+	public Contestant getWeeklyPick() {
+		return weeklyPick;
 	}
+
+
 
 	// ---------------- MUTATOR METHODS ----------------- //
 
@@ -167,6 +153,18 @@ public class User implements Person, Comparable<User> {
 					"Invalid First Name (User)");
 		firstName = Utils.strCapitalize(first);
 	}
+	
+	/**
+	 * Sets the user ID.
+	 */
+	public void setID(String id) throws InvalidFieldException {
+		if (id != null)
+			id = id.toLowerCase().trim();
+		if (!Utils.checkString(id, REGEX_PLAYER_ID))
+			throw new InvalidFieldException(Field.USER_ID, "Invalid Player ID");
+
+		unID = id;
+	}
 
 	/**
 	 * setFirstName sets the users last name
@@ -182,6 +180,65 @@ public class User implements Person, Comparable<User> {
 					"Invalid Last Name (User)");
 		lastName = Utils.strCapitalize(last);
 	}
+	
+	/**
+	 * Set the number of bonus questions answered this week.
+	 * Set this to 0 after week has advanced!
+	 * @param numBonusAnswer The number of bonus questions answered
+	 */
+	public void setNumBonusAnswer(int numBonusAnswer) {
+		this.numBonusAnswer = numBonusAnswer;
+	}
+	
+	/**
+	 * Sets the users current score
+	 * @param points
+	 */
+	public void setPoints(int points) {
+		this.points = points;
+	}
+	
+	/**
+	 * setWinPick sets the users choice for which contestant will win the
+	 * competition. Also determines how many points the user will receive if
+	 * that player wins
+	 * 
+	 * @param winner
+	 *            contestant choice
+	 * @throws InvalidFieldException
+	 *             If null, throws exception.
+	 */
+	public void setUltimatePick(Contestant winner) throws InvalidFieldException {
+		setUltimatePickNoSetPts(winner);
+		if (!winner.isNull())
+			ultPoints = 2 * GameData.getCurrentGame().weeksLeft();
+	}
+	
+	/**
+	 * just sets the same as prior without setting pts.
+	 * 
+	 * @param winner
+	 * @throws InvalidFieldException
+	 */
+	public void setUltimatePickNoSetPts(Contestant winner)
+			throws InvalidFieldException {
+		if (winner == null) {
+			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
+					"Weekly pick was null");
+		}
+	 
+		ultPick = winner;
+	}
+	
+	/**
+	 * sets the ultimate points.
+	 * 
+	 * @param pts
+	 */
+	public void setUltimatePoints(int pts) {
+		ultPoints = pts;
+	}
+
 
 	/**
 	 * setWeeklyPick sets the users pick for which contestant will be eliminated
@@ -200,68 +257,33 @@ public class User implements Person, Comparable<User> {
 		weeklyPick = pick;
 	}
 
+	
+    // ----------------- HELPER METHODS ---------------- //
+	
 	/**
-	 * setWinPick sets the users choice for which contestant will win the
-	 * competition. Also determines how many points the user will receive if
-	 * that player wins
+	 * Compares two User objects.
 	 * 
-	 * @param winner
-	 *            contestant choice
-	 * @throws InvalidFieldException
-	 *             If null, throws exception.
+	 * @return 0    Users are equal.
+	 * @return -1   User A is greater than User B.
+	 * @return 1    User B is greater than User A.
 	 */
-	public void setUltimatePick(Contestant winner) throws InvalidFieldException {
-		setUltimatePickNoSetPts(winner);
-		if (!winner.isNull())
-			ultPoints = 2 * GameData.getCurrentGame().weeksLeft();
-	}
-
-	/**
-	 * just sets the same as prior without setting pts.
-	 * 
-	 * @param winner
-	 * @throws InvalidFieldException
-	 */
-	public void setUltimatePickNoSetPts(Contestant winner)
-			throws InvalidFieldException {
-		if (winner == null) {
-			throw new InvalidFieldException(Field.USER_WEEKLY_PICK,
-					"Weekly pick was null");
+	public int compareTo(User otherU) {
+		// ugly, but works. :)
+		int result = getID().compareToIgnoreCase(otherU.getID());
+		if (result == 0) {
+			result = getPoints() - otherU.getPoints();
+			if (result == 0) {
+				result = getLastName().compareToIgnoreCase(otherU.getLastName());
+				if (result == 0) {
+					result = getFirstName().compareToIgnoreCase(otherU.getLastName());
+				}
+			}
 		}
-	 
-		ultPick = winner;
+		
+		return result;
 	}
 
-	/**
-	 * sets the ultimate points.
-	 * 
-	 * @param pts
-	 */
-	public void setUltimatePoints(int pts) {
-		ultPoints = pts;
-	}
-
-	/**
-	 * Sets the user ID.
-	 */
-	public void setID(String id) throws InvalidFieldException {
-		if (id != null)
-			id = id.toLowerCase().trim();
-		if (!Utils.checkString(id, REGEX_PLAYER_ID))
-			throw new InvalidFieldException(Field.USER_ID, "Invalid Player ID");
-
-		unID = id;
-	}
-
-	/**
-	 * Set the number of bonus questions answered this week.
-	 * Set this to 0 after week has advanced!
-	 * @param numBonusAnswer The number of bonus questions answered
-	 */
-	public void setNumBonusAnswer(int numBonusAnswer) {
-		this.numBonusAnswer = numBonusAnswer;
-	}
-
+	
 	/**
 	 * toString returns a string of the contestant's information in JSON format.
 	 */
@@ -270,8 +292,53 @@ public class User implements Person, Comparable<User> {
 				+ "\"" + lastName + "\"" + ", Points: " + "\"" + points + "\""
 				+ ", ID: " + "\"" + unID + "\">");
 	}
+	
+	/**
+	 * Updates the stored user with any not null information in the passed user
+	 * 
+	 * @param u
+	 *            The user to update from.
+	 * @throws InvalidFieldException
+	 *             Thrown if anything is of the wrong format.
+	 * 
+	 */
+	public void update(User u) throws InvalidFieldException {
+		if (u.getFirstName() != null) {
+			setFirstName(u.getFirstName());
+		}
+
+		if (u.getLastName() != null) {
+			setLastName(u.getLastName());
+		}
+
+		if (u.getID() != null) {
+			setID(u.getID());
+		}
+
+		if (u.getPoints() != getPoints()) {
+			setPoints(u.getPoints());
+		}
+
+		if (u.getWeeklyPick() != null && !u.getWeeklyPick().isNull()) {
+			setWeeklyPick(u.getWeeklyPick());
+		}
+
+		if (u.getUltimatePick() != null && !u.getUltimatePick().isNull()) {
+			setUltimatePickNoSetPts(u.getUltimatePick());
+		}
+
+		if (u.getUltimatePoints() != getUltimatePoints()) {
+			setUltimatePoints(u.getUltimatePoints());
+		}
+	}
 
 	// ----------------- JSON ----------------- //
+	
+	/**
+	 * Turns a User into a JSON object.
+	 * 
+	 * @return obj   JSON object
+	 */
 
 	public JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
@@ -299,6 +366,12 @@ public class User implements Person, Comparable<User> {
 		obj.put(KEY_NUM_BONUS_ANSWER,getNumBonusAnswer());
 		return obj;
 	}
+	
+	/**
+	 * Turns a JSON object into a User.
+	 * 
+	 * @param o      JSON object
+	 */
 
 	public void fromJSONObject(JSONObject o) {
 		try {
@@ -339,61 +412,10 @@ public class User implements Person, Comparable<User> {
 
 	}
 
-	/**
-	 * Updates the stored user with any not null information in the passed user
-	 * 
-	 * @param u
-	 *            The user to update from.
-	 * @throws InvalidFieldException
-	 *             Thrown if anything is of the wrong format.
-	 * 
-	 */
-	public void update(User u) throws InvalidFieldException {
-		if (u.getFirstName() != null) {
-			setFirstName(u.getFirstName());
-		}
-
-		if (u.getLastName() != null) {
-			setLastName(u.getLastName());
-		}
-
-		if (u.getID() != null) {
-			setID(u.getID());
-		}
-
-		if (u.getPoints() != getPoints()) {
-			setPoints(u.getPoints());
-		}
-
-		if (u.getWeeklyPick() != null && !u.getWeeklyPick().isNull()) {
-			setWeeklyPick(u.getWeeklyPick());
-		}
-
-		if (u.getUltimatePick() != null && !u.getUltimatePick().isNull()) {
-			setUltimatePickNoSetPts(u.getUltimatePick());
-		}
-
-		if (u.getUltimatePoints() != getUltimatePoints()) {
-			setUltimatePoints(u.getUltimatePoints());
-		}
-	}
 	
-	public int compareTo(User otherU) {
-		// ugly, but works. :)
-		int result = getID().compareToIgnoreCase(otherU.getID());
-		if (result == 0) {
-			result = getPoints() - otherU.getPoints();
-			if (result == 0) {
-				result = getLastName().compareToIgnoreCase(otherU.getLastName());
-				if (result == 0) {
-					result = getFirstName().compareToIgnoreCase(otherU.getLastName());
-				}
-			}
-		}
-		
-		return result;
-	}
-
+	
+	
+	// ====== TEST DRIVER ===== //
 	public static void main(String[] args) {
 		User u = null;
 		try {

@@ -24,8 +24,7 @@ import data.bonus.Bonus;
  * information, including the number of weeks passed, the lists of all/active
  * contestants, and the number of weeks remaining.
  * 
- * @author Graem Littleton, Ramesh Raj, Justin McDonald, Jonathan Demelo, Kevin
- *         Brightwell
+ * @author Graem Littleton, Ramesh Raj, Jonathan Demelo, Kevin Brightwell
  */
 
 public class GameData extends Observable {

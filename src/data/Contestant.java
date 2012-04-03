@@ -8,8 +8,7 @@ import admin.Utils;
  * The contestant class will be used to create a person who will be competing in
  * the actual game of survivor, and can be chosen by people from the User class.
  * 
- * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, Justin McDonald,
- *         Ramesh Raj
+ * @author Kevin Brightwell, Jonathon Demelo, Graem Littleton, Ramesh Raj
  */
 
 public class Contestant implements Person, Comparable<Contestant> {
@@ -22,26 +21,33 @@ public class Contestant implements Person, Comparable<Contestant> {
 
 	public final static String NULL_ID = "??";
 
-	// TODO: enum
-	protected final static String KEY_FIRST_NAME = "first";
-	protected final static String KEY_LAST_NAME = "last";
-	protected final static String KEY_ID = "id";
-	protected final static String KEY_PICTURE = "picture";
-	protected final static String KEY_TRIBE = "tribe";
-	protected final static String KEY_DATE = "date";
-	protected final static String KEY_CHOSEN = "chosen";
+	/**
+	 * Keys represent the string that is to be stored and fetched when writing to a JSON object
+	 * and reading one in.
+	 * 
+	 *                          KEY_FIRST_NAME = "first
+	 *							KEY_LAST_NAME = "last",
+	 *							KEY_ID = "id",
+	 *							KEY_PICTURE = "picture",
+     *							KEY_TRIBE = "tribe",
+	 *							KEY_DATE = "date",
+	 *							KEY_CHOSEN = "chosen",
+	 */
+	protected final static String KEY_FIRST_NAME = "first",
+	 							KEY_LAST_NAME = "last",
+	 							KEY_ID = "id",
+	 							KEY_PICTURE = "picture",
+     							KEY_TRIBE = "tribe",
+	 							KEY_DATE = "date",
+	 							KEY_CHOSEN = "chosen";
 
 	/**
 	 * Constructor method for type contestant sets player info
-	 * 
-	 * @param _id
-	 *            ID tag
-	 * @param first
-	 *            first name
-	 * @param last
-	 *            last name
-	 * @param _tribe
-	 *            contestant's tribe
+	 *
+	 * @param _id            ID tag
+	 * @param first          first name
+	 * @param last           last name
+	 * @param _tribe         contestant's tribe
 	 */
 	public Contestant(String _id, String first, String last, String _tribe)
 			throws InvalidFieldException {
@@ -51,6 +57,10 @@ public class Contestant implements Person, Comparable<Contestant> {
 		setTribe(_tribe);
 		picked = false;
 	}
+	/**
+	 * Constructor with no parameters.  Simply sets castDate to the uncast and
+	 * picked to false.
+	 */
 
 	public Contestant() {
 		castDate = -1;
@@ -145,13 +155,19 @@ public class Contestant implements Person, Comparable<Contestant> {
 	// ----------------- MUTATOR METHODS -----------------//
 
 	/**
-	 * sets the contestant to null. 
+	 * @return the toBeCast
 	 */
-	public void setNull() {
-		cID = NULL_ID;
-		isNull = true;
+	public boolean isToBeCast() {
+		return toBeCast;
 	}
-
+	
+	/**
+	 * Sets a contestant's cast date.
+	 */
+	public void setCastDate(int date) {
+		castDate = date;
+	}
+	
 	/**
 	 * castOff indicates that a contestant has been removed from the show
 	 */
@@ -161,7 +177,74 @@ public class Contestant implements Person, Comparable<Contestant> {
 		g.setElimCont(null);
 		g.setElimExists(false);
 	}
+	
+	/**
+	 * Sets the contestants picked status to true.
+	 */
+	public void selected(){
+		this.picked = true;
+	}
+	
+	/**
+	 * Sets the contestant's first name.
+	 * 
+	 * @param name
+	 *            New first name of the contestant, must be alphabetic, between
+	 *            1 and 20 chars.
+	 * @throws InvalidFieldException
+	 */
+	public void setFirstName(String name) throws InvalidFieldException {
+		name = name.trim();
+		if (!Utils.checkString(name, REGEX_FIRST_NAME))
+			throw new InvalidFieldException(
+					InvalidFieldException.Field.CONT_FIRST,
+					"Invalid First Name");
 
+		firstName = Utils.strCapitalize(name);
+
+	}
+	
+	/**
+	 * Sets the user ID to the passed ID, checks that is is of the correct
+	 * format
+	 * 
+	 * @param newID
+	 *            the new User ID, must adhere to correct syntax.
+	 * @throws InvalidFieldException
+	 */
+	public void setID(String newID) throws InvalidFieldException {
+		newID = newID.toLowerCase().trim();
+		if (!Utils.checkString(newID, REGEX_CONTEST_ID))
+			throw new InvalidFieldException(
+					InvalidFieldException.Field.CONT_ID,
+					"Invalid contestant ID");
+
+		cID = newID;
+	}
+	
+	/**
+	 * Sets the contestant's last name.
+	 * 
+	 * @param name
+	 *            New last name of the contestant
+	 */
+	public void setLastName(String name) throws InvalidFieldException {
+		name = name.trim();
+		if (!Utils.checkString(name, REGEX_LAST_NAME))
+			throw new InvalidFieldException(
+					InvalidFieldException.Field.CONT_LAST, "Invalid Last Name");
+
+		lastName = Utils.strCapitalize(name);
+	}
+
+	/**
+	 * sets the contestant to null. 
+	 */
+	public void setNull() {
+		cID = NULL_ID;
+		isNull = true;
+	}
+	
 	/**
 	 * setPicture sets a contestant's picture
 	 * 
@@ -172,10 +255,11 @@ public class Contestant implements Person, Comparable<Contestant> {
 	}
 	
 	/**
-	 * Sets the contestants picked status to true.
+	 * @param toBeCast
+	 *            the toBeCast to set
 	 */
-	public void selected(){
-		this.picked = true;
+	public void setToBeCast(boolean toBeCast) {
+		this.toBeCast = toBeCast;
 	}
 	
 	/**
@@ -198,76 +282,9 @@ public class Contestant implements Person, Comparable<Contestant> {
 		tribe = Utils.strCapitalize(name);
 	}
 
-	/**
-	 * Sets the contestant's first name.
-	 * 
-	 * @param name
-	 *            New first name of the contestant, must be alphabetic, between
-	 *            1 and 20 chars.
-	 * @throws InvalidFieldException
-	 */
-	public void setFirstName(String name) throws InvalidFieldException {
-		name = name.trim();
-		if (!Utils.checkString(name, REGEX_FIRST_NAME))
-			throw new InvalidFieldException(
-					InvalidFieldException.Field.CONT_FIRST,
-					"Invalid First Name");
-
-		firstName = Utils.strCapitalize(name);
-
-	}
-
-	/**
-	 * Sets the contestant's last name.
-	 * 
-	 * @param name
-	 *            New last name of the contestant
-	 */
-	public void setLastName(String name) throws InvalidFieldException {
-		name = name.trim();
-		if (!Utils.checkString(name, REGEX_LAST_NAME))
-			throw new InvalidFieldException(
-					InvalidFieldException.Field.CONT_LAST, "Invalid Last Name");
-
-		lastName = Utils.strCapitalize(name);
-	}
-
-	/**
-	 * Sets the user ID to the passed ID, checks that is is of the correct
-	 * format
-	 * 
-	 * @param newID
-	 *            the new User ID, must adhere to correct syntax.
-	 * @throws InvalidFieldException
-	 */
-	public void setID(String newID) throws InvalidFieldException {
-		newID = newID.toLowerCase().trim();
-		if (!Utils.checkString(newID, REGEX_CONTEST_ID))
-			throw new InvalidFieldException(
-					InvalidFieldException.Field.CONT_ID,
-					"Invalid contestant ID");
-
-		cID = newID;
-	}
-
-	public void setCastDate(int date) {
-		castDate = date;
-	}
-
-	/**
-	 * @return the toBeCast
-	 */
-	public boolean isToBeCast() {
-		return toBeCast;
-	}
-
-	/**
-	 * @param toBeCast
-	 *            the toBeCast to set
-	 */
-	public void setToBeCast(boolean toBeCast) {
-		this.toBeCast = toBeCast;
-	}
+	
+	// ----------------- HELPER METHODS ----------------- //
+	
 
 	/**
 	 * Update current contestant with contestant in param
@@ -342,7 +359,12 @@ public class Contestant implements Person, Comparable<Contestant> {
 		obj.put(KEY_CHOSEN, beenPicked());
 		return obj;
 	}
-
+	
+	/**
+	 * Converts a JSON object to a Contestant.
+	 * 
+	 * @param o   JSON object
+	 */
 	public void fromJSONObject(JSONObject o) {
 		try {
 			setID((String) o.remove(KEY_ID));
@@ -361,6 +383,13 @@ public class Contestant implements Person, Comparable<Contestant> {
 		}
 	}
 
+	/**
+	 * Compares two contestant objects.
+	 * 
+	 * @return 0      Contestant objects are equal (or null)
+	 * @return -1     Contestant A is greater than Contestant B
+	 * @return 1      Contestant B is greater than Contestant A
+	 */
 	@Override
 	public int compareTo(Contestant otherC) {
 		// ugly, but works. :)

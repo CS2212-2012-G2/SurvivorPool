@@ -1,16 +1,17 @@
-/**
- * 
- */
-package data;
 
-// TODO: Docs:
+package data;
 
 /**
  * Exception class to show when an invalid type is attempted to be used.
- * 
+ *
+ * @author Kevin Brightwell
  */
+
 public class InvalidFieldException extends RuntimeException {
 
+	/**
+	 * enum keys that will be returned depending on where the error exists.
+	 */
 	public enum Field {
 		UNKNOWN_FIELD,
 		// User:

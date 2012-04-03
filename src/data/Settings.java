@@ -1,5 +1,12 @@
 package data;
 
+/**
+ * Class that will be used to remember stylistic choices of the user.  Includes theme, window size,
+ * and the positioning of the window on the Admin's screen when loading.
+ * 
+ * @author Kevin Brightwell
+ */
+
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 
@@ -12,13 +19,19 @@ public class Settings extends HashMap<String, Object> {
 
 	private static Settings currentSettings = null;
 	
+	/**
+	 * Keys to represent stylistic choices (Theme, screen size) when written
+	 * into a JSON object.
+	 */
 	public static final String THEME = "theme",
 			HISTORY = "history",
 			SCREEN_LOC_X = "screen_locX",
 			SCREEN_LOC_Y = "screen_locY",
 			SCREEN_SIZE_X = "screen_sizeX",
 			SCREEN_SIZE_Y = "screen_sizeY";
-	
+	/**
+	 * Constructor for when no settings are loaded.
+	 */
 	public Settings() {
 		this(false);
 	}
