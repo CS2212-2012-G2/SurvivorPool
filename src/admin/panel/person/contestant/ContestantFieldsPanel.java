@@ -18,13 +18,22 @@ import javax.swing.JTextField;
 
 import admin.MainFrame;
 import admin.panel.person.PersonFields;
+import admin.panel.person.player.PlayerPanel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
 import data.User;
 import data.InvalidFieldException.Field;
 
-public class ContestantFieldsPanel extends JPanel implements PersonFields<Contestant> {
+/**
+ * Stores all editing fields for the Contestant panel. This implements the 
+ * {@link PersonFields} interface to allow for the {@link PlayerPanel} to take
+ * over most actions for the {@link ContestantPanel}. 
+ * 
+ * @author Kevin Brightwell (@Nava2)
+ */
+public class ContestantFieldsPanel extends JPanel implements
+		PersonFields<Contestant> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -50,8 +59,6 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	// store internal
 	private GridBagLayout gbFields;
 	private GridBagConstraints gbFieldsConst;
-
-	
 	
 	// constants:
 	private static final String DEFAULT_PICTURE = "res/img/defaultpic.png";
@@ -93,6 +100,14 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 		add(fieldsPane, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Sets all the {@link GridBagLayout} parameters and adds the components
+	 * as necessary to the {@link JPanel} passed. Used as a separation in the 
+	 * program for ease of reading.
+	 * @param pane
+	 * @param gbl
+	 * @param gbc
+	 */
 	private void setupGridBag(JPanel pane, GridBagLayout gbl, GridBagConstraints gbc) {
 		// gbc.insets = new Insets(5, 5, 5, 5);
 
@@ -177,9 +192,8 @@ public class ContestantFieldsPanel extends JPanel implements PersonFields<Contes
 	 * <b>Note:</b> Pictures must be PNG format.
 	 * 
 	 * @param path
-	 *            Path to new image.
+	 *            Path to new image. 
 	 */
-	// apparently images have to be .png and alphanumeric
 	protected void updateContPicture(String path) {
 		// don't update if its already correct!
 		if (imgPath == path) {

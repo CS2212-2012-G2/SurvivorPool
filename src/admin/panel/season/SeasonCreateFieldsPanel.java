@@ -10,6 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
+/**
+ * Stores all the fields associated with the Season Create panel. 
+ * 
+ * @author Kevin Brightwell (@Nava2), Justin McDonald
+ */
 public class SeasonCreateFieldsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;

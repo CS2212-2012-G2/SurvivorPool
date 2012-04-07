@@ -34,7 +34,6 @@ public abstract class PersonTableModel<P extends Person> extends AbstractTableMo
 	protected String[] columnNames;
 	//protected List<P> data;
 
-	protected int sortColumn;
 	protected List<P> globalData;
 
 	protected JTable parent;

@@ -37,10 +37,12 @@ import data.Person;
 import data.User;
 
 /**
- * TODO: Doc
+ * Panel containing all {@link User} manipulation methods for the UI. The
+ * panel closely follows {@link GameData} and updates as appropriate. This UI 
+ * contains methods for Adding, Deleting, and Modifying {@link User} data 
+ * fully. 
  * 
- * @author kevin
- * 
+ * @author Kevin Brightwell (@Nava2)
  */
 public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		MouseListener, Observer {
@@ -113,10 +115,7 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 		// add the mouse listener to all components.
 		for (Component c : ((JPanel)personFields).getComponents()) {
 			c.addMouseListener(this);
-		}
-
-		// right side!
-		
+		}	
 
 		// ////////////////////////////
 		// Mid

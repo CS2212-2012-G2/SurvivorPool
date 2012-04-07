@@ -28,7 +28,7 @@ import data.Person;
  * Screen for creating a season. Controls the number of contestants and weeks
  * and the two tribes name.
  * 
- * @author CS2212 GROUP TWO 2011/2012
+ * @author Justin McDonald, Ramesh Raj (@slyos)
  * 
  */
 public class SeasonCreatePanel extends JPanel {

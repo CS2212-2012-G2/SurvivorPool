@@ -11,6 +11,13 @@ import data.Contestant;
 import data.InvalidFieldException;
 import data.User;
 
+/**
+ * Subclass of {@link PersonTableModel} that stores {@link User} data. The 
+ * majority of operations occur in the super class.
+ * 
+ * @author Kevin Brightwell (@Nava2)
+ *
+ */
 public class PlayerTableModel extends PersonTableModel<User> {
 
 	private static final long serialVersionUID = 1L;
@@ -31,8 +38,6 @@ public class PlayerTableModel extends PersonTableModel<User> {
 		
 		columnNames = new String[] { "ID", "Last", "First", "Points", 
 				"Weekly Pick", "Ultimate Pick" };
-
-		sortColumn = INDEX_ID;
 	}
 
 	@Override

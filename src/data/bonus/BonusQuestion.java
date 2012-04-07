@@ -7,15 +7,12 @@ import java.util.List;
 import json.simple.JSONArray;
 import json.simple.JSONObject;
 import json.simple.parser.ParseException;
-import data.JSONUtils;
 
 /**
- * BonusQuestion is the class that will deal with the numerous bonus questions
- * that users can answer at their leisure during the competition.
+ * BonusQuestion is the data type used to store all information about a single
+ * question.
  * 
- * @author Graem Littleton, Kevin Brightwell, Jonathan Demelo, Ramesh Raj,
- *         Justin McDonald
- * 
+ * @author Kevin Brightwell (@Nava2), Justin McDonald, Ramesh Raj (@slyos)
  */
 
 public class BonusQuestion {
@@ -205,7 +202,7 @@ public class BonusQuestion {
 	}
 	
 	/**
-	 * Converts Contestant object to a json object
+	 * Converts Bonus Question object to a json object
 	 * 
 	 * @return a JSON object containing all the data needed
 	 * @throws JSONException

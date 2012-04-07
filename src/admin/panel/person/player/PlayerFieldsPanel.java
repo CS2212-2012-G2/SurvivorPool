@@ -12,12 +12,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import admin.panel.person.PersonFields;
+import admin.panel.person.contestant.ContestantPanel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
 import data.InvalidFieldException.Field;
 import data.User;
 
+/**
+ * Stores all editing fields for the {@link User} panel. This implements the
+ * {@link PersonFields} interface to allow for the {@link PlayerPanel} to take
+ * over most actions for the {@link PlayerPanel}.
+ * 
+ * @author Kevin Brightwell (@Nava2)
+ */
 public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 
 	private static final long serialVersionUID = 1L;
@@ -81,6 +89,12 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 		setupGridBag(gbFields, gbFieldsConst);
 	}
 
+	/**
+	 * Sets all the {@link GridBagLayout} parameters and adds the components
+	 * as necessary. Used as a separation in the program for ease of reading.
+	 * @param gbl
+	 * @param gbc
+	 */
 	private void setupGridBag(GridBagLayout gbl, GridBagConstraints gbc) {
 		// gbc.insets = new Insets(5, 5, 5, 5);
 

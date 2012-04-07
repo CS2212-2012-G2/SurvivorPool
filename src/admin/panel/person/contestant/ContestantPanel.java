@@ -33,7 +33,14 @@ import data.GameData;
 import data.GameData.UpdateTag;
 import data.InvalidFieldException;
 
-public class ContestantPanel extends PersonPanel<Contestant> implements MouseListener, Observer {
+/**
+ * Panel containing all {@link Contestant} manipulation methods for the UI. The
+ * panel closely follows {@link GameData} and updates as appropriate. This UI 
+ * contains methods for Adding, Deleting, and Modifying contestants fully. 
+ * @author Kevin Brightwell (@Nava2)
+ */
+public class ContestantPanel extends PersonPanel<Contestant> implements
+		MouseListener, Observer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -69,6 +76,9 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			TOOL_DELETE = "Click to remove currently selected Contestant",
 			TOOL_WINNER = "Click to choose winner";
 	
+	/**
+	 * Builds the contestant panel and all its subcomponents
+	 */
 	public ContestantPanel() {
 		super(new Contestant());
 		
@@ -77,7 +87,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		// ////////////////////////////
 		// Top Panel:
 		// ////////////////////////////
-		// TODO: Better Test picture
 		imgDisplay = new JButton();
 
 		// Edit fields:
@@ -162,10 +171,11 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		assembleAll();
 	}
 	
-	@Override
+	
 	/**
 	 * Builds the top panel including all the editable information
 	 */
+	@Override
 	protected void buildTopPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout(10, 10));
@@ -306,9 +316,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 		}
 	};
 	
-	/**
-	 * 
-	 */
 	@Override
 	protected void buildActions() {
 		super.buildActions();
@@ -336,8 +343,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 			}
 		});
 		
-		
-
 		btnSetStatus.addActionListener(new ActionListener() {
 			
 			@Override
@@ -451,8 +456,6 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 					if (!c.equals(win))
 						g.castOff(g.getCurrentWeek(),c);
 				}
-				
-				// FIXME: What do here?
 			}
 		});
 		
@@ -475,7 +478,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	}
 
 	/**
-	 * Convienience wrapper. 
+	 * Convenience wrapper. 
 	 * @param absolutePath
 	 */
 	protected void updateContPicture(String absolutePath) {
@@ -498,10 +501,7 @@ public class ContestantPanel extends PersonPanel<Contestant> implements MouseLis
 	 * Refreshes all values associated with GameData reference. <br>
 	 * Currently: - Tribe combobox - Table - Sets buttons enabled/disabled as
 	 * appropriate.
-	 * 
-	 * @see GameDataDependant.refreshGameFields
-	 */
-	// TODO: Make this use the EnumSet notion of what's passed in. 
+	 */ 
 	@Override
 	public void update(Observable obj, Object arg) {
 		super.update(obj, arg);

@@ -13,7 +13,7 @@ import json.simple.parser.ParseException;
 import data.JSONUtils;
 
 /**
- * This class holds all the bonus questions
+ * This class holds <i>all</i> the bonus questions
  * 
  * @author Ramesh Raj
  * 
@@ -35,7 +35,7 @@ public class Bonus extends Observable {
 			
 			return weekDiff;
 		}
-	};;
+	};
 	
 	/**
 	 * Adds a new question into the array. Be careful, this does NOT check if
@@ -48,6 +48,9 @@ public class Bonus extends Observable {
 		sortQuestions();
 	}
 	
+	/**
+	 * Sorts all the bonus questions by week then number if equal.
+	 */
 	private static void sortQuestions(){
 		Collections.sort(questions, comp);
 	}
@@ -115,6 +118,13 @@ public class Bonus extends Observable {
 		return w;
 	}
 	
+	/**
+	 * Parses all {@link BonusQuestion} objects stored into a 
+	 * {@link JSONObject} with a single {@link JSONArray} stored internally.
+	 * for storage into JSON files.
+	 * @return
+	 * @throws ParseException
+	 */
 	public static JSONObject toJSONObject() throws ParseException {
 		JSONObject obj = new JSONObject();
 
@@ -126,6 +136,11 @@ public class Bonus extends Observable {
 		return obj;
 	}
 
+	/**
+	 * Parses {@link BonusQuestion}s from a {@link JSONObject}.
+	 * @param o
+	 * @throws ParseException
+	 */
 	public static void fromJSONObject(JSONObject o) throws ParseException {
 		if(o==null)
 		    return;
@@ -141,7 +156,7 @@ public class Bonus extends Observable {
 	}
 	
 	/**
-	 * Initalize bonus
+	 * Initalize bonus questions
 	 */
 	public static void initBonus(){
 		try {

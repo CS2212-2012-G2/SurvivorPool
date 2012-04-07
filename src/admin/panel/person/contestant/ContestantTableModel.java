@@ -10,6 +10,13 @@ import admin.panel.person.PersonTableModel;
 import data.Contestant;
 import data.InvalidFieldException;
 
+/**
+ * Subclass of {@link PersonTableModel} that stores contestant data. The 
+ * majority of operations occur in the super class.
+ * 
+ * @author Kevin Brightwell (@Nava2)
+ *
+ */
 public class ContestantTableModel extends PersonTableModel<Contestant> {
 	private static final long serialVersionUID = 1L;
 
@@ -31,11 +38,6 @@ public class ContestantTableModel extends PersonTableModel<Contestant> {
 		columnNames = new String[] {
 				"ID", "Last Name", "First Name", "Tribe", "Date Cast"
 		};
-		
-		globalData = _globaldata;
-		//data = new ArrayList<Contestant>(globalData);
-
-		sortColumn = INDEX_ID;
 	}
 
 	@Override
