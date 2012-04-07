@@ -8,6 +8,11 @@ import javax.swing.JPanel;
 
 import data.bonus.BonusQuestion;
 
+/**
+ * Container for the Question viewing panel.
+ * @author Ramesh Raj (@slyos)
+ *
+ */
 public class ViewQPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -20,6 +25,9 @@ public class ViewQPanel extends JPanel {
 	private JLabel lblChoicesStr = new JLabel("",JLabel.RIGHT);
 	private JLabel lblChoices = new JLabel("");
 	
+	/**
+	 * Builds the panel and all labels necessary
+	 */
 	public ViewQPanel(){
 		this.setPreferredSize(new Dimension(100,100));
 		this.setLayout(new GridLayout(7,2,5,1));
@@ -37,6 +45,9 @@ public class ViewQPanel extends JPanel {
 		this.add(lblChoices);
 	}
 	
+	/**
+	 * Loads all the labels internally with default values
+	 */
 	private void setLabelsNull() {
 		lblWeek.setText("Not Set");
 		lblNum.setText("Not Set");
@@ -47,6 +58,10 @@ public class ViewQPanel extends JPanel {
 		lblChoices.setText("");
 	}
 	
+	/**
+	 * Updates the labels stored to show the {@link BonusQuestion} passed in.
+	 * @param q Question to display
+	 */
 	public void updateLabels(BonusQuestion q) {
 		if (q == null) {
 			setLabelsNull();
@@ -72,7 +87,6 @@ public class ViewQPanel extends JPanel {
 					sb.append(c + ", ");
 			}
 			sb.deleteCharAt(sb.lastIndexOf(","));
-		//	sb.append("</html>");
 			
 			lblChoices.setText(sb.toString());
 		}else{

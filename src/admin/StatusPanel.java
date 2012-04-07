@@ -16,8 +16,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
- * @author kevin
+ * Small panel which is used to display messages to the User, as well as 
+ * display errors. This panel has methods associated to push errors and to 
+ * reset said errors.
  * 
+ * @author Kevin Brightwell, Ramesh Raj
  */
 public class StatusPanel extends JPanel {
 
@@ -135,11 +138,10 @@ public class StatusPanel extends JPanel {
 		resetColor();
 	}
 
-	Action displayError = new AbstractAction() {
-
-		/**
-		 * 
-		 */
+	/**
+	 * Action used with the Timer to reset the colours
+	 */
+	private Action displayError = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
 
 		@Override

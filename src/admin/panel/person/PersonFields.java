@@ -7,9 +7,9 @@ import data.InvalidFieldException;
 import data.Person;
 
 /**
- * Interface used to amalgomate the Player/Contestant Field objects.
+ * Interface used to amalgamate the Player/Contestant Field objects.
  * 
- * @author kevin
+ * @author Kevin Brightwell (@Nava2)
  *
  */
 public interface PersonFields<P extends Person> {

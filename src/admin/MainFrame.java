@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,10 +32,17 @@ import admin.panel.person.contestant.ContestantPanel;
 import admin.panel.person.player.PlayerPanel;
 import admin.panel.season.SeasonCreatePanel;
 import data.GameData;
-import data.Settings;
 import data.GameData.UpdateTag;
+import data.Settings;
 import data.bonus.Bonus;
 
+/**
+ * The main executing class for the Survivor Pool Application, this
+ * container contains all other UI components internally. Several methods are
+ * included for ease of use.
+ * 
+ * @author Kevin Brightwell, Ramesh Raj
+ */
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -74,6 +80,9 @@ public class MainFrame extends JFrame {
 	
 	private Settings settings;
 
+	/**
+	 * Performs all initialisations as well as beings execution of the main UI.
+	 */
 	public MainFrame() {
 
 		GameData g = GameData.initGameData();
@@ -106,6 +115,9 @@ public class MainFrame extends JFrame {
 		this.setIconImage(new ImageIcon("res/img/icon.png").getImage());
 	}
 	
+	/**
+	 * Action listener used for the Menus
+	 */
 	private ActionListener al = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent ae) {
@@ -121,6 +133,9 @@ public class MainFrame extends JFrame {
 		}
 	};
 
+	/**
+	 * change listener used for the Tabs across the top
+	 */
 	private ChangeListener cl = new ChangeListener() {
 		@Override
 		public void stateChanged(ChangeEvent ce) {
@@ -131,6 +146,9 @@ public class MainFrame extends JFrame {
 		}
 	};
 	
+	/**
+	 * Called to save all data and be persistent
+	 */
 	private void saveAllData() {
 		if (GameData.getCurrentGame() != null)
 			GameData.getCurrentGame().writeData();

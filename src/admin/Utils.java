@@ -18,9 +18,21 @@ import data.Contestant;
 import data.Person;
 import data.User;
 
+/**
+ * Contains general methods for working inside this application. All methods in
+ * this class were moved here because they were considered miscellaneous or 
+ * used frequently.
+ * @author Kevin Brightwell (@Nava2), Ramesh Raj (@Slyos)
+ *
+ */
 public class Utils {
 
-	// A clean way to handle themes with minimal code.
+	/**
+	 * Enum used to store colour themes. This keeps everything contained and 
+	 * very clean.
+	 * @author Ramesh Raj
+	 *
+	 */
 	enum GUITHEME {
 		// ThemeName(Foreground Color,Background Color);
 		Western(Color.WHITE, new Color(79, 33, 112), new Color(79, 33, 112)), 
@@ -47,48 +59,6 @@ public class Utils {
 		}
 	};
 	
-	/**
-	 * Generates the default table renderer for tables inside the client.
-	 * @return
-	 */
-	public static TableCellRenderer buildDefaultRenderer() {
-		TableCellRenderer renderer = new TableCellRenderer() {
-
-			JLabel label = new JLabel();
-	
-			@Override
-			public JComponent getTableCellRendererComponent(JTable table,
-					Object value, boolean isSelected, boolean hasFocus,
-					int row, int column) {
-	
-				if (table.isRowSelected(row)) {
-					label.setBackground(Utils.getThemeTableHighlight());
-					label.setForeground(Utils.getThemeBG());
-				} else {
-					label.setBackground(UIManager.getColor("Table.background"));
-					label.setForeground(UIManager.getColor("Table.foreground"));
-				}
-	
-				label.setOpaque(true);
-				label.setText("" + value);
-	
-				return label;
-			}
-	
-		};
-		
-		return renderer;
-	}
-
-	public enum CompType {
-		// Person:
-		FIRST_NAME, LAST_NAME, ID,
-		// Contestants:
-		CONTNT_TRIBE, CONTNT_DATE,
-		// Users:
-		 USER_POINTS, USER_ULT_PICK, USER_WEEKLY_PICK
-	}
-
 	private static GUITHEME theme;
 
 	public static GUITHEME getTheme() {
@@ -150,6 +120,53 @@ public class Utils {
 		}
 		return themeString;
 	}
+	
+	/**
+	 * Generates the default table renderer for tables inside the client.
+	 * This is placed here to be common across all the different tables used.
+	 * @return
+	 */
+	public static TableCellRenderer buildDefaultRenderer() {
+		TableCellRenderer renderer = new TableCellRenderer() {
+
+			JLabel label = new JLabel();
+	
+			@Override
+			public JComponent getTableCellRendererComponent(JTable table,
+					Object value, boolean isSelected, boolean hasFocus,
+					int row, int column) {
+	
+				if (table.isRowSelected(row)) {
+					label.setBackground(Utils.getThemeTableHighlight());
+					label.setForeground(Utils.getThemeBG());
+				} else {
+					label.setBackground(UIManager.getColor("Table.background"));
+					label.setForeground(UIManager.getColor("Table.foreground"));
+				}
+	
+				label.setOpaque(true);
+				label.setText("" + value);
+	
+				return label;
+			}
+	
+		};
+		
+		return renderer;
+	}
+
+	/**
+	 * Enum used to distinguish between what type of comparator to get from the
+	 * {@link Utils.getComparator} method.
+	 */
+	public enum CompType {
+		// Person:
+		FIRST_NAME, LAST_NAME, ID,
+		// Contestants:
+		CONTNT_TRIBE, CONTNT_DATE,
+		// Users:
+		 USER_POINTS, USER_ULT_PICK, USER_WEEKLY_PICK
+	}
 
 	/**
 	 * modified from http://today.java.net/pub/a/today/2003/10/14/swingcss.html
@@ -160,7 +177,6 @@ public class Utils {
 	 * @param comp
 	 *            The component to apply the theme
 	 */
-	//
 	public static void style(Component comp) {
 
 		comp.setForeground(theme.getForeground());
@@ -226,11 +242,11 @@ public class Utils {
 	/**
 	 * Removes all 'null' items from a list.
 	 * 
-	 * @param l
-	 * @return
+	 * @param src
+	 * @return List containing all values, but null
 	 */
-	public static <T> List<T> noNullList(List<T> l) {
-		List<T> list = new ArrayList<T>(l);
+	public static <T> List<T> noNullList(List<T> src) {
+		List<T> list = new ArrayList<T>(src);
 
 		int i = 0;
 		while ((i = list.indexOf(null)) != -1)
@@ -241,7 +257,7 @@ public class Utils {
 
 	/**
 	 * Creates a new list of the objects cast as the type passed as target.
-	 * WARNING: BESURE YOU KNOW THIS WILL WORK.
+	 * <b>WARNING</b>: BESURE YOU KNOW THIS WILL WORK.
 	 * 
 	 * @param list
 	 * @return
@@ -256,11 +272,12 @@ public class Utils {
 	}
 
 	/**
-	 * removes null entries before performing binary search on a list.
-	 * 
-	 * @param list
-	 * @param target
-	 * @param comp
+	 * Convenience method for 
+	 * {@link Collections.binarySearch(List<T>, T, Comparator<T>)} that uses
+	 * the {@link getComparator} method to save code and clean.
+	 * @param list 		List to search through
+	 * @param target 	Key to search for
+	 * @param compType	Comparator to use
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -273,24 +290,31 @@ public class Utils {
 	}
 
 	/**
-	 * Traverses a list of Persons for an ID.
+	 * Convenience method to search for an ID in a list of {@link Person}
+	 * objects. 
 	 * 
-	 * @param list
-	 * @param searchID
-	 * @return Index if found, index <0 if not found.
+	 * @param list		List to traverse
+	 * @param searchID	ID to trawl for
+	 * @return Index if found, index < 0 if not found.
 	 */
-	public static <T> int BinIDSearchSafe(List<T> list, String searchID) {
+	public static <T extends Person> int BinIDSearchSafe(List<T> list, String searchID) {
 		List<String> idList = new ArrayList<String>(list.size());
 		for (T elem : list) {
-			if (elem instanceof Person) {
-				idList.add(((Person) elem).getID());
-			}
+			idList.add(((Person) elem).getID());
 		}
 
-		
 		return Collections.binarySearch(idList, searchID);
 	}
 
+	/**
+	 * Convenience method to get a series of comparators for Contestants and 
+	 * Users. Some are common between, others are specific. 
+	 * @param t 	The designation of the {@link Comparator}
+	 * @param targ	The class of the target. This is used for the Generic 
+	 * 				declaration
+	 * @return		Comparator for the specified type
+	 * @see CompType
+	 */
 	public static <T extends Person> Comparator<T> getComparator(CompType t, Class<T> targ) {
 		switch (t) {
 		case FIRST_NAME:
@@ -401,27 +425,27 @@ public class Utils {
 	}
 
 	/**
-	 * Capitalizes a string. Does not remove existing capitals.
+	 * Capitalises a string. Does not remove existing capitals.
 	 * 
-	 * @param s
-	 * @return
+	 * @param s String to parse and capitalise
+	 * @return 
 	 */
 	public static String strCapitalize(String s) {
-		String result = "";
+		StringBuilder result = new StringBuilder(s.length());
 
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			if ((i + 1 < s.length()) && (c == ' ' || c == '-' || c == '_')) {
-				result += c;
-				result += Character.toUpperCase(s.charAt(++i));
+				result.append(c);
+				result.append(Character.toUpperCase(s.charAt(++i)));
 			} else if (i == 0) {
-				result += Character.toUpperCase(c);
+				result.append(Character.toUpperCase(c));
 			} else {
-				result += c;
+				result.append(c);
 			}
 		}
 
-		return result;
+		return result.toString();
 	}
 	
 	/**

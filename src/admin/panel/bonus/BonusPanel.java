@@ -36,6 +36,9 @@ import data.bonus.BonusQuestion;
 import data.bonus.BonusQuestion.BONUS_TYPE;
 
 /**
+ * Panel containing all parts to do with the Bonus questions. This panel has 
+ * methods for viewing and for editing bonus questions.  It is not yet 
+ * implemented to see User's past answers.
  * 
  * @author Kevin Brightwell, Justin MacDonald, Ramesh Raj
  *
@@ -144,6 +147,10 @@ public class BonusPanel extends JPanel implements Observer{
 		g.addObserver(this);
 	}
 	
+	/**
+	 * Initialises the first panel when inserting a question. This contains the
+	 * prompt and the question type
+	 */
 	private void buildQuestionPanelP1() {
 		// starting card:
 		pnlNewQ1 = new JPanel();
@@ -209,7 +216,8 @@ public class BonusPanel extends JPanel implements Observer{
 	
 	
 	/**
-	 * TODO:
+	 * Builds the second panel containing both types of questions through the
+	 * use of a {@link CardLayout}.
 	 */
 	private void buildQuestionPanelP2() {
 		pnlNewQ2 = new JPanel();
@@ -325,7 +333,7 @@ public class BonusPanel extends JPanel implements Observer{
 	}
 	
 	/**
-	 * Builds the entire question panel (all others included internally).
+	 * Assembles the entire question panel (all others included internally).
 	 */
 	private void buildQuestionPaneAll() {
 		pnlQuestionEdit = new JPanel();
@@ -344,7 +352,7 @@ public class BonusPanel extends JPanel implements Observer{
 	}
 	
 	/**
-	 * construct the questing LISTING panel
+	 * Construct the questing LISTING panel
 	 */
 	private void initPnlQuestionListing() {		
 		pnlListQ.setLayout(new BorderLayout());
@@ -424,6 +432,10 @@ public class BonusPanel extends JPanel implements Observer{
 		spnQuestion.addChangeListener(clQuestion);
 	}
 	
+	/**
+	 * Enables the question panel for input
+	 * @param enabled
+	 */
 	private void setEnableNewQPanel(boolean enabled) {
 		tfPromptInput.setEnabled(enabled);
 		btnNextPart.setEnabled(enabled);
@@ -435,15 +447,14 @@ public class BonusPanel extends JPanel implements Observer{
 	/**
 	 * checks if all multiple choice answers are 1-200 characters 
 	 * 		AND if at least one answer exists
-	 * @return
+	 * @return True if all multiple choice answers are valid
 	 */
-	// returns whether all four are valid as of now.. 
-	private Boolean isValidMultiAnswers() {
+	private boolean isValidMultiAnswers() {
 		boolean res = true;
 		for (int i=0; i < 4 && res; i++) {
 			String s = tfMultiList.get(i).getText();
 			// checks each tf is (1,200)
-			res = res && (s.length() > 0 && s.length() <= 200); 
+			res = res && isValidQuestionOrAnswer(s); 
 		}
 		
 		return res;
@@ -454,18 +465,29 @@ public class BonusPanel extends JPanel implements Observer{
 	 * @param t
 	 * @return true if text is 1-200 char
 	 */
-	private Boolean isValidQuestionOrAnswer(String t){
+	private boolean isValidQuestionOrAnswer(String t){
 		return (t.length() > 0 && t.length() < 201);
 	}
 	
+	/**
+	 * Gets the current week stored in the Week spinner
+	 * @return
+	 */
 	private int getCurrentWeek() {
 		return (Integer)spnWeek.getValue();
 	}
 	
+	/**
+	 * The current question number selected in the week spinner
+	 * @return
+	 */
 	private int getCurrentQNum() {
 		return (Integer)spnQuestion.getValue();
 	}
 	
+	/**
+	 * Called to initialise for a new question in the top panel
+	 */
 	private void setupNewQuestion() {
 		tfPromptInput.setText("");
 			
@@ -509,6 +531,11 @@ public class BonusPanel extends JPanel implements Observer{
 		setEnableNewQPanel(true);
 	}
 	
+	/**
+	 * Pulls a {@link BonusQuestion} from the upper panel, the type is decided
+	 * in this method based on the UI elements
+	 * @return
+	 */
 	private BonusQuestion loadFromPanel() {
 		BonusQuestion bq = new BonusQuestion();
 		
@@ -692,9 +719,11 @@ public class BonusPanel extends JPanel implements Observer{
 		spnQuestion.addChangeListener(clQuestion);
 	}
 
+	@Override
 	public void update(Observable observ, Object obj) {
 		GameData g = (GameData)observ;
 		
+		@SuppressWarnings("unchecked")
 		EnumSet<UpdateTag> update = (EnumSet<UpdateTag>)obj;
 		
 		if (update.contains(UpdateTag.END_GAME)){

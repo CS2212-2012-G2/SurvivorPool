@@ -43,6 +43,14 @@ import data.InvalidFieldException;
 import data.Person;
 import data.User;
 
+/**
+ * Panel containing many methods used between both the Contestant and user 
+ * panels. This is done to save code and make maintaining the backend much 
+ * easier. 
+ * @author Kevin Brightwell (@Nava2)
+ *
+ * @param <P> The datatype to use
+ */
 public abstract class PersonPanel<P extends Person> extends JPanel implements
 		MouseListener, Observer {
 
@@ -135,7 +143,10 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		}
 	};
 	
-	
+	/**
+	 * Sets the tooltips that are displayed in the status panel on hovering
+	 * over a component in the UI.
+	 */
 	protected abstract void setToolTips();
 
 	/**
@@ -295,6 +306,9 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		tableModel.setRowSelect(p);
 	}
 
+	/**
+	 * Saves a person from the {@link PersonFields} specified in the subclass.
+	 */
 	protected void savePerson() {
 		P p = null;
 
@@ -368,6 +382,10 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		return (usingContestants ? "Contestant" : "Player");
 	}
 	
+	/**
+	 * This used to be contained in an {@link ActionListener} event for the 
+	 * save button, but was moved out because it was needed in other places.
+	 */
 	public void clickSaveButton() {
 		if (!getFieldsChanged()) 
 			return;
@@ -384,6 +402,10 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		}	
 	}
 	
+	/**
+	 * Builds all actions associated with common buttons. This MUST be called
+	 * if subclassed.
+	 */
 	protected void buildActions() {
 		btnDelete.addActionListener(new ActionListener(){
 
@@ -466,9 +488,14 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 		};
 	}
 
+	// unused
 	@Override
 	public abstract void mouseClicked(MouseEvent e);
 
+	/**
+	 * Displays the tool tip for a component in the status panel of the 
+	 * {@link MainFrame}.  If no text is present, nothing is displayed.
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		JComponent c = (JComponent) e.getComponent();
@@ -479,11 +506,13 @@ public abstract class PersonPanel<P extends Person> extends JPanel implements
 			mf.setStatusMsg(txt);
 	}
 
+	// unused
 	@Override
 	public void mouseExited(MouseEvent e) {
 		mouseEntered(e);
 	}
 
+	// unused
 	@Override
 	public void mousePressed(MouseEvent e) {
 		return;

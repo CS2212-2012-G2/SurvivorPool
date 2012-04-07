@@ -38,6 +38,14 @@ import data.GameData.UpdateTag;
 import data.Person;
 import data.User;
 
+/**
+ * Displays general game data that does not fit under the title of User or 
+ * Contestant management. This includes standings of contestants and general
+ * administration.
+ * 
+ * @author Kevin Brightwell, Jonathon Demelo, Ramesh Raj
+ *
+ */
 public class GeneralPanel extends JPanel implements Observer {
 
 	private static final long serialVersionUID = 1L;
@@ -75,6 +83,9 @@ public class GeneralPanel extends JPanel implements Observer {
 	private JTable activeTable;
 	private JTable castTable;
 
+	/**
+	 * Strings used for the tool tips
+	 */
 	protected static final String TOOL_START = "Start the Season",
 				TOOL_ADV = "Advance the Season week", 
 				TOOL_FIN_ADV = "Advance the final week",
@@ -83,6 +94,11 @@ public class GeneralPanel extends JPanel implements Observer {
 	
 	
 	
+	/**
+	 * Builds the general panel and displays all components. Many are swapped 
+	 * by using {@link CardLayout} for changing views while maintaining 
+	 * component state.
+	 */
 	public GeneralPanel() {
 		setLayout(new BorderLayout(10, 10));
 
@@ -133,6 +149,11 @@ public class GeneralPanel extends JPanel implements Observer {
 		lblTribe2.setToolTipText(TOOL_TRIBE);
 	}
 	
+	/**
+	 * Builds a {@link JPanel} containing the components for changing a 
+	 * particular tribe's name (or both). 
+	 * @return 
+	 */
 	private JPanel buildTribePanel() {
 		GameData g = GameData.getCurrentGame();
 
@@ -172,6 +193,11 @@ public class GeneralPanel extends JPanel implements Observer {
 		return pane;
 	}
 	
+	/**
+	 * Displays the winners on Game completion. This is swapped in place of the
+	 * Tribe name changing interface.
+	 * @return
+	 */
 	private JPanel buildWinnerPanel() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BorderLayout(5, 5));
@@ -183,6 +209,11 @@ public class GeneralPanel extends JPanel implements Observer {
 		return pane;
 	}
 	
+	/**
+	 * Builds the container of buttons for the progression of weeks and 
+	 * starting of the game
+	 * @return
+	 */
 	private JPanel buildCtrlPanel() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
@@ -210,6 +241,11 @@ public class GeneralPanel extends JPanel implements Observer {
 		return pane;
 	}
 
+	/**
+	 * Builds the panel containing the Game History aspect of whom was cast off
+	 * each week. This panel contains the spinners for control and the like.
+	 * @return
+	 */
 	private JPanel buildHistory() {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.PAGE_AXIS));
@@ -253,6 +289,10 @@ public class GeneralPanel extends JPanel implements Observer {
 		return pane;
 	}
 	
+	/**
+	 * Builds the two {@author JTable} components used to display contestants
+	 * as they are cast off.
+	 */
 	private void buildHistoryTables() {
 		// build the encapsulating panels:
 		final Border bevB = BorderFactory
@@ -313,6 +353,9 @@ public class GeneralPanel extends JPanel implements Observer {
 		return s;
 	}
 
+	/**
+	 * Creates all the event listeners for the entire panel
+	 */
 	private void initListeners() {
 		btnStartSn.addActionListener(new ActionListener() {
 
@@ -418,12 +461,20 @@ public class GeneralPanel extends JPanel implements Observer {
 		});
 	}
 
+	/**
+	 * Updates the week spinner to a set value
+	 * @param w The new max week (and week to show)
+	 */
 	private void updateSpinnerModel(int w) {
 		weekModel.setMinimum(1);
 		weekModel.setMaximum(w-1 > 0 ? w-1 : 1);
 		weekModel.setStepSize(1);
 	}
 	
+	/**
+	 * Gets the string representing the standings in the game.
+	 * @return
+	 */
 	private String getWinnersString() {
 		GameData g = GameData.getCurrentGame();
 		

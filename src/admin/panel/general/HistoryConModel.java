@@ -16,6 +16,13 @@ import data.Contestant;
 import data.GameData;
 import data.GameData.UpdateTag;
 
+/**
+ * Table Model for the history tables featured on the {@link GeneralPanel}. 
+ * This model is used for both history tables, merely adjusted where necessary
+ * on instantiation.
+ * 
+ * @author Kevin Brightwell (@Nava2)
+ */
 public class HistoryConModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
@@ -94,15 +101,18 @@ public class HistoryConModel extends AbstractTableModel implements Observer {
 		return; // overridden to stop super.
 	}
 	
+	/**
+	 * Loads a contestant into the table based on the week from which they were
+	 * cast off.
+	 * @param week The week to add into the table
+	 */
 	protected void loadContestantByWeek(int week) {
 		GameData g = GameData.getCurrentGame();
 		List<Contestant> temp = new ArrayList<Contestant>(g.getAllContestants());
 		data = new ArrayList<Contestant>(temp.size());
 		
-		Collections.sort(temp, Utils.getComparator(Utils.CompType.CONTNT_DATE, Contestant.class));
-		
-		//if (!active) // count backwards. :)
-		//	Collections.reverse(temp);
+		Collections.sort(temp, Utils.getComparator(Utils.CompType.CONTNT_DATE, 
+				Contestant.class));
 		
 		for (Contestant c: temp) {
 			if (active) {
@@ -117,10 +127,6 @@ public class HistoryConModel extends AbstractTableModel implements Observer {
 				} 
 			}
 		}
-		
-		//if (!active) {
-		//	Collections.sort(data, Utils.getContComparator(Utils.CompType.CONTNT_DATE));
-		//}
 		
 		fireTableDataChanged();
 	}

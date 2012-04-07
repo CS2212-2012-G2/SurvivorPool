@@ -6,6 +6,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+/**
+ * Small container class to hold the tribe and winner panels and elegantly swap
+ * between them without cluttering up {@link GeneralPanel}.
+ * 
+ * @author Kevin Brightwell (@Nava2)
+ */
 public class TribeWinnerCont extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -15,6 +21,12 @@ public class TribeWinnerCont extends JPanel {
 	
 	private boolean showTribes;
 	
+	/**
+	 * Creates the panel and lays out the two panels in a {@link CardLayout}.
+	 * @param tribePane
+	 * @param winPane
+	 * @param showTribes	Whether to show tribes initially
+	 */
 	public TribeWinnerCont(JPanel tribePane, JPanel winPane, boolean showTribes) {
 		super(new CardLayout(5, 5));
 		//setBorder(BorderFactory.createTitledBorder(TRIBE));
@@ -31,15 +43,26 @@ public class TribeWinnerCont extends JPanel {
 		}
 	}
 	
-	
+	/**
+	 * Returns the {@link CardLayout} object used by this container.
+	 * @return
+	 */
 	private CardLayout getCL() {
 		return (CardLayout)super.getLayout();
 	}
 	
+	/**
+	 * Gets the {@link TitledBorder} object so the panel can change its Title 
+	 * when switching from Tribes to displaying winners
+	 * @return
+	 */
 	private TitledBorder getTBorder() {
 		return (TitledBorder)getBorder();
 	}
 	
+	/**
+	 * Shows the tribe changing interface.
+	 */
 	protected void showTribe() {
 		if (showTribes) return;
 		
@@ -50,6 +73,9 @@ public class TribeWinnerCont extends JPanel {
 		repaint();
 	}
 	
+	/**
+	 * Shows the winners information
+	 */
 	protected void showWinners() {
 		if (!showTribes) return;
 		
@@ -60,6 +86,10 @@ public class TribeWinnerCont extends JPanel {
 		repaint();
 	}
 	
+	/**
+	 * Tells whether the container is showing the tribes
+	 * @return	True if showing tribes
+	 */
 	protected boolean isShowingTribes() {
 		return showTribes;
 	}

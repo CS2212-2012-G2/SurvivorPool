@@ -10,7 +10,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 
-import admin.Utils;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
@@ -19,8 +18,15 @@ import data.Person;
 import data.User;
 
 /**
- * @author kevin
- * 
+ * This model is used to manage either Contestants or Users. This is allowed 
+ * through the use of Generics. The type used must be a subclass of 
+ * {@link Person}. This is done to once again abstract more between the two 
+ * data types. <br>
+ * This Model works on adding and removing players in the global data register.
+ * Due to this, many of the application's data operations work through this 
+ * model. <br>
+ * Much of this class is abstracted to the subclasses due to them needing to 
+ * specifically manage parts.
  */
 public abstract class PersonTableModel<P extends Person> extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
@@ -185,7 +191,8 @@ public abstract class PersonTableModel<P extends Person> extends AbstractTableMo
 	 * but will invalidate them, thus <i>not</i> allowing them to run. This
 	 * breaks nothing as all those calls do is use up time and memory.
 	 * @param row Row to select
-	 * @param viewIndex TODO
+	 * @param viewIndex 	Set depending on whether the index passed needs to
+	 * 			be converted from the viewed index into the tables actual index
 	 * @throws IndexOutOfBoundsException On row < -1.
 	 */
 	public void setRowSelect(int row, boolean viewIndex) {
@@ -218,6 +225,15 @@ public abstract class PersonTableModel<P extends Person> extends AbstractTableMo
 	
 	protected abstract void setComparators(TableRowSorter<PersonTableModel<P>> sort);
 	
+	/**
+	 * Class used to select rows over time.  Originally, on every click, a row
+	 * would be selected. This meant multiple calls to the selection methods 
+	 * and many redundant ones.  This controls this and only allows one call to
+	 * the update mathod to be called.
+	 * 
+	 * @author Kevin Brightwell (@Nava2)
+	 *
+	 */
 	private class RowSelector implements Runnable {
 
 		protected int row;
