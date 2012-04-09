@@ -22,7 +22,6 @@ import admin.panel.person.player.PlayerPanel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
-import data.User;
 import data.InvalidFieldException.Field;
 
 /**

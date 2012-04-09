@@ -65,9 +65,11 @@
 	     windowtitle="CS2212 Group 2 2012 - Javadoc">
       
       <fileset dir="src" defaultexcludes="yes">
-        <include name="admin/**"/>
-	<include name="data/**"/>
-	<include name="test/**"/>
+	<exclude name="**.txt"/>
+        <include name="admin/**.java"/>
+	<include name="data/**.java"/>
+	<include name="test/**.java"/>
+	<include name="json/**.java"/>
       </fileset>
     </javadoc>
   </target>

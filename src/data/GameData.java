@@ -16,7 +16,6 @@ import json.simple.JSONObject;
 import json.simple.parser.ParseException;
 import admin.Utils;
 import admin.Utils.CompType;
-import data.InvalidFieldException.Field;
 import data.bonus.Bonus;
 
 /**
@@ -73,8 +72,6 @@ public class GameData extends Observable {
 	 * @param numInitialContestants
 	 *            number of contestants to be in game
 	 */
-	// TODO: Make throw exception, its not enough to return, the object is still
-	// created.
 	public GameData(int numInitialContestants) {
 		// check if within parameters
 		if (numInitialContestants > 15 || numInitialContestants < 6)

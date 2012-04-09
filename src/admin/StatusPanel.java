@@ -108,9 +108,8 @@ public class StatusPanel extends JPanel {
 	 * 
 	 * @param txt
 	 *            Error text to display
-	 * @param c
-	 *            A component to make the background red(can pass null if none
-	 *            needed)
+	 * @param comps
+	 *            A variable amount of components to display as errors
 	 */
 	public void setErrorMsgLabel(String txt, Component... comps) {
 		errorComps = comps;

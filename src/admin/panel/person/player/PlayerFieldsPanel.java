@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import admin.panel.person.PersonFields;
-import admin.panel.person.contestant.ContestantPanel;
 import data.Contestant;
 import data.GameData;
 import data.InvalidFieldException;
