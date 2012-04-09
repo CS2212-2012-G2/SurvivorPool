@@ -244,7 +244,7 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 	public void getFromPane(User u) throws InvalidFieldException {
 		
 		String oID = u.getID();
-		u.setID(tfID.getText());
+		u.setID(tfID.getText().trim());
 		
 		GameData g = GameData.getCurrentGame();
 		
@@ -254,7 +254,7 @@ public class PlayerFieldsPanel extends JPanel implements PersonFields<User> {
 			throw new InvalidFieldException(Field.USER_ID_DUP, "Duplicate ID, User (changing manually)");
 		}
 		
-		u.setID(tfID.getText());
+		//u.setID(tfID.getText());
 
 		u.setFirstName(tfFirstName.getText().trim());
 		u.setLastName(tfLastName.getText().trim());

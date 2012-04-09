@@ -625,10 +625,10 @@ public class GameData extends Observable {
 	}
 	
 	/** 
-	 * Checks an 
+	 * Checks a Person against the IDs stored.
 	 * @param p
 	 * @param type 
-	 * @return
+	 * @return true if valid to use
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Person> boolean checkID(T p, Class<T> type) {
@@ -656,7 +656,7 @@ public class GameData extends Observable {
 			// have a problem, otherwise, no problem (nothing changed!).
 			// JESUS CHRIST THIS LOGIC SUCKED.
 			for (T t : list) {
-				if (t.getID().equals(p.getID()) && t != p) {
+				if (t != p && t.getID().equals(p.getID())) {
 					return false;
 				}
 			}

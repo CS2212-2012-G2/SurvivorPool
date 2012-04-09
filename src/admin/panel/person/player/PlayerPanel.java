@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
@@ -114,7 +116,66 @@ public class PlayerPanel extends PersonPanel<User> implements ChangeListener,
 				labelUltimate, cbUltPick, labelPts, labelPtsValue);
 		// add the mouse listener to all components.
 		for (Component c : ((JPanel)personFields).getComponents()) {
-			c.addMouseListener(this);
+			//c.addMouseListener(this);
+			if (c instanceof JTextField) {
+				JTextField tf = (JTextField)c;
+				tf.addKeyListener(new KeyListener() {
+
+					@Override
+					public void keyPressed(KeyEvent ke) {
+						return;
+					}
+
+					@Override
+					public void keyReleased(KeyEvent ke) {
+						return;
+					}
+
+					@Override
+					public void keyTyped(KeyEvent ke) {
+						char key = ke.getKeyChar();
+						if (Character.isLetterOrDigit(key)) {
+							setFieldsChanged(true);
+							btnSave.setEnabled(true);
+						}
+					}
+					
+				});
+			} else if (c instanceof JComboBox) {
+				c.addMouseListener(new MouseListener() {
+					
+					@Override
+					public void mouseReleased(MouseEvent arg0) {
+						return;
+					}
+					
+					@Override
+					public void mousePressed(MouseEvent arg0) {
+						return;
+					}
+					
+					@Override
+					public void mouseExited(MouseEvent arg0) {
+						return;
+					}
+					
+					@Override
+					public void mouseEntered(MouseEvent arg0) {
+						return;
+					}
+					
+					@Override
+					public void mouseClicked(MouseEvent me) {
+						Component c = me.getComponent();
+						
+						if (!c.isEnabled()) return;
+					
+						setFieldsChanged(true);
+						btnSave.setEnabled(true);
+					}
+				});
+			}
+			
 		}	
 
 		// ////////////////////////////

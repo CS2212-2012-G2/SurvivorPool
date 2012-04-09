@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
@@ -113,10 +115,14 @@ public class ContestantPanel extends PersonPanel<Contestant> implements
 		for (Component c : ((JPanel)personFields).getComponents()) {
 			if (c instanceof JPanel) {
 				for (Component d: ((JPanel)c).getComponents())
-					d.addMouseListener(this);
+					//d.addMouseListener(this);
+					addListeners(d);
 			}
-			c.addMouseListener(this);
+			//c.addMouseListener(this);
+			addListeners(c);
 		}
+		
+		
 		
 		btnPickWin = new JButton("<html><center>Select<br>Winner</center></html>");
 
@@ -169,6 +175,69 @@ public class ContestantPanel extends PersonPanel<Contestant> implements
 		});
 		
 		assembleAll();
+	}
+	
+	private void addListeners(Component c) {
+		// c.addMouseListener(this);
+		if (c instanceof JTextField) {
+			JTextField tf = (JTextField) c;
+			tf.addKeyListener(new KeyListener() {
+
+				@Override
+				public void keyPressed(KeyEvent ke) {
+					return;
+				}
+
+				@Override
+				public void keyReleased(KeyEvent ke) {
+					return;
+				}
+
+				@Override
+				public void keyTyped(KeyEvent ke) {
+					char key = ke.getKeyChar();
+					if (Character.isLetterOrDigit(key)) {
+						setFieldsChanged(true);
+						btnSave.setEnabled(true);
+					}
+				}
+
+			});
+		} else if (c instanceof JComboBox) {
+			c.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseReleased(MouseEvent arg0) {
+					return;
+				}
+
+				@Override
+				public void mousePressed(MouseEvent arg0) {
+					return;
+				}
+
+				@Override
+				public void mouseExited(MouseEvent arg0) {
+					return;
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent arg0) {
+					return;
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent me) {
+					Component c = me.getComponent();
+
+					if (!c.isEnabled())
+						return;
+
+					setFieldsChanged(true);
+					btnSave.setEnabled(true);
+				}
+			});
+		}
 	}
 	
 	
