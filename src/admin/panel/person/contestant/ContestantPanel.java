@@ -37,7 +37,7 @@ import data.InvalidFieldException;
  * Panel containing all {@link Contestant} manipulation methods for the UI. The
  * panel closely follows {@link GameData} and updates as appropriate. This UI 
  * contains methods for Adding, Deleting, and Modifying contestants fully. 
- * @author Kevin Brightwell (@Nava2)
+ * @author Kevin Brightwell (@Nava2), Graem Littleton (@Lukirre), Ramesh Raj, Jon Demelo
  */
 public class ContestantPanel extends PersonPanel<Contestant> implements
 		MouseListener, Observer {
