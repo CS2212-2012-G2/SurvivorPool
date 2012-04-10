@@ -1,10 +1,10 @@
 <project name="SurvivorPool-Admin" default="all">
 
   <property name="jar-out" value="Group2Standalone.jar"/>
-  <property name="src-dir" value="./src/"/>
-  <property name="bin-dir" value="./bin/"/>
-  <property name="javadoc-dir" value="./doc/"/>
-  <property name="res-dir" value="./res/"/>
+  <property name="src-dir" value="src/"/>
+  <property name="bin-dir" value="bin/"/>
+  <property name="javadoc-dir" value="doc/"/>
+  <property name="res-dir" value="res/"/>
 
   <target name="clean">
     <delete dir="${bin-dir}" />
@@ -42,8 +42,9 @@
       <exclude name="**/.classpath" />
       <exclude name="**/.project" />
       <exclude name="**/*.swp" />
-      <include name="${bin-dir}**/*.class" />
-      <include name="${src-dir}**/*.java" />
+      <exclude name="**/*.mp?" />
+      <include name="${bin-dir}**/**.class" />
+      <include name="${src-dir}**/**.java" />
       <include name="${javadoc-dir}**" />
       <include name="${res-dir}**" />
       <include name="*" />
